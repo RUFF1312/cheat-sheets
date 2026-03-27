@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Git Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#f05033;--accent2:#f0a030;--blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#1a0c09 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(240,80,51,0.08),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(240,80,51,0.12);border:1px solid rgba(240,80,51,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  .legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600}
+  .chip.a{background:rgba(240,80,51,0.12);border:1px solid rgba(240,80,51,0.3);color:var(--accent)}
+  .chip.b{background:rgba(63,185,80,0.12);border:1px solid rgba(63,185,80,0.3);color:var(--green)}
+  .chip.c{background:rgba(61,139,205,0.12);border:1px solid rgba(61,139,205,0.3);color:var(--blue)}
+  .chip.d{background:rgba(163,113,247,0.12);border:1px solid rgba(163,113,247,0.3);color:var(--purple)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  .theme-red .section-header{background:rgba(240,80,51,0.08)}.theme-red .section-icon{background:rgba(240,80,51,0.15)}.theme-red .section-title{color:var(--accent)}
+  .theme-green .section-header{background:rgba(63,185,80,0.08)}.theme-green .section-icon{background:rgba(63,185,80,0.15)}.theme-green .section-title{color:var(--green)}
+  .theme-blue .section-header{background:rgba(61,139,205,0.08)}.theme-blue .section-icon{background:rgba(61,139,205,0.15)}.theme-blue .section-title{color:var(--blue)}
+  .theme-purple .section-header{background:rgba(163,113,247,0.08)}.theme-purple .section-icon{background:rgba(163,113,247,0.15)}.theme-purple .section-title{color:var(--purple)}
+  .theme-yellow .section-header{background:rgba(240,160,48,0.08)}.theme-yellow .section-icon{background:rgba(240,160,48,0.15)}.theme-yellow .section-title{color:var(--accent2)}
+  .theme-cyan .section-header{background:rgba(57,197,207,0.08)}.theme-cyan .section-icon{background:rgba(57,197,207,0.15)}.theme-cyan .section-title{color:var(--cyan)}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:#f05033;font-weight:700}.sub{color:#f0a030;font-weight:600}.fl{color:#3d8bcd}.val{color:#3fb950}.cm{color:#7d8590;font-style:italic}.var{color:#a371f7}.br{color:#39c5cf;font-weight:600}
+  .tip{padding:8px 16px;background:rgba(240,80,51,0.05);border-top:1px dashed rgba(240,80,51,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  .tip.b{background:rgba(61,139,205,0.05);border-color:rgba(61,139,205,0.2);color:var(--blue)}
+  .tip.p{background:rgba(163,113,247,0.05);border-color:rgba(163,113,247,0.2);color:var(--purple)}
+  .tip.y{background:rgba(240,160,48,0.05);border-color:rgba(240,160,48,0.2);color:var(--accent2)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(240,80,51,0.3);padding:4px 12px;border-radius:4px;background:rgba(240,80,51,0.08)}
+  .nav-link:hover{background:rgba(240,80,51,0.15)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Version Control Reference</div>
+      <h1><span>Git</span><br>Cheat Sheet</h1>
+      <p class="subtitle">$ git [command] -- distributed version control</p>
+      <div class="legend">
+        <div class="chip a">📦 Commits</div>
+        <div class="chip b">🌿 Branches</div>
+        <div class="chip c">🔄 Remote</div>
+        <div class="chip d">🔧 Advanced</div>
+      </div>
+    </div>
+    <div class="meta"><strong>git 2.x</strong><br>Staging · Commits<br>Branches · Merging<br>Rebase · Hooks</div>
+  </div>
+</header>
+<main>
+
+<div class="section theme-red">
+  <div class="section-header"><div class="section-icon">🚀</div><div class="section-title">Setup & Init</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Konfiguration</div>
+<code><span class="kw">git</span> config --global user.name <span class="val">"Name"</span>
+<span class="kw">git</span> config --global user.email <span class="val">"mail"</span>
+<span class="kw">git</span> config --global core.editor <span class="val">vim</span>
+<span class="kw">git</span> config --global init.defaultBranch <span class="val">main</span>
+<span class="kw">git</span> config --list</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Repository erstellen</div>
+<code><span class="kw">git</span> init
+<span class="kw">git</span> init <span class="var">my-project</span>
+<span class="kw">git</span> clone <span class="val">https://github.com/org/repo.git</span>
+<span class="kw">git</span> clone <span class="val">repo.git</span> <span class="fl">--depth</span> 1   <span class="cm">  # shallow</span>
+<span class="kw">git</span> clone <span class="val">repo.git</span> <span class="fl">-b</span> <span class="var">develop</span></code></div>
+  </div>
+</div>
+
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">📦</div><div class="section-title">Staging & Commits</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Status & Staging</div>
+<code><span class="kw">git</span> status
+<span class="kw">git</span> status -s              <span class="cm">  # kurz</span>
+<span class="kw">git</span> add <span class="var">datei.txt</span>
+<span class="kw">git</span> add .                  <span class="cm">  # alles</span>
+<span class="kw">git</span> add -p                 <span class="cm">  # interaktiv (hunks)</span>
+<span class="kw">git</span> restore --staged <span class="var">file</span>  <span class="cm">  # unstage</span>
+<span class="kw">git</span> restore <span class="var">file</span>           <span class="cm">  # Änderungen verwerfen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Committen</div>
+<code><span class="kw">git</span> commit -m <span class="val">"feat: add login"</span>
+<span class="kw">git</span> commit -am <span class="val">"fix: ..."</span>    <span class="cm">  # add + commit</span>
+<span class="kw">git</span> commit --amend           <span class="cm">  # letzten ändern</span>
+<span class="kw">git</span> commit --amend --no-edit <span class="cm">  # nur Dateien</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Diff</div>
+<code><span class="kw">git</span> diff                    <span class="cm">  # unstaged</span>
+<span class="kw">git</span> diff --staged            <span class="cm">  # staged</span>
+<span class="kw">git</span> diff <span class="var">main..feature</span>      <span class="cm">  # Branch-Diff</span>
+<span class="kw">git</span> diff HEAD~2 HEAD         <span class="cm">  # letzte 2</span>
+<span class="kw">git</span> diff --stat              <span class="cm">  # nur Statistik</span></code></div>
+  </div>
+  <div class="tip g">💡 <strong>git add -p</strong> für saubere, atomare Commits — jeder Hunk einzeln prüfen</div>
+</div>
+
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">🌿</div><div class="section-title">Branches</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Branch verwalten</div>
+<code><span class="kw">git</span> branch                  <span class="cm">  # lokal auflisten</span>
+<span class="kw">git</span> branch -a               <span class="cm">  # inkl. remote</span>
+<span class="kw">git</span> branch <span class="var">feature/login</span>    <span class="cm">  # erstellen</span>
+<span class="kw">git</span> branch -d <span class="var">feature</span>      <span class="cm">  # löschen (safe)</span>
+<span class="kw">git</span> branch -D <span class="var">feature</span>      <span class="cm">  # force-delete</span>
+<span class="kw">git</span> branch -m <span class="var">old</span> <span class="var">new</span>      <span class="cm">  # umbenennen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Wechseln & Erstellen</div>
+<code><span class="kw">git</span> switch <span class="var">main</span>
+<span class="kw">git</span> switch -c <span class="var">feature/neu</span>   <span class="cm">  # erstellen + wechseln</span>
+<span class="kw">git</span> switch -              <span class="cm">  # vorheriger Branch</span>
+<span class="cm"># alt (checkout)</span>
+<span class="kw">git</span> checkout -b <span class="var">feature</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Merge</div>
+<code><span class="kw">git</span> merge <span class="var">feature</span>
+<span class="kw">git</span> merge --no-ff <span class="var">feature</span>   <span class="cm">  # merge commit</span>
+<span class="kw">git</span> merge --squash <span class="var">feature</span>  <span class="cm">  # squash</span>
+<span class="kw">git</span> merge --abort           <span class="cm">  # abbrechen</span>
+<span class="kw">git</span> mergetool               <span class="cm">  # Konflikte lösen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Rebase</div>
+<code><span class="kw">git</span> rebase <span class="var">main</span>
+<span class="kw">git</span> rebase -i HEAD~3        <span class="cm">  # interaktiv</span>
+<span class="kw">git</span> rebase --onto <span class="var">main</span> <span class="var">old</span> <span class="var">new</span>
+<span class="kw">git</span> rebase --abort
+<span class="kw">git</span> rebase --continue</code></div>
+  </div>
+  <div class="tip b">💡 Interaktiver Rebase: <strong>pick squash fixup reword drop</strong> zum Aufräumen der History</div>
+</div>
+
+<div class="section theme-red">
+  <div class="section-header"><div class="section-icon">🔄</div><div class="section-title">Remote</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Remote verwalten</div>
+<code><span class="kw">git</span> remote -v
+<span class="kw">git</span> remote add <span class="var">origin</span> <span class="val">url</span>
+<span class="kw">git</span> remote rename <span class="var">origin</span> <span class="var">upstream</span>
+<span class="kw">git</span> remote remove <span class="var">origin</span>
+<span class="kw">git</span> remote set-url <span class="var">origin</span> <span class="val">neue-url</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Push & Pull</div>
+<code><span class="kw">git</span> push <span class="var">origin</span> <span class="var">main</span>
+<span class="kw">git</span> push -u <span class="var">origin</span> <span class="var">feature</span>  <span class="cm">  # tracking setzen</span>
+<span class="kw">git</span> push --force-with-lease  <span class="cm">  # safe force push</span>
+<span class="kw">git</span> push <span class="var">origin</span> :<span class="var">branch</span>     <span class="cm">  # remote löschen</span>
+<span class="kw">git</span> push --tags
+
+<span class="kw">git</span> pull                     <span class="cm">  # fetch + merge</span>
+<span class="kw">git</span> pull --rebase            <span class="cm">  # fetch + rebase</span>
+<span class="kw">git</span> fetch <span class="var">origin</span>
+<span class="kw">git</span> fetch --prune            <span class="cm">  # tote Branches weg</span></code></div>
+  </div>
+</div>
+
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">🏷</div><div class="section-title">Tags</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Tags erstellen & pushen</div>
+<code><span class="kw">git</span> tag <span class="val">v1.0.0</span>
+<span class="kw">git</span> tag -a <span class="val">v1.0.0</span> -m <span class="val">"Release 1.0"</span>
+<span class="kw">git</span> tag -a <span class="val">v1.0.0</span> <span class="var">abc1234</span>    <span class="cm">  # auf Commit</span>
+<span class="kw">git</span> tag                        <span class="cm">  # auflisten</span>
+<span class="kw">git</span> push <span class="var">origin</span> <span class="val">v1.0.0</span>
+<span class="kw">git</span> push <span class="var">origin</span> --tags
+<span class="kw">git</span> tag -d <span class="val">v1.0.0</span>             <span class="cm">  # lokal löschen</span>
+<span class="kw">git</span> push <span class="var">origin</span> --delete <span class="val">v1.0.0</span></code></div>
+  </div>
+</div>
+
+<div class="section theme-yellow">
+  <div class="section-header"><div class="section-icon">📜</div><div class="section-title">History & Log</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Log</div>
+<code><span class="kw">git</span> log --oneline
+<span class="kw">git</span> log --oneline --graph --all
+<span class="kw">git</span> log -p                   <span class="cm">  # mit Diffs</span>
+<span class="kw">git</span> log --author=<span class="val">"Name"</span>
+<span class="kw">git</span> log --since=<span class="val">"2024-01-01"</span>
+<span class="kw">git</span> log --grep=<span class="val">"fix"</span>
+<span class="kw">git</span> log -S <span class="val">"Funktionsname"</span>    <span class="cm">  # pickaxe</span>
+<span class="kw">git</span> log -- <span class="var">pfad/datei.txt</span>    <span class="cm">  # Datei-History</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Suchen & Blame</div>
+<code><span class="kw">git</span> blame <span class="var">datei.txt</span>
+<span class="kw">git</span> blame -L 10,20 <span class="var">datei</span>    <span class="cm">  # Zeilen 10-20</span>
+<span class="kw">git</span> grep <span class="val">"muster"</span>
+<span class="kw">git</span> show <span class="var">abc1234</span>
+<span class="kw">git</span> show <span class="var">HEAD~2</span>:<span class="val">datei.txt</span></code></div>
+  </div>
+</div>
+
+<div class="section theme-cyan">
+  <div class="section-header"><div class="section-icon">🧰</div><div class="section-title">Stash, Reset & Restore</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Stash</div>
+<code><span class="kw">git</span> stash
+<span class="kw">git</span> stash push -m <span class="val">"wip: feature"</span>
+<span class="kw">git</span> stash list
+<span class="kw">git</span> stash pop              <span class="cm">  # anwenden + löschen</span>
+<span class="kw">git</span> stash apply stash@{1}  <span class="cm">  # anwenden</span>
+<span class="kw">git</span> stash drop stash@{0}
+<span class="kw">git</span> stash clear
+<span class="kw">git</span> stash branch <span class="var">neu</span>       <span class="cm">  # → Branch</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Reset</div>
+<code><span class="kw">git</span> reset --soft HEAD~1    <span class="cm">  # commit rückgängig, staged bleibt</span>
+<span class="kw">git</span> reset --mixed HEAD~1   <span class="cm">  # + unstage (default)</span>
+<span class="kw">git</span> reset --hard HEAD~1    <span class="cm">  # ⚠ Änderungen weg!</span>
+<span class="kw">git</span> reset HEAD <span class="var">datei</span>       <span class="cm">  # unstage</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Cherry-Pick & Revert</div>
+<code><span class="kw">git</span> cherry-pick <span class="var">abc1234</span>
+<span class="kw">git</span> cherry-pick <span class="var">A</span>..<span class="var">B</span>       <span class="cm">  # Bereich</span>
+<span class="kw">git</span> revert <span class="var">abc1234</span>         <span class="cm">  # sicheres Rückgängig</span>
+<span class="kw">git</span> revert HEAD~3..HEAD     <span class="cm">  # mehrere</span></code></div>
+  </div>
+  <div class="tip p">💡 <strong>git reflog</strong> — rettet verlorene Commits nach reset --hard oder Branch-Löschung</div>
+</div>
+
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">.gitconfig & Aliases</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Nützliche Aliases</div>
+<code>[alias]
+  st   = status -s
+  co   = checkout
+  sw   = switch
+  lg   = log --oneline --graph --all
+  undo = reset --soft HEAD~1
+  save = stash push -m
+  wip  = commit -am "wip"
+  oops = commit --amend --no-edit
+  pub  = push -u origin HEAD</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">.gitignore Muster</div>
+<code><span class="cm"># Verzeichnis</span>
+node_modules/
+__pycache__/
+.venv/
+
+<span class="cm"># Dateien</span>
+*.log  *.tmp  .env  .DS_Store
+
+<span class="cm"># Ausnahme</span>
+!important.log
+
+<span class="cm"># Global .gitignore</span>
+<span class="kw">git</span> config --global \
+  core.excludesfile ~/.gitignore_global</code></div>
+  </div>
+  <div class="tip y">💡 <strong>git bisect start / good / bad</strong> für binäres Suchen nach fehlerhaftem Commit</div>
+</div>
+
+<div class="section theme-red">
+  <div class="section-header"><div class="section-icon">🔀</div><div class="section-title">Workflows & Submodules</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Worktree</div>
+<code><span class="kw">git</span> worktree add <span class="var">../hotfix</span> <span class="br">hotfix/bug</span>
+<span class="kw">git</span> worktree list
+<span class="kw">git</span> worktree remove <span class="var">../hotfix</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Submodules</div>
+<code><span class="kw">git</span> submodule add <span class="val">url</span> <span class="var">pfad</span>
+<span class="kw">git</span> submodule update --init --recursive
+<span class="kw">git</span> clone --recurse-submodules <span class="val">url</span>
+<span class="kw">git</span> submodule foreach <span class="val">'git pull'</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Maintenance</div>
+<code><span class="kw">git</span> gc                   <span class="cm">  # Aufräumen</span>
+<span class="kw">git</span> fsck                 <span class="cm">  # Integrität prüfen</span>
+<span class="kw">git</span> clean -fd            <span class="cm">  # untracked löschen</span>
+<span class="kw">git</span> clean -fdx           <span class="cm">  # + ignored</span>
+<span class="kw">git</span> archive --format=zip HEAD &gt; out.zip</code></div>
+  </div>
+</div>
+
+</main>
+<footer><span>git</span> — git-scm.com/doc · <span>git help</span> [command] · <span>git reflog</span> ist dein Sicherheitsnetz</footer>
+</body>
+</html>

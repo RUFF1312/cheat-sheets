@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bash Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0d1117;--surface:#161b22;--border:#30363d;
+    --accent:#4ec9b0;--accent2:#f0a030;
+    --blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;
+    --cyan:#39c5cf;--red:#f47067;--text:#e6edf3;
+    --muted:#7d8590;--code-bg:#10161d;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#0a1a18 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(78,201,176,0.07),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(78,201,176,0.12);border:1px solid rgba(78,201,176,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  .legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600}
+  .chip.a{background:rgba(78,201,176,0.12);border:1px solid rgba(78,201,176,0.3);color:var(--accent)}
+  .chip.b{background:rgba(63,185,80,0.12);border:1px solid rgba(63,185,80,0.3);color:var(--green)}
+  .chip.c{background:rgba(61,139,205,0.12);border:1px solid rgba(61,139,205,0.3);color:var(--blue)}
+  .chip.d{background:rgba(163,113,247,0.12);border:1px solid rgba(163,113,247,0.3);color:var(--purple)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  .theme-teal .section-header{background:rgba(78,201,176,0.08)}.theme-teal .section-icon{background:rgba(78,201,176,0.15)}.theme-teal .section-title{color:var(--accent)}
+  .theme-green .section-header{background:rgba(63,185,80,0.08)}.theme-green .section-icon{background:rgba(63,185,80,0.15)}.theme-green .section-title{color:var(--green)}
+  .theme-blue .section-header{background:rgba(61,139,205,0.08)}.theme-blue .section-icon{background:rgba(61,139,205,0.15)}.theme-blue .section-title{color:var(--blue)}
+  .theme-purple .section-header{background:rgba(163,113,247,0.08)}.theme-purple .section-icon{background:rgba(163,113,247,0.15)}.theme-purple .section-title{color:var(--purple)}
+  .theme-yellow .section-header{background:rgba(240,160,48,0.08)}.theme-yellow .section-icon{background:rgba(240,160,48,0.15)}.theme-yellow .section-title{color:var(--accent2)}
+  .theme-red .section-header{background:rgba(244,112,103,0.08)}.theme-red .section-icon{background:rgba(244,112,103,0.15)}.theme-red .section-title{color:var(--red)}
+  .theme-cyan .section-header{background:rgba(57,197,207,0.08)}.theme-cyan .section-icon{background:rgba(57,197,207,0.15)}.theme-cyan .section-title{color:var(--cyan)}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:#4ec9b0;font-weight:700}.bi{color:#3d8bcd;font-weight:600}.st{color:#3fb950}.nu{color:#f47067}.cm{color:#7d8590;font-style:italic}.fn{color:#39c5cf;font-weight:600}.va{color:#a371f7}.op{color:#f0a030;font-weight:600}
+  .tip{padding:8px 16px;background:rgba(78,201,176,0.05);border-top:1px dashed rgba(78,201,176,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  .tip.y{background:rgba(240,160,48,0.05);border-color:rgba(240,160,48,0.2);color:var(--accent2)}
+  .tip.p{background:rgba(163,113,247,0.05);border-color:rgba(163,113,247,0.2);color:var(--purple)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(78,201,176,0.3);padding:4px 12px;border-radius:4px;background:rgba(78,201,176,0.08)}
+  .nav-link:hover{background:rgba(78,201,176,0.15)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Shell Scripting Reference</div>
+      <h1><span>Bash</span><br>Cheat Sheet</h1>
+      <p class="subtitle">$ bash script.sh -- Bourne Again Shell</p>
+      <div class="legend">
+        <div class="chip a">🐚 Bash 5+</div>
+        <div class="chip b">🔀 Scripting</div>
+        <div class="chip c">📡 Pipes & Redirects</div>
+        <div class="chip d">⚙️ Process Control</div>
+      </div>
+    </div>
+    <div class="meta"><strong>bash / sh</strong><br>Variables · Arrays<br>Functions · Loops<br>Regex · Process</div>
+  </div>
+</header>
+<main>
+
+<div class="section theme-teal">
+  <div class="section-header"><div class="section-icon">📝</div><div class="section-title">Variablen & Parameter</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Deklaration & Expansion</div>
+<code><span class="va">NAME</span>=<span class="st">"Welt"</span>           <span class="cm"># kein Leerzeichen!</span>
+<span class="kw">echo</span> <span class="st">"Hallo $NAME"</span>
+<span class="kw">echo</span> <span class="st">"Hallo ${NAME}"</span>   <span class="cm"># sicherer</span>
+<span class="kw">readonly</span> <span class="va">PI</span>=<span class="nu">3.14</span>
+<span class="kw">unset</span> <span class="va">NAME</span>
+<span class="kw">export</span> <span class="va">PATH</span>=<span class="st">"$PATH:/opt/bin"</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Spezialvariablen</div>
+<code><span class="va">$0</span>   <span class="cm">  Skriptname</span>
+<span class="va">$1</span>..<span class="va">$9</span> <span class="cm"> Positionsparameter</span>
+<span class="va">$@</span>   <span class="cm">  Alle Argumente (Array)</span>
+<span class="va">$*</span>   <span class="cm">  Alle Argumente (String)</span>
+<span class="va">$#</span>   <span class="cm">  Anzahl Argumente</span>
+<span class="va">$?</span>   <span class="cm">  Exit-Code letzter Befehl</span>
+<span class="va">$$</span>   <span class="cm">  PID des Skripts</span>
+<span class="va">$!</span>   <span class="cm">  PID letzter Hintergrundprozess</span>
+<span class="va">$_</span>   <span class="cm">  Letztes Argument</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">String-Manipulation</div>
+<code><span class="va">${#VAR}</span>           <span class="cm">  Länge</span>
+<span class="va">${VAR:-default}</span>   <span class="cm">  Fallback wenn leer</span>
+<span class="va">${VAR:=default}</span>   <span class="cm">  Setzen wenn leer</span>
+<span class="va">${VAR:offset:len}</span> <span class="cm">  Substring</span>
+<span class="va">${VAR#prefix}</span>     <span class="cm">  Präfix entfernen</span>
+<span class="va">${VAR%suffix}</span>     <span class="cm">  Suffix entfernen</span>
+<span class="va">${VAR//alt/neu}</span>   <span class="cm">  Alle ersetzen</span>
+<span class="va">${VAR^^}</span>          <span class="cm">  Großbuchstaben</span>
+<span class="va">${VAR,,}</span>          <span class="cm">  Kleinbuchstaben</span></code></div>
+  </div>
+</div>
+
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">📋</div><div class="section-title">Arrays</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Index-Array</div>
+<code><span class="va">arr</span>=(<span class="st">"a"</span> <span class="st">"b"</span> <span class="st">"c"</span>)
+<span class="va">arr</span>+=(<span class="st">"d"</span>)
+<span class="kw">echo</span> <span class="va">${arr[0]}</span>        <span class="cm">  # a</span>
+<span class="kw">echo</span> <span class="va">${arr[-1]}</span>       <span class="cm">  # letztes</span>
+<span class="kw">echo</span> <span class="va">${arr[@]}</span>        <span class="cm">  # alle</span>
+<span class="kw">echo</span> <span class="va">${#arr[@]}</span>       <span class="cm">  # Anzahl</span>
+<span class="kw">echo</span> <span class="va">${arr[@]:1:2}</span>    <span class="cm">  # Slice</span>
+<span class="kw">unset</span> <span class="va">arr[1]</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Assoziatives Array (Bash 4+)</div>
+<code><span class="kw">declare</span> -A <span class="va">map</span>
+<span class="va">map</span>[<span class="st">"key"</span>]=<span class="st">"val"</span>
+<span class="kw">echo</span> <span class="va">${map["key"]}</span>
+<span class="kw">echo</span> <span class="va">${!map[@]}</span>      <span class="cm">  # alle Keys</span>
+<span class="kw">echo</span> <span class="va">${map[@]}</span>       <span class="cm">  # alle Werte</span>
+<span class="kw">for</span> <span class="va">k</span> <span class="kw">in</span> <span class="va">${!map[@]}</span>; <span class="kw">do</span>
+  <span class="kw">echo</span> <span class="st">"$k = ${map[$k]}"</span>
+<span class="kw">done</span></code></div>
+  </div>
+</div>
+
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">🔀</div><div class="section-title">Kontrollfluss</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">If / Test</div>
+<code><span class="kw">if</span> [[ <span class="va">$x</span> -gt <span class="nu">0</span> ]]; <span class="kw">then</span>
+    <span class="kw">echo</span> <span class="st">"positiv"</span>
+<span class="kw">elif</span> [[ <span class="va">$x</span> -eq <span class="nu">0</span> ]]; <span class="kw">then</span>
+    <span class="kw">echo</span> <span class="st">"null"</span>
+<span class="kw">else</span>
+    <span class="kw">echo</span> <span class="st">"negativ"</span>
+<span class="kw">fi</span>
+
+<span class="cm"># Kurzformen</span>
+[[ <span class="va">$a</span> ]] && <span class="kw">echo</span> <span class="st">"gesetzt"</span>
+<span class="va">cmd</span> || <span class="kw">echo</span> <span class="st">"fehlgeschlagen"</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Test-Operatoren</div>
+<code><span class="cm"># Zahlen</span>
+-eq -ne -lt -le -gt -ge
+
+<span class="cm"># Strings</span>
+== != &lt; &gt;  -z (leer)  -n (nicht leer)
+<span class="va">$a</span> =~ <span class="va">$regex</span>   <span class="cm">  # Regex-Match</span>
+
+<span class="cm"># Dateien</span>
+-e (existiert)  -f (Datei)  -d (Dir)
+-r (lesbar)     -w (schreibbar)  -x (ausführbar)
+-s (nicht leer) -L (Symlink)
+<span class="va">f1</span> -nt <span class="va">f2</span>  <span class="cm">  # newer than</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Schleifen</div>
+<code><span class="kw">for</span> <span class="va">i</span> <span class="kw">in</span> {<span class="nu">1</span>..<span class="nu">10</span>}; <span class="kw">do</span> <span class="kw">echo</span> <span class="va">$i</span>; <span class="kw">done</span>
+<span class="kw">for</span> <span class="va">f</span> <span class="kw">in</span> *.txt; <span class="kw">do</span> <span class="fn">process</span> <span class="va">$f</span>; <span class="kw">done</span>
+<span class="kw">for</span> ((<span class="va">i</span>=<span class="nu">0</span>; <span class="va">i</span>&lt;<span class="nu">10</span>; <span class="va">i</span>++)); <span class="kw">do</span> ...; <span class="kw">done</span>
+<span class="kw">for</span> <span class="va">item</span> <span class="kw">in</span> <span class="st">"${arr[@]}"</span>; <span class="kw">do</span> ...; <span class="kw">done</span>
+
+<span class="kw">while</span> <span class="fn">read</span> -r <span class="va">line</span>; <span class="kw">do</span>
+  <span class="kw">echo</span> <span class="va">$line</span>
+<span class="kw">done</span> &lt; file.txt
+
+<span class="kw">until</span> [[ <span class="va">$x</span> -gt <span class="nu">5</span> ]]; <span class="kw">do</span> ((<span class="va">x</span>++)); <span class="kw">done</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Case</div>
+<code><span class="kw">case</span> <span class="va">$opt</span> <span class="kw">in</span>
+  start) <span class="fn">start_service</span> ;;
+  stop)  <span class="fn">stop_service</span>  ;;
+  re*)   <span class="fn">restart</span>        ;;
+  [yY])  <span class="kw">echo</span> <span class="st">"Ja"</span>      ;;
+  *)     <span class="kw">echo</span> <span class="st">"unbekannt"</span>;;
+<span class="kw">esac</span></code></div>
+  </div>
+  <div class="tip g">💡 <strong>[[ ]]</strong> statt <strong>[ ]</strong> verwenden — sicherer, unterstützt && || und Regex</div>
+</div>
+
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">Funktionen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Definition & Aufruf</div>
+<code><span class="kw">function</span> <span class="fn">myfunc</span>() {
+  <span class="kw">local</span> <span class="va">arg1</span>=<span class="st">"$1"</span>
+  <span class="kw">echo</span> <span class="st">"Argument: $arg1"</span>
+  <span class="kw">return</span> <span class="nu">0</span>
+}
+<span class="cm"># Kurzschreibweise</span>
+<span class="fn">myfunc</span>() { <span class="kw">echo</span> <span class="st">"$@"</span>; }
+<span class="fn">myfunc</span> <span class="st">"hallo"</span> <span class="st">"welt"</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Rückgabewerte</div>
+<code><span class="cm"># Exit-Code (0=OK, 1-255=Fehler)</span>
+<span class="fn">check</span>() { [[ -f <span class="va">$1</span> ]]; }
+<span class="fn">check</span> <span class="st">"/etc/hosts"</span> && <span class="kw">echo</span> <span class="st">"OK"</span>
+
+<span class="cm"># String via echo</span>
+<span class="fn">get_name</span>() { <span class="kw">echo</span> <span class="st">"Max"</span>; }
+<span class="va">name</span>=$(<span class="fn">get_name</span>)</code></div>
+  </div>
+</div>
+
+<div class="section theme-yellow">
+  <div class="section-header"><div class="section-icon">📡</div><div class="section-title">Pipes, Redirects & Prozesse</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Redirects</div>
+<code><span class="va">cmd</span> &gt; out.txt     <span class="cm">  stdout → Datei (überschreiben)</span>
+<span class="va">cmd</span> &gt;&gt; out.txt    <span class="cm">  stdout → Datei (anhängen)</span>
+<span class="va">cmd</span> 2&gt; err.txt    <span class="cm">  stderr → Datei</span>
+<span class="va">cmd</span> &gt; out 2&gt;&amp;1    <span class="cm">  stdout + stderr</span>
+<span class="va">cmd</span> &amp;&gt; all.txt    <span class="cm">  stdout + stderr (kurz)</span>
+<span class="va">cmd</span> &gt; /dev/null   <span class="cm">  Ausgabe verwerfen</span>
+<span class="va">cmd</span> &lt; input.txt   <span class="cm">  stdin aus Datei</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Here-Doc & Here-String</div>
+<code><span class="kw">cat</span> &lt;&lt;EOF
+Zeile 1
+Zeile 2: $VAR
+EOF
+
+<span class="kw">cat</span> &lt;&lt;'EOF'       <span class="cm">  # kein Expansion</span>
+$VAR bleibt literal
+EOF
+
+<span class="kw">grep</span> <span class="st">"muster"</span> &lt;&lt;&lt; <span class="st">"text mit muster"</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Prozesssteuerung</div>
+<code><span class="va">cmd</span> &amp;             <span class="cm">  Hintergrund</span>
+<span class="kw">jobs</span>              <span class="cm">  Hintergrundjobs</span>
+<span class="kw">fg</span> %1             <span class="cm">  Vordergrund</span>
+<span class="kw">bg</span> %1             <span class="cm">  Hintergrund</span>
+<span class="kw">wait</span>              <span class="cm">  Auf alle warten</span>
+<span class="kw">kill</span> <span class="va">$PID</span>         <span class="cm">  SIGTERM</span>
+<span class="kw">kill</span> -9 <span class="va">$PID</span>      <span class="cm">  SIGKILL</span>
+<span class="kw">trap</span> <span class="st">'cleanup'</span> EXIT INT TERM</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Command Substitution & Arithmetic</div>
+<code><span class="va">result</span>=$(<span class="fn">cmd</span>)       <span class="cm">  # modern</span>
+<span class="va">result</span>=`<span class="fn">cmd</span>`        <span class="cm">  # alt (vermeiden)</span>
+(( <span class="va">x</span> = <span class="nu">5</span> * <span class="nu">3</span> ))
+(( <span class="va">x</span>++ ))
+<span class="kw">echo</span> $(( <span class="nu">10</span> / <span class="nu">3</span> ))    <span class="cm">  # 3 (int)</span>
+<span class="kw">echo</span> <span class="st">"scale=2; 10/3"</span> | <span class="fn">bc</span>  <span class="cm">  # float</span></code></div>
+  </div>
+</div>
+
+<div class="section theme-teal">
+  <div class="section-header"><div class="section-icon">🛡</div><div class="section-title">Scripting Best Practices</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Robustes Skript-Template</div>
+<code><span class="kw">#!/usr/bin/env bash</span>
+<span class="kw">set</span> -euo pipefail   <span class="cm">  # exit on error</span>
+<span class="kw">IFS</span>=<span class="va">$'\n\t'</span>
+
+<span class="kw">readonly</span> <span class="va">SCRIPT_DIR</span>=$(<span class="fn">cd</span> <span class="st">"$(dirname "${BASH_SOURCE[0]}")"</span> && <span class="kw">pwd</span>)
+
+<span class="fn">usage</span>() {
+  <span class="kw">echo</span> <span class="st">"Usage: $0 [-v] &lt;arg&gt;"</span>
+  <span class="kw">exit</span> <span class="nu">1</span>
+}
+
+<span class="fn">cleanup</span>() {
+  <span class="kw">echo</span> <span class="st">"Cleanup..."</span> >&amp;2
+}
+<span class="kw">trap</span> <span class="fn">cleanup</span> EXIT</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">getopts — Flags parsen</div>
+<code><span class="kw">while</span> <span class="fn">getopts</span> <span class="st">":hvo:"</span> <span class="va">opt</span>; <span class="kw">do</span>
+  <span class="kw">case</span> <span class="va">$opt</span> <span class="kw">in</span>
+    h) <span class="fn">usage</span> ;;
+    v) <span class="va">VERBOSE</span>=<span class="nu">1</span> ;;
+    o) <span class="va">OUTPUT</span>=<span class="st">"$OPTARG"</span> ;;
+    ?) <span class="kw">echo</span> <span class="st">"Ungültig: -$OPTARG"</span>; <span class="kw">exit</span> <span class="nu">1</span> ;;
+  <span class="kw">esac</span>
+<span class="kw">done</span>
+<span class="kw">shift</span> $(( <span class="va">OPTIND</span> - <span class="nu">1</span> ))</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Fehlerbehandlung & Logging</div>
+<code><span class="fn">log</span>()  { <span class="kw">echo</span> <span class="st">"[INFO]  $*"</span> >&amp;2; }
+<span class="fn">warn</span>() { <span class="kw">echo</span> <span class="st">"[WARN]  $*"</span> >&amp;2; }
+<span class="fn">die</span>()  { <span class="kw">echo</span> <span class="st">"[ERROR] $*"</span> >&amp;2; <span class="kw">exit</span> <span class="nu">1</span>; }
+
+<span class="va">cmd</span> || <span class="fn">die</span> <span class="st">"cmd fehlgeschlagen"</span>
+[[ -d <span class="va">$DIR</span> ]] || <span class="fn">die</span> <span class="st">"$DIR nicht gefunden"</span></code></div>
+  </div>
+  <div class="tip p">💡 <strong>shellcheck script.sh</strong> — statische Analyse für Bash-Skripte</div>
+</div>
+
+<div class="section theme-red">
+  <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Text-Verarbeitung</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">grep</div>
+<code><span class="fn">grep</span> <span class="st">"muster"</span> datei.txt
+<span class="fn">grep</span> -r <span class="st">"muster"</span> ./          <span class="cm">  rekursiv</span>
+<span class="fn">grep</span> -i <span class="st">"muster"</span>             <span class="cm">  case-insensitiv</span>
+<span class="fn">grep</span> -n <span class="st">"muster"</span>             <span class="cm">  mit Zeilennummer</span>
+<span class="fn">grep</span> -v <span class="st">"muster"</span>             <span class="cm">  invertieren</span>
+<span class="fn">grep</span> -E <span class="st">"a|b"</span>                <span class="cm">  Extended Regex</span>
+<span class="fn">grep</span> -l <span class="st">"muster"</span> *.txt        <span class="cm">  nur Dateinamen</span>
+<span class="fn">grep</span> -c <span class="st">"muster"</span>              <span class="cm">  Anzahl Treffer</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">sed & awk</div>
+<code><span class="fn">sed</span> <span class="st">'s/alt/neu/g'</span> datei.txt
+<span class="fn">sed</span> -i <span class="st">'s/alt/neu/g'</span> datei.txt  <span class="cm">  in-place</span>
+<span class="fn">sed</span> -n <span class="st">'5,10p'</span> datei.txt        <span class="cm">  Zeilen 5-10</span>
+<span class="fn">sed</span> <span class="st">'/muster/d'</span>                  <span class="cm">  Zeilen löschen</span>
+
+<span class="fn">awk</span> <span class="st">'{print $1, $3}'</span> datei.txt   <span class="cm">  Spalten</span>
+<span class="fn">awk</span> -F<span class="st">':'</span> <span class="st">'{print $1}'</span> /etc/passwd
+<span class="fn">awk</span> <span class="st">'NR&gt;5 {print}'</span>               <span class="cm">  ab Zeile 5</span>
+<span class="fn">awk</span> <span class="st">'{sum+=$1} END{print sum}'</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Nützliche Kombinationen</div>
+<code><span class="fn">sort</span> -k2 -n datei.txt     <span class="cm">  nach Spalte 2</span>
+<span class="fn">sort</span> -u                   <span class="cm">  sortiert + eindeutig</span>
+<span class="fn">uniq</span> -c                   <span class="cm">  Duplikate zählen</span>
+<span class="fn">cut</span> -d<span class="st">':'</span> -f1             <span class="cm">  Erste Spalte</span>
+<span class="fn">tr</span> <span class="st">'[:lower:]' '[:upper:]'</span>
+<span class="fn">wc</span> -l  <span class="fn">wc</span> -w  <span class="fn">wc</span> -c
+<span class="fn">head</span> -n 20  <span class="fn">tail</span> -n 20
+<span class="fn">tail</span> -f /var/log/syslog   <span class="cm">  live</span></code></div>
+  </div>
+</div>
+
+<div class="section theme-cyan">
+  <div class="section-header"><div class="section-icon">💡</div><div class="section-title">Nützliche Muster</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Temporäre Dateien & Locks</div>
+<code><span class="va">tmp</span>=$(<span class="fn">mktemp</span>)
+<span class="kw">trap</span> <span class="st">"rm -f $tmp"</span> EXIT
+
+<span class="cm"># Mutex-Lock</span>
+<span class="va">LOCK</span>=<span class="st">"/var/run/myscript.lock"</span>
+<span class="kw">exec</span> <span class="nu">9</span>&gt;<span class="va">$LOCK</span>
+<span class="fn">flock</span> -n <span class="nu">9</span> || <span class="fn">die</span> <span class="st">"läuft bereits"</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Parallelisierung</div>
+<code><span class="kw">for</span> <span class="va">f</span> <span class="kw">in</span> *.log; <span class="kw">do</span>
+  <span class="fn">process</span> <span class="st">"$f"</span> &
+<span class="kw">done</span>
+<span class="kw">wait</span>
+
+<span class="cm"># xargs parallel</span>
+<span class="fn">find</span> . -name <span class="st">"*.py"</span> | \
+  <span class="fn">xargs</span> -P4 -I{} <span class="fn">python3</span> -m py_compile {}</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Nützliche Einzeiler</div>
+<code><span class="cm"># Zeilen einer Datei iterieren</span>
+<span class="kw">while</span> <span class="bi">IFS</span>= <span class="fn">read</span> -r <span class="va">line</span>; <span class="kw">do</span>
+  <span class="kw">echo</span> <span class="st">"$line"</span>
+<span class="kw">done</span> &lt; <span class="st">"datei.txt"</span>
+
+<span class="cm"># Alle PIDs eines Prozesses</span>
+<span class="fn">pgrep</span> -a nginx
+
+<span class="cm"># Verzeichnis-Backup</span>
+<span class="fn">tar</span> czf backup-$(date +%F).tar.gz ./data
+
+<span class="cm"># Port prüfen</span>
+<span class="fn">ss</span> -tlnp | <span class="fn">grep</span> <span class="st">":80"</span></code></div>
+  </div>
+  <div class="tip y">💡 <strong>bash -x script.sh</strong> für Schritt-für-Schritt-Debugging (xtrace)</div>
+</div>
+
+</main>
+<footer><span>bash</span> — man bash · <span>shellcheck.net</span> · explainshell.com</footer>
+</body>
+</html>

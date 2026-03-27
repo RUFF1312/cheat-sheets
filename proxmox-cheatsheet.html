@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proxmox VE Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#e36209;--accent2:#f0a030;--blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#1a0f00 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(227,98,9,0.08),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(227,98,9,0.12);border:1px solid rgba(227,98,9,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  .legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600}
+  .chip.a{background:rgba(227,98,9,0.12);border:1px solid rgba(227,98,9,0.3);color:var(--accent)}
+  .chip.b{background:rgba(63,185,80,0.12);border:1px solid rgba(63,185,80,0.3);color:var(--green)}
+  .chip.c{background:rgba(61,139,205,0.12);border:1px solid rgba(61,139,205,0.3);color:var(--blue)}
+  .chip.d{background:rgba(163,113,247,0.12);border:1px solid rgba(163,113,247,0.3);color:var(--purple)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  .theme-orange .section-header{background:rgba(227,98,9,0.08)}.theme-orange .section-icon{background:rgba(227,98,9,0.15)}.theme-orange .section-title{color:var(--accent)}
+  .theme-green .section-header{background:rgba(63,185,80,0.08)}.theme-green .section-icon{background:rgba(63,185,80,0.15)}.theme-green .section-title{color:var(--green)}
+  .theme-blue .section-header{background:rgba(61,139,205,0.08)}.theme-blue .section-icon{background:rgba(61,139,205,0.15)}.theme-blue .section-title{color:var(--blue)}
+  .theme-purple .section-header{background:rgba(163,113,247,0.08)}.theme-purple .section-icon{background:rgba(163,113,247,0.15)}.theme-purple .section-title{color:var(--purple)}
+  .theme-yellow .section-header{background:rgba(240,160,48,0.08)}.theme-yellow .section-icon{background:rgba(240,160,48,0.15)}.theme-yellow .section-title{color:var(--accent2)}
+  .theme-cyan .section-header{background:rgba(57,197,207,0.08)}.theme-cyan .section-icon{background:rgba(57,197,207,0.15)}.theme-cyan .section-title{color:var(--cyan)}
+  .theme-red .section-header{background:rgba(244,112,103,0.08)}.theme-red .section-icon{background:rgba(244,112,103,0.15)}.theme-red .section-title{color:var(--red)}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:#e36209;font-weight:700}.fl{color:#3d8bcd}.val{color:#3fb950}.cm{color:#7d8590;font-style:italic}.var{color:#a371f7}.nu{color:#f47067}.cy{color:#39c5cf;font-weight:600}
+  .tip{padding:8px 16px;background:rgba(227,98,9,0.05);border-top:1px dashed rgba(227,98,9,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  .tip.b{background:rgba(61,139,205,0.05);border-color:rgba(61,139,205,0.2);color:var(--blue)}
+  .tip.p{background:rgba(163,113,247,0.05);border-color:rgba(163,113,247,0.2);color:var(--purple)}
+  .tip.y{background:rgba(240,160,48,0.05);border-color:rgba(240,160,48,0.2);color:var(--accent2)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(227,98,9,0.3);padding:4px 12px;border-radius:4px;background:rgba(227,98,9,0.08)}
+  .nav-link:hover{background:rgba(227,98,9,0.15)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Virtualization Platform Reference</div>
+      <h1><span>Proxmox VE</span><br>Cheat Sheet</h1>
+      <p class="subtitle">$ pvesh / qm / pct / pvecm -- Proxmox Virtual Environment</p>
+      <div class="legend">
+        <div class="chip a">🖥 VMs (KVM)</div>
+        <div class="chip b">📦 Container (LXC)</div>
+        <div class="chip c">💾 Storage</div>
+        <div class="chip d">🌐 Cluster</div>
+      </div>
+    </div>
+    <div class="meta"><strong>Proxmox VE 8.x</strong><br>KVM · LXC · Ceph<br>Cluster · Backup<br>Netzwerk · API</div>
+  </div>
+</header>
+<main>
+
+<div class="section theme-orange">
+  <div class="section-header"><div class="section-icon">🖥</div><div class="section-title">VMs verwalten (qm)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Status & Auflistung</div>
+<code><span class="kw">qm</span> list
+<span class="kw">qm</span> status <span class="nu">100</span>
+<span class="kw">pvesh</span> get /nodes/pve/qemu      <span class="cm">  # API</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">VM starten / stoppen / neu starten</div>
+<code><span class="kw">qm</span> start  <span class="nu">100</span>
+<span class="kw">qm</span> stop   <span class="nu">100</span>             <span class="cm">  # sofort</span>
+<span class="kw">qm</span> shutdown <span class="nu">100</span>           <span class="cm">  # ACPI graceful</span>
+<span class="kw">qm</span> reboot <span class="nu">100</span>
+<span class="kw">qm</span> reset  <span class="nu">100</span>             <span class="cm">  # hard reset</span>
+<span class="kw">qm</span> suspend <span class="nu">100</span>
+<span class="kw">qm</span> resume  <span class="nu">100</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">VM erstellen & klonen</div>
+<code><span class="kw">qm</span> create <span class="nu">101</span> \
+  <span class="fl">--name</span> <span class="val">myvm</span> \
+  <span class="fl">--memory</span> <span class="nu">2048</span> \
+  <span class="fl">--cores</span> <span class="nu">2</span> \
+  <span class="fl">--net0</span> <span class="val">virtio,bridge=vmbr0</span> \
+  <span class="fl">--ostype</span> <span class="val">l26</span>
+
+<span class="kw">qm</span> clone <span class="nu">100</span> <span class="nu">200</span> <span class="fl">--name</span> <span class="val">myvm-clone</span>
+<span class="kw">qm</span> clone <span class="nu">100</span> <span class="nu">201</span> <span class="fl">--full</span>         <span class="cm">  # full clone</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">VM konfigurieren</div>
+<code><span class="kw">qm</span> config <span class="nu">100</span>
+<span class="kw">qm</span> set <span class="nu">100</span> <span class="fl">--memory</span> <span class="nu">4096</span>
+<span class="kw">qm</span> set <span class="nu">100</span> <span class="fl">--cores</span> <span class="nu">4</span>
+<span class="kw">qm</span> set <span class="nu">100</span> <span class="fl">--onboot</span> <span class="nu">1</span>
+<span class="kw">qm</span> set <span class="nu">100</span> <span class="fl">--boot</span> <span class="val">order=scsi0</span>
+<span class="kw">qm</span> set <span class="nu">100</span> <span class="fl">--agent</span> <span class="nu">1</span>            <span class="cm">  # QEMU agent</span>
+<span class="kw">qm</span> set <span class="nu">100</span> <span class="fl">--ipconfig0</span> <span class="val">ip=dhcp</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Disk & CD-ROM</div>
+<code><span class="kw">qm</span> disk import <span class="nu">100</span> disk.qcow2 local-lvm
+<span class="kw">qm</span> set <span class="nu">100</span> <span class="fl">--scsi0</span> <span class="val">local-lvm:vm-100-disk-0</span>
+<span class="kw">qm</span> set <span class="nu">100</span> <span class="fl">--ide2</span>  <span class="val">local:iso/debian.iso,media=cdrom</span>
+<span class="kw">qm</span> resize <span class="nu">100</span> scsi0 <span class="val">+10G</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Konsole & Migration</div>
+<code><span class="kw">qm</span> terminal <span class="nu">100</span>              <span class="cm">  # serielle Konsole</span>
+<span class="kw">qm</span> migrate <span class="nu">100</span> <span class="val">pve2</span>           <span class="cm">  # live migration</span>
+<span class="kw">qm</span> migrate <span class="nu">100</span> <span class="val">pve2</span> <span class="fl">--online</span>
+<span class="kw">qm</span> destroy <span class="nu">100</span></code></div>
+  </div>
+  <div class="tip">💡 <strong>qm guest cmd 100 network-get-interfaces</strong> — IPs per QEMU-Agent abfragen</div>
+</div>
+
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">📦</div><div class="section-title">Container verwalten (pct / LXC)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Container Status & Auflistung</div>
+<code><span class="kw">pct</span> list
+<span class="kw">pct</span> status <span class="nu">110</span>
+<span class="kw">pct</span> config <span class="nu">110</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Container starten / stoppen</div>
+<code><span class="kw">pct</span> start   <span class="nu">110</span>
+<span class="kw">pct</span> stop    <span class="nu">110</span>
+<span class="kw">pct</span> shutdown <span class="nu">110</span>
+<span class="kw">pct</span> reboot  <span class="nu">110</span>
+<span class="kw">pct</span> suspend <span class="nu">110</span>
+<span class="kw">pct</span> resume  <span class="nu">110</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Container erstellen</div>
+<code><span class="kw">pct</span> create <span class="nu">110</span> \
+  <span class="val">local:vztmpl/debian-12-standard_12.2-1_amd64.tar.zst</span> \
+  <span class="fl">--hostname</span> <span class="val">myct</span> \
+  <span class="fl">--memory</span>   <span class="nu">512</span> \
+  <span class="fl">--rootfs</span>   <span class="val">local-lvm:8</span> \
+  <span class="fl">--net0</span>     <span class="val">name=eth0,bridge=vmbr0,ip=dhcp</span> \
+  <span class="fl">--unprivileged</span> <span class="nu">1</span> \
+  <span class="fl">--password</span> <span class="val">geheim</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Container verwalten</div>
+<code><span class="kw">pct</span> enter <span class="nu">110</span>               <span class="cm">  # Shell öffnen</span>
+<span class="kw">pct</span> exec  <span class="nu">110</span> -- bash -c <span class="val">"ls"</span>
+<span class="kw">pct</span> set   <span class="nu">110</span> <span class="fl">--memory</span> <span class="nu">1024</span>
+<span class="kw">pct</span> set   <span class="nu">110</span> <span class="fl">--onboot</span> <span class="nu">1</span>
+<span class="kw">pct</span> resize <span class="nu">110</span> rootfs <span class="val">+5G</span>
+<span class="kw">pct</span> clone  <span class="nu">110</span> <span class="nu">111</span> <span class="fl">--hostname</span> <span class="val">clone</span>
+<span class="kw">pct</span> destroy <span class="nu">110</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Templates verwalten</div>
+<code><span class="kw">pveam</span> update
+<span class="kw">pveam</span> available <span class="fl">--section</span> <span class="val">system</span>
+<span class="kw">pveam</span> download local <span class="val">debian-12-standard_12.2-1_amd64.tar.zst</span>
+<span class="kw">pveam</span> list local</code></div>
+  </div>
+  <div class="tip g">💡 <strong>--features nesting=1</strong> für Docker-in-LXC; <strong>--unprivileged 0</strong> für privilegierte Container</div>
+</div>
+
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">💾</div><div class="section-title">Storage & Disks</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Storage auflisten & verwalten</div>
+<code><span class="kw">pvesm</span> status
+<span class="kw">pvesm</span> list <span class="val">local</span>
+<span class="kw">pvesm</span> list <span class="val">local-lvm</span>
+<span class="kw">pvesm</span> add dir <span class="val">mystore</span> <span class="fl">--path</span> <span class="val">/mnt/data</span>
+<span class="kw">pvesm</span> remove <span class="val">mystore</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">LVM & ZFS</div>
+<code><span class="cm"># LVM Thin</span>
+<span class="kw">pvesm</span> add lvmthin <span class="val">data</span> \
+  <span class="fl">--vgname</span> <span class="val">pve</span> <span class="fl">--thinpool</span> <span class="val">data</span>
+
+<span class="cm"># ZFS Pool</span>
+<span class="kw">zpool</span> create <span class="val">tank</span> mirror <span class="val">/dev/sdb</span> <span class="val">/dev/sdc</span>
+<span class="kw">pvesm</span> add zfspool <span class="val">tank</span> <span class="fl">--pool</span> <span class="val">tank</span>
+<span class="kw">zpool</span> status  <span class="kw">zfs</span> list</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Disk-Operationen</div>
+<code><span class="kw">lsblk</span>
+<span class="kw">fdisk</span> -l
+<span class="kw">pvdisplay</span>   <span class="kw">vgdisplay</span>   <span class="kw">lvdisplay</span>
+<span class="kw">pvcreate</span> /dev/sdd
+<span class="kw">vgextend</span> pve /dev/sdd
+<span class="kw">lvextend</span> -l +100%FREE /dev/pve/data</code></div>
+  </div>
+</div>
+
+<div class="section theme-yellow">
+  <div class="section-header"><div class="section-icon">📸</div><div class="section-title">Snapshots & Backup</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">VM-Snapshots</div>
+<code><span class="kw">qm</span> snapshot  <span class="nu">100</span> <span class="val">snap1</span> <span class="fl">--vmstate</span>
+<span class="kw">qm</span> listsnapshot <span class="nu">100</span>
+<span class="kw">qm</span> rollback  <span class="nu">100</span> <span class="val">snap1</span>
+<span class="kw">qm</span> delsnapshot <span class="nu">100</span> <span class="val">snap1</span>
+
+<span class="cm"># LXC Snapshots</span>
+<span class="kw">pct</span> snapshot  <span class="nu">110</span> <span class="val">snap1</span>
+<span class="kw">pct</span> rollback  <span class="nu">110</span> <span class="val">snap1</span>
+<span class="kw">pct</span> delsnapshot <span class="nu">110</span> <span class="val">snap1</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">vzdump — Backup</div>
+<code><span class="kw">vzdump</span> <span class="nu">100</span> <span class="fl">--storage</span> <span class="val">local</span> <span class="fl">--mode</span> <span class="val">snapshot</span>
+<span class="kw">vzdump</span> <span class="nu">100</span> <span class="fl">--dumpdir</span> <span class="val">/mnt/backup</span>
+<span class="kw">vzdump</span> --all <span class="fl">--storage</span> <span class="val">backup</span>   <span class="cm">  # alle VMs</span>
+<span class="kw">vzdump</span> <span class="nu">100</span> <span class="fl">--compress</span> <span class="val">zstd</span>
+
+<span class="cm"># Restore</span>
+<span class="kw">qmrestore</span> /var/lib/vz/dump/vzdump-qemu-100-*.vma.zst <span class="nu">200</span>
+<span class="kw">pct</span> restore <span class="nu">111</span> /var/lib/vz/dump/vzdump-lxc-110-*.tar.zst</code></div>
+  </div>
+  <div class="tip y">💡 <strong>Proxmox Backup Server (PBS)</strong> für deduplizierende, inkrementelle Backups empfohlen</div>
+</div>
+
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Netzwerk</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Bridge & Bonds konfigurieren</div>
+<code><span class="cm"># /etc/network/interfaces</span>
+auto vmbr0
+iface vmbr0 inet static
+  address   192.168.1.10/24
+  gateway   192.168.1.1
+  bridge-ports eno1
+  bridge-stp   off
+  bridge-fd    0
+
+<span class="cm"># VLAN-Aware Bridge</span>
+  bridge-vlan-aware yes
+  bridge-vids       2-4094</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Netzwerk-Befehle</div>
+<code><span class="kw">ifreload</span> -a                    <span class="cm">  # Änderungen laden</span>
+<span class="kw">ip</span> link show
+<span class="kw">ip</span> addr show vmbr0
+<span class="kw">brctl</span> show
+<span class="kw">pvesh</span> get /nodes/pve/network</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">SDN (Software Defined Network)</div>
+<code><span class="kw">pvesh</span> get /cluster/sdn/vnets
+<span class="kw">pvesh</span> create /cluster/sdn/zones \
+  <span class="fl">--zone</span> <span class="val">myzone</span> <span class="fl">--type</span> <span class="val">simple</span>
+<span class="cm"># Dann im Web-UI: Datacenter → SDN</span></code></div>
+  </div>
+</div>
+
+<div class="section theme-cyan">
+  <div class="section-header"><div class="section-icon">🔗</div><div class="section-title">Cluster (pvecm)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Cluster erstellen & beitreten</div>
+<code><span class="kw">pvecm</span> create <span class="val">mycluster</span>
+<span class="kw">pvecm</span> add <span class="val">192.168.1.10</span>     <span class="cm">  # Node hinzufügen</span>
+<span class="kw">pvecm</span> status
+<span class="kw">pvecm</span> nodes
+<span class="kw">pvecm</span> expected 1           <span class="cm">  # Quorum override</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">HA (High Availability)</div>
+<code><span class="kw">ha-manager</span> status
+<span class="kw">ha-manager</span> add vm:<span class="nu">100</span>
+<span class="kw">ha-manager</span> set vm:<span class="nu">100</span> <span class="fl">--state</span> <span class="val">started</span>
+<span class="kw">ha-manager</span> remove vm:<span class="nu">100</span>
+<span class="kw">ha-manager</span> migrate vm:<span class="nu">100</span> <span class="val">pve2</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Ceph (verteilter Storage)</div>
+<code><span class="kw">ceph</span> status
+<span class="kw">ceph</span> osd tree
+<span class="kw">ceph</span> df
+<span class="kw">pveceph</span> init <span class="fl">--network</span> <span class="val">10.0.0.0/24</span>
+<span class="kw">pveceph</span> createosd /dev/sdb
+<span class="kw">pveceph</span> createpool <span class="val">vmstore</span> <span class="fl">--size</span> <span class="nu">3</span></code></div>
+  </div>
+</div>
+
+<div class="section theme-orange">
+  <div class="section-header"><div class="section-icon">🔑</div><div class="section-title">API & Zertifikate</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">REST API mit pvesh</div>
+<code><span class="kw">pvesh</span> get /nodes
+<span class="kw">pvesh</span> get /nodes/pve/status
+<span class="kw">pvesh</span> get /nodes/pve/qemu
+<span class="kw">pvesh</span> get /cluster/resources
+<span class="kw">pvesh</span> create /nodes/pve/qemu/<span class="nu">100</span>/status/start
+<span class="kw">pvesh</span> set /nodes/pve/qemu/<span class="nu">100</span>/config \
+  <span class="fl">--memory</span> <span class="nu">4096</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">API Token erstellen</div>
+<code><span class="kw">pveum</span> user add <span class="val">automation@pve</span>
+<span class="kw">pveum</span> aclmod / <span class="fl">-user</span> <span class="val">automation@pve</span> \
+  <span class="fl">-role</span> <span class="val">PVEVMAdmin</span>
+<span class="kw">pveum</span> user token add <span class="val">automation@pve</span> <span class="val">mytoken</span>
+<span class="cm"># Token für curl/Terraform verwenden</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">SSL-Zertifikat (Let's Encrypt)</div>
+<code><span class="cm"># Im Web-UI: Node → Certificates</span>
+<span class="kw">pvenode</span> acme account register \
+  default <span class="val">email@example.com</span>
+<span class="kw">pvenode</span> config set \
+  <span class="fl">--acmedomain0</span> <span class="val">pve.example.com</span>
+<span class="kw">pvenode</span> acme cert order</code></div>
+  </div>
+</div>
+
+<div class="section theme-red">
+  <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">System & Wartung</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Updates & Pakete</div>
+<code><span class="kw">apt</span> update && <span class="kw">apt</span> dist-upgrade
+<span class="kw">pveam</span> update
+
+<span class="cm"># Enterprise Repo deaktivieren (kein Abo)</span>
+<span class="kw">echo</span> <span class="val">"# deactivated"</span> > \
+  /etc/apt/sources.list.d/pve-enterprise.list
+<span class="cm"># No-Subscription Repo</span>
+<span class="kw">echo</span> <span class="val">"deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription"</span> >> \
+  /etc/apt/sources.list</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Logs & Diagnose</div>
+<code><span class="kw">journalctl</span> -u pve-cluster
+<span class="kw">journalctl</span> -u pvedaemon
+<span class="kw">journalctl</span> -u qemu-server@100
+<span class="kw">tail</span> -f /var/log/pve/tasks/active
+<span class="kw">pvesh</span> get /nodes/pve/tasks         <span class="cm">  # Tasks</span>
+<span class="kw">cat</span> /var/log/syslog | <span class="kw">grep</span> KVM</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Node-Informationen</div>
+<code><span class="kw">pvesh</span> get /nodes/pve/status
+<span class="kw">pveperf</span>                          <span class="cm">  # Benchmark</span>
+<span class="kw">free</span> -h  <span class="kw">df</span> -h  <span class="kw">top</span>
+<span class="kw">systemctl</span> status pve-cluster
+<span class="kw">systemctl</span> status pvedaemon
+<span class="kw">systemctl</span> status pveproxy</code></div>
+  </div>
+  <div class="tip p">💡 Web-UI: <strong>https://IP:8006</strong> — Standard-Login: root / PAM</div>
+</div>
+
+</main>
+<footer><span>Proxmox VE</span> — pve.proxmox.com/wiki · <span>pvesh</span> für API-Zugriff · Forum: forum.proxmox.com</footer>
+</body>
+</html>
