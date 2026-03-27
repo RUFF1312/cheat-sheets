@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>systemd - TheLayer0Guide</title>
+<meta name="description" content="systemd Cheat Sheet — systemctl, journalctl, Unit-Files und System-Management auf einen Blick.">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0d1117;--surface:#161b22;--border:#30363d;
+    --accent:#30D475;--accent2:#58e695;
+    --blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;
+    --cyan:#39c5cf;--red:#f47067;--yellow:#f7c948;
+    --text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#0e1a12 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(48,212,117,0.08),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(48,212,117,0.12);border:1px solid rgba(48,212,117,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span.tool{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  .legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600}
+  .chip.a{background:rgba(48,212,117,0.12);border:1px solid rgba(48,212,117,0.3);color:var(--accent)}
+  .chip.b{background:rgba(63,185,80,0.12);border:1px solid rgba(63,185,80,0.3);color:var(--green)}
+  .chip.c{background:rgba(247,201,72,0.12);border:1px solid rgba(247,201,72,0.3);color:var(--yellow)}
+  .chip.d{background:rgba(163,113,247,0.12);border:1px solid rgba(163,113,247,0.3);color:var(--purple)}
+  .chip.e{background:rgba(57,197,207,0.12);border:1px solid rgba(57,197,207,0.3);color:var(--cyan)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  /* Themes */
+  .theme-green .section-header{background:rgba(48,212,117,0.08)}.theme-green .section-icon{background:rgba(48,212,117,0.15)}.theme-green .section-title{color:var(--accent)}
+  .theme-blue .section-header{background:rgba(61,139,205,0.08)}.theme-blue .section-icon{background:rgba(61,139,205,0.15)}.theme-blue .section-title{color:var(--blue)}
+  .theme-purple .section-header{background:rgba(163,113,247,0.08)}.theme-purple .section-icon{background:rgba(163,113,247,0.15)}.theme-purple .section-title{color:var(--purple)}
+  .theme-yellow .section-header{background:rgba(247,201,72,0.08)}.theme-yellow .section-icon{background:rgba(247,201,72,0.15)}.theme-yellow .section-title{color:var(--yellow)}
+  .theme-red .section-header{background:rgba(244,112,103,0.08)}.theme-red .section-icon{background:rgba(244,112,103,0.15)}.theme-red .section-title{color:var(--red)}
+  .theme-cyan .section-header{background:rgba(57,197,207,0.08)}.theme-cyan .section-icon{background:rgba(57,197,207,0.15)}.theme-cyan .section-title{color:var(--cyan)}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:var(--accent);font-weight:700}
+  .bi{color:var(--blue);font-weight:600}
+  .st{color:var(--green)}
+  .nu{color:var(--red)}
+  .cm{color:var(--muted);font-style:italic}
+  .fn{color:var(--cyan);font-weight:600}
+  .va{color:var(--purple)}
+  .op{color:var(--yellow);font-weight:600}
+  .tip{padding:8px 16px;background:rgba(48,212,117,0.05);border-top:1px dashed rgba(48,212,117,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.b{background:rgba(61,139,205,0.05);border-color:rgba(61,139,205,0.2);color:var(--blue)}
+  .tip.y{background:rgba(247,201,72,0.05);border-color:rgba(247,201,72,0.2);color:var(--yellow)}
+  .tip.p{background:rgba(163,113,247,0.05);border-color:rgba(163,113,247,0.2);color:var(--purple)}
+  .tip.r{background:rgba(244,112,103,0.05);border-color:rgba(244,112,103,0.2);color:var(--red)}
+  .tip.c{background:rgba(57,197,207,0.05);border-color:rgba(57,197,207,0.2);color:var(--cyan)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(48,212,117,0.3);padding:4px 12px;border-radius:4px;background:rgba(48,212,117,0.08)}
+  .nav-link:hover{background:rgba(48,212,117,0.18)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+<link rel="icon" type="image/svg+xml" href="assets/systemd.svg">
+</head>
+<body>
+<header>
+  <a href="index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ System &amp; Service Manager</div>
+      <img src="assets/systemd.svg" alt="systemd Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;">
+      <h1><span class="tool">systemd</span><br>TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ systemctl [command] [UNIT]</p>
+      <div class="legend">
+        <div class="chip a">⚙️ Services</div>
+        <div class="chip b">📜 Logs</div>
+        <div class="chip c">📄 Units</div>
+        <div class="chip d">🛠️ Analyze</div>
+        <div class="chip e">🌐 Network</div>
+      </div>
+    </div>
+    <div class="meta"><strong>systemd / pid 1</strong><br>Init System<br>journald · networkd<br>logind · resolved</div>
+  </div>
+</header>
+<main>
+
+<!-- SERVICE MANAGEMENT -->
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">Service Management</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Service steuern</div>
+<code><span class="kw">systemctl start</span>   <span class="st">app.service</span>
+<span class="kw">systemctl stop</span>    <span class="st">app.service</span>
+<span class="kw">systemctl restart</span> <span class="st">app.service</span>
+<span class="kw">systemctl reload</span>  <span class="st">app.service</span>
+<span class="kw">systemctl status</span>  <span class="st">app.service</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Autostart konfigurieren</div>
+<code><span class="kw">systemctl enable</span>  <span class="st">app.service</span>  <span class="cm"># Aktivieren</span>
+<span class="kw">systemctl disable</span> <span class="st">app.service</span>  <span class="cm"># Deaktivieren</span>
+<span class="kw">systemctl is-enabled</span> <span class="st">app.service</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Units sperren (Masking)</div>
+<code><span class="kw">systemctl mask</span>   <span class="st">app.service</span>   <span class="cm"># Link zu /dev/null</span>
+<span class="kw">systemctl unmask</span> <span class="st">app.service</span></code></div>
+  </div>
+  <div class="tip">💡 <strong>daemon-reload</strong> nach Änderungen an Unit-Files ausführen.</div>
+</div>
+
+<!-- LOGS (JOURNALCTL) -->
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">📜</div><div class="section-title">Journal / Logs</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Logs anzeigen</div>
+<code><span class="kw">journalctl</span>                     <span class="cm"># Alle Logs</span>
+<span class="kw">journalctl -u</span> <span class="st">app.service</span>     <span class="cm"># Nur für Unit</span>
+<span class="kw">journalctl -f</span>                  <span class="cm"># Follow (live)</span>
+<span class="kw">journalctl -xe</span>                 <span class="cm"># Ende + Details</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Zeitliche Filter</div>
+<code><span class="kw">journalctl --since</span> <span class="st">"1 hour ago"</span>
+<span class="kw">journalctl --since</span> <span class="st">"2024-03-27"</span>
+<span class="kw">journalctl --until</span> <span class="st">"15:00"</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Filter &amp; Output</div>
+<code><span class="kw">journalctl -p</span> err              <span class="cm"># Priorities (err, warning, ...)</span>
+<span class="kw">journalctl -b</span>                  <span class="cm"># Logs vom aktuellen Boot</span>
+<span class="kw">journalctl -o</span> json-pretty      <span class="cm"># Formatauflösung</span></code></div>
+  </div>
+</div>
+
+<!-- UNIT FILES -->
+<div class="section theme-yellow">
+  <div class="section-header"><div class="section-icon">📄</div><div class="section-title">Unit Files</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Speicherorte</div>
+<code><span class="st">/etc/systemd/system/</span>         <span class="cm"># User-definierte Units (höchste Prio)</span>
+<span class="st">/lib/systemd/system/</span>         <span class="cm"># Paket-Units</span>
+<span class="st">~/.config/systemd/user/</span>      <span class="cm"># User-spezifische Units</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Unit Struktur (.service)</div>
+<code><span class="kw">[Unit]</span>
+Description=My App
+After=network.target
+
+<span class="kw">[Service]</span>
+Type=simple
+ExecStart=/usr/bin/app
+Restart=always
+
+<span class="kw">[Install]</span>
+WantedBy=multi-user.target</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Editieren &amp; Reload</div>
+<code><span class="kw">systemctl edit</span> <span class="st">app.service</span>     <span class="cm"># Erstellt Drop-in</span>
+<span class="kw">systemctl edit --full</span> <span class="st">app</span>      <span class="cm"># Kopiert Original</span>
+<span class="kw">systemctl daemon-reload</span>        <span class="cm"># Konfig neu laden</span></code></div>
+  </div>
+  <div class="tip y">💡 <strong>Drop-ins</strong> überschreiben nur Teile der Original-Unit (über <code>.d/</code> Ordner).</div>
+</div>
+
+<!-- SYSTEM ANALYSIS -->
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">🛠️</div><div class="section-title">System Analysis</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Boot Performance</div>
+<code><span class="kw">systemd-analyze</span>                <span class="cm"># Boot-Zeit</span>
+<span class="kw">systemd-analyze blame</span>          <span class="cm"># Langsamste Units</span>
+<span class="kw">systemd-analyze critical-chain</span> <span class="cm"># Abhängigkeits-Pfad</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Abhängigkeiten &amp; Baum</div>
+<code><span class="kw">systemctl list-dependencies</span>    <span class="cm"># Baum-Ansicht</span>
+<span class="kw">systemctl cat</span> <span class="st">app.service</span>      <span class="cm"># Inhalt anzeigen</span>
+<span class="kw">systemctl show</span> <span class="st">app.service</span>     <span class="cm"># Low-level Properties</span></code></div>
+  </div>
+</div>
+
+<!-- TOOLS (CTL-FAMILY) -->
+<div class="section theme-cyan">
+  <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">Tools &amp; State</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">System Settings</div>
+<code><span class="kw">hostnamectl</span>                    <span class="cm"># Hostname & OS-Info</span>
+<span class="kw">timedatectl</span>                    <span class="cm"># Zeit & Zeitzone</span>
+<span class="kw">localectl</span>                     <span class="cm"># Tastatur & Locale</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">User Sessions &amp; Power</div>
+<code><span class="kw">loginctl list-sessions</span>         <span class="cm"># Aktive User</span>
+<span class="kw">systemctl reboot</span>               <span class="cm"># Neustart</span>
+<span class="kw">systemctl poweroff</span>             <span class="cm"># Herunterfahren</span>
+<span class="kw">systemctl suspend</span>              <span class="cm"># Standby</span></code></div>
+  </div>
+</div>
+
+<!-- UNIT LISTING -->
+<div class="section theme-red">
+  <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Unit Listing</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Units auflisten</div>
+<code><span class="kw">systemctl list-units</span>           <span class="cm"># Nur aktive</span>
+<span class="kw">systemctl list-units --all</span>     <span class="cm"># Alle im Speicher</span>
+<span class="kw">systemctl list-units --failed</span>  <span class="cm"># Nur fehlgeschlagene</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Unit Files (Filesystem)</div>
+<code><span class="kw">systemctl list-unit-files</span>
+<span class="kw">systemctl list-unit-files --type=service</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Listen filtern</div>
+<code><span class="kw">systemctl</span> <span class="op">--type=</span><span class="st">mount</span>
+<span class="kw">systemctl</span> <span class="op">--state=</span><span class="st">running</span></code></div>
+  </div>
+  <div class="tip r">⚠️ <strong>list-unit-files</strong> zeigt den Installationsstatus (enabled/disabled), <strong>list-units</strong> den Laufzeitstatus.</div>
+</div>
+
+<!-- USER UNITS -->
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">👤</div><div class="section-title">User Mode</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Management</div>
+<code><span class="kw">systemctl --user start</span> <span class="st">app</span>
+<span class="kw">systemctl --user status</span> <span class="st">app</span>
+<span class="kw">journalctl --user -u</span> <span class="st">app</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Linger (Dauerhaftigkeit)</div>
+<code><span class="cm"># Units laufen lassen, wenn User ausgeloggt ist</span>
+<span class="kw">loginctl enable-linger</span> <span class="va">$USER</span>
+<span class="kw">loginctl show-user</span> <span class="va">$USER</span></code></div>
+  </div>
+</div>
+
+</main>
+<footer><span>systemd</span> — systemd.io · freedesktop.org · PID 1 · TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span>Guide</footer>
+</body>
+</html>

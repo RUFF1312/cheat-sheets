@@ -30,6 +30,7 @@ Jedes Sheet / jede Karte hat ihre eigene Akzentfarbe (`--ac`), sowie semi-transp
 - **Git:** `#f05033`
 - **PowerShell:** `#2671be`
 - **Proxmox:** `#e36209`
+- **systemd:** `#30d475`
 
 ## 2. Typografie (Typography)
 

@@ -76,6 +76,8 @@
   .c-kubernetes{--ac:#326CE5;--acs:rgba(50,108,229,0.15);--acb:rgba(50,108,229,0.25)}
   /* Docker */
   .c-docker{--ac:#2496ED;--acs:rgba(36,150,237,0.15);--acb:rgba(36,150,237,0.25)}
+  /* systemd */
+  .c-systemd{--ac:#30D475;--acs:rgba(48,212,117,0.15);--acb:rgba(48,212,117,0.25)}
 
   .card .card-accent{background:var(--ac)}
   .card:hover{border-color:var(--ac)}
@@ -108,13 +110,19 @@
   <div class="header-eyebrow">Developer Reference Collection</div>
   <h1><span class="h1-accent">TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span></span><br>Guide</h1>
   <p class="header-sub">Alle Referenz-Sheets auf einen Blick — dark-themed, vollständig, offline-fähig.</p>
-  <div class="header-count"><span>13</span> Sheets · CLI · Scripting · DevOps · Kubernetes</div>
+  <div class="header-count"><span>14</span> Sheets · CLI · Scripting · DevOps · Kubernetes</div>
 </header>
 
 <main>
   <div class="toolbar">
     <div class="section-label">Alle Referenz-Sheets</div>
     <div class="toolbar-controls">
+      <select id="groupSelect" class="sort-select">
+        <option value="all">Alle Themen</option>
+        <option value="Cloud & Infra">Cloud & Infra</option>
+        <option value="System & Netz">System & Netz</option>
+        <option value="Dev & Automation">Dev & Automation</option>
+      </select>
       <select id="sortSelect" class="sort-select">
         <option value="default">Standard-Sortierung</option>
         <option value="asc">Name A-Z</option>
@@ -126,7 +134,7 @@
   <div class="grid" id="cardGrid">
 
     <!-- OpenStack -->
-    <a href="openstack-cheatsheet.html" class="card c-openstack" data-title="OpenStack CLI">
+    <a href="openstack-cheatsheet.html" class="card c-openstack" data-title="OpenStack CLI" data-group="Cloud & Infra">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -142,7 +150,7 @@
     </a>
 
     <!-- tmux -->
-    <a href="tmux-cheatsheet.html" class="card c-tmux" data-title="tmux">
+    <a href="tmux-cheatsheet.html" class="card c-tmux" data-title="tmux" data-group="System & Netz">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -158,7 +166,7 @@
     </a>
 
     <!-- vi / vim -->
-    <a href="vi-cheatsheet.html" class="card c-vi" data-title="vi / vim">
+    <a href="vi-cheatsheet.html" class="card c-vi" data-title="vi / vim" data-group="System & Netz">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -174,7 +182,7 @@
     </a>
 
     <!-- Ansible -->
-    <a href="ansible-cheatsheet.html" class="card c-ansible" data-title="Ansible">
+    <a href="ansible-cheatsheet.html" class="card c-ansible" data-title="Ansible" data-group="Dev & Automation">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -190,7 +198,7 @@
     </a>
 
     <!-- Python -->
-    <a href="python-cheatsheet.html" class="card c-python" data-title="Python">
+    <a href="python-cheatsheet.html" class="card c-python" data-title="Python" data-group="Dev & Automation">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -206,7 +214,7 @@
     </a>
 
     <!-- Bash -->
-    <a href="bash-cheatsheet.html" class="card c-bash" data-title="Bash">
+    <a href="bash-cheatsheet.html" class="card c-bash" data-title="Bash" data-group="System & Netz">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -222,7 +230,7 @@
     </a>
 
     <!-- Git -->
-    <a href="git-cheatsheet.html" class="card c-git" data-title="Git">
+    <a href="git-cheatsheet.html" class="card c-git" data-title="Git" data-group="Dev & Automation">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -238,7 +246,7 @@
     </a>
 
     <!-- PowerShell -->
-    <a href="powershell-cheatsheet.html" class="card c-ps" data-title="PowerShell">
+    <a href="powershell-cheatsheet.html" class="card c-ps" data-title="PowerShell" data-group="System & Netz">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -254,7 +262,7 @@
     </a>
 
     <!-- Proxmox -->
-    <a href="proxmox-cheatsheet.html" class="card c-proxmox" data-title="Proxmox VE">
+    <a href="proxmox-cheatsheet.html" class="card c-proxmox" data-title="Proxmox VE" data-group="Cloud & Infra">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -270,7 +278,7 @@
     </a>
 
     <!-- Nmcli -->
-    <a href="nmcli-cheatsheet.html" class="card c-nmcli" data-title="nmcli">
+    <a href="nmcli-cheatsheet.html" class="card c-nmcli" data-title="nmcli" data-group="System & Netz">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -286,7 +294,7 @@
     </a>
 
     <!-- SQL -->
-    <a href="sql-cheatsheet.html" class="card c-sql" data-title="SQL">
+    <a href="sql-cheatsheet.html" class="card c-sql" data-title="SQL" data-group="Dev & Automation">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -302,7 +310,7 @@
     </a>
 
     <!-- Kubernetes -->
-    <a href="kubernetes-cheatsheet.html" class="card c-kubernetes" data-title="Kubernetes">
+    <a href="kubernetes-cheatsheet.html" class="card c-kubernetes" data-title="Kubernetes" data-group="Cloud & Infra">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -318,7 +326,7 @@
     </a>
 
     <!-- Helm -->
-    <a href="helm-cheatsheet.html" class="card c-helm" data-title="Helm">
+    <a href="helm-cheatsheet.html" class="card c-helm" data-title="Helm" data-group="Cloud & Infra">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -334,7 +342,7 @@
     </a>
 
     <!-- Docker -->
-    <a href="docker-cheatsheet.html" class="card c-docker" data-title="Docker">
+    <a href="docker-cheatsheet.html" class="card c-docker" data-title="Docker" data-group="Cloud & Infra">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -349,6 +357,22 @@
       </div>
     </a>
 
+    <!-- systemd -->
+    <a href="systemd-cheatsheet.html" class="card c-systemd" data-title="systemd" data-group="System & Netz">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/systemd.svg" alt="systemd.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">systemd</div>
+        </div>
+        <div class="card-tagline">$ systemctl [command] [unit] -- System & Service Manager<br>journalctl · Unit Files · analyze · loginctl</div>
+        <div class="card-tags">
+          <span class="tag">Services</span><span class="tag">Journal</span><span class="tag">Units</span><span class="tag">Boot</span><span class="tag">Linger</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
   </div>
 </main>
 
@@ -358,6 +382,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('searchInput');
     const sortSelect = document.getElementById('sortSelect');
+    const groupSelect = document.getElementById('groupSelect');
     const cardGrid = document.getElementById('cardGrid');
     const cards = Array.from(document.querySelectorAll('.card'));
 
@@ -367,15 +392,19 @@
     const updateGrid = () => {
       const term = searchInput.value.toLowerCase();
       const sortBy = sortSelect.value;
+      const groupFilter = groupSelect.value;
 
-      // 1. Filtern (Suche)
+      // 1. Filtern (Suche & Gruppe)
       cards.forEach(card => {
         const text = card.textContent.toLowerCase();
-        card.style.display = text.includes(term) ? 'block' : 'none';
+        const matchesSearch = text.includes(term);
+        const matchesGroup = groupFilter === 'all' || card.dataset.group === groupFilter;
+        
+        card.style.display = (matchesSearch && matchesGroup) ? 'block' : 'none';
       });
 
       // 2. Sortieren
-      const sortedCards = [...cards].sort((a, b) => {
+      const sortedCards = [...cards].filter(card => card.style.display !== 'none').sort((a, b) => {
         if (sortBy === 'asc') {
           return a.dataset.title.localeCompare(b.dataset.title);
         } else if (sortBy === 'desc') {
@@ -385,12 +414,13 @@
         }
       });
 
-      // 3. Neu anordnen im DOM
+      // 3. Neu anordnen im DOM (nur sichtbare werden ans Ende/in Reihenfolge angefügt)
       sortedCards.forEach(card => cardGrid.appendChild(card));
     };
 
     searchInput.addEventListener('input', updateGrid);
     sortSelect.addEventListener('change', updateGrid);
+    groupSelect.addEventListener('change', updateGrid);
   });
 </script>
 </body>
