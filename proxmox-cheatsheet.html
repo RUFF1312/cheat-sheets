@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Proxmox VE Cheat Sheet</title>
+<title>Proxmox VE - TheLayer0Guide</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#e36209;--accent2:#f0a030;--blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d}
@@ -49,10 +49,11 @@
   .tip.y{background:rgba(240,160,48,0.05);border-color:rgba(240,160,48,0.2);color:var(--accent2)}
   footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
   footer span{color:var(--accent)}
-  .nav-link{position:absolute;top:40px;right:48px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(227,98,9,0.3);padding:4px 12px;border-radius:4px;background:rgba(227,98,9,0.08)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(227,98,9,0.3);padding:4px 12px;border-radius:4px;background:rgba(227,98,9,0.08)}
   .nav-link:hover{background:rgba(227,98,9,0.15)}
   @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
 </style>
+<link rel="icon" type="image/svg+xml" href="assets/proxmox.svg">
 </head>
 <body>
 <header>
@@ -60,7 +61,8 @@
   <div class="header-grid">
     <div>
       <div class="badge">▸ Virtualization Platform Reference</div>
-      <h1><span>Proxmox VE</span><br>Cheat Sheet</h1>
+      <img src="assets/proxmox.svg" alt="Logo" style="width:48px; height:48px; margin-bottom:12px; display:block;">
+<h1><span>Proxmox VE</span><br>TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span>Guide</h1>
       <p class="subtitle">$ pvesh / qm / pct / pvecm -- Proxmox Virtual Environment</p>
       <div class="legend">
         <div class="chip a">🖥 VMs (KVM)</div>

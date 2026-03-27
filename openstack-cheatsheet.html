@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenStack CLI Cheat Sheet</title>
+<title>OpenStack CLI - TheLayer0Guide</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -235,17 +235,23 @@
     font-family: 'JetBrains Mono', monospace;
   }
 
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(232,84,26,0.3);padding:4px 12px;border-radius:4px;background:rgba(232,84,26,0.08)}
+  .nav-link:hover{background:rgba(232,84,26,0.15)}
+
   @media (max-width: 1100px) { main { columns: 2; } }
   @media (max-width: 700px) { main { columns: 1; padding: 16px; } header { padding: 24px 16px; } }
 </style>
+<link rel="icon" type="image/svg+xml" href="assets/openstack.svg">
 </head>
 <body>
 
 <header>
+  <a href="index.html" class="nav-link">← Index</a>
   <div class="header-grid">
     <div>
       <div class="badge">▸ CLI Reference v2024</div>
-      <h1>OpenStack <span>CLI</span><br>Cheat Sheet</h1>
+      <img src="assets/openstack.svg" alt="Logo" style="width:48px; height:48px; margin-bottom:12px; display:block;">
+<h1>OpenStack <span>CLI</span><br>TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span>Guide</h1>
       <p class="subtitle">$ openstack [command] [options] -- unified client</p>
     </div>
     <div class="meta">

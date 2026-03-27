@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dev Cheat Sheets — Index</title>
+<title>TheLayer0Guide</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root{--bg:#0d1117;--surface:#161b22;--surface2:#1c2330;--border:#30363d;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d}
@@ -73,8 +73,11 @@
   .card-arrow{color:var(--ac)}
   .tag{background:var(--acs);border:1px solid var(--acb);color:var(--ac)}
 
-  /* DIVIDER */
-  .section-label{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin:0 0 16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+  /* TOOLBAR & SEARCH */
+  .toolbar{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);margin-bottom:20px;padding-bottom:12px;gap:16px;flex-wrap:wrap}
+  .section-label{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin:0}
+  .search-input{background:var(--code-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:8px 12px;font-size:14px;font-family:'Syne',sans-serif;width:100%;max-width:300px;outline:none;transition:border-color 0.2s}
+  .search-input:focus{border-color:var(--text)}
 
   /* FOOTER */
   footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)}
@@ -82,26 +85,30 @@
   @media(max-width:900px){main{padding:24px}.grid{grid-template-columns:1fr}}
   @media(max-width:600px){header{padding:32px 20px}}
 </style>
+<link rel="icon" type="image/svg+xml" href="assets/gnubash.svg">
 </head>
 <body>
 
 <header>
   <div class="header-eyebrow">Developer Reference Collection</div>
-  <h1><span class="h1-accent">Cheat Sheet</span><br>Index</h1>
+  <h1><span class="h1-accent">TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span></span><br>Guide</h1>
   <p class="header-sub">Alle Referenz-Sheets auf einen Blick — dark-themed, vollständig, offline-fähig.</p>
   <div class="header-count"><span>9</span> Sheets · CLI · Scripting · DevOps · Virtualisierung</div>
 </header>
 
 <main>
-  <div class="section-label">Alle Referenz-Sheets</div>
-  <div class="grid">
+  <div class="toolbar">
+    <div class="section-label">Alle Referenz-Sheets</div>
+    <input type="text" id="searchInput" class="search-input" placeholder="Suche nach Sheets, Commands, Tags...">
+  </div>
+  <div class="grid" id="cardGrid">
 
     <!-- OpenStack -->
     <a href="openstack-cheatsheet.html" class="card c-openstack">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
-          <div class="card-icon">☁️</div>
+          <div class="card-icon"><img src="assets/openstack.svg" alt="openstack.svg" style="width:24px;height:24px;"></div>
           <div class="card-name">OpenStack CLI</div>
         </div>
         <div class="card-tagline">$ openstack [service] [action] -- unified client<br>python-openstackclient · Nova · Neutron · Cinder</div>
@@ -117,7 +124,7 @@
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
-          <div class="card-icon">🖥</div>
+          <div class="card-icon"><img src="assets/tmux.svg" alt="tmux.svg" style="width:24px;height:24px;"></div>
           <div class="card-name">tmux</div>
         </div>
         <div class="card-tagline">$ tmux -- terminal multiplexer<br>Sessions · Windows · Panes · Copy Mode</div>
@@ -133,7 +140,7 @@
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
-          <div class="card-icon">📝</div>
+          <div class="card-icon"><img src="assets/vim.svg" alt="vim.svg" style="width:24px;height:24px;"></div>
           <div class="card-name">vi / vim</div>
         </div>
         <div class="card-tagline">$ vim [file] -- modal text editor<br>Normal · Insert · Visual · Command</div>
@@ -149,7 +156,7 @@
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
-          <div class="card-icon">⚙️</div>
+          <div class="card-icon"><img src="assets/ansible.svg" alt="ansible.svg" style="width:24px;height:24px;"></div>
           <div class="card-name">Ansible</div>
         </div>
         <div class="card-tagline">$ ansible-playbook playbook.yml -- agentless automation<br>Playbooks · Roles · Vault · Galaxy</div>
@@ -165,7 +172,7 @@
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
-          <div class="card-icon">🐍</div>
+          <div class="card-icon"><img src="assets/python.svg" alt="python.svg" style="width:24px;height:24px;"></div>
           <div class="card-name">Python</div>
         </div>
         <div class="card-tagline">$ python3 script.py -- batteries included<br>Python 3.10+ · Type Hints · Async · Stdlib</div>
@@ -181,7 +188,7 @@
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
-          <div class="card-icon">🐚</div>
+          <div class="card-icon"><img src="assets/gnubash.svg" alt="gnubash.svg" style="width:24px;height:24px;"></div>
           <div class="card-name">Bash</div>
         </div>
         <div class="card-tagline">$ bash script.sh -- Bourne Again Shell<br>Variablen · Arrays · Pipes · Prozesse</div>
@@ -197,7 +204,7 @@
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
-          <div class="card-icon">🔀</div>
+          <div class="card-icon"><img src="assets/git.svg" alt="git.svg" style="width:24px;height:24px;"></div>
           <div class="card-name">Git</div>
         </div>
         <div class="card-tagline">$ git [command] -- distributed version control<br>Commits · Branches · Rebase · Remote</div>
@@ -213,7 +220,7 @@
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
-          <div class="card-icon">🔵</div>
+          <div class="card-icon"><img src="assets/powershell.svg" alt="powershell.svg" style="width:24px;height:24px;"></div>
           <div class="card-name">PowerShell</div>
         </div>
         <div class="card-tagline">PS> [Verb]-[Noun] -- object-based shell<br>PS 7+ · Cmdlets · Pipeline · Remoting</div>
@@ -229,7 +236,7 @@
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
-          <div class="card-icon">🖧</div>
+          <div class="card-icon"><img src="assets/proxmox.svg" alt="proxmox.svg" style="width:24px;height:24px;"></div>
           <div class="card-name">Proxmox VE</div>
         </div>
         <div class="card-tagline">$ qm / pct / pvecm -- Virtualization Platform<br>KVM · LXC · Cluster · Ceph · Backup</div>
@@ -243,6 +250,25 @@
   </div>
 </main>
 
-<footer>Dev Cheat Sheet Collection · dark-themed · offline-fähig · kein CDN außer Google Fonts</footer>
+<footer>TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span>Guide · dark-themed · offline-fähig · kein CDN außer Google Fonts</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+    const cards = document.querySelectorAll('.card');
+
+    searchInput.addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase();
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (text.includes(term)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
 </body>
 </html>

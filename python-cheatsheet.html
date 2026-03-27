@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Python Cheat Sheet</title>
+<title>Python - TheLayer0Guide</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -243,17 +243,23 @@
   }
   footer span { color: var(--accent); }
 
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(247,201,72,0.3);padding:4px 12px;border-radius:4px;background:rgba(247,201,72,0.08)}
+  .nav-link:hover{background:rgba(247,201,72,0.15)}
+
   @media (max-width: 1100px) { main { columns: 2; } }
   @media (max-width: 700px)  { main { columns: 1; padding: 16px; } header { padding: 24px 16px; } }
 </style>
+<link rel="icon" type="image/svg+xml" href="assets/python.svg">
 </head>
 <body>
 
 <header>
+  <a href="index.html" class="nav-link">← Index</a>
   <div class="header-grid">
     <div>
       <div class="badge">▸ Language Reference</div>
-      <h1><span>Python</span><br>Cheat Sheet</h1>
+      <img src="assets/python.svg" alt="Logo" style="width:48px; height:48px; margin-bottom:12px; display:block;">
+<h1><span>Python</span><br>TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span>Guide</h1>
       <p class="subtitle">$ python3 script.py -- batteries included</p>
       <div class="version-legend">
         <div class="version-chip py3">🐍 Python 3.10+</div>
