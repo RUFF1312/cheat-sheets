@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vi / vim Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --accent: #c778dd;
+    --accent2: #f0a030;
+    --blue: #3d8bcd;
+    --green: #3fb950;
+    --purple: #a371f7;
+    --cyan: #39c5cf;
+    --red: #f47067;
+    --text: #e6edf3;
+    --muted: #7d8590;
+    --code-bg: #10161d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0d1117 0%, #180d1f 50%, #0d1117 100%);
+    border-bottom: 2px solid var(--accent);
+    padding: 40px 48px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 600px 200px at 60% 50%, rgba(199,120,221,0.08), transparent);
+  }
+  .header-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 24px;
+    position: relative;
+  }
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(199,120,221,0.12);
+    border: 1px solid rgba(199,120,221,0.3);
+    padding: 3px 10px;
+    border-radius: 3px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  h1 span { color: var(--accent); }
+  .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .meta {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+  .meta strong { color: var(--accent2); }
+
+  /* MODE LEGEND */
+  .mode-legend {
+    position: relative;
+    margin-top: 18px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .mode-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    border-radius: 4px;
+    padding: 4px 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .mode-chip.normal  { background: rgba(199,120,221,0.12); border: 1px solid rgba(199,120,221,0.3); color: var(--accent); }
+  .mode-chip.insert  { background: rgba(63,185,80,0.12);   border: 1px solid rgba(63,185,80,0.3);   color: var(--green); }
+  .mode-chip.visual  { background: rgba(61,139,205,0.12);  border: 1px solid rgba(61,139,205,0.3);  color: var(--blue); }
+  .mode-chip.command { background: rgba(240,160,48,0.12);  border: 1px solid rgba(240,160,48,0.3);  color: var(--accent2); }
+  .mode-chip.replace { background: rgba(244,112,103,0.12); border: 1px solid rgba(244,112,103,0.3); color: var(--red); }
+
+  /* LAYOUT */
+  main {
+    padding: 32px 48px;
+    max-width: 1400px;
+    margin: 0 auto;
+    columns: 3;
+    column-gap: 20px;
+  }
+
+  /* SECTION CARDS */
+  .section {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* COLOR THEMES */
+  .theme-purple .section-header { background: rgba(199,120,221,0.08); }
+  .theme-purple .section-icon   { background: rgba(199,120,221,0.15); }
+  .theme-purple .section-title  { color: var(--accent); }
+
+  .theme-green .section-header  { background: rgba(63,185,80,0.08); }
+  .theme-green .section-icon    { background: rgba(63,185,80,0.15); }
+  .theme-green .section-title   { color: var(--green); }
+
+  .theme-blue .section-header   { background: rgba(61,139,205,0.08); }
+  .theme-blue .section-icon     { background: rgba(61,139,205,0.15); }
+  .theme-blue .section-title    { color: var(--blue); }
+
+  .theme-yellow .section-header { background: rgba(240,160,48,0.08); }
+  .theme-yellow .section-icon   { background: rgba(240,160,48,0.15); }
+  .theme-yellow .section-title  { color: var(--accent2); }
+
+  .theme-cyan .section-header   { background: rgba(57,197,207,0.08); }
+  .theme-cyan .section-icon     { background: rgba(57,197,207,0.15); }
+  .theme-cyan .section-title    { color: var(--cyan); }
+
+  .theme-red .section-header    { background: rgba(244,112,103,0.08); }
+  .theme-red .section-icon      { background: rgba(244,112,103,0.15); }
+  .theme-red .section-title     { color: var(--red); }
+
+  /* COMMAND ENTRIES */
+  .command-list { padding: 8px 0; }
+  .cmd-entry {
+    padding: 6px 16px;
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+  }
+  .cmd-entry:last-child { border-bottom: none; }
+  .cmd-desc {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 3px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--text);
+    background: var(--code-bg);
+    display: block;
+    padding: 5px 9px;
+    border-radius: 4px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  /* Syntax tokens */
+  .k  { color: #c778dd; font-weight: 700; }   /* key / command */
+  .n  { color: #f0a030; font-weight: 600; }   /* number / count */
+  .m  { color: #3fb950; font-weight: 600; }   /* motion */
+  .op { color: #3d8bcd; }                      /* operator */
+  .cm { color: #7d8590; font-style: italic; }  /* comment */
+  .ex { color: #39c5cf; font-weight: 600; }    /* ex command */
+  .re { color: #f47067; }                      /* regex / replace */
+  .fl { color: #3d8bcd; }                      /* flag */
+
+  /* TIP */
+  .tip {
+    padding: 8px 16px;
+    background: rgba(199,120,221,0.05);
+    border-top: 1px dashed rgba(199,120,221,0.2);
+    font-size: 11px;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .tip.green  { background: rgba(63,185,80,0.05);  border-color: rgba(63,185,80,0.2);  color: var(--green); }
+  .tip.yellow { background: rgba(240,160,48,0.05); border-color: rgba(240,160,48,0.2); color: var(--accent2); }
+  .tip.cyan   { background: rgba(57,197,207,0.05); border-color: rgba(57,197,207,0.2); color: var(--cyan); }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px 48px;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  footer span { color: var(--accent); }
+
+  @media (max-width: 1100px) { main { columns: 2; } }
+  @media (max-width: 700px)  { main { columns: 1; padding: 16px; } header { padding: 24px 16px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Modal Editor Reference</div>
+      <h1><span>vi</span> / vim<br>Cheat Sheet</h1>
+      <p class="subtitle">$ vim [file]  --  modal text editor</p>
+      <div class="mode-legend">
+        <div class="mode-chip normal"> NORMAL</div>
+        <div class="mode-chip insert"> INSERT  i / a / o</div>
+        <div class="mode-chip visual"> VISUAL  v / V / Ctrl+v</div>
+        <div class="mode-chip command"> COMMAND  :</div>
+        <div class="mode-chip replace"> REPLACE  R</div>
+      </div>
+    </div>
+    <div class="meta">
+      <strong>vi / vim / neovim</strong><br>
+      Normal · Insert · Visual<br>
+      Command · Replace<br>
+      Buffers · Registers · Macros
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- MODES -->
+  <div class="section theme-purple">
+    <div class="section-header">
+      <div class="section-icon">🔄</div>
+      <div class="section-title">Modi wechseln</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">In den Insert-Modus</div>
+        <code><span class="k">i</span>   <span class="cm">  vor dem Cursor einfügen</span>
+<span class="k">I</span>   <span class="cm">  am Zeilenanfang einfügen</span>
+<span class="k">a</span>   <span class="cm">  nach dem Cursor anhängen</span>
+<span class="k">A</span>   <span class="cm">  am Zeilenende anhängen</span>
+<span class="k">o</span>   <span class="cm">  neue Zeile darunter</span>
+<span class="k">O</span>   <span class="cm">  neue Zeile darüber</span>
+<span class="k">s</span>   <span class="cm">  Zeichen ersetzen + Insert</span>
+<span class="k">S</span>   <span class="cm">  Zeile ersetzen + Insert</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Zurück zu Normal / andere Modi</div>
+        <code><span class="k">Esc</span>        <span class="cm">  → Normal Mode</span>
+<span class="k">Ctrl+c</span>     <span class="cm">  → Normal Mode (schneller)</span>
+<span class="k">v</span>          <span class="cm">  → Visual (zeichenweise)</span>
+<span class="k">V</span>          <span class="cm">  → Visual Line</span>
+<span class="k">Ctrl+v</span>     <span class="cm">  → Visual Block</span>
+<span class="k">R</span>          <span class="cm">  → Replace Mode</span>
+<span class="k">:</span>          <span class="cm">  → Command Mode</span></code>
+      </div>
+    </div>
+    <div class="tip">💡 Im Insert-Modus: <strong>Ctrl+o</strong> führt einen Normal-Befehl aus</div>
+  </div>
+
+  <!-- MOVEMENT -->
+  <div class="section theme-blue">
+    <div class="section-header">
+      <div class="section-icon">🧭</div>
+      <div class="section-title">Navigation — Cursor bewegen</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Grundbewegungen</div>
+        <code><span class="k">h</span> <span class="k">j</span> <span class="k">k</span> <span class="k">l</span>    <span class="cm">  ←↓↑→</span>
+<span class="k">w</span>          <span class="cm">  Wortanfang vorwärts</span>
+<span class="k">W</span>          <span class="cm">  Wortanfang (inkl. Satzz.)</span>
+<span class="k">b</span>          <span class="cm">  Wortanfang rückwärts</span>
+<span class="k">B</span>          <span class="cm">  Wortanfang rückw. (inkl.)</span>
+<span class="k">e</span>          <span class="cm">  Wortende vorwärts</span>
+<span class="k">E</span>          <span class="cm">  Wortende (inkl. Satzz.)</span>
+<span class="k">ge</span>         <span class="cm">  Wortende rückwärts</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Zeile</div>
+        <code><span class="k">0</span>   <span class="cm">  Zeilenanfang (Spalte 0)</span>
+<span class="k">^</span>   <span class="cm">  Erstes Nicht-Leerzeichen</span>
+<span class="k">$</span>   <span class="cm">  Zeilenende</span>
+<span class="k">g_</span>  <span class="cm">  Letztes Nicht-Leerzeichen</span>
+<span class="k">f</span><span class="n">x</span>  <span class="cm">  Nächstes Zeichen x finden</span>
+<span class="k">F</span><span class="n">x</span>  <span class="cm">  Vorheriges Zeichen x</span>
+<span class="k">t</span><span class="n">x</span>  <span class="cm">  Bis vor Zeichen x</span>
+<span class="k">T</span><span class="n">x</span>  <span class="cm">  Bis vor Zeichen x (rückw.)</span>
+<span class="k">;</span>   <span class="cm">  f/t Bewegung wiederholen</span>
+<span class="k">,</span>   <span class="cm">  f/t Bewegung umkehren</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Datei & Bildschirm</div>
+        <code><span class="k">gg</span>      <span class="cm">  Dateianfang</span>
+<span class="k">G</span>       <span class="cm">  Dateiende</span>
+<span class="n">42</span><span class="k">G</span>     <span class="cm">  Zeile 42</span>
+<span class="k">:</span><span class="n">42</span>     <span class="cm">  Zeile 42 (Command Mode)</span>
+<span class="k">H</span>       <span class="cm">  Bildschirm oben</span>
+<span class="k">M</span>       <span class="cm">  Bildschirm Mitte</span>
+<span class="k">L</span>       <span class="cm">  Bildschirm unten</span>
+<span class="k">Ctrl+d</span>  <span class="cm">  Halb runter scrollen</span>
+<span class="k">Ctrl+u</span>  <span class="cm">  Halb rauf scrollen</span>
+<span class="k">Ctrl+f</span>  <span class="cm">  Seite runter</span>
+<span class="k">Ctrl+b</span>  <span class="cm">  Seite rauf</span>
+<span class="k">zz</span>      <span class="cm">  Cursor zentrieren</span>
+<span class="k">zt</span>      <span class="cm">  Cursor nach oben</span>
+<span class="k">zb</span>      <span class="cm">  Cursor nach unten</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Sprünge & Marks</div>
+        <code><span class="k">%</span>       <span class="cm">  Klammer-Partner springen</span>
+<span class="k">m</span><span class="n">a</span>      <span class="cm">  Mark 'a' setzen</span>
+<span class="k">'</span><span class="n">a</span>      <span class="cm">  Zu Mark 'a' (Zeilenanf.)</span>
+<span class="k">`</span><span class="n">a</span>      <span class="cm">  Zu Mark 'a' (genau)</span>
+<span class="k">''</span>      <span class="cm">  Vorherige Position</span>
+<span class="k">Ctrl+o</span>  <span class="cm">  Sprunghistorie zurück</span>
+<span class="k">Ctrl+i</span>  <span class="cm">  Sprunghistorie vorwärts</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDITING -->
+  <div class="section theme-green">
+    <div class="section-header">
+      <div class="section-icon">✏️</div>
+      <div class="section-title">Bearbeiten — Normal Mode</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Löschen (Operator + Motion)</div>
+        <code><span class="k">x</span>       <span class="cm">  Zeichen unter Cursor löschen</span>
+<span class="k">X</span>       <span class="cm">  Zeichen links löschen</span>
+<span class="k">dd</span>      <span class="cm">  Zeile löschen</span>
+<span class="k">D</span>       <span class="cm">  Bis Zeilenende löschen</span>
+<span class="k">dw</span>      <span class="cm">  Wort löschen</span>
+<span class="k">d</span><span class="n">3</span><span class="k">w</span>     <span class="cm">  3 Wörter löschen</span>
+<span class="k">dG</span>      <span class="cm">  Bis Dateiende löschen</span>
+<span class="k">d</span><span class="n">0</span>      <span class="cm">  Bis Zeilenanfang löschen</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Kopieren (yank) & Einfügen</div>
+        <code><span class="k">yy</span>      <span class="cm">  Zeile kopieren</span>
+<span class="k">Y</span>       <span class="cm">  Zeile kopieren (= yy)</span>
+<span class="k">yw</span>      <span class="cm">  Wort kopieren</span>
+<span class="k">y</span><span class="n">3</span><span class="k">j</span>     <span class="cm">  3 Zeilen kopieren</span>
+<span class="k">p</span>       <span class="cm">  Nach Cursor einfügen</span>
+<span class="k">P</span>       <span class="cm">  Vor Cursor einfügen</span>
+<span class="k">]p</span>      <span class="cm">  Einfügen + Einrückung</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Ändern (change)</div>
+        <code><span class="k">cc</span>      <span class="cm">  Zeile ändern → Insert</span>
+<span class="k">C</span>       <span class="cm">  Bis Ende ändern → Insert</span>
+<span class="k">cw</span>      <span class="cm">  Wort ändern → Insert</span>
+<span class="k">ci"</span>     <span class="cm">  Inhalt in " ändern</span>
+<span class="k">ci(</span>     <span class="cm">  Inhalt in () ändern</span>
+<span class="k">ca{</span>     <span class="cm">  Inhalt inkl. {} ändern</span>
+<span class="k">r</span><span class="n">x</span>      <span class="cm">  Zeichen durch x ersetzen</span>
+<span class="k">R</span>       <span class="cm">  Replace Mode (überschreiben)</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Undo, Redo & Wiederholen</div>
+        <code><span class="k">u</span>       <span class="cm">  Rückgängig (undo)</span>
+<span class="k">Ctrl+r</span>  <span class="cm">  Wiederherstellen (redo)</span>
+<span class="k">U</span>       <span class="cm">  Zeile wiederherstellen</span>
+<span class="k">.</span>       <span class="cm">  Letzten Befehl wiederholen</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Einrückung & Transformation</div>
+        <code><span class="k">&gt;&gt;</span>      <span class="cm">  Zeile einrücken</span>
+<span class="k">&lt;&lt;</span>      <span class="cm">  Einrückung entfernen</span>
+<span class="k">==</span>      <span class="cm">  Zeile auto-einrücken</span>
+<span class="k">gg=G</span>    <span class="cm">  Gesamte Datei einrücken</span>
+<span class="k">~</span>       <span class="cm">  Groß-/Kleinschreibung</span>
+<span class="k">gu</span><span class="m">w</span>     <span class="cm">  Wort → Kleinbuchstaben</span>
+<span class="k">gU</span><span class="m">w</span>     <span class="cm">  Wort → Großbuchstaben</span>
+<span class="k">J</span>       <span class="cm">  Zeilen zusammenfügen</span></code>
+      </div>
+    </div>
+    <div class="tip green">💡 Operator + Motion: <strong>d</strong>elete, <strong>c</strong>hange, <strong>y</strong>ank + w b e j k …</div>
+  </div>
+
+  <!-- TEXT OBJECTS -->
+  <div class="section theme-cyan">
+    <div class="section-header">
+      <div class="section-icon">🎯</div>
+      <div class="section-title">Text Objects (i = inner, a = around)</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Kombinationen: di / da / ci / ca / yi / ya</div>
+        <code><span class="op">i</span><span class="k">w</span>  <span class="cm">  Wort (inner word)</span>
+<span class="op">a</span><span class="k">w</span>  <span class="cm">  Wort + Leerzeichen (a word)</span>
+<span class="op">i</span><span class="k">s</span>  <span class="cm">  Satz (inner sentence)</span>
+<span class="op">i</span><span class="k">p</span>  <span class="cm">  Absatz (inner paragraph)</span>
+<span class="op">i</span><span class="k">"</span>  <span class="cm">  Inhalt in doppelten " "</span>
+<span class="op">i</span><span class="k">'</span>  <span class="cm">  Inhalt in einfachen ' '</span>
+<span class="op">i</span><span class="k">`</span>  <span class="cm">  Inhalt in Backticks</span>
+<span class="op">i</span><span class="k">(</span>  <span class="cm">  Inhalt in ( )  — auch ib</span>
+<span class="op">i</span><span class="k">[</span>  <span class="cm">  Inhalt in [ ]</span>
+<span class="op">i</span><span class="k">{</span>  <span class="cm">  Inhalt in { }  — auch iB</span>
+<span class="op">i</span><span class="k">&lt;</span>  <span class="cm">  Inhalt in &lt; &gt;</span>
+<span class="op">i</span><span class="k">t</span>  <span class="cm">  Inhalt in HTML-Tag</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Beispiele</div>
+        <code><span class="k">ci"</span>   <span class="cm">  Text in "" ändern</span>
+<span class="k">da(</span>   <span class="cm">  () inkl. Klammern löschen</span>
+<span class="k">yip</span>   <span class="cm">  Absatz kopieren</span>
+<span class="k">vit</span>   <span class="cm">  Tag-Inhalt visuell wählen</span>
+<span class="k">caW</span>   <span class="cm">  Wort + Leerzeichen ändern</span></code>
+      </div>
+    </div>
+    <div class="tip cyan">💡 Zahl davor möglich: <strong>2dw</strong> = 2 Wörter löschen, <strong>3yy</strong> = 3 Zeilen kopieren</div>
+  </div>
+
+  <!-- SEARCH & REPLACE -->
+  <div class="section theme-yellow">
+    <div class="section-header">
+      <div class="section-icon">🔍</div>
+      <div class="section-title">Suchen & Ersetzen</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Suchen</div>
+        <code><span class="k">/</span><span class="re">muster</span>   <span class="cm">  Vorwärts suchen</span>
+<span class="k">?</span><span class="re">muster</span>   <span class="cm">  Rückwärts suchen</span>
+<span class="k">n</span>          <span class="cm">  Nächste Fundstelle</span>
+<span class="k">N</span>          <span class="cm">  Vorherige Fundstelle</span>
+<span class="k">*</span>          <span class="cm">  Wort unter Cursor suchen</span>
+<span class="k">#</span>          <span class="cm">  Wort rückwärts suchen</span>
+<span class="k">g*</span>         <span class="cm">  Teilstring suchen</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Ersetzen (Substitute)</div>
+        <code><span class="ex">:s/</span><span class="re">alt</span><span class="ex">/</span><span class="m">neu</span><span class="ex">/</span>       <span class="cm">  1. Fund in Zeile</span>
+<span class="ex">:s/</span><span class="re">alt</span><span class="ex">/</span><span class="m">neu</span><span class="ex">/g</span>      <span class="cm">  Alle in Zeile</span>
+<span class="ex">:%s/</span><span class="re">alt</span><span class="ex">/</span><span class="m">neu</span><span class="ex">/g</span>     <span class="cm">  Alle in Datei</span>
+<span class="ex">:%s/</span><span class="re">alt</span><span class="ex">/</span><span class="m">neu</span><span class="ex">/gc</span>    <span class="cm">  Mit Bestätigung</span>
+<span class="ex">:%s/</span><span class="re">alt</span><span class="ex">/</span><span class="m">neu</span><span class="ex">/gi</span>    <span class="cm">  Case-insensitiv</span>
+<span class="ex">:5,12s/</span><span class="re">a</span><span class="ex">/</span><span class="m">b</span><span class="ex">/g</span>    <span class="cm">  Zeilen 5–12</span>
+<span class="ex">:'&lt;,'&gt;s/</span><span class="re">a</span><span class="ex">/</span><span class="m">b</span><span class="ex">/g</span>   <span class="cm">  Nur Auswahl</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Nützliche Regex-Sonderzeichen</div>
+        <code><span class="re">\w</span>   <span class="cm">  Wortzeichen (a-z, 0-9, _)</span>
+<span class="re">\s</span>   <span class="cm">  Leerzeichen / Tab</span>
+<span class="re">\d</span>   <span class="cm">  Ziffer (vim: \d)</span>
+<span class="re">^</span>    <span class="cm">  Zeilenanfang</span>
+<span class="re">$</span>    <span class="cm">  Zeilenende</span>
+<span class="re">.</span>    <span class="cm">  Beliebiges Zeichen</span>
+<span class="re">\&lt;</span>   <span class="cm">  Wortanfang</span>
+<span class="re">\&gt;</span>   <span class="cm">  Wortende</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Suchoptionen</div>
+        <code><span class="ex">:set</span> <span class="fl">hlsearch</span>    <span class="cm">  Treffer hervorheben</span>
+<span class="ex">:set</span> <span class="fl">incsearch</span>    <span class="cm">  Inkrementell suchen</span>
+<span class="ex">:set</span> <span class="fl">ignorecase</span>   <span class="cm">  Groß-/Kleinschr. ignorieren</span>
+<span class="ex">:set</span> <span class="fl">smartcase</span>    <span class="cm">  Smart Case (empfohlen)</span>
+<span class="ex">:noh</span>             <span class="cm">  Hervorhebung entfernen</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISUAL MODE -->
+  <div class="section theme-blue">
+    <div class="section-header">
+      <div class="section-icon">🔵</div>
+      <div class="section-title">Visual Mode</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Auswahl starten</div>
+        <code><span class="k">v</span>        <span class="cm">  Zeichenweise</span>
+<span class="k">V</span>        <span class="cm">  Zeilenweise</span>
+<span class="k">Ctrl+v</span>   <span class="cm">  Block (Spalten)</span>
+<span class="k">gv</span>       <span class="cm">  Letzte Auswahl wiederholen</span>
+<span class="k">o</span>        <span class="cm">  Auswahlende wechseln</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Aktionen auf Auswahl</div>
+        <code><span class="k">d</span>  <span class="cm">  Löschen</span>
+<span class="k">y</span>  <span class="cm">  Kopieren (yank)</span>
+<span class="k">c</span>  <span class="cm">  Ändern → Insert Mode</span>
+<span class="k">&gt;</span>  <span class="cm">  Einrücken</span>
+<span class="k">&lt;</span>  <span class="cm">  Einrückung entfernen</span>
+<span class="k">~</span>  <span class="cm">  Groß-/Kleinschr. umschalten</span>
+<span class="k">u</span>  <span class="cm">  Kleinbuchstaben</span>
+<span class="k">U</span>  <span class="cm">  Großbuchstaben</span>
+<span class="k">=</span>  <span class="cm">  Auto-Einrücken</span>
+<span class="k">J</span>  <span class="cm">  Zeilen verbinden</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Block-Modus (Ctrl+v)</div>
+        <code><span class="k">Ctrl+v</span> → Spalte wählen → <span class="k">I</span>
+<span class="cm">  Text vor Block einfügen → Esc</span>
+<span class="k">Ctrl+v</span> → Spalte wählen → <span class="k">A</span>
+<span class="cm">  Text hinter Block anhängen</span>
+<span class="k">Ctrl+v</span> → Zeilen wählen → <span class="k">$A</span>
+<span class="cm">  Am Zeilenende jeder Zeile</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILES & BUFFERS -->
+  <div class="section theme-yellow">
+    <div class="section-header">
+      <div class="section-icon">📁</div>
+      <div class="section-title">Dateien, Buffers & Tabs</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Datei öffnen / speichern / beenden</div>
+        <code><span class="ex">:e</span> <span class="m">datei.txt</span>  <span class="cm">  Datei öffnen</span>
+<span class="ex">:w</span>            <span class="cm">  Speichern</span>
+<span class="ex">:w</span> <span class="m">neu.txt</span>    <span class="cm">  Speichern unter</span>
+<span class="ex">:wq</span>           <span class="cm">  Speichern & beenden</span>
+<span class="ex">:q</span>            <span class="cm">  Beenden</span>
+<span class="ex">:q!</span>           <span class="cm">  Ohne Speichern beenden</span>
+<span class="ex">:x</span>            <span class="cm">  Speichern & beenden (= :wq)</span>
+<span class="k">ZZ</span>            <span class="cm">  Speichern & beenden (Normal)</span>
+<span class="k">ZQ</span>            <span class="cm">  Ohne Speichern (Normal)</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Buffer verwalten</div>
+        <code><span class="ex">:ls</span>           <span class="cm">  Buffer auflisten</span>
+<span class="ex">:b</span> <span class="n">2</span>          <span class="cm">  Buffer 2 wechseln</span>
+<span class="ex">:b</span> <span class="m">datei</span>      <span class="cm">  Buffer per Name</span>
+<span class="ex">:bn</span>           <span class="cm">  Nächster Buffer</span>
+<span class="ex">:bp</span>           <span class="cm">  Vorheriger Buffer</span>
+<span class="ex">:bd</span>           <span class="cm">  Buffer schließen</span>
+<span class="ex">:e</span> <span class="fl">#</span>          <span class="cm">  Letzten Buffer öffnen</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Splits & Tabs</div>
+        <code><span class="ex">:sp</span>  <span class="m">datei</span>    <span class="cm">  Horizontal splitten</span>
+<span class="ex">:vsp</span> <span class="m">datei</span>    <span class="cm">  Vertikal splitten</span>
+<span class="k">Ctrl+w</span> <span class="k">h/j/k/l</span>  <span class="cm">  Split navigieren</span>
+<span class="k">Ctrl+w</span> <span class="k">w</span>      <span class="cm">  Nächsten Split</span>
+<span class="k">Ctrl+w</span> <span class="k">=</span>      <span class="cm">  Gleiche Größe</span>
+<span class="ex">:tabnew</span> <span class="m">datei</span> <span class="cm">  Neuer Tab</span>
+<span class="k">gt</span>            <span class="cm">  Nächster Tab</span>
+<span class="k">gT</span>            <span class="cm">  Vorheriger Tab</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTERS & MACROS -->
+  <div class="section theme-purple">
+    <div class="section-header">
+      <div class="section-icon">🎬</div>
+      <div class="section-title">Register & Makros</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Register verwenden</div>
+        <code><span class="k">"</span><span class="n">a</span><span class="k">yy</span>   <span class="cm">  Zeile in Register a kopieren</span>
+<span class="k">"</span><span class="n">a</span><span class="k">p</span>    <span class="cm">  Aus Register a einfügen</span>
+<span class="k">"</span><span class="n">+</span><span class="k">y</span>    <span class="cm">  In Systemclipboard kopieren</span>
+<span class="k">"</span><span class="n">+</span><span class="k">p</span>    <span class="cm">  Aus Systemclipboard einfügen</span>
+<span class="k">"</span><span class="n">0</span><span class="k">p</span>    <span class="cm">  Letzten Yank einfügen</span>
+<span class="k">"</span><span class="n">_</span><span class="k">d</span>    <span class="cm">  Löschen ohne Register (void)</span>
+<span class="ex">:reg</span>   <span class="cm">  Alle Register anzeigen</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Makros aufnehmen & abspielen</div>
+        <code><span class="k">q</span><span class="n">a</span>     <span class="cm">  Makro in Register a aufnehmen</span>
+<span class="cm">  ... Befehle ausführen ...</span>
+<span class="k">q</span>      <span class="cm">  Aufnahme stoppen</span>
+<span class="k">@</span><span class="n">a</span>     <span class="cm">  Makro a abspielen</span>
+<span class="k">@@</span>     <span class="cm">  Letztes Makro wiederholen</span>
+<span class="n">5</span><span class="k">@</span><span class="n">a</span>    <span class="cm">  Makro 5× abspielen</span>
+<span class="ex">:norm</span> <span class="k">@</span><span class="n">a</span>  <span class="cm">  Makro auf jede Zeile</span></code>
+      </div>
+    </div>
+    <div class="tip">💡 Makro bearbeiten: <strong>"ap</strong> → editieren → <strong>"ayy</strong> → zurück</div>
+  </div>
+
+  <!-- COMMAND MODE -->
+  <div class="section theme-red">
+    <div class="section-header">
+      <div class="section-icon">⌨️</div>
+      <div class="section-title">Command Mode — Ex-Befehle</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Zeilenbereiche</div>
+        <code><span class="ex">:</span><span class="n">5</span>       <span class="cm">  Zeile 5</span>
+<span class="ex">:</span><span class="n">5</span>,<span class="n">10</span>    <span class="cm">  Zeilen 5 bis 10</span>
+<span class="ex">:</span><span class="n">%</span>       <span class="cm">  Gesamte Datei</span>
+<span class="ex">:</span><span class="n">.</span>       <span class="cm">  Aktuelle Zeile</span>
+<span class="ex">:</span><span class="n">$</span>       <span class="cm">  Letzte Zeile</span>
+<span class="ex">:'&lt;,'&gt;</span>  <span class="cm">  Visuelle Auswahl</span>
+<span class="ex">:.,+5</span>   <span class="cm">  Aktuelle bis +5 Zeilen</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Nützliche Ex-Befehle</div>
+        <code><span class="ex">:g/</span><span class="re">muster</span><span class="ex">/d</span>   <span class="cm">  Zeilen mit Muster löschen</span>
+<span class="ex">:v/</span><span class="re">muster</span><span class="ex">/d</span>   <span class="cm">  Zeilen ohne Muster löschen</span>
+<span class="ex">:g/</span><span class="re">muster</span><span class="ex">/p</span>   <span class="cm">  Zeilen mit Muster anzeigen</span>
+<span class="ex">:sort</span>          <span class="cm">  Zeilen sortieren</span>
+<span class="ex">:sort</span> <span class="fl">u</span>        <span class="cm">  Sortieren + Duplikate weg</span>
+<span class="ex">:sort</span> <span class="fl">!</span>        <span class="cm">  Umgekehrt sortieren</span>
+<span class="ex">:retab</span>         <span class="cm">  Tabs → Spaces</span>
+<span class="ex">:%s/\s\+$//e</span>  <span class="cm">  Trailing Whitespace weg</span>
+<span class="ex">:!</span><span class="m">ls</span>           <span class="cm">  Shell-Befehl ausführen</span>
+<span class="ex">:r!</span><span class="m">date</span>        <span class="cm">  Ausgabe in Datei einfügen</span></code>
+      </div>
+    </div>
+    <div class="tip yellow">💡 Tipp: <strong>:earlier 1m</strong> / <strong>:later 1m</strong> — Zeitbasiertes Undo!</div>
+  </div>
+
+  <!-- VIMRC -->
+  <div class="section theme-purple">
+    <div class="section-header">
+      <div class="section-icon">⚙️</div>
+      <div class="section-title">~/.vimrc — Konfiguration</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Grundeinstellungen</div>
+        <code><span class="ex">set</span> <span class="fl">nocompatible</span>       <span class="cm">  Modernes vim</span>
+<span class="ex">set</span> <span class="fl">number</span>             <span class="cm">  Zeilennummern</span>
+<span class="ex">set</span> <span class="fl">relativenumber</span>     <span class="cm">  Relative Nummern</span>
+<span class="ex">set</span> <span class="fl">tabstop</span>=<span class="n">2</span>          <span class="cm">  Tab-Breite</span>
+<span class="ex">set</span> <span class="fl">shiftwidth</span>=<span class="n">2</span>       <span class="cm">  Einrückung</span>
+<span class="ex">set</span> <span class="fl">expandtab</span>          <span class="cm">  Tabs → Spaces</span>
+<span class="ex">set</span> <span class="fl">autoindent</span>         <span class="cm">  Auto-Einrückung</span>
+<span class="ex">set</span> <span class="fl">smartindent</span>        <span class="cm">  Intelligente Einrückung</span>
+<span class="ex">set</span> <span class="fl">wrap</span>               <span class="cm">  Zeilenumbruch</span>
+<span class="ex">set</span> <span class="fl">cursorline</span>         <span class="cm">  Aktuelle Zeile hervorheben</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Suche & Darstellung</div>
+        <code><span class="ex">set</span> <span class="fl">hlsearch</span>          <span class="cm">  Treffer hervorheben</span>
+<span class="ex">set</span> <span class="fl">incsearch</span>          <span class="cm">  Inkrementelle Suche</span>
+<span class="ex">set</span> <span class="fl">ignorecase</span>         <span class="cm">  Groß-/Kleinschr. ignorieren</span>
+<span class="ex">set</span> <span class="fl">smartcase</span>          <span class="cm">  Bei Großbuchst. case-sensitive</span>
+<span class="ex">syntax</span> <span class="fl">on</span>              <span class="cm">  Syntax-Highlighting</span>
+<span class="ex">set</span> <span class="fl">background</span>=dark    <span class="cm">  Dunkles Theme</span>
+<span class="ex">colorscheme</span> <span class="m">desert</span>    <span class="cm">  Farbschema setzen</span>
+<span class="ex">set</span> <span class="fl">termguicolors</span>      <span class="cm">  True Color</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Nützliche Mappings</div>
+        <code><span class="cm">" Leader-Taste setzen</span>
+<span class="ex">let</span> mapleader=<span class="re">" "</span>
+<span class="cm">" Escape-Alternative</span>
+<span class="ex">inoremap</span> <span class="k">jk</span> &lt;Esc&gt;
+<span class="cm">" Datei speichern</span>
+<span class="ex">nnoremap</span> &lt;leader&gt;<span class="k">w</span> :w&lt;CR&gt;
+<span class="cm">" Suche löschen</span>
+<span class="ex">nnoremap</span> &lt;leader&gt;&lt;space&gt; :noh&lt;CR&gt;
+<span class="cm">" Split navigieren</span>
+<span class="ex">nnoremap</span> &lt;C-h&gt; &lt;C-w&gt;h
+<span class="ex">nnoremap</span> &lt;C-l&gt; &lt;C-w&gt;l</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- HANDY COMBOS -->
+  <div class="section theme-cyan">
+    <div class="section-header">
+      <div class="section-icon">⚡</div>
+      <div class="section-title">Nützliche Kombinationen</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Häufige Muster</div>
+        <code><span class="k">ciw</span>    <span class="cm">  Wort komplett ersetzen</span>
+<span class="k">daw</span>    <span class="cm">  Wort inkl. Leerzeichen löschen</span>
+<span class="k">ggdG</span>   <span class="cm">  Gesamten Inhalt löschen</span>
+<span class="k">ggyG</span>   <span class="cm">  Gesamten Inhalt kopieren</span>
+<span class="k">yi(</span>    <span class="cm">  Klammerinhalt kopieren</span>
+<span class="k">va{</span>    <span class="cm">  Block inkl. {} auswählen</span>
+<span class="k">dt,</span>    <span class="cm">  Bis zum Komma löschen</span>
+<span class="k">ct.</span>    <span class="cm">  Bis zum Punkt ändern</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Zeilen & Cursor</div>
+        <code><span class="k">ddp</span>    <span class="cm">  Zeile nach unten verschieben</span>
+<span class="k">ddkP</span>   <span class="cm">  Zeile nach oben verschieben</span>
+<span class="k">yiwp</span>   <span class="cm">  Wort duplizieren</span>
+<span class="k">xp</span>     <span class="cm">  Zeichen tauschen</span>
+<span class="k">ea</span>     <span class="cm">  Am Wortende anhängen</span>
+<span class="k">bi</span>     <span class="cm">  Vor Wortanfang einfügen</span>
+<span class="k">A;&lt;Esc&gt;</span><span class="cm">  Semikolon ans Zeilenende</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Mehrere Dateien</div>
+        <code><span class="ex">:args</span> <span class="m">*.py</span>         <span class="cm">  Alle .py-Dateien laden</span>
+<span class="ex">:argdo</span> <span class="m">%s/a/b/ge</span>  <span class="cm">  In allen ersetzen</span>
+<span class="ex">:bufdo</span> <span class="m">%s/a/b/ge</span>  <span class="cm">  In allen Buffern ersetzen</span>
+<span class="ex">:windo</span> <span class="m">diffthis</span>    <span class="cm">  Diff auf alle Splits</span></code>
+      </div>
+    </div>
+    <div class="tip cyan">💡 Tipp: <strong>:set paste</strong> vor dem Einfügen aus Clipboard (kein Auto-Indent)</div>
+  </div>
+
+</main>
+
+<footer>
+  <span>vi</span> / <span>vim</span> — <span>:help</span> für die eingebaute Dokumentation &nbsp;·&nbsp;
+  vimhelp.org &nbsp;·&nbsp; vim.rtorr.com &nbsp;·&nbsp;
+  <span>:Tutor</span> für interaktive Einführung
+</footer>
+
+</body>
+</html>

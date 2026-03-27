@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ansible Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --accent: #e8313a;
+    --accent2: #f0a030;
+    --blue: #3d8bcd;
+    --green: #3fb950;
+    --purple: #a371f7;
+    --cyan: #39c5cf;
+    --red: #e8313a;
+    --text: #e6edf3;
+    --muted: #7d8590;
+    --code-bg: #10161d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0d1117 0%, #1f0b0b 50%, #0d1117 100%);
+    border-bottom: 2px solid var(--accent);
+    padding: 40px 48px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 600px 200px at 60% 50%, rgba(232,49,58,0.08), transparent);
+  }
+  .header-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 24px;
+    position: relative;
+  }
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(232,49,58,0.12);
+    border: 1px solid rgba(232,49,58,0.3);
+    padding: 3px 10px;
+    border-radius: 3px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  h1 span { color: var(--accent); }
+  .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .meta {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+  .meta strong { color: var(--accent2); }
+
+  /* CONCEPT LEGEND */
+  .concept-legend {
+    position: relative;
+    margin-top: 18px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .concept-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    border-radius: 4px;
+    padding: 4px 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .concept-chip.playbook  { background: rgba(232,49,58,0.12);  border: 1px solid rgba(232,49,58,0.3);  color: var(--accent); }
+  .concept-chip.inventory { background: rgba(63,185,80,0.12);  border: 1px solid rgba(63,185,80,0.3);  color: var(--green); }
+  .concept-chip.role      { background: rgba(163,113,247,0.12);border: 1px solid rgba(163,113,247,0.3);color: var(--purple); }
+  .concept-chip.module    { background: rgba(61,139,205,0.12); border: 1px solid rgba(61,139,205,0.3); color: var(--blue); }
+  .concept-chip.vars      { background: rgba(240,160,48,0.12); border: 1px solid rgba(240,160,48,0.3); color: var(--accent2); }
+
+  /* LAYOUT */
+  main {
+    padding: 32px 48px;
+    max-width: 1400px;
+    margin: 0 auto;
+    columns: 3;
+    column-gap: 20px;
+  }
+
+  /* SECTION CARDS */
+  .section {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* COLOR THEMES */
+  .theme-red .section-header    { background: rgba(232,49,58,0.08); }
+  .theme-red .section-icon      { background: rgba(232,49,58,0.15); }
+  .theme-red .section-title     { color: var(--accent); }
+
+  .theme-green .section-header  { background: rgba(63,185,80,0.08); }
+  .theme-green .section-icon    { background: rgba(63,185,80,0.15); }
+  .theme-green .section-title   { color: var(--green); }
+
+  .theme-blue .section-header   { background: rgba(61,139,205,0.08); }
+  .theme-blue .section-icon     { background: rgba(61,139,205,0.15); }
+  .theme-blue .section-title    { color: var(--blue); }
+
+  .theme-purple .section-header { background: rgba(163,113,247,0.08); }
+  .theme-purple .section-icon   { background: rgba(163,113,247,0.15); }
+  .theme-purple .section-title  { color: var(--purple); }
+
+  .theme-yellow .section-header { background: rgba(240,160,48,0.08); }
+  .theme-yellow .section-icon   { background: rgba(240,160,48,0.15); }
+  .theme-yellow .section-title  { color: var(--accent2); }
+
+  .theme-cyan .section-header   { background: rgba(57,197,207,0.08); }
+  .theme-cyan .section-icon     { background: rgba(57,197,207,0.15); }
+  .theme-cyan .section-title    { color: var(--cyan); }
+
+  /* COMMAND ENTRIES */
+  .command-list { padding: 8px 0; }
+  .cmd-entry {
+    padding: 6px 16px;
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+  }
+  .cmd-entry:last-child { border-bottom: none; }
+  .cmd-desc {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 3px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--text);
+    background: var(--code-bg);
+    display: block;
+    padding: 5px 9px;
+    border-radius: 4px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  /* Syntax tokens */
+  .kw  { color: #e8313a; font-weight: 700; }   /* ansible-playbook / ansible */
+  .fl  { color: #3d8bcd; }                      /* flag / option */
+  .val { color: #3fb950; }                      /* value */
+  .var { color: #a371f7; }                      /* variable / name */
+  .key { color: #f0a030; font-weight: 600; }    /* YAML key */
+  .str { color: #3fb950; }                      /* string value */
+  .cmt { color: #7d8590; font-style: italic; }  /* comment */
+  .mod { color: #39c5cf; font-weight: 600; }    /* module name */
+  .tag { color: #e8313a; font-weight: 600; }    /* tag / special */
+
+  /* TIP */
+  .tip {
+    padding: 8px 16px;
+    background: rgba(232,49,58,0.05);
+    border-top: 1px dashed rgba(232,49,58,0.2);
+    font-size: 11px;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .tip.green  { background: rgba(63,185,80,0.05);  border-color: rgba(63,185,80,0.25);  color: var(--green); }
+  .tip.blue   { background: rgba(61,139,205,0.05); border-color: rgba(61,139,205,0.25); color: var(--blue); }
+  .tip.yellow { background: rgba(240,160,48,0.05); border-color: rgba(240,160,48,0.25); color: var(--accent2); }
+  .tip.cyan   { background: rgba(57,197,207,0.05); border-color: rgba(57,197,207,0.25); color: var(--cyan); }
+  .tip.purple { background: rgba(163,113,247,0.05);border-color: rgba(163,113,247,0.25);color: var(--purple); }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px 48px;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  footer span { color: var(--accent); }
+
+  @media (max-width: 1100px) { main { columns: 2; } }
+  @media (max-width: 700px)  { main { columns: 1; padding: 16px; } header { padding: 24px 16px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ IT Automation Reference</div>
+      <h1><span>Ansible</span><br>Cheat Sheet</h1>
+      <p class="subtitle">$ ansible-playbook playbook.yml -- agentless automation</p>
+      <div class="concept-legend">
+        <div class="concept-chip playbook">📋 Playbook</div>
+        <div class="concept-chip inventory">📦 Inventory</div>
+        <div class="concept-chip role">🎭 Role</div>
+        <div class="concept-chip module">🔧 Module</div>
+        <div class="concept-chip vars">📝 Variables</div>
+      </div>
+    </div>
+    <div class="meta">
+      <strong>ansible-core</strong><br>
+      Playbooks · Roles · Vars<br>
+      Inventory · Vault · Galaxy<br>
+      Modules · Templates · Handlers
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- AD-HOC COMMANDS -->
+  <div class="section theme-red">
+    <div class="section-header">
+      <div class="section-icon">⚡</div>
+      <div class="section-title">Ad-hoc Befehle</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Ping / Verbindung testen</div>
+        <code><span class="kw">ansible</span> <span class="val">all</span> <span class="fl">-m</span> <span class="mod">ping</span>
+<span class="kw">ansible</span> <span class="val">webservers</span> <span class="fl">-m</span> <span class="mod">ping</span>
+<span class="kw">ansible</span> <span class="val">all</span> <span class="fl">-m</span> <span class="mod">ping</span> <span class="fl">-i</span> <span class="var">inventory.ini</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Befehl ausführen</div>
+        <code><span class="kw">ansible</span> <span class="val">all</span> <span class="fl">-m</span> <span class="mod">command</span> <span class="fl">-a</span> <span class="str">"uptime"</span>
+<span class="kw">ansible</span> <span class="val">all</span> <span class="fl">-m</span> <span class="mod">shell</span>   <span class="fl">-a</span> <span class="str">"df -h | grep /dev"</span>
+<span class="kw">ansible</span> <span class="val">all</span> <span class="fl">-m</span> <span class="mod">raw</span>     <span class="fl">-a</span> <span class="str">"uname -r"</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Paket installieren / Service</div>
+        <code><span class="kw">ansible</span> <span class="val">all</span> <span class="fl">-m</span> <span class="mod">apt</span> \
+  <span class="fl">-a</span> <span class="str">"name=nginx state=present"</span> <span class="fl">-b</span>
+<span class="kw">ansible</span> <span class="val">all</span> <span class="fl">-m</span> <span class="mod">service</span> \
+  <span class="fl">-a</span> <span class="str">"name=nginx state=started"</span> <span class="fl">-b</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Datei kopieren / Facts sammeln</div>
+        <code><span class="kw">ansible</span> <span class="val">all</span> <span class="fl">-m</span> <span class="mod">copy</span> \
+  <span class="fl">-a</span> <span class="str">"src=file.conf dest=/etc/file.conf"</span>
+<span class="kw">ansible</span> <span class="val">all</span> <span class="fl">-m</span> <span class="mod">setup</span>
+<span class="kw">ansible</span> <span class="val">all</span> <span class="fl">-m</span> <span class="mod">setup</span> <span class="fl">-a</span> <span class="str">"filter=ansible_os*"</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Wichtige Flags</div>
+        <code><span class="fl">-i</span> <span class="var">hosts</span>       <span class="cmt">  Inventory-Datei</span>
+<span class="fl">-u</span> <span class="var">user</span>        <span class="cmt">  Remote-Benutzer</span>
+<span class="fl">-b</span>             <span class="cmt">  become (sudo)</span>
+<span class="fl">--become-user</span> <span class="var">root</span>  <span class="cmt">  Als User</span>
+<span class="fl">-k</span>             <span class="cmt">  SSH-Passwort abfragen</span>
+<span class="fl">-K</span>             <span class="cmt">  sudo-Passwort abfragen</span>
+<span class="fl">-f</span> <span class="var">10</span>          <span class="cmt">  Forks (Parallelität)</span>
+<span class="fl">-v / -vvv</span>     <span class="cmt">  Verbose</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLAYBOOK AUSFÜHREN -->
+  <div class="section theme-red">
+    <div class="section-header">
+      <div class="section-icon">▶️</div>
+      <div class="section-title">ansible-playbook — Ausführen</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Grundlegende Ausführung</div>
+        <code><span class="kw">ansible-playbook</span> <span class="var">playbook.yml</span>
+<span class="kw">ansible-playbook</span> <span class="var">playbook.yml</span> <span class="fl">-i</span> <span class="var">hosts</span>
+<span class="kw">ansible-playbook</span> <span class="var">playbook.yml</span> <span class="fl">-v</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Ausführung einschränken</div>
+        <code><span class="kw">ansible-playbook</span> <span class="var">site.yml</span> \
+  <span class="fl">--limit</span> <span class="val">webservers</span>
+<span class="kw">ansible-playbook</span> <span class="var">site.yml</span> \
+  <span class="fl">--limit</span> <span class="val">host1,host2</span>
+<span class="kw">ansible-playbook</span> <span class="var">site.yml</span> \
+  <span class="fl">--tags</span> <span class="val">deploy,config</span>
+<span class="kw">ansible-playbook</span> <span class="var">site.yml</span> \
+  <span class="fl">--skip-tags</span> <span class="val">debug</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Variablen übergeben</div>
+        <code><span class="kw">ansible-playbook</span> <span class="var">site.yml</span> \
+  <span class="fl">-e</span> <span class="str">"env=prod version=1.2"</span>
+<span class="kw">ansible-playbook</span> <span class="var">site.yml</span> \
+  <span class="fl">-e</span> <span class="str">@vars/extra.yml</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Testen & Prüfen</div>
+        <code><span class="kw">ansible-playbook</span> <span class="var">site.yml</span> <span class="fl">--check</span>    <span class="cmt"> dry-run</span>
+<span class="kw">ansible-playbook</span> <span class="var">site.yml</span> <span class="fl">--diff</span>     <span class="cmt"> Änderungen</span>
+<span class="kw">ansible-playbook</span> <span class="var">site.yml</span> <span class="fl">--syntax-check</span>
+<span class="kw">ansible-playbook</span> <span class="var">site.yml</span> <span class="fl">--list-tasks</span>
+<span class="kw">ansible-playbook</span> <span class="var">site.yml</span> <span class="fl">--list-hosts</span>
+<span class="kw">ansible-playbook</span> <span class="var">site.yml</span> <span class="fl">--step</span>     <span class="cmt"> interaktiv</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Ab bestimmtem Task starten</div>
+        <code><span class="kw">ansible-playbook</span> <span class="var">site.yml</span> \
+  <span class="fl">--start-at-task</span> <span class="str">"Install nginx"</span></code>
+      </div>
+    </div>
+    <div class="tip">💡 <strong>--check --diff</strong> kombinieren für sicheres Testen vor dem Ausrollen</div>
+  </div>
+
+  <!-- INVENTORY -->
+  <div class="section theme-green">
+    <div class="section-header">
+      <div class="section-icon">📦</div>
+      <div class="section-title">Inventory</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">INI-Format (hosts / inventory.ini)</div>
+        <code><span class="cmt"># Einzelne Hosts</span>
+<span class="val">web1.example.com</span>
+<span class="val">web2.example.com</span> <span class="key">ansible_port</span>=<span class="str">2222</span>
+
+<span class="cmt"># Gruppen</span>
+[<span class="var">webservers</span>]
+<span class="val">web1.example.com</span>
+<span class="val">web2.example.com</span>
+
+[<span class="var">dbservers</span>]
+<span class="val">db1.example.com</span>
+
+<span class="cmt"># Gruppe von Gruppen</span>
+[<span class="var">production</span>:<span class="tag">children</span>]
+<span class="val">webservers</span>
+<span class="val">dbservers</span>
+
+<span class="cmt"># Gruppen-Variablen</span>
+[<span class="var">webservers</span>:<span class="tag">vars</span>]
+<span class="key">ansible_user</span>=<span class="str">deploy</span>
+<span class="key">http_port</span>=<span class="str">80</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">YAML-Format (inventory.yml)</div>
+        <code><span class="tag">all:</span>
+  <span class="key">children:</span>
+    <span class="var">webservers:</span>
+      <span class="key">hosts:</span>
+        <span class="val">web1.example.com:</span>
+          <span class="key">ansible_user:</span> <span class="str">deploy</span>
+        <span class="val">web2.example.com:</span>
+    <span class="var">dbservers:</span>
+      <span class="key">hosts:</span>
+        <span class="val">db1.example.com:</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Inventory prüfen</div>
+        <code><span class="kw">ansible-inventory</span> <span class="fl">--list</span>
+<span class="kw">ansible-inventory</span> <span class="fl">--graph</span>
+<span class="kw">ansible-inventory</span> <span class="fl">--host</span> <span class="var">web1</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Verbindungs-Variablen</div>
+        <code><span class="key">ansible_host</span>        <span class="cmt">  IP / Hostname</span>
+<span class="key">ansible_port</span>        <span class="cmt">  SSH-Port (default 22)</span>
+<span class="key">ansible_user</span>        <span class="cmt">  SSH-Benutzer</span>
+<span class="key">ansible_password</span>    <span class="cmt">  SSH-Passwort</span>
+<span class="key">ansible_ssh_private_key_file</span>
+<span class="key">ansible_become</span>      <span class="cmt">  true/false</span>
+<span class="key">ansible_become_user</span> <span class="cmt">  z.B. root</span>
+<span class="key">ansible_python_interpreter</span> <span class="cmt"> /usr/bin/python3</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLAYBOOK STRUKTUR -->
+  <div class="section theme-blue">
+    <div class="section-header">
+      <div class="section-icon">📋</div>
+      <div class="section-title">Playbook — Struktur</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Vollständiges Playbook-Beispiel</div>
+        <code><span class="cmt">---</span>
+- <span class="key">name:</span> <span class="str">Webserver einrichten</span>
+  <span class="key">hosts:</span> <span class="val">webservers</span>
+  <span class="key">become:</span> <span class="val">true</span>
+  <span class="key">vars:</span>
+    <span class="key">http_port:</span> <span class="val">80</span>
+    <span class="key">app_name:</span> <span class="str">myapp</span>
+
+  <span class="key">pre_tasks:</span>
+    - <span class="key">name:</span> <span class="str">System aktualisieren</span>
+      <span class="mod">apt:</span>
+        <span class="key">update_cache:</span> <span class="val">true</span>
+
+  <span class="key">tasks:</span>
+    - <span class="key">name:</span> <span class="str">Nginx installieren</span>
+      <span class="mod">apt:</span>
+        <span class="key">name:</span> <span class="str">nginx</span>
+        <span class="key">state:</span> <span class="str">present</span>
+      <span class="key">notify:</span> <span class="str">Restart nginx</span>
+
+    - <span class="key">name:</span> <span class="str">Config deployen</span>
+      <span class="mod">template:</span>
+        <span class="key">src:</span> <span class="str">nginx.conf.j2</span>
+        <span class="key">dest:</span> <span class="str">/etc/nginx/nginx.conf</span>
+
+  <span class="key">handlers:</span>
+    - <span class="key">name:</span> <span class="str">Restart nginx</span>
+      <span class="mod">service:</span>
+        <span class="key">name:</span> <span class="str">nginx</span>
+        <span class="key">state:</span> <span class="str">restarted</span>
+
+  <span class="key">post_tasks:</span>
+    - <span class="key">name:</span> <span class="str">Smoke test</span>
+      <span class="mod">uri:</span>
+        <span class="key">url:</span> <span class="str">http://localhost</span>
+        <span class="key">status_code:</span> <span class="val">200</span></code>
+      </div>
+    </div>
+    <div class="tip blue">💡 Handler laufen immer <strong>am Ende</strong> des Plays — egal wie oft notifiziert</div>
+  </div>
+
+  <!-- VARIABLEN -->
+  <div class="section theme-yellow">
+    <div class="section-header">
+      <div class="section-icon">📝</div>
+      <div class="section-title">Variablen & Facts</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Variablen definieren</div>
+        <code><span class="cmt"># Im Playbook</span>
+<span class="key">vars:</span>
+  <span class="key">app_port:</span> <span class="val">8080</span>
+  <span class="key">app_name:</span> <span class="str">myapp</span>
+
+<span class="cmt"># Als Datei einbinden</span>
+<span class="key">vars_files:</span>
+  - <span class="str">vars/main.yml</span>
+  - <span class="str">vars/secrets.yml</span>
+
+<span class="cmt"># Interaktiv abfragen</span>
+<span class="key">vars_prompt:</span>
+  - <span class="key">name:</span> <span class="str">username</span>
+    <span class="key">prompt:</span> <span class="str">Benutzername?</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Variablen verwenden (Jinja2)</div>
+        <code><span class="cmt"># Einfache Verwendung</span>
+<span class="key">dest:</span> <span class="str">"/etc/{{ app_name }}.conf"</span>
+
+<span class="cmt"># Filter anwenden</span>
+<span class="str">{{ app_name | upper }}</span>
+<span class="str">{{ liste | join(', ') }}</span>
+<span class="str">{{ var | default('fallback') }}</span>
+<span class="str">{{ pfad | basename }}</span>
+<span class="str">{{ zahl | int }}</span>
+
+<span class="cmt"># Bedingung</span>
+<span class="str">{{ 'prod' if env == 'production' else 'dev' }}</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Ansible Facts</div>
+        <code><span class="str">{{ ansible_hostname }}</span>        <span class="cmt">  Hostname</span>
+<span class="str">{{ ansible_os_family }}</span>       <span class="cmt">  Debian / RedHat</span>
+<span class="str">{{ ansible_distribution }}</span>    <span class="cmt">  Ubuntu / CentOS</span>
+<span class="str">{{ ansible_default_ipv4.address }}</span>
+<span class="str">{{ ansible_memtotal_mb }}</span>      <span class="cmt">  RAM gesamt</span>
+<span class="str">{{ ansible_processor_vcpus }}</span>  <span class="cmt">  CPU-Kerne</span>
+<span class="str">{{ ansible_env.HOME }}</span>        <span class="cmt">  Env-Variablen</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Variable Priorität (niedrig → hoch)</div>
+        <code><span class="cmt">role defaults → inventory → playbook vars</span>
+<span class="cmt">→ vars_files → set_fact → -e (extra vars)</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Variable registrieren</div>
+        <code>- <span class="key">name:</span> <span class="str">Ausgabe speichern</span>
+  <span class="mod">command:</span> <span class="str">whoami</span>
+  <span class="key">register:</span> <span class="var">cmd_output</span>
+
+- <span class="mod">debug:</span>
+    <span class="key">msg:</span> <span class="str">"{{ cmd_output.stdout }}"</span></code>
+      </div>
+    </div>
+    <div class="tip yellow">💡 <strong>group_vars/all.yml</strong> und <strong>host_vars/hostname.yml</strong> für strukturierte Vars</div>
+  </div>
+
+  <!-- TASKS & CONTROL FLOW -->
+  <div class="section theme-purple">
+    <div class="section-header">
+      <div class="section-icon">🔀</div>
+      <div class="section-title">Tasks — Steuerung & Schleifen</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Bedingungen (when)</div>
+        <code>- <span class="key">name:</span> <span class="str">Nur auf Debian</span>
+  <span class="mod">apt:</span>
+    <span class="key">name:</span> <span class="str">nginx</span>
+  <span class="key">when:</span> <span class="var">ansible_os_family == "Debian"</span>
+
+- <span class="key">name:</span> <span class="str">Mehrere Bedingungen</span>
+  <span class="mod">command:</span> <span class="str">echo ok</span>
+  <span class="key">when:</span>
+    - <span class="var">env == "production"</span>
+    - <span class="var">ansible_memtotal_mb &gt; 1024</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Schleifen (loop)</div>
+        <code>- <span class="key">name:</span> <span class="str">Pakete installieren</span>
+  <span class="mod">apt:</span>
+    <span class="key">name:</span> <span class="str">"{{ item }}"</span>
+    <span class="key">state:</span> <span class="str">present</span>
+  <span class="key">loop:</span>
+    - <span class="str">nginx</span>
+    - <span class="str">curl</span>
+    - <span class="str">git</span>
+
+- <span class="key">name:</span> <span class="str">Dict-Schleife</span>
+  <span class="mod">user:</span>
+    <span class="key">name:</span>  <span class="str">"{{ item.name }}"</span>
+    <span class="key">state:</span> <span class="str">"{{ item.state }}"</span>
+  <span class="key">loop:</span>
+    - { <span class="key">name:</span> <span class="str">alice</span>, <span class="key">state:</span> <span class="str">present</span> }
+    - { <span class="key">name:</span> <span class="str">bob</span>,   <span class="key">state:</span> <span class="str">absent</span>  }</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Fehlerbehandlung</div>
+        <code>- <span class="key">name:</span> <span class="str">Fehler ignorieren</span>
+  <span class="mod">command:</span> <span class="str">/bin/false</span>
+  <span class="key">ignore_errors:</span> <span class="val">true</span>
+
+- <span class="key">name:</span> <span class="str">Eigene Fehlerbedingung</span>
+  <span class="mod">command:</span> <span class="str">check_status.sh</span>
+  <span class="key">register:</span> <span class="var">result</span>
+  <span class="key">failed_when:</span> <span class="var">result.rc != 0</span>
+
+- <span class="key">name:</span> <span class="str">Immer als changed markieren</span>
+  <span class="mod">command:</span> <span class="str">deploy.sh</span>
+  <span class="key">changed_when:</span> <span class="val">false</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Blöcke & Rescue</div>
+        <code><span class="key">block:</span>
+  - <span class="key">name:</span> <span class="str">Task 1</span>
+    <span class="mod">command:</span> <span class="str">riskytask.sh</span>
+  - <span class="key">name:</span> <span class="str">Task 2</span>
+    <span class="mod">command:</span> <span class="str">nexttask.sh</span>
+<span class="key">rescue:</span>
+  - <span class="key">name:</span> <span class="str">Fehler-Handler</span>
+    <span class="mod">debug:</span>
+      <span class="key">msg:</span> <span class="str">"Etwas ging schief"</span>
+<span class="key">always:</span>
+  - <span class="key">name:</span> <span class="str">Aufräumen</span>
+    <span class="mod">command:</span> <span class="str">cleanup.sh</span></code>
+      </div>
+    </div>
+    <div class="tip purple">💡 <strong>loop_control: label: "{{ item.name }}"</strong> für lesbarere Ausgabe</div>
+  </div>
+
+  <!-- HÄUFIGE MODULE -->
+  <div class="section theme-cyan">
+    <div class="section-header">
+      <div class="section-icon">🔧</div>
+      <div class="section-title">Wichtige Module</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Dateien & Verzeichnisse</div>
+        <code><span class="mod">copy:</span>
+  <span class="key">src:</span> <span class="str">local.conf</span>  <span class="key">dest:</span> <span class="str">/etc/app.conf</span>
+  <span class="key">owner:</span> <span class="str">root</span>  <span class="key">mode:</span> <span class="str">'0644'</span>
+
+<span class="mod">template:</span>
+  <span class="key">src:</span> <span class="str">app.conf.j2</span>  <span class="key">dest:</span> <span class="str">/etc/app.conf</span>
+
+<span class="mod">file:</span>
+  <span class="key">path:</span> <span class="str">/opt/myapp</span>  <span class="key">state:</span> <span class="str">directory</span>
+  <span class="key">mode:</span> <span class="str">'0755'</span>
+
+<span class="mod">lineinfile:</span>
+  <span class="key">path:</span>   <span class="str">/etc/hosts</span>
+  <span class="key">line:</span>   <span class="str">'192.168.1.1 myhost'</span>
+  <span class="key">state:</span>  <span class="str">present</span>
+
+<span class="mod">fetch:</span>
+  <span class="key">src:</span> <span class="str">/var/log/app.log</span>  <span class="key">dest:</span> <span class="str">./logs/</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Pakete & Services</div>
+        <code><span class="mod">apt:</span>        <span class="cmt">  # Debian/Ubuntu</span>
+  <span class="key">name:</span> <span class="str">nginx</span>  <span class="key">state:</span> <span class="str">present</span>
+  <span class="key">update_cache:</span> <span class="val">true</span>
+
+<span class="mod">yum:</span> / <span class="mod">dnf:</span>  <span class="cmt">  # RHEL/CentOS</span>
+  <span class="key">name:</span> <span class="str">nginx</span>  <span class="key">state:</span> <span class="str">latest</span>
+
+<span class="mod">package:</span>    <span class="cmt">  # generisch (auto-detect)</span>
+  <span class="key">name:</span> <span class="str">nginx</span>  <span class="key">state:</span> <span class="str">present</span>
+
+<span class="mod">service:</span>
+  <span class="key">name:</span>    <span class="str">nginx</span>
+  <span class="key">state:</span>   <span class="str">started</span>
+  <span class="key">enabled:</span> <span class="val">true</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Benutzer & System</div>
+        <code><span class="mod">user:</span>
+  <span class="key">name:</span>    <span class="str">deploy</span>
+  <span class="key">shell:</span>   <span class="str">/bin/bash</span>
+  <span class="key">groups:</span>  <span class="str">sudo</span>
+  <span class="key">state:</span>   <span class="str">present</span>
+
+<span class="mod">authorized_key:</span>
+  <span class="key">user:</span> <span class="str">deploy</span>
+  <span class="key">key:</span>  <span class="str">"{{ lookup('file','~/.ssh/id_rsa.pub') }}"</span>
+
+<span class="mod">cron:</span>
+  <span class="key">name:</span>   <span class="str">Backup täglich</span>
+  <span class="key">minute:</span> <span class="str">"0"</span>  <span class="key">hour:</span> <span class="str">"2"</span>
+  <span class="key">job:</span>    <span class="str">"/opt/backup.sh"</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Netzwerk & Sonstiges</div>
+        <code><span class="mod">uri:</span>
+  <span class="key">url:</span>         <span class="str">https://api.example.com</span>
+  <span class="key">method:</span>      <span class="str">POST</span>
+  <span class="key">body_format:</span> <span class="str">json</span>
+  <span class="key">status_code:</span> <span class="val">200</span>
+
+<span class="mod">git:</span>
+  <span class="key">repo:</span>    <span class="str">https://github.com/org/app.git</span>
+  <span class="key">dest:</span>    <span class="str">/opt/app</span>
+  <span class="key">version:</span> <span class="str">main</span>
+
+<span class="mod">debug:</span>
+  <span class="key">msg:</span> <span class="str">"Wert: {{ meine_var }}"</span>
+
+<span class="mod">set_fact:</span>
+  <span class="key">neue_var:</span> <span class="str">"{{ alte_var | upper }}"</span></code>
+      </div>
+    </div>
+    <div class="tip cyan">💡 Alle Module: <strong>ansible-doc -l</strong> · Modul-Hilfe: <strong>ansible-doc apt</strong></div>
+  </div>
+
+  <!-- ROLES -->
+  <div class="section theme-purple">
+    <div class="section-header">
+      <div class="section-icon">🎭</div>
+      <div class="section-title">Roles — Struktur & Verwendung</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Verzeichnisstruktur einer Role</div>
+        <code><span class="var">roles/</span>
+  <span class="var">myrole/</span>
+    <span class="key">tasks/</span>
+      <span class="str">main.yml</span>      <span class="cmt">  Task-Einstieg</span>
+    <span class="key">handlers/</span>
+      <span class="str">main.yml</span>      <span class="cmt">  Handler</span>
+    <span class="key">templates/</span>     <span class="cmt">  Jinja2-Vorlagen (.j2)</span>
+    <span class="key">files/</span>         <span class="cmt">  Statische Dateien</span>
+    <span class="key">vars/</span>
+      <span class="str">main.yml</span>      <span class="cmt">  Unveränderliche Variablen</span>
+    <span class="key">defaults/</span>
+      <span class="str">main.yml</span>      <span class="cmt">  Überschreibbare Defaults</span>
+    <span class="key">meta/</span>
+      <span class="str">main.yml</span>      <span class="cmt">  Abhängigkeiten</span>
+    <span class="key">tests/</span>         <span class="cmt">  Molecule-Tests</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Role erstellen & verwenden</div>
+        <code><span class="kw">ansible-galaxy</span> init <span class="var">myrole</span>
+
+<span class="cmt"># Im Playbook einbinden</span>
+<span class="key">roles:</span>
+  - <span class="str">myrole</span>
+  - <span class="key">role:</span> <span class="str">geerlingguy.nginx</span>
+    <span class="key">vars:</span>
+      <span class="key">nginx_port:</span> <span class="val">8080</span>
+
+<span class="cmt"># Als Task (ansible 2.4+)</span>
+<span class="key">tasks:</span>
+  - <span class="mod">include_role:</span>
+      <span class="key">name:</span> <span class="str">myrole</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Abhängigkeiten (meta/main.yml)</div>
+        <code><span class="key">dependencies:</span>
+  - <span class="key">role:</span> <span class="str">common</span>
+  - <span class="key">role:</span> <span class="str">nginx</span>
+    <span class="key">vars:</span>
+      <span class="key">nginx_port:</span> <span class="val">80</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANSIBLE VAULT -->
+  <div class="section theme-red">
+    <div class="section-header">
+      <div class="section-icon">🔐</div>
+      <div class="section-title">Ansible Vault — Secrets</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Datei verschlüsseln / entschlüsseln</div>
+        <code><span class="kw">ansible-vault</span> encrypt <span class="var">secrets.yml</span>
+<span class="kw">ansible-vault</span> decrypt <span class="var">secrets.yml</span>
+<span class="kw">ansible-vault</span> view    <span class="var">secrets.yml</span>
+<span class="kw">ansible-vault</span> edit    <span class="var">secrets.yml</span>
+<span class="kw">ansible-vault</span> rekey   <span class="var">secrets.yml</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Einzelnen Wert verschlüsseln</div>
+        <code><span class="kw">ansible-vault</span> encrypt_string \
+  <span class="str">'supersecret'</span> <span class="fl">--name</span> <span class="var">db_password</span>
+
+<span class="cmt"># Ausgabe in vars/main.yml einfügen:</span>
+<span class="key">db_password:</span> !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  ...</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Mit Vault-Passwort ausführen</div>
+        <code><span class="kw">ansible-playbook</span> <span class="var">site.yml</span> \
+  <span class="fl">--ask-vault-pass</span>
+<span class="kw">ansible-playbook</span> <span class="var">site.yml</span> \
+  <span class="fl">--vault-password-file</span> <span class="var">.vault_pass</span>
+<span class="cmt"># .vault_pass in .gitignore eintragen!</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Mehrere Vault-IDs</div>
+        <code><span class="kw">ansible-vault</span> encrypt \
+  <span class="fl">--vault-id</span> <span class="var">prod@prompt</span> <span class="var">prod.yml</span>
+<span class="kw">ansible-playbook</span> <span class="var">site.yml</span> \
+  <span class="fl">--vault-id</span> <span class="var">prod@.prod_pass</span> \
+  <span class="fl">--vault-id</span> <span class="var">dev@.dev_pass</span></code>
+      </div>
+    </div>
+    <div class="tip">💡 Vault-Passwortdatei: <strong>chmod 600 .vault_pass</strong> und in <strong>.gitignore</strong> eintragen</div>
+  </div>
+
+  <!-- ANSIBLE GALAXY -->
+  <div class="section theme-green">
+    <div class="section-header">
+      <div class="section-icon">🌌</div>
+      <div class="section-title">Ansible Galaxy & Collections</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Roles installieren</div>
+        <code><span class="kw">ansible-galaxy</span> install <span class="var">geerlingguy.nginx</span>
+<span class="kw">ansible-galaxy</span> install <span class="fl">-r</span> <span class="var">requirements.yml</span>
+<span class="kw">ansible-galaxy</span> list
+<span class="kw">ansible-galaxy</span> remove <span class="var">geerlingguy.nginx</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">requirements.yml</div>
+        <code><span class="key">roles:</span>
+  - <span class="key">name:</span> <span class="str">geerlingguy.nginx</span>
+    <span class="key">version:</span> <span class="str">"3.2.0"</span>
+
+<span class="key">collections:</span>
+  - <span class="key">name:</span> <span class="str">community.general</span>
+  - <span class="key">name:</span> <span class="str">ansible.posix</span>
+    <span class="key">version:</span> <span class="str">">=1.3"</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Collections verwalten</div>
+        <code><span class="kw">ansible-galaxy</span> collection install \
+  <span class="var">community.general</span>
+<span class="kw">ansible-galaxy</span> collection install \
+  <span class="fl">-r</span> <span class="var">requirements.yml</span>
+<span class="kw">ansible-galaxy</span> collection list</code>
+      </div>
+    </div>
+    <div class="tip green">💡 Collections im Playbook: <strong>community.general.homebrew</strong> statt nur <strong>homebrew</strong></div>
+  </div>
+
+  <!-- TEMPLATES -->
+  <div class="section theme-blue">
+    <div class="section-header">
+      <div class="section-icon">📄</div>
+      <div class="section-title">Jinja2 Templates</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Grundlegende Syntax</div>
+        <code><span class="cmt">{# Kommentar #}</span>
+<span class="str">{{ variable }}</span>          <span class="cmt">  Ausgabe</span>
+<span class="str">{% if bedingung %}</span>     <span class="cmt">  Block</span>
+<span class="str">{% for item in list %}</span> <span class="cmt">  Schleife</span>
+<span class="str">{% endif %}</span> / <span class="str">{% endfor %}</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Beispiel nginx.conf.j2</div>
+        <code>server {
+  listen <span class="str">{{ http_port }}</span>;
+  server_name <span class="str">{{ ansible_hostname }}</span>;
+
+  <span class="str">{% for vhost in virtual_hosts %}</span>
+  location /<span class="str">{{ vhost.path }}</span> {
+    proxy_pass http://<span class="str">{{ vhost.backend }}</span>;
+  }
+  <span class="str">{% endfor %}</span>
+}</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Nützliche Filter</div>
+        <code><span class="str">{{ var | default('wert') }}</span>    <span class="cmt">  Fallback</span>
+<span class="str">{{ var | upper }}</span>              <span class="cmt">  Großbuchst.</span>
+<span class="str">{{ var | lower }}</span>              <span class="cmt">  Kleinbuchst.</span>
+<span class="str">{{ liste | join(', ') }}</span>        <span class="cmt">  Verbinden</span>
+<span class="str">{{ var | regex_replace('a','b') }}</span>
+<span class="str">{{ var | bool }}</span>               <span class="cmt">  zu Boolean</span>
+<span class="str">{{ var | int }}</span>                <span class="cmt">  zu Integer</span>
+<span class="str">{{ dict | dict2items }}</span>        <span class="cmt">  Dict → Liste</span>
+<span class="str">{{ var | to_json }}</span>            <span class="cmt">  JSON</span>
+<span class="str">{{ var | to_yaml }}</span>            <span class="cmt">  YAML</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANSIBLE.CFG -->
+  <div class="section theme-yellow">
+    <div class="section-header">
+      <div class="section-icon">⚙️</div>
+      <div class="section-title">ansible.cfg — Konfiguration</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Wichtige Einstellungen</div>
+        <code>[<span class="var">defaults</span>]
+<span class="key">inventory</span>          = <span class="str">./inventory</span>
+<span class="key">remote_user</span>        = <span class="str">deploy</span>
+<span class="key">private_key_file</span>   = <span class="str">~/.ssh/id_rsa</span>
+<span class="key">host_key_checking</span>  = <span class="val">False</span>
+<span class="key">retry_files_enabled</span>= <span class="val">False</span>
+<span class="key">forks</span>              = <span class="val">20</span>
+<span class="key">gathering</span>          = <span class="str">smart</span>
+<span class="key">roles_path</span>         = <span class="str">./roles:~/.ansible/roles</span>
+<span class="key">stdout_callback</span>    = <span class="str">yaml</span>
+
+[<span class="var">privilege_escalation</span>]
+<span class="key">become</span>             = <span class="val">True</span>
+<span class="key">become_method</span>      = <span class="str">sudo</span>
+<span class="key">become_user</span>        = <span class="str">root</span>
+
+[<span class="var">ssh_connection</span>]
+<span class="key">pipelining</span>         = <span class="val">True</span>
+<span class="key">control_path</span>       = <span class="str">/tmp/ansible-ssh-%%h-%%p-%%r</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Konfiguration prüfen</div>
+        <code><span class="kw">ansible-config</span> list
+<span class="kw">ansible-config</span> dump <span class="fl">--only-changed</span>
+<span class="kw">ansible-config</span> view</code>
+      </div>
+    </div>
+    <div class="tip yellow">💡 Reihenfolge: ANSIBLE_* Env-Variablen &gt; ansible.cfg im CWD &gt; ~/.ansible.cfg</div>
+  </div>
+
+  <!-- NÜTZLICHE PATTERNS -->
+  <div class="section theme-cyan">
+    <div class="section-header">
+      <div class="section-icon">💡</div>
+      <div class="section-title">Nützliche Muster & Tricks</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Task nur einmal ausführen (run_once)</div>
+        <code>- <span class="key">name:</span> <span class="str">DB Migration</span>
+  <span class="mod">command:</span> <span class="str">python manage.py migrate</span>
+  <span class="key">run_once:</span> <span class="val">true</span>
+  <span class="key">delegate_to:</span> <span class="var">db01.example.com</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Task lokal ausführen</div>
+        <code>- <span class="key">name:</span> <span class="str">Lokal ausführen</span>
+  <span class="mod">command:</span> <span class="str">./local_script.sh</span>
+  <span class="key">delegate_to:</span> <span class="val">localhost</span>
+  <span class="key">connection:</span> <span class="str">local</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Rolling Updates (serial)</div>
+        <code>- <span class="key">hosts:</span> <span class="val">webservers</span>
+  <span class="key">serial:</span> <span class="val">2</span>           <span class="cmt">  2 Hosts gleichzeitig</span>
+  <span class="key">serial:</span> <span class="str">"30%"</span>       <span class="cmt">  30% gleichzeitig</span>
+  <span class="key">max_fail_percentage:</span> <span class="val">0</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Datei aus Template mit lookup</div>
+        <code><span class="key">vars:</span>
+  <span class="key">ssh_key:</span> <span class="str">"{{ lookup('file','~/.ssh/id_rsa.pub') }}"</span>
+  <span class="key">env_val:</span> <span class="str">"{{ lookup('env','HOME') }}"</span>
+  <span class="key">secret:</span>  <span class="str">"{{ lookup('password','/tmp/pass length=20') }}"</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Inventory dynamisch testen</div>
+        <code><span class="kw">ansible</span> <span class="val">all</span> <span class="fl">--list-hosts</span>
+<span class="kw">ansible</span> <span class="val">webservers</span> <span class="fl">--list-hosts</span>
+<span class="kw">ansible</span> <span class="str">'web*'</span> <span class="fl">--list-hosts</span>
+<span class="kw">ansible</span> <span class="str">'!dbservers'</span> <span class="fl">--list-hosts</span>
+<span class="kw">ansible</span> <span class="str">'web1:web2'</span> <span class="fl">--list-hosts</span></code>
+      </div>
+    </div>
+    <div class="tip cyan">💡 <strong>ANSIBLE_STDOUT_CALLBACK=yaml</strong> für lesbare Ausgabe ohne ansible.cfg</div>
+  </div>
+
+</main>
+
+<footer>
+  <span>ansible</span> — agentless IT automation &nbsp;·&nbsp;
+  <span>ansible-doc -l</span> für alle Module &nbsp;·&nbsp;
+  docs.ansible.com &nbsp;·&nbsp;
+  galaxy.ansible.com
+</footer>
+
+</body>
+</html>

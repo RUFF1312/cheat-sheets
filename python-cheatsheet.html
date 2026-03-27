@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --accent: #f7c948;
+    --accent2: #4b8bbe;
+    --blue: #3d8bcd;
+    --green: #3fb950;
+    --purple: #a371f7;
+    --cyan: #39c5cf;
+    --red: #f47067;
+    --text: #e6edf3;
+    --muted: #7d8590;
+    --code-bg: #10161d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0d1117 0%, #1a1800 50%, #0d1117 100%);
+    border-bottom: 2px solid var(--accent);
+    padding: 40px 48px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 600px 200px at 60% 50%, rgba(247,201,72,0.07), transparent);
+  }
+  .header-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 24px;
+    position: relative;
+  }
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(247,201,72,0.12);
+    border: 1px solid rgba(247,201,72,0.3);
+    padding: 3px 10px;
+    border-radius: 3px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  h1 span { color: var(--accent); }
+  .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .meta {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+  .meta strong { color: var(--accent2); }
+
+  /* VERSION LEGEND */
+  .version-legend {
+    position: relative;
+    margin-top: 18px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .version-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    border-radius: 4px;
+    padding: 4px 12px;
+    font-weight: 600;
+  }
+  .version-chip.py3    { background: rgba(247,201,72,0.12); border: 1px solid rgba(247,201,72,0.3); color: var(--accent); }
+  .version-chip.typed  { background: rgba(75,139,190,0.12); border: 1px solid rgba(75,139,190,0.3); color: var(--accent2); }
+  .version-chip.oop    { background: rgba(163,113,247,0.12);border: 1px solid rgba(163,113,247,0.3);color: var(--purple); }
+  .version-chip.async  { background: rgba(57,197,207,0.12); border: 1px solid rgba(57,197,207,0.3); color: var(--cyan); }
+  .version-chip.stdlib { background: rgba(63,185,80,0.12);  border: 1px solid rgba(63,185,80,0.3);  color: var(--green); }
+
+  /* LAYOUT */
+  main {
+    padding: 32px 48px;
+    max-width: 1400px;
+    margin: 0 auto;
+    columns: 3;
+    column-gap: 20px;
+  }
+
+  /* SECTION CARDS */
+  .section {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* COLOR THEMES */
+  .theme-yellow .section-header { background: rgba(247,201,72,0.08); }
+  .theme-yellow .section-icon   { background: rgba(247,201,72,0.15); }
+  .theme-yellow .section-title  { color: var(--accent); }
+
+  .theme-blue .section-header   { background: rgba(75,139,190,0.08); }
+  .theme-blue .section-icon     { background: rgba(75,139,190,0.15); }
+  .theme-blue .section-title    { color: var(--accent2); }
+
+  .theme-green .section-header  { background: rgba(63,185,80,0.08); }
+  .theme-green .section-icon    { background: rgba(63,185,80,0.15); }
+  .theme-green .section-title   { color: var(--green); }
+
+  .theme-purple .section-header { background: rgba(163,113,247,0.08); }
+  .theme-purple .section-icon   { background: rgba(163,113,247,0.15); }
+  .theme-purple .section-title  { color: var(--purple); }
+
+  .theme-cyan .section-header   { background: rgba(57,197,207,0.08); }
+  .theme-cyan .section-icon     { background: rgba(57,197,207,0.15); }
+  .theme-cyan .section-title    { color: var(--cyan); }
+
+  .theme-red .section-header    { background: rgba(244,112,103,0.08); }
+  .theme-red .section-icon      { background: rgba(244,112,103,0.15); }
+  .theme-red .section-title     { color: var(--red); }
+
+  /* COMMAND ENTRIES */
+  .command-list { padding: 8px 0; }
+  .cmd-entry {
+    padding: 6px 16px;
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+  }
+  .cmd-entry:last-child { border-bottom: none; }
+  .cmd-desc {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 3px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--text);
+    background: var(--code-bg);
+    display: block;
+    padding: 5px 9px;
+    border-radius: 4px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  /* Syntax tokens */
+  .kw  { color: #f7c948; font-weight: 700; }   /* keyword: def class if for ... */
+  .bi  { color: #4b8bbe; font-weight: 600; }   /* builtin: print len range ... */
+  .st  { color: #3fb950; }                      /* string */
+  .nu  { color: #f47067; }                      /* number */
+  .cm  { color: #7d8590; font-style: italic; }  /* comment */
+  .fn  { color: #39c5cf; font-weight: 600; }   /* function / method name */
+  .tp  { color: #a371f7; font-weight: 600; }   /* type hint / decorator */
+  .op  { color: #e6edf3; }                      /* operator */
+  .va  { color: #e6edf3; }                      /* variable */
+
+  /* TIP */
+  .tip {
+    padding: 8px 16px;
+    background: rgba(247,201,72,0.05);
+    border-top: 1px dashed rgba(247,201,72,0.2);
+    font-size: 11px;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .tip.green  { background: rgba(63,185,80,0.05);  border-color: rgba(63,185,80,0.25);  color: var(--green); }
+  .tip.blue   { background: rgba(75,139,190,0.05); border-color: rgba(75,139,190,0.25); color: var(--accent2); }
+  .tip.purple { background: rgba(163,113,247,0.05);border-color: rgba(163,113,247,0.25);color: var(--purple); }
+  .tip.cyan   { background: rgba(57,197,207,0.05); border-color: rgba(57,197,207,0.25); color: var(--cyan); }
+  .tip.red    { background: rgba(244,112,103,0.05);border-color: rgba(244,112,103,0.25);color: var(--red); }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px 48px;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  footer span { color: var(--accent); }
+
+  @media (max-width: 1100px) { main { columns: 2; } }
+  @media (max-width: 700px)  { main { columns: 1; padding: 16px; } header { padding: 24px 16px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Language Reference</div>
+      <h1><span>Python</span><br>Cheat Sheet</h1>
+      <p class="subtitle">$ python3 script.py -- batteries included</p>
+      <div class="version-legend">
+        <div class="version-chip py3">🐍 Python 3.10+</div>
+        <div class="version-chip typed">📐 Type Hints</div>
+        <div class="version-chip oop">🧩 OOP</div>
+        <div class="version-chip async">⚡ Async / Await</div>
+        <div class="version-chip stdlib">📦 Stdlib</div>
+      </div>
+    </div>
+    <div class="meta">
+      <strong>python3</strong><br>
+      Types · Functions · OOP<br>
+      Comprehensions · Itertools<br>
+      Async · Stdlib · CLI
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- DATENTYPEN -->
+  <div class="section theme-yellow">
+    <div class="section-header">
+      <div class="section-icon">🔢</div>
+      <div class="section-title">Datentypen & Grundoperationen</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Zahlen</div>
+        <code><span class="va">x</span> <span class="op">=</span> <span class="nu">42</span>          <span class="cm">  # int</span>
+<span class="va">y</span> <span class="op">=</span> <span class="nu">3.14</span>        <span class="cm">  # float</span>
+<span class="va">z</span> <span class="op">=</span> <span class="nu">2</span><span class="op">+</span><span class="nu">3j</span>        <span class="cm">  # complex</span>
+<span class="va">b</span> <span class="op">=</span> <span class="nu">0b1010</span>      <span class="cm">  # binär = 10</span>
+<span class="va">h</span> <span class="op">=</span> <span class="nu">0xFF</span>        <span class="cm">  # hex = 255</span>
+<span class="va">big</span> <span class="op">=</span> <span class="nu">1_000_000</span> <span class="cm">  # Unterstrich OK</span>
+<span class="nu">10</span> <span class="op">//</span> <span class="nu">3</span>          <span class="cm">  # 3  (floor div)</span>
+<span class="nu">10</span> <span class="op">%</span>  <span class="nu">3</span>          <span class="cm">  # 1  (modulo)</span>
+<span class="nu">2</span>  <span class="op">**</span> <span class="nu">8</span>          <span class="cm">  # 256 (potenz)</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Strings</div>
+        <code><span class="va">s</span> <span class="op">=</span> <span class="st">"Hallo"</span>  <span class="op">/</span>  <span class="st">'Welt'</span>
+<span class="va">ml</span> <span class="op">=</span> <span class="st">"""mehrzeilig
+     string"""</span>
+<span class="va">r</span> <span class="op">=</span> <span class="st">r"C:\Users\name"</span>    <span class="cm">  # raw</span>
+<span class="va">b</span> <span class="op">=</span> <span class="st">b"bytes"</span>             <span class="cm">  # bytes</span>
+<span class="va">f</span> <span class="op">=</span> <span class="st">f"Wert: {</span><span class="va">x</span><span class="op">*</span><span class="nu">2</span><span class="st">}"</span>        <span class="cm">  # f-string</span>
+<span class="va">s</span>[<span class="nu">0</span>]   <span class="va">s</span>[<span class="op">-</span><span class="nu">1</span>]  <span class="va">s</span>[<span class="nu">1</span><span class="op">:</span><span class="nu">4</span>]  <span class="va">s</span>[<span class="op">::</span><span class="nu">2</span>]
+<span class="va">s</span>.<span class="fn">upper</span>()  <span class="va">s</span>.<span class="fn">lower</span>()  <span class="va">s</span>.<span class="fn">strip</span>()
+<span class="va">s</span>.<span class="fn">split</span>(<span class="st">","</span>)  <span class="st">","</span>.<span class="fn">join</span>([<span class="st">"a"</span>,<span class="st">"b"</span>])
+<span class="va">s</span>.<span class="fn">replace</span>(<span class="st">"alt"</span>, <span class="st">"neu"</span>)
+<span class="va">s</span>.<span class="fn">startswith</span>(<span class="st">"H"</span>)  <span class="va">s</span>.<span class="fn">find</span>(<span class="st">"l"</span>)</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">F-String Formatierung</div>
+        <code><span class="st">f"{</span><span class="va">pi</span><span class="st">:.2f}"</span>       <span class="cm">  # "3.14"</span>
+<span class="st">f"{</span><span class="nu">1000</span><span class="st">:,}"</span>        <span class="cm">  # "1,000"</span>
+<span class="st">f"{</span><span class="va">n</span><span class="st">:05d}"</span>         <span class="cm">  # "00042"</span>
+<span class="st">f"{</span><span class="va">n</span><span class="st">:&gt;10}"</span>         <span class="cm">  # rechtsbündig</span>
+<span class="st">f"{</span><span class="va">n</span><span class="st">:^10}"</span>         <span class="cm">  # zentriert</span>
+<span class="st">f"{</span><span class="va">val</span><span class="st">!r}"</span>         <span class="cm">  # repr()</span>
+<span class="st">f"{</span><span class="va">val</span><span class="st">=}"</span>          <span class="cm">  # "val=42" (3.8+)</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Bool & None</div>
+        <code><span class="kw">True</span>  <span class="kw">False</span>  <span class="kw">None</span>
+<span class="bi">bool</span>(<span class="nu">0</span>)   <span class="cm">  # False</span>
+<span class="bi">bool</span>(<span class="st">""</span>)  <span class="cm">  # False</span>
+<span class="bi">bool</span>([])  <span class="cm">  # False</span>
+<span class="va">x</span> <span class="op">is</span> <span class="kw">None</span>  <span class="va">x</span> <span class="op">is not</span> <span class="kw">None</span>
+<span class="kw">not</span> <span class="va">x</span>  <span class="va">x</span> <span class="kw">and</span> <span class="va">y</span>  <span class="va">x</span> <span class="kw">or</span> <span class="va">y</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATENSTRUKTUREN -->
+  <div class="section theme-blue">
+    <div class="section-header">
+      <div class="section-icon">📚</div>
+      <div class="section-title">Datenstrukturen</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">List — geordnet, veränderlich</div>
+        <code><span class="va">lst</span> <span class="op">=</span> [<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>]
+<span class="va">lst</span>.<span class="fn">append</span>(<span class="nu">4</span>)       <span class="cm">  # [1,2,3,4]</span>
+<span class="va">lst</span>.<span class="fn">extend</span>([<span class="nu">5</span>,<span class="nu">6</span>])   <span class="cm">  # [1..6]</span>
+<span class="va">lst</span>.<span class="fn">insert</span>(<span class="nu">0</span>, <span class="nu">99</span>)   <span class="cm">  # vorne einfügen</span>
+<span class="va">lst</span>.<span class="fn">remove</span>(<span class="nu">2</span>)       <span class="cm">  # ersten 2 löschen</span>
+<span class="va">lst</span>.<span class="fn">pop</span>()            <span class="cm">  # letztes entfernen</span>
+<span class="va">lst</span>.<span class="fn">pop</span>(<span class="nu">0</span>)           <span class="cm">  # Index 0 entfernen</span>
+<span class="va">lst</span>.<span class="fn">sort</span>()           <span class="cm">  # in-place</span>
+<span class="va">lst</span>.<span class="fn">sort</span>(<span class="va">reverse</span><span class="op">=</span><span class="kw">True</span>)
+<span class="bi">sorted</span>(<span class="va">lst</span>, <span class="va">key</span><span class="op">=</span><span class="bi">len</span>) <span class="cm">  # neu</span>
+<span class="va">lst</span>.<span class="fn">index</span>(<span class="nu">3</span>)         <span class="cm">  # Position</span>
+<span class="va">lst</span>.<span class="fn">count</span>(<span class="nu">2</span>)         <span class="cm">  # Vorkommen</span>
+<span class="va">lst</span>[<span class="nu">1</span><span class="op">:</span><span class="nu">3</span>] <span class="op">=</span> [<span class="nu">9</span>, <span class="nu">9</span>]    <span class="cm">  # Slice-Assign</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Tuple & Set</div>
+        <code><span class="va">t</span> <span class="op">=</span> (<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>)         <span class="cm">  # unveränderlich</span>
+<span class="va">t</span> <span class="op">=</span> (<span class="nu">42</span>,)              <span class="cm">  # 1-Element-Tuple!</span>
+<span class="va">a</span>, <span class="va">b</span>, <span class="va">*</span><span class="va">rest</span> <span class="op">=</span> <span class="va">t</span>       <span class="cm">  # unpacking</span>
+
+<span class="va">s</span> <span class="op">=</span> {<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>}          <span class="cm">  # Set (eindeutig)</span>
+<span class="va">s</span>.<span class="fn">add</span>(<span class="nu">4</span>)
+<span class="va">s</span>.<span class="fn">discard</span>(<span class="nu">2</span>)          <span class="cm">  # kein Fehler wenn fehlt</span>
+<span class="va">s1</span> <span class="op">|</span> <span class="va">s2</span>   <span class="cm">  # Vereinigung</span>
+<span class="va">s1</span> <span class="op">&amp;</span> <span class="va">s2</span>   <span class="cm">  # Schnittmenge</span>
+<span class="va">s1</span> <span class="op">-</span> <span class="va">s2</span>   <span class="cm">  # Differenz</span>
+<span class="va">s1</span> <span class="op">^</span> <span class="va">s2</span>   <span class="cm">  # Symmetrisch</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Dictionary</div>
+        <code><span class="va">d</span> <span class="op">=</span> {<span class="st">"key"</span>: <span class="st">"val"</span>, <span class="st">"n"</span>: <span class="nu">42</span>}
+<span class="va">d</span>[<span class="st">"key"</span>]              <span class="cm">  # Zugriff</span>
+<span class="va">d</span>.<span class="fn">get</span>(<span class="st">"x"</span>, <span class="st">"default"</span>) <span class="cm">  # sicher</span>
+<span class="va">d</span>[<span class="st">"neu"</span>] <span class="op">=</span> <span class="st">"wert"</span>      <span class="cm">  # setzen</span>
+<span class="va">d</span>.<span class="fn">update</span>({<span class="st">"a"</span>: <span class="nu">1</span>})     <span class="cm">  # mergen</span>
+<span class="va">merged</span> <span class="op">=</span> <span class="va">d1</span> <span class="op">|</span> <span class="va">d2</span>       <span class="cm">  # 3.9+</span>
+<span class="va">d</span>.<span class="fn">pop</span>(<span class="st">"key"</span>)           <span class="cm">  # entfernen</span>
+<span class="va">d</span>.<span class="fn">keys</span>()  <span class="va">d</span>.<span class="fn">values</span>()  <span class="va">d</span>.<span class="fn">items</span>()
+<span class="st">"key"</span> <span class="kw">in</span> <span class="va">d</span>             <span class="cm">  # True/False</span>
+<span class="va">d</span>.<span class="fn">setdefault</span>(<span class="st">"k"</span>, [])  <span class="cm">  # init falls fehlt</span></code>
+      </div>
+    </div>
+    <div class="tip blue">💡 <strong>collections.defaultdict</strong>, <strong>OrderedDict</strong> und <strong>Counter</strong> für spezielle Fälle</div>
+  </div>
+
+  <!-- CONTROL FLOW -->
+  <div class="section theme-yellow">
+    <div class="section-header">
+      <div class="section-icon">🔀</div>
+      <div class="section-title">Kontrollfluss</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Bedingungen</div>
+        <code><span class="kw">if</span> <span class="va">x</span> <span class="op">&gt;</span> <span class="nu">0</span><span class="op">:</span>
+    <span class="bi">print</span>(<span class="st">"positiv"</span>)
+<span class="kw">elif</span> <span class="va">x</span> <span class="op">==</span> <span class="nu">0</span><span class="op">:</span>
+    <span class="bi">print</span>(<span class="st">"null"</span>)
+<span class="kw">else</span><span class="op">:</span>
+    <span class="bi">print</span>(<span class="st">"negativ"</span>)
+
+<span class="cm"># Ternär</span>
+<span class="va">res</span> <span class="op">=</span> <span class="st">"ja"</span> <span class="kw">if</span> <span class="va">x</span> <span class="op">&gt;</span> <span class="nu">0</span> <span class="kw">else</span> <span class="st">"nein"</span>
+
+<span class="cm"># match/case (3.10+)</span>
+<span class="kw">match</span> <span class="va">cmd</span><span class="op">:</span>
+    <span class="kw">case</span> <span class="st">"quit"</span><span class="op">:</span>   <span class="bi">exit</span>()
+    <span class="kw">case</span> <span class="st">"help"</span><span class="op">:</span>   <span class="fn">show_help</span>()
+    <span class="kw">case</span> <span class="va">_</span><span class="op">:</span>        <span class="bi">print</span>(<span class="st">"unbekannt"</span>)</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Schleifen</div>
+        <code><span class="kw">for</span> <span class="va">i</span> <span class="kw">in</span> <span class="bi">range</span>(<span class="nu">10</span>)<span class="op">:</span>        <span class="cm">  # 0–9</span>
+<span class="kw">for</span> <span class="va">i</span> <span class="kw">in</span> <span class="bi">range</span>(<span class="nu">2</span>, <span class="nu">10</span>, <span class="nu">2</span>)<span class="op">:</span> <span class="cm">  # 2,4,6,8</span>
+<span class="kw">for</span> <span class="va">item</span> <span class="kw">in</span> <span class="va">liste</span><span class="op">:</span>
+<span class="kw">for</span> <span class="va">i</span>, <span class="va">v</span> <span class="kw">in</span> <span class="bi">enumerate</span>(<span class="va">lst</span>)<span class="op">:</span>
+<span class="kw">for</span> <span class="va">k</span>, <span class="va">v</span> <span class="kw">in</span> <span class="va">d</span>.<span class="fn">items</span>()<span class="op">:</span>
+<span class="kw">for</span> <span class="va">a</span>, <span class="va">b</span> <span class="kw">in</span> <span class="bi">zip</span>(<span class="va">l1</span>, <span class="va">l2</span>)<span class="op">:</span>
+
+<span class="kw">while</span> <span class="va">bedingung</span><span class="op">:</span>
+    <span class="kw">if</span> <span class="va">x</span><span class="op">:</span> <span class="kw">break</span>     <span class="cm">  # abbrechen</span>
+    <span class="kw">if</span> <span class="va">y</span><span class="op">:</span> <span class="kw">continue</span>  <span class="cm">  # überspringen</span>
+<span class="kw">else</span><span class="op">:</span>
+    <span class="bi">print</span>(<span class="st">"normal beendet"</span>)</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- FUNCTIONS -->
+  <div class="section theme-green">
+    <div class="section-header">
+      <div class="section-icon">🔧</div>
+      <div class="section-title">Funktionen</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Definition & Argumente</div>
+        <code><span class="kw">def</span> <span class="fn">greet</span>(<span class="va">name</span><span class="op">:</span> <span class="tp">str</span>, <span class="va">greeting</span><span class="op">:</span> <span class="tp">str</span> <span class="op">=</span> <span class="st">"Hi"</span>) <span class="op">-&gt;</span> <span class="tp">str</span><span class="op">:</span>
+    <span class="st">"""Docstring hier."""</span>
+    <span class="kw">return</span> <span class="st">f"{</span><span class="va">greeting</span><span class="st">}, {</span><span class="va">name</span><span class="st">}!"</span>
+
+<span class="cm"># *args und **kwargs</span>
+<span class="kw">def</span> <span class="fn">f</span>(<span class="va">*args</span><span class="op">:</span> <span class="tp">int</span>, <span class="va">**kwargs</span><span class="op">:</span> <span class="tp">str</span>)<span class="op">:</span>
+    <span class="bi">print</span>(<span class="va">args</span>, <span class="va">kwargs</span>)
+
+<span class="cm"># Keyword-only (nach *)</span>
+<span class="kw">def</span> <span class="fn">f</span>(<span class="va">a</span>, <span class="op">*</span>, <span class="va">force</span><span class="op">=</span><span class="kw">False</span>)<span class="op">:</span> ...
+
+<span class="cm"># Positional-only (vor /)</span>
+<span class="kw">def</span> <span class="fn">f</span>(<span class="va">a</span>, <span class="va">b</span>, <span class="op">/</span>, <span class="va">c</span>)<span class="op">:</span> ...</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Lambda, map, filter</div>
+        <code><span class="va">double</span> <span class="op">=</span> <span class="kw">lambda</span> <span class="va">x</span><span class="op">:</span> <span class="va">x</span> <span class="op">*</span> <span class="nu">2</span>
+
+<span class="bi">list</span>(<span class="bi">map</span>(<span class="kw">lambda</span> <span class="va">x</span><span class="op">:</span> <span class="va">x</span><span class="op">**</span><span class="nu">2</span>, <span class="va">lst</span>))
+<span class="bi">list</span>(<span class="bi">filter</span>(<span class="kw">lambda</span> <span class="va">x</span><span class="op">:</span> <span class="va">x</span><span class="op">&gt;</span><span class="nu">0</span>, <span class="va">lst</span>))
+<span class="bi">sorted</span>(<span class="va">data</span>, <span class="va">key</span><span class="op">=</span><span class="kw">lambda</span> <span class="va">x</span><span class="op">:</span> <span class="va">x</span>[<span class="st">"name"</span>])</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Closures & Decorators</div>
+        <code><span class="kw">def</span> <span class="fn">make_adder</span>(<span class="va">n</span>)<span class="op">:</span>
+    <span class="kw">return</span> <span class="kw">lambda</span> <span class="va">x</span><span class="op">:</span> <span class="va">x</span> <span class="op">+</span> <span class="va">n</span>
+
+<span class="kw">import</span> functools
+
+<span class="kw">def</span> <span class="fn">timer</span>(<span class="va">func</span>)<span class="op">:</span>
+    <span class="tp">@functools.wraps</span>(<span class="va">func</span>)
+    <span class="kw">def</span> <span class="fn">wrapper</span>(<span class="va">*a</span>, <span class="va">**kw</span>)<span class="op">:</span>
+        <span class="kw">import</span> time
+        <span class="va">t</span> <span class="op">=</span> time.<span class="fn">time</span>()
+        <span class="va">r</span> <span class="op">=</span> <span class="fn">func</span>(<span class="va">*a</span>, <span class="va">**kw</span>)
+        <span class="bi">print</span>(<span class="st">f"{</span><span class="va">time</span>.<span class="fn">time</span>()<span class="op">-</span><span class="va">t</span><span class="st">:.3f}s"</span>)
+        <span class="kw">return</span> <span class="va">r</span>
+    <span class="kw">return</span> <span class="va">wrapper</span>
+
+<span class="tp">@timer</span>
+<span class="kw">def</span> <span class="fn">meine_funktion</span>()<span class="op">:</span> ...</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Generators</div>
+        <code><span class="kw">def</span> <span class="fn">fibonacci</span>()<span class="op">:</span>
+    <span class="va">a</span>, <span class="va">b</span> <span class="op">=</span> <span class="nu">0</span>, <span class="nu">1</span>
+    <span class="kw">while</span> <span class="kw">True</span><span class="op">:</span>
+        <span class="kw">yield</span> <span class="va">a</span>
+        <span class="va">a</span>, <span class="va">b</span> <span class="op">=</span> <span class="va">b</span>, <span class="va">a</span> <span class="op">+</span> <span class="va">b</span>
+
+<span class="va">gen</span> <span class="op">=</span> (<span class="va">x</span><span class="op">**</span><span class="nu">2</span> <span class="kw">for</span> <span class="va">x</span> <span class="kw">in</span> <span class="bi">range</span>(<span class="nu">10</span>))
+<span class="bi">next</span>(<span class="va">gen</span>)
+<span class="bi">sum</span>(<span class="va">x</span> <span class="kw">for</span> <span class="va">x</span> <span class="kw">in</span> <span class="bi">range</span>(<span class="nu">1000</span>))</code>
+      </div>
+    </div>
+    <div class="tip green">💡 <strong>functools.cache</strong> / <strong>lru_cache</strong> für Memoization ohne eigenen Code</div>
+  </div>
+
+  <!-- COMPREHENSIONS -->
+  <div class="section theme-cyan">
+    <div class="section-header">
+      <div class="section-icon">⚡</div>
+      <div class="section-title">Comprehensions</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">List Comprehension</div>
+        <code>[<span class="va">x</span><span class="op">**</span><span class="nu">2</span> <span class="kw">for</span> <span class="va">x</span> <span class="kw">in</span> <span class="bi">range</span>(<span class="nu">10</span>)]
+[<span class="va">x</span> <span class="kw">for</span> <span class="va">x</span> <span class="kw">in</span> <span class="va">lst</span> <span class="kw">if</span> <span class="va">x</span> <span class="op">&gt;</span> <span class="nu">0</span>]
+[<span class="va">s</span>.<span class="fn">strip</span>() <span class="kw">for</span> <span class="va">s</span> <span class="kw">in</span> <span class="va">text</span>.<span class="fn">splitlines</span>()]
+[<span class="va">f</span>(<span class="va">x</span>) <span class="kw">if</span> <span class="va">x</span> <span class="op">&gt;</span> <span class="nu">0</span> <span class="kw">else</span> <span class="nu">0</span> <span class="kw">for</span> <span class="va">x</span> <span class="kw">in</span> <span class="va">lst</span>]
+<span class="cm"># Verschachtelt</span>
+[<span class="va">x</span><span class="op">*</span><span class="va">y</span> <span class="kw">for</span> <span class="va">x</span> <span class="kw">in</span> <span class="va">a</span> <span class="kw">for</span> <span class="va">y</span> <span class="kw">in</span> <span class="va">b</span>]</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Dict & Set Comprehension</div>
+        <code>{<span class="va">k</span><span class="op">:</span> <span class="va">v</span><span class="op">*</span><span class="nu">2</span> <span class="kw">for</span> <span class="va">k</span>, <span class="va">v</span> <span class="kw">in</span> <span class="va">d</span>.<span class="fn">items</span>()}
+{<span class="va">k</span><span class="op">:</span> <span class="va">v</span> <span class="kw">for</span> <span class="va">k</span>, <span class="va">v</span> <span class="kw">in</span> <span class="va">d</span>.<span class="fn">items</span>() <span class="kw">if</span> <span class="va">v</span>}
+{<span class="va">v</span><span class="op">:</span> <span class="va">k</span> <span class="kw">for</span> <span class="va">k</span>, <span class="va">v</span> <span class="kw">in</span> <span class="va">d</span>.<span class="fn">items</span>()}    <span class="cm">  # invert</span>
+
+{<span class="va">x</span><span class="op">**</span><span class="nu">2</span> <span class="kw">for</span> <span class="va">x</span> <span class="kw">in</span> <span class="va">lst</span>}           <span class="cm">  # set</span>
+(<span class="va">x</span><span class="op">**</span><span class="nu">2</span> <span class="kw">for</span> <span class="va">x</span> <span class="kw">in</span> <span class="va">lst</span>)           <span class="cm">  # generator</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Walrus Operator (3.8+)</div>
+        <code><span class="cm"># := weist zu und wertet aus</span>
+<span class="kw">while</span> (<span class="va">chunk</span> <span class="op">:=</span> <span class="va">f</span>.<span class="fn">read</span>(<span class="nu">8192</span>))<span class="op">:</span>
+    <span class="fn">process</span>(<span class="va">chunk</span>)
+
+[<span class="va">y</span> <span class="kw">for</span> <span class="va">x</span> <span class="kw">in</span> <span class="va">data</span> <span class="kw">if</span> (<span class="va">y</span> <span class="op">:=</span> <span class="fn">f</span>(<span class="va">x</span>)) <span class="op">&gt;</span> <span class="nu">0</span>]</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- OOP -->
+  <div class="section theme-purple">
+    <div class="section-header">
+      <div class="section-icon">🧩</div>
+      <div class="section-title">Klassen & OOP</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Klassenstruktur</div>
+        <code><span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass, field
+
+<span class="tp">@dataclass</span>
+<span class="kw">class</span> <span class="tp">Tier</span><span class="op">:</span>
+    <span class="va">name</span><span class="op">:</span>   <span class="tp">str</span>
+    <span class="va">alter</span><span class="op">:</span>  <span class="tp">int</span>
+    <span class="va">tags</span><span class="op">:</span>   <span class="tp">list</span>[<span class="tp">str</span>] <span class="op">=</span> <span class="fn">field</span>(<span class="va">default_factory</span><span class="op">=</span><span class="bi">list</span>)
+
+    <span class="kw">def</span> <span class="fn">vorstellen</span>(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="tp">str</span><span class="op">:</span>
+        <span class="kw">return</span> <span class="st">f"Ich bin {</span><span class="va">self</span><span class="st">.name}"</span>
+
+    <span class="tp">@classmethod</span>
+    <span class="kw">def</span> <span class="fn">from_dict</span>(<span class="va">cls</span>, <span class="va">d</span><span class="op">:</span> <span class="tp">dict</span>) <span class="op">-&gt;</span> <span class="st">"Tier"</span><span class="op">:</span>
+        <span class="kw">return</span> <span class="fn">cls</span>(<span class="op">**</span><span class="va">d</span>)
+
+    <span class="tp">@staticmethod</span>
+    <span class="kw">def</span> <span class="fn">gültig</span>(<span class="va">alter</span><span class="op">:</span> <span class="tp">int</span>) <span class="op">-&gt;</span> <span class="tp">bool</span><span class="op">:</span>
+        <span class="kw">return</span> <span class="va">alter</span> <span class="op">&gt;=</span> <span class="nu">0</span>
+
+    <span class="kw">def</span> <span class="fn">__repr__</span>(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="tp">str</span><span class="op">:</span>
+        <span class="kw">return</span> <span class="st">f"Tier({</span><span class="va">self</span><span class="st">.name!r})"</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Vererbung & Dunder Methods</div>
+        <code><span class="kw">class</span> <span class="tp">Hund</span>(<span class="tp">Tier</span>)<span class="op">:</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="va">self</span>, <span class="va">name</span>, <span class="va">rasse</span>)<span class="op">:</span>
+        <span class="bi">super</span>().<span class="fn">__init__</span>(<span class="va">name</span>, <span class="va">alter</span><span class="op">=</span><span class="nu">0</span>)
+        <span class="va">self</span>.<span class="va">rasse</span> <span class="op">=</span> <span class="va">rasse</span>
+
+<span class="cm"># Wichtige Dunder Methods:</span>
+<span class="fn">__str__</span>   <span class="fn">__repr__</span>  <span class="fn">__len__</span>
+<span class="fn">__eq__</span>    <span class="fn">__lt__</span>    <span class="fn">__hash__</span>
+<span class="fn">__add__</span>   <span class="fn">__iter__</span>  <span class="fn">__next__</span>
+<span class="fn">__enter__</span> <span class="fn">__exit__</span>  <span class="fn">__call__</span>
+<span class="fn">__getitem__</span>         <span class="fn">__setitem__</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Properties & Abstrakte Klassen</div>
+        <code><span class="kw">class</span> <span class="tp">Kreis</span><span class="op">:</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="va">self</span>, <span class="va">r</span><span class="op">:</span> <span class="tp">float</span>)<span class="op">:</span>
+        <span class="va">self</span>.<span class="va">_r</span> <span class="op">=</span> <span class="va">r</span>
+
+    <span class="tp">@property</span>
+    <span class="kw">def</span> <span class="fn">radius</span>(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="tp">float</span><span class="op">:</span>
+        <span class="kw">return</span> <span class="va">self</span>.<span class="va">_r</span>
+
+    <span class="tp">@radius.setter</span>
+    <span class="kw">def</span> <span class="fn">radius</span>(<span class="va">self</span>, <span class="va">v</span><span class="op">:</span> <span class="tp">float</span>)<span class="op">:</span>
+        <span class="kw">if</span> <span class="va">v</span> <span class="op">&lt;</span> <span class="nu">0</span><span class="op">:</span> <span class="kw">raise</span> <span class="tp">ValueError</span>
+        <span class="va">self</span>.<span class="va">_r</span> <span class="op">=</span> <span class="va">v</span></code>
+      </div>
+    </div>
+    <div class="tip purple">💡 <strong>@dataclass(frozen=True)</strong> erzeugt unveränderliche, hashbare Objekte</div>
+  </div>
+
+  <!-- EXCEPTIONS -->
+  <div class="section theme-red">
+    <div class="section-header">
+      <div class="section-icon">🚨</div>
+      <div class="section-title">Exceptions & Context Manager</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Try / Except / Finally</div>
+        <code><span class="kw">try</span><span class="op">:</span>
+    <span class="va">result</span> <span class="op">=</span> <span class="nu">10</span> <span class="op">/</span> <span class="nu">0</span>
+<span class="kw">except</span> <span class="tp">ZeroDivisionError</span><span class="op">:</span>
+    <span class="bi">print</span>(<span class="st">"Division durch Null"</span>)
+<span class="kw">except</span> (<span class="tp">TypeError</span>, <span class="tp">ValueError</span>) <span class="kw">as</span> <span class="va">e</span><span class="op">:</span>
+    <span class="bi">print</span>(<span class="st">f"Fehler: {</span><span class="va">e</span><span class="st">}"</span>)
+<span class="kw">except</span> <span class="tp">Exception</span><span class="op">:</span>
+    <span class="kw">raise</span>               <span class="cm">  # weiterwerfen</span>
+<span class="kw">else</span><span class="op">:</span>
+    <span class="bi">print</span>(<span class="st">"Kein Fehler"</span>)  <span class="cm">  # wenn OK</span>
+<span class="kw">finally</span><span class="op">:</span>
+    <span class="bi">print</span>(<span class="st">"Immer"</span>)         <span class="cm">  # immer</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Eigene Exceptions</div>
+        <code><span class="kw">class</span> <span class="tp">AppError</span>(<span class="tp">Exception</span>)<span class="op">:</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="va">self</span>, <span class="va">msg</span><span class="op">:</span> <span class="tp">str</span>, <span class="va">code</span><span class="op">:</span> <span class="tp">int</span> <span class="op">=</span> <span class="nu">0</span>)<span class="op">:</span>
+        <span class="bi">super</span>().<span class="fn">__init__</span>(<span class="va">msg</span>)
+        <span class="va">self</span>.<span class="va">code</span> <span class="op">=</span> <span class="va">code</span>
+
+<span class="kw">raise</span> <span class="tp">AppError</span>(<span class="st">"fehlgeschlagen"</span>, <span class="nu">404</span>)
+<span class="kw">raise</span> <span class="tp">ValueError</span>(<span class="st">"ungültig"</span>) <span class="kw">from</span> <span class="va">e</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Context Manager (with)</div>
+        <code><span class="cm"># Datei — automatisch schließen</span>
+<span class="kw">with</span> <span class="bi">open</span>(<span class="st">"f.txt"</span>, <span class="st">"r"</span>, <span class="va">encoding</span><span class="op">=</span><span class="st">"utf-8"</span>) <span class="kw">as</span> <span class="va">f</span><span class="op">:</span>
+    <span class="va">inhalt</span> <span class="op">=</span> <span class="va">f</span>.<span class="fn">read</span>()
+
+<span class="cm"># Eigener Context Manager</span>
+<span class="kw">from</span> contextlib <span class="kw">import</span> contextmanager
+
+<span class="tp">@contextmanager</span>
+<span class="kw">def</span> <span class="fn">managed</span>()<span class="op">:</span>
+    <span class="bi">print</span>(<span class="st">"start"</span>)
+    <span class="kw">yield</span> <span class="st">"ressource"</span>
+    <span class="bi">print</span>(<span class="st">"cleanup"</span>)
+
+<span class="kw">with</span> <span class="fn">managed</span>() <span class="kw">as</span> <span class="va">r</span><span class="op">:</span>
+    <span class="fn">nutze</span>(<span class="va">r</span>)</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- TYPE HINTS -->
+  <div class="section theme-blue">
+    <div class="section-header">
+      <div class="section-icon">📐</div>
+      <div class="section-title">Type Hints (3.9 / 3.10+)</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Grundlegende Typen</div>
+        <code><span class="kw">from</span> __future__ <span class="kw">import</span> annotations   <span class="cm">  # 3.7+</span>
+<span class="kw">from</span> typing <span class="kw">import</span> Optional, Union, Any
+
+<span class="va">x</span><span class="op">:</span> <span class="tp">int</span> <span class="op">=</span> <span class="nu">42</span>
+<span class="va">s</span><span class="op">:</span> <span class="tp">str</span> <span class="op">=</span> <span class="st">"hallo"</span>
+<span class="va">lst</span><span class="op">:</span> <span class="tp">list</span>[<span class="tp">int</span>]          <span class="cm">  # 3.9+</span>
+<span class="va">d</span><span class="op">:</span>   <span class="tp">dict</span>[<span class="tp">str</span>, <span class="tp">Any</span>]
+<span class="va">t</span><span class="op">:</span>   <span class="tp">tuple</span>[<span class="tp">int</span>, <span class="tp">str</span>]
+<span class="va">opt</span><span class="op">:</span> <span class="tp">int</span> <span class="op">|</span> <span class="kw">None</span>          <span class="cm">  # 3.10+</span>
+<span class="va">uni</span><span class="op">:</span> <span class="tp">str</span> <span class="op">|</span> <span class="tp">int</span>           <span class="cm">  # 3.10+</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Callable, TypeVar, Protocol</div>
+        <code><span class="kw">from</span> typing <span class="kw">import</span> Callable, TypeVar
+
+<span class="va">F</span> <span class="op">=</span> <span class="fn">Callable</span>[[<span class="tp">int</span>, <span class="tp">str</span>], <span class="tp">bool</span>]
+<span class="va">T</span> <span class="op">=</span> <span class="fn">TypeVar</span>(<span class="st">"T"</span>)
+
+<span class="kw">def</span> <span class="fn">identity</span>(<span class="va">x</span><span class="op">:</span> <span class="va">T</span>) <span class="op">-&gt;</span> <span class="va">T</span><span class="op">:</span>
+    <span class="kw">return</span> <span class="va">x</span>
+
+<span class="kw">from</span> typing <span class="kw">import</span> Protocol
+
+<span class="kw">class</span> <span class="tp">Printable</span>(<span class="tp">Protocol</span>)<span class="op">:</span>
+    <span class="kw">def</span> <span class="fn">__str__</span>(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="tp">str</span><span class="op">:</span> ...</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">TypedDict & Literal</div>
+        <code><span class="kw">from</span> typing <span class="kw">import</span> TypedDict, Literal
+
+<span class="kw">class</span> <span class="tp">Config</span>(<span class="tp">TypedDict</span>)<span class="op">:</span>
+    <span class="va">host</span><span class="op">:</span> <span class="tp">str</span>
+    <span class="va">port</span><span class="op">:</span> <span class="tp">int</span>
+    <span class="va">debug</span><span class="op">:</span> <span class="tp">bool</span>
+
+<span class="va">Mode</span> <span class="op">=</span> <span class="fn">Literal</span>[<span class="st">"r"</span>, <span class="st">"w"</span>, <span class="st">"a"</span>]</code>
+      </div>
+    </div>
+    <div class="tip blue">💡 <strong>mypy datei.py</strong> oder <strong>pyright</strong> für statische Typprüfung</div>
+  </div>
+
+  <!-- ASYNC -->
+  <div class="section theme-cyan">
+    <div class="section-header">
+      <div class="section-icon">⚡</div>
+      <div class="section-title">Async / Await</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Coroutines & Event Loop</div>
+        <code><span class="kw">import</span> asyncio
+
+<span class="kw">async def</span> <span class="fn">fetch</span>(<span class="va">url</span><span class="op">:</span> <span class="tp">str</span>) <span class="op">-&gt;</span> <span class="tp">str</span><span class="op">:</span>
+    <span class="kw">await</span> asyncio.<span class="fn">sleep</span>(<span class="nu">1</span>)    <span class="cm">  # non-blocking</span>
+    <span class="kw">return</span> <span class="st">"daten"</span>
+
+<span class="kw">async def</span> <span class="fn">main</span>()<span class="op">:</span>
+    <span class="va">res</span> <span class="op">=</span> <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">"http://..."</span>)
+
+<span class="cm"># Parallel ausführen</span>
+<span class="va">results</span> <span class="op">=</span> <span class="kw">await</span> asyncio.<span class="fn">gather</span>(
+    <span class="fn">fetch</span>(<span class="st">"url1"</span>),
+    <span class="fn">fetch</span>(<span class="st">"url2"</span>),
+)
+
+asyncio.<span class="fn">run</span>(<span class="fn">main</span>())</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Async Context Manager & Iterator</div>
+        <code><span class="kw">async with</span> <span class="fn">aiofiles</span>.<span class="fn">open</span>(<span class="st">"f"</span>) <span class="kw">as</span> <span class="va">f</span><span class="op">:</span>
+    <span class="va">data</span> <span class="op">=</span> <span class="kw">await</span> <span class="va">f</span>.<span class="fn">read</span>()
+
+<span class="kw">async for</span> <span class="va">item</span> <span class="kw">in</span> <span class="fn">async_generator</span>()<span class="op">:</span>
+    <span class="fn">process</span>(<span class="va">item</span>)
+
+<span class="cm"># Timeout</span>
+<span class="kw">async with</span> asyncio.<span class="fn">timeout</span>(<span class="nu">5.0</span>)<span class="op">:</span>   <span class="cm">  # 3.11+</span>
+    <span class="kw">await</span> <span class="fn">lange_operation</span>()</code>
+      </div>
+    </div>
+    <div class="tip cyan">💡 <strong>asyncio.TaskGroup</strong> (3.11+) ist sicherer als <strong>gather()</strong> bei Fehlern</div>
+  </div>
+
+  <!-- STDLIB -->
+  <div class="section theme-green">
+    <div class="section-header">
+      <div class="section-icon">📦</div>
+      <div class="section-title">Wichtige Stdlib-Module</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">pathlib — Dateipfade</div>
+        <code><span class="kw">from</span> pathlib <span class="kw">import</span> Path
+
+<span class="va">p</span> <span class="op">=</span> <span class="fn">Path</span>(<span class="st">"."</span>) <span class="op">/</span> <span class="st">"data"</span> <span class="op">/</span> <span class="st">"file.txt"</span>
+<span class="va">p</span>.<span class="fn">exists</span>()   <span class="va">p</span>.<span class="fn">is_file</span>()   <span class="va">p</span>.<span class="fn">is_dir</span>()
+<span class="va">p</span>.<span class="fn">read_text</span>(<span class="va">encoding</span><span class="op">=</span><span class="st">"utf-8"</span>)
+<span class="va">p</span>.<span class="fn">write_text</span>(<span class="st">"inhalt"</span>)
+<span class="va">p</span>.<span class="fn">mkdir</span>(<span class="va">parents</span><span class="op">=</span><span class="kw">True</span>, <span class="va">exist_ok</span><span class="op">=</span><span class="kw">True</span>)
+<span class="va">p</span>.<span class="fn">unlink</span>()   <span class="va">p</span>.<span class="fn">rename</span>(<span class="st">"neu.txt"</span>)
+<span class="bi">list</span>(<span class="va">p</span>.<span class="fn">glob</span>(<span class="st">"**/*.py"</span>))
+<span class="va">p</span>.<span class="fn">stat</span>().<span class="va">st_size</span>   <span class="va">p</span>.<span class="fn">suffix</span>   <span class="va">p</span>.<span class="fn">stem</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">json, re, datetime</div>
+        <code><span class="kw">import</span> json
+<span class="va">s</span> <span class="op">=</span> json.<span class="fn">dumps</span>(<span class="va">obj</span>, <span class="va">indent</span><span class="op">=</span><span class="nu">2</span>)
+<span class="va">obj</span> <span class="op">=</span> json.<span class="fn">loads</span>(<span class="va">s</span>)
+
+<span class="kw">import</span> re
+<span class="va">m</span> <span class="op">=</span> re.<span class="fn">search</span>(<span class="st">r"\d+"</span>, <span class="st">"abc123"</span>)
+<span class="va">m</span>.<span class="fn">group</span>()                <span class="cm">  # "123"</span>
+re.<span class="fn">sub</span>(<span class="st">r"\s+"</span>, <span class="st">" "</span>, <span class="va">text</span>)
+re.<span class="fn">findall</span>(<span class="st">r"\w+"</span>, <span class="va">text</span>)
+
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime, timedelta
+<span class="va">now</span> <span class="op">=</span> datetime.<span class="fn">now</span>()
+<span class="va">d</span>   <span class="op">=</span> datetime.<span class="fn">fromisoformat</span>(<span class="st">"2024-01-01"</span>)
+<span class="va">now</span> <span class="op">+</span> <span class="fn">timedelta</span>(<span class="va">days</span><span class="op">=</span><span class="nu">7</span>)
+<span class="va">now</span>.<span class="fn">strftime</span>(<span class="st">"%Y-%m-%d %H:%M"</span>)</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">itertools & functools</div>
+        <code><span class="kw">from</span> itertools <span class="kw">import</span> (
+    <span class="fn">chain</span>, <span class="fn">islice</span>, <span class="fn">groupby</span>,
+    <span class="fn">product</span>, <span class="fn">combinations</span>, <span class="fn">permutations</span>,
+    <span class="fn">cycle</span>, <span class="fn">repeat</span>, <span class="fn">takewhile</span>, <span class="fn">dropwhile</span>
+)
+<span class="bi">list</span>(<span class="fn">chain</span>([<span class="nu">1</span>,<span class="nu">2</span>], [<span class="nu">3</span>,<span class="nu">4</span>]))    <span class="cm">  # [1,2,3,4]</span>
+<span class="bi">list</span>(<span class="fn">islice</span>(<span class="fn">fib</span>(), <span class="nu">10</span>))     <span class="cm">  # erste 10</span>
+
+<span class="kw">from</span> functools <span class="kw">import</span> reduce, partial, cache
+<span class="fn">reduce</span>(<span class="kw">lambda</span> <span class="va">a</span>,<span class="va">b</span><span class="op">:</span> <span class="va">a</span><span class="op">+</span><span class="va">b</span>, <span class="va">lst</span>)
+<span class="fn">partial</span>(<span class="bi">pow</span>, <span class="va">exp</span><span class="op">=</span><span class="nu">2</span>)
+
+<span class="tp">@cache</span>                       <span class="cm">  # Memoization</span>
+<span class="kw">def</span> <span class="fn">fib</span>(<span class="va">n</span>)<span class="op">:</span> ...</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">collections</div>
+        <code><span class="kw">from</span> collections <span class="kw">import</span> (
+    <span class="fn">Counter</span>, <span class="fn">defaultdict</span>,
+    <span class="fn">deque</span>, <span class="fn">namedtuple</span>, <span class="fn">OrderedDict</span>
+)
+<span class="va">c</span> <span class="op">=</span> <span class="fn">Counter</span>(<span class="st">"abracadabra"</span>)
+<span class="va">c</span>.<span class="fn">most_common</span>(<span class="nu">3</span>)
+
+<span class="va">dd</span> <span class="op">=</span> <span class="fn">defaultdict</span>(<span class="bi">list</span>)
+<span class="va">dd</span>[<span class="st">"neu"</span>].<span class="fn">append</span>(<span class="nu">1</span>)        <span class="cm">  # kein KeyError</span>
+
+<span class="va">Point</span> <span class="op">=</span> <span class="fn">namedtuple</span>(<span class="st">"Point"</span>, [<span class="st">"x"</span>,<span class="st">"y"</span>])
+<span class="va">dq</span> <span class="op">=</span> <span class="fn">deque</span>(<span class="va">lst</span>, <span class="va">maxlen</span><span class="op">=</span><span class="nu">100</span>)
+<span class="va">dq</span>.<span class="fn">appendleft</span>(<span class="nu">0</span>)   <span class="va">dq</span>.<span class="fn">rotate</span>(<span class="nu">1</span>)</code>
+      </div>
+    </div>
+    <div class="tip green">💡 <strong>subprocess.run()</strong>, <strong>shutil</strong>, <strong>os.environ</strong> für System-Interaktion</div>
+  </div>
+
+  <!-- CLI & SCRIPTING -->
+  <div class="section theme-yellow">
+    <div class="section-header">
+      <div class="section-icon">🖥</div>
+      <div class="section-title">CLI & Scripting</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">argparse</div>
+        <code><span class="kw">import</span> argparse
+
+<span class="va">parser</span> <span class="op">=</span> argparse.<span class="fn">ArgumentParser</span>(
+    <span class="va">description</span><span class="op">=</span><span class="st">"Mein CLI-Tool"</span>
+)
+<span class="va">parser</span>.<span class="fn">add_argument</span>(<span class="st">"datei"</span>)
+<span class="va">parser</span>.<span class="fn">add_argument</span>(<span class="st">"-v"</span>, <span class="st">"--verbose"</span>,
+    <span class="va">action</span><span class="op">=</span><span class="st">"store_true"</span>)
+<span class="va">parser</span>.<span class="fn">add_argument</span>(<span class="st">"-n"</span>, <span class="va">type</span><span class="op">=</span><span class="bi">int</span>,
+    <span class="va">default</span><span class="op">=</span><span class="nu">10</span>)
+<span class="va">args</span> <span class="op">=</span> <span class="va">parser</span>.<span class="fn">parse_args</span>()
+<span class="bi">print</span>(<span class="va">args</span>.<span class="va">datei</span>, <span class="va">args</span>.<span class="va">verbose</span>)</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">subprocess & os</div>
+        <code><span class="kw">import</span> subprocess, os
+
+<span class="va">r</span> <span class="op">=</span> subprocess.<span class="fn">run</span>(
+    [<span class="st">"ls"</span>, <span class="st">"-la"</span>],
+    <span class="va">capture_output</span><span class="op">=</span><span class="kw">True</span>,
+    <span class="va">text</span><span class="op">=</span><span class="kw">True</span>, <span class="va">check</span><span class="op">=</span><span class="kw">True</span>
+)
+<span class="bi">print</span>(<span class="va">r</span>.<span class="va">stdout</span>)
+
+os.<span class="fn">environ</span>.<span class="fn">get</span>(<span class="st">"HOME"</span>)
+os.<span class="fn">getcwd</span>()   os.<span class="fn">chdir</span>(<span class="st">"/tmp"</span>)
+os.<span class="fn">makedirs</span>(<span class="st">"a/b/c"</span>, <span class="va">exist_ok</span><span class="op">=</span><span class="kw">True</span>)</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">logging</div>
+        <code><span class="kw">import</span> logging
+
+logging.<span class="fn">basicConfig</span>(
+    <span class="va">level</span><span class="op">=</span>logging.<span class="va">INFO</span>,
+    <span class="va">format</span><span class="op">=</span><span class="st">"%(asctime)s %(levelname)s %(message)s"</span>
+)
+<span class="va">log</span> <span class="op">=</span> logging.<span class="fn">getLogger</span>(<span class="fn">__name__</span>)
+<span class="va">log</span>.<span class="fn">info</span>(<span class="st">"Start"</span>)
+<span class="va">log</span>.<span class="fn">warning</span>(<span class="st">"Warnung: %s"</span>, <span class="va">msg</span>)
+<span class="va">log</span>.<span class="fn">error</span>(<span class="st">"Fehler"</span>, <span class="va">exc_info</span><span class="op">=</span><span class="kw">True</span>)</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Nützliche Einzeiler</div>
+        <code><span class="cm"># HTTP-Server starten</span>
+python3 <span class="op">-</span>m http.server <span class="nu">8080</span>
+
+<span class="cm"># JSON formatieren</span>
+echo <span class="st">'{"a":1}'</span> | python3 <span class="op">-</span>m json.tool
+
+<span class="cm"># Profiling</span>
+python3 <span class="op">-</span>m cProfile <span class="op">-</span>s cumtime <span class="va">script</span>.py
+
+<span class="cm"># REPL mit Startup-Datei</span>
+python3 <span class="op">-</span>i <span class="va">setup</span>.py</code>
+      </div>
+    </div>
+    <div class="tip">💡 <strong>if __name__ == "__main__":</strong> — immer für ausführbare Skripte verwenden</div>
+  </div>
+
+  <!-- VIRTUALENV & PACKAGES -->
+  <div class="section theme-purple">
+    <div class="section-header">
+      <div class="section-icon">🌱</div>
+      <div class="section-title">Umgebungen & Pakete</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">venv — virtuelle Umgebung</div>
+        <code><span class="cm"># Erstellen & aktivieren</span>
+python3 <span class="op">-</span>m venv <span class="st">.venv</span>
+source <span class="st">.venv/bin/activate</span>      <span class="cm">  # Linux/Mac</span>
+<span class="st">.venv\Scripts\activate</span>         <span class="cm">  # Windows</span>
+deactivate
+
+<span class="cm"># pip</span>
+pip install <span class="va">requests</span>
+pip install <span class="op">-</span>r requirements.txt
+pip freeze <span class="op">&gt;</span> requirements.txt
+pip list <span class="op">--</span>outdated
+pip show <span class="va">requests</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">pyproject.toml (modernes Setup)</div>
+        <code>[build-system]
+requires = [<span class="st">"hatchling"</span>]
+build-backend = <span class="st">"hatchling.build"</span>
+
+[project]
+name = <span class="st">"meinpaket"</span>
+version = <span class="st">"0.1.0"</span>
+requires-python = <span class="st">">=3.10"</span>
+dependencies = [
+    <span class="st">"requests>=2.28"</span>,
+    <span class="st">"pydantic>=2.0"</span>,
+]
+
+[project.scripts]
+<span class="va">mein-cli</span> = <span class="st">"meinpaket.cli:main"</span></code>
+      </div>
+    </div>
+    <div class="tip purple">💡 <strong>uv</strong> als moderner, extrem schneller Ersatz für pip + venv empfohlen</div>
+  </div>
+
+</main>
+
+<footer>
+  <span>python3</span> — batteries included &nbsp;·&nbsp;
+  <span>python -m pydoc</span> für Dokumentation &nbsp;·&nbsp;
+  docs.python.org &nbsp;·&nbsp;
+  pypi.org
+</footer>
+
+</body>
+</html>

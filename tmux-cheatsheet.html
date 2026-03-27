@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tmux Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2330;
+    --border: #30363d;
+    --accent: #1aac8a;
+    --accent2: #f0a030;
+    --blue: #3d8bcd;
+    --green: #3fb950;
+    --purple: #a371f7;
+    --cyan: #39c5cf;
+    --text: #e6edf3;
+    --muted: #7d8590;
+    --code-bg: #10161d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0d1117 0%, #001a13 50%, #0d1117 100%);
+    border-bottom: 2px solid var(--accent);
+    padding: 40px 48px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 600px 200px at 60% 50%, rgba(26,172,138,0.08), transparent);
+  }
+  .header-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 24px;
+    position: relative;
+  }
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(26,172,138,0.12);
+    border: 1px solid rgba(26,172,138,0.3);
+    padding: 3px 10px;
+    border-radius: 3px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  h1 span { color: var(--accent); }
+  .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .meta {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+  .meta strong { color: var(--accent2); }
+
+  /* PREFIX KEY LEGEND */
+  .prefix-legend {
+    position: relative;
+    margin-top: 18px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .prefix-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: rgba(26,172,138,0.08);
+    border: 1px solid rgba(26,172,138,0.25);
+    border-radius: 4px;
+    padding: 4px 12px;
+    color: var(--text);
+  }
+  .prefix-chip kbd {
+    background: rgba(26,172,138,0.2);
+    border: 1px solid rgba(26,172,138,0.4);
+    border-radius: 3px;
+    padding: 1px 6px;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 11px;
+  }
+
+  /* LAYOUT */
+  main {
+    padding: 32px 48px;
+    max-width: 1400px;
+    margin: 0 auto;
+    columns: 3;
+    column-gap: 20px;
+  }
+
+  /* SECTION CARDS */
+  .section {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* COLOR THEMES */
+  .theme-teal .section-header { background: rgba(26,172,138,0.08); }
+  .theme-teal .section-icon { background: rgba(26,172,138,0.15); }
+  .theme-teal .section-title { color: var(--accent); }
+
+  .theme-blue .section-header { background: rgba(61,139,205,0.08); }
+  .theme-blue .section-icon { background: rgba(61,139,205,0.15); }
+  .theme-blue .section-title { color: var(--blue); }
+
+  .theme-green .section-header { background: rgba(63,185,80,0.08); }
+  .theme-green .section-icon { background: rgba(63,185,80,0.15); }
+  .theme-green .section-title { color: var(--green); }
+
+  .theme-purple .section-header { background: rgba(163,113,247,0.08); }
+  .theme-purple .section-icon { background: rgba(163,113,247,0.15); }
+  .theme-purple .section-title { color: var(--purple); }
+
+  .theme-cyan .section-header { background: rgba(57,197,207,0.08); }
+  .theme-cyan .section-icon { background: rgba(57,197,207,0.15); }
+  .theme-cyan .section-title { color: var(--cyan); }
+
+  .theme-yellow .section-header { background: rgba(240,160,48,0.08); }
+  .theme-yellow .section-icon { background: rgba(240,160,48,0.15); }
+  .theme-yellow .section-title { color: var(--accent2); }
+
+  /* COMMAND ENTRIES */
+  .command-list { padding: 8px 0; }
+  .cmd-entry {
+    padding: 6px 16px;
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+  }
+  .cmd-entry:last-child { border-bottom: none; }
+  .cmd-desc {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 3px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--text);
+    background: var(--code-bg);
+    display: block;
+    padding: 5px 9px;
+    border-radius: 4px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  /* Key styles */
+  .prefix { color: #1aac8a; font-weight: 700; }  /* Ctrl+b */
+  .key    { color: #f0a030; font-weight: 600; }   /* the shortcut letter/key */
+  .cmd    { color: #3d8bcd; font-weight: 600; }   /* tmux subcommand */
+  .flag   { color: #3d8bcd; }
+  .val    { color: #3fb950; }
+  .cmt    { color: var(--muted); font-style: italic; }
+  .var    { color: var(--purple); }
+  .kw     { color: #1aac8a; font-weight: 700; }
+
+  /* TIP */
+  .tip {
+    padding: 8px 16px;
+    background: rgba(26,172,138,0.05);
+    border-top: 1px dashed rgba(26,172,138,0.2);
+    font-size: 11px;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px 48px;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  footer span { color: var(--accent); }
+
+  @media (max-width: 1100px) { main { columns: 2; } }
+  @media (max-width: 700px)  { main { columns: 1; padding: 16px; } header { padding: 24px 16px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Terminal Multiplexer Reference</div>
+      <h1><span>tmux</span><br>Cheat Sheet</h1>
+      <p class="subtitle">$ tmux [command] -- terminal multiplexer</p>
+      <div class="prefix-legend">
+        <div class="prefix-chip">Standard Prefix: <kbd>Ctrl+b</kbd></div>
+        <div class="prefix-chip">Alternativ:      <kbd>Ctrl+a</kbd> (screen-style)</div>
+        <div class="prefix-chip"><kbd>prefix</kbd> = Präfix-Taste drücken, loslassen, dann Taste</div>
+      </div>
+    </div>
+    <div class="meta">
+      <strong>tmux</strong><br>
+      Sessions · Windows<br>
+      Panes · Copy Mode<br>
+      Scripting · Config
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- SESSION MANAGEMENT -->
+  <div class="section theme-teal">
+    <div class="section-header">
+      <div class="section-icon">🖥</div>
+      <div class="section-title">Sessions — Verwaltung</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Neue Session starten</div>
+        <code><span class="kw">tmux</span>
+<span class="kw">tmux</span> new <span class="cmt">                    # Kurzform</span>
+<span class="kw">tmux</span> new-session
+<span class="kw">tmux</span> new <span class="flag">-s</span> <span class="val">mysession</span> <span class="cmt">   # mit Name</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Session wiederherstellen (attach)</div>
+        <code><span class="kw">tmux</span> attach
+<span class="kw">tmux</span> attach <span class="flag">-t</span> <span class="val">mysession</span>
+<span class="kw">tmux</span> a <span class="flag">-t</span> <span class="val">mysession</span> <span class="cmt">     # Kurzform</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Sessions auflisten</div>
+        <code><span class="kw">tmux</span> ls
+<span class="kw">tmux</span> list-sessions</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Session umbenennen / beenden</div>
+        <code><span class="kw">tmux</span> rename-session <span class="flag">-t</span> <span class="val">old</span> <span class="val">new</span>
+<span class="kw">tmux</span> kill-session <span class="flag">-t</span> <span class="val">mysession</span>
+<span class="kw">tmux</span> kill-server <span class="cmt">         # ALLE beenden</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Session-Shortcuts (im Prefix)</div>
+        <code><span class="prefix">prefix</span> <span class="key">d</span>    <span class="cmt">  detach (Session verlassen)</span>
+<span class="prefix">prefix</span> <span class="key">$</span>    <span class="cmt">  Session umbenennen</span>
+<span class="prefix">prefix</span> <span class="key">s</span>    <span class="cmt">  Sessions wechseln (Liste)</span>
+<span class="prefix">prefix</span> <span class="key">(</span>    <span class="cmt">  Vorherige Session</span>
+<span class="prefix">prefix</span> <span class="key">)</span>    <span class="cmt">  Nächste Session</span>
+<span class="prefix">prefix</span> <span class="key">L</span>    <span class="cmt">  Letzte Session</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- WINDOWS -->
+  <div class="section theme-blue">
+    <div class="section-header">
+      <div class="section-icon">🗂</div>
+      <div class="section-title">Windows (Tabs)</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Window erstellen & navigieren</div>
+        <code><span class="prefix">prefix</span> <span class="key">c</span>    <span class="cmt">  Neues Window</span>
+<span class="prefix">prefix</span> <span class="key">n</span>    <span class="cmt">  Nächstes Window</span>
+<span class="prefix">prefix</span> <span class="key">p</span>    <span class="cmt">  Vorheriges Window</span>
+<span class="prefix">prefix</span> <span class="key">l</span>    <span class="cmt">  Letztes Window</span>
+<span class="prefix">prefix</span> <span class="key">0–9</span>  <span class="cmt">  Window per Nummer</span>
+<span class="prefix">prefix</span> <span class="key">w</span>    <span class="cmt">  Window-Liste (interaktiv)</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Window verwalten</div>
+        <code><span class="prefix">prefix</span> <span class="key">,</span>    <span class="cmt">  Window umbenennen</span>
+<span class="prefix">prefix</span> <span class="key">&amp;</span>    <span class="cmt">  Window schließen</span>
+<span class="prefix">prefix</span> <span class="key">f</span>    <span class="cmt">  Window suchen</span>
+<span class="prefix">prefix</span> <span class="key">.</span>    <span class="cmt">  Window-Nummer ändern</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Per CLI</div>
+        <code><span class="kw">tmux</span> new-window <span class="flag">-n</span> <span class="val">mywindow</span>
+<span class="kw">tmux</span> rename-window <span class="val">newname</span>
+<span class="kw">tmux</span> kill-window <span class="flag">-t</span> <span class="val">2</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANES -->
+  <div class="section theme-green">
+    <div class="section-header">
+      <div class="section-icon">⬛</div>
+      <div class="section-title">Panes (Split-Terminals)</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Panes aufteilen</div>
+        <code><span class="prefix">prefix</span> <span class="key">%</span>    <span class="cmt">  Vertikal splitten (links/rechts)</span>
+<span class="prefix">prefix</span> <span class="key">"</span>    <span class="cmt">  Horizontal splitten (oben/unten)</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Zwischen Panes wechseln</div>
+        <code><span class="prefix">prefix</span> <span class="key">←↑↓→</span>   <span class="cmt"> Pfeil-Navigation</span>
+<span class="prefix">prefix</span> <span class="key">o</span>    <span class="cmt">  Nächster Pane</span>
+<span class="prefix">prefix</span> <span class="key">;</span>    <span class="cmt">  Letzter Pane</span>
+<span class="prefix">prefix</span> <span class="key">q</span>    <span class="cmt">  Pane-Nummern anzeigen</span>
+<span class="prefix">prefix</span> <span class="key">q 0-9</span><span class="cmt"> Pane per Nummer wählen</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Pane-Größe anpassen</div>
+        <code><span class="prefix">prefix</span> <span class="key">Ctrl+←↑↓→</span> <span class="cmt">Größe ändern</span>
+<span class="prefix">prefix</span> <span class="key">Alt+←↑↓→</span>  <span class="cmt">Größe (5 Schritte)</span>
+<span class="prefix">prefix</span> <span class="key">z</span>    <span class="cmt">  Pane maximieren / zurück</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Pane verwalten</div>
+        <code><span class="prefix">prefix</span> <span class="key">x</span>    <span class="cmt">  Pane schließen</span>
+<span class="prefix">prefix</span> <span class="key">!</span>    <span class="cmt">  Pane → eigenes Window</span>
+<span class="prefix">prefix</span> <span class="key">{</span>    <span class="cmt">  Pane nach links tauschen</span>
+<span class="prefix">prefix</span> <span class="key">}</span>    <span class="cmt">  Pane nach rechts tauschen</span>
+<span class="prefix">prefix</span> <span class="key">Space</span><span class="cmt">  Layout durchschalten</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Layouts</div>
+        <code><span class="prefix">prefix</span> <span class="key">Alt+1</span>  <span class="cmt"> even-horizontal</span>
+<span class="prefix">prefix</span> <span class="key">Alt+2</span>  <span class="cmt"> even-vertical</span>
+<span class="prefix">prefix</span> <span class="key">Alt+3</span>  <span class="cmt"> main-horizontal</span>
+<span class="prefix">prefix</span> <span class="key">Alt+4</span>  <span class="cmt"> main-vertical</span>
+<span class="prefix">prefix</span> <span class="key">Alt+5</span>  <span class="cmt"> tiled</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- COPY MODE -->
+  <div class="section theme-purple">
+    <div class="section-header">
+      <div class="section-icon">📋</div>
+      <div class="section-title">Copy Mode & Scrollback</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Copy Mode aktivieren</div>
+        <code><span class="prefix">prefix</span> <span class="key">[</span>    <span class="cmt">  Copy Mode starten</span>
+<span class="prefix">prefix</span> <span class="key">PgUp</span> <span class="cmt">  Copy Mode + scroll up</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Navigation im Copy Mode</div>
+        <code><span class="key">↑↓←→</span> / <span class="key">hjkl</span>  <span class="cmt">  Bewegen (vi-Modus)</span>
+<span class="key">PgUp</span> / <span class="key">PgDn</span>     <span class="cmt">  Seitenweise scrollen</span>
+<span class="key">g</span>              <span class="cmt">  Zum Anfang</span>
+<span class="key">G</span>              <span class="cmt">  Zum Ende</span>
+<span class="key">/</span>              <span class="cmt">  Vorwärts suchen</span>
+<span class="key">?</span>              <span class="cmt">  Rückwärts suchen</span>
+<span class="key">n</span> / <span class="key">N</span>          <span class="cmt">  Nächste/Vorh. Fundstelle</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Text kopieren (vi-Modus)</div>
+        <code><span class="key">Space</span>          <span class="cmt">  Auswahl starten</span>
+<span class="key">Enter</span>          <span class="cmt">  Kopieren & Copy Mode verlassen</span>
+<span class="key">v</span>              <span class="cmt">  Zeilenweise auswählen</span>
+<span class="key">V</span>              <span class="cmt">  Ganze Zeile auswählen</span>
+<span class="key">q</span> / <span class="key">Esc</span>        <span class="cmt">  Copy Mode verlassen</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Einfügen</div>
+        <code><span class="prefix">prefix</span> <span class="key">]</span>    <span class="cmt">  Aus tmux-Buffer einfügen</span>
+<span class="prefix">prefix</span> <span class="key">=</span>    <span class="cmt">  Buffer-Liste wählen</span></code>
+      </div>
+    </div>
+    <div class="tip">💡 vi-Modus: <strong>set-window-option -g mode-keys vi</strong> in ~/.tmux.conf</div>
+  </div>
+
+  <!-- COMMAND MODE -->
+  <div class="section theme-cyan">
+    <div class="section-header">
+      <div class="section-icon">⌨️</div>
+      <div class="section-title">Command Mode & Sonstiges</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Command Mode öffnen</div>
+        <code><span class="prefix">prefix</span> <span class="key">:</span>    <span class="cmt">  Befehlszeile öffnen</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Nützliche Befehle im Command Mode</div>
+        <code><span class="cmd">:new-window</span>
+<span class="cmd">:split-window</span> <span class="flag">-h</span>
+<span class="cmd">:split-window</span> <span class="flag">-v</span>
+<span class="cmd">:resize-pane</span> <span class="flag">-D</span> <span class="val">10</span>
+<span class="cmd">:kill-session</span>
+<span class="cmd">:source-file</span> ~/.tmux.conf</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Sonstige Shortcuts</div>
+        <code><span class="prefix">prefix</span> <span class="key">?</span>    <span class="cmt">  Alle Shortcuts anzeigen</span>
+<span class="prefix">prefix</span> <span class="key">t</span>    <span class="cmt">  Uhr anzeigen</span>
+<span class="prefix">prefix</span> <span class="key">~</span>    <span class="cmt">  tmux-Nachrichten anzeigen</span>
+<span class="prefix">prefix</span> <span class="key">r</span>    <span class="cmt">  Config neu laden (custom)</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">In alle Panes gleichzeitig schreiben</div>
+        <code><span class="prefix">prefix</span> <span class="key">:</span> <span class="cmd">set-window-option</span> <span class="val">synchronize-panes on</span>
+<span class="prefix">prefix</span> <span class="key">:</span> <span class="cmd">set-window-option</span> <span class="val">synchronize-panes off</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTING -->
+  <div class="section theme-yellow">
+    <div class="section-header">
+      <div class="section-icon">⚙️</div>
+      <div class="section-title">Scripting & CLI-Befehle</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Session mit Befehl starten</div>
+        <code><span class="kw">tmux</span> new <span class="flag">-s</span> <span class="val">dev</span> <span class="flag">-d</span> <span class="cmt">          # detached</span>
+<span class="kw">tmux</span> new <span class="flag">-s</span> <span class="val">dev</span> <span class="flag">-d</span> <span class="var">'vim .'</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Befehl in Session senden</div>
+        <code><span class="kw">tmux</span> send-keys <span class="flag">-t</span> <span class="val">dev</span> <span class="var">'ls -la'</span> <span class="val">Enter</span>
+<span class="kw">tmux</span> send-keys <span class="flag">-t</span> <span class="val">dev:1.0</span> <span class="var">'cmd'</span> <span class="val">Enter</span>
+<span class="cmt">                 # session:window.pane</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Fenster & Panes per Skript</div>
+        <code><span class="kw">tmux</span> new-window <span class="flag">-t</span> <span class="val">dev</span> <span class="flag">-n</span> <span class="var">logs</span>
+<span class="kw">tmux</span> split-window <span class="flag">-h</span> <span class="flag">-t</span> <span class="val">dev:logs</span>
+<span class="kw">tmux</span> select-window <span class="flag">-t</span> <span class="val">dev:logs</span>
+<span class="kw">tmux</span> select-pane <span class="flag">-t</span> <span class="val">dev:logs.1</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Infos abfragen</div>
+        <code><span class="kw">tmux</span> list-sessions
+<span class="kw">tmux</span> list-windows <span class="flag">-t</span> <span class="val">mysession</span>
+<span class="kw">tmux</span> list-panes <span class="flag">-t</span> <span class="val">mysession:0</span>
+<span class="kw">tmux</span> display-message <span class="flag">-p</span> <span class="var">'#S:#W.#P'</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Pane-Inhalt speichern</div>
+        <code><span class="kw">tmux</span> capture-pane <span class="flag">-p</span> <span class="var">&gt; output.txt</span>
+<span class="kw">tmux</span> capture-pane <span class="flag">-pt</span> <span class="val">dev:0.0</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- TMUX.CONF -->
+  <div class="section theme-teal">
+    <div class="section-header">
+      <div class="section-icon">📝</div>
+      <div class="section-title">~/.tmux.conf — Konfiguration</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Prefix-Taste ändern</div>
+        <code><span class="cmd">unbind</span> <span class="val">C-b</span>
+<span class="cmd">set</span> <span class="flag">-g</span> prefix <span class="val">C-a</span>
+<span class="cmd">bind</span> <span class="val">C-a</span> send-prefix</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">vi-Modus & Maus aktivieren</div>
+        <code><span class="cmd">setw</span> <span class="flag">-g</span> mode-keys <span class="val">vi</span>
+<span class="cmd">set</span> <span class="flag">-g</span> mouse <span class="val">on</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Intuitive Split-Shortcuts</div>
+        <code><span class="cmd">bind</span> <span class="key">|</span> split-window <span class="flag">-h</span>
+<span class="cmd">bind</span> <span class="key">-</span> split-window <span class="flag">-v</span>
+<span class="cmd">unbind</span> <span class="val">'"'</span>
+<span class="cmd">unbind</span> <span class="val">%</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Config neu laden</div>
+        <code><span class="cmd">bind</span> <span class="key">r</span> source-file ~/.tmux.conf <span class="val">\;</span>
+       display-message <span class="var">"Config reloaded!"</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Indexierung & History</div>
+        <code><span class="cmd">set</span> <span class="flag">-g</span> base-index <span class="val">1</span>
+<span class="cmd">setw</span> <span class="flag">-g</span> pane-base-index <span class="val">1</span>
+<span class="cmd">set</span> <span class="flag">-g</span> history-limit <span class="val">50000</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Statusbar</div>
+        <code><span class="cmd">set</span> <span class="flag">-g</span> status-position <span class="val">bottom</span>
+<span class="cmd">set</span> <span class="flag">-g</span> status-interval <span class="val">5</span>
+<span class="cmd">set</span> <span class="flag">-g</span> status-right <span class="var">'%H:%M %d-%b-%y'</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">True Color aktivieren</div>
+        <code><span class="cmd">set</span> <span class="flag">-g</span> default-terminal <span class="var">"tmux-256color"</span>
+<span class="cmd">set</span> <span class="flag">-ag</span> terminal-overrides <span class="var">",xterm-256color:RGB"</span></code>
+      </div>
+    </div>
+    <div class="tip">💡 Config anwenden: <strong>prefix : source-file ~/.tmux.conf</strong></div>
+  </div>
+
+  <!-- PLUGINS -->
+  <div class="section theme-blue">
+    <div class="section-header">
+      <div class="section-icon">🔌</div>
+      <div class="section-title">TPM — Plugin Manager</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">TPM installieren</div>
+        <code><span class="kw">git</span> clone https://github.com/tmux-plugins/tpm \
+  ~/.tmux/plugins/tpm</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Plugins in ~/.tmux.conf definieren</div>
+        <code><span class="cmd">set</span> <span class="flag">-g</span> @plugin <span class="var">'tmux-plugins/tpm'</span>
+<span class="cmd">set</span> <span class="flag">-g</span> @plugin <span class="var">'tmux-plugins/tmux-sensible'</span>
+<span class="cmd">set</span> <span class="flag">-g</span> @plugin <span class="var">'tmux-plugins/tmux-resurrect'</span>
+<span class="cmd">set</span> <span class="flag">-g</span> @plugin <span class="var">'tmux-plugins/tmux-continuum'</span>
+<span class="cmd">run</span> <span class="var">'~/.tmux/plugins/tpm/tpm'</span> <span class="cmt"># LETZTE ZEILE</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Plugin-Shortcuts</div>
+        <code><span class="prefix">prefix</span> <span class="key">I</span>    <span class="cmt">  Plugins installieren</span>
+<span class="prefix">prefix</span> <span class="key">U</span>    <span class="cmt">  Plugins updaten</span>
+<span class="prefix">prefix</span> <span class="key">Alt+u</span><span class="cmt"> Plugins entfernen</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Beliebte Plugins</div>
+        <code><span class="var">tmux-resurrect</span>  <span class="cmt">  Sessions speichern/laden</span>
+<span class="var">tmux-continuum</span>  <span class="cmt">  Auto-Save + Auto-Restore</span>
+<span class="var">tmux-yank</span>       <span class="cmt">  Clipboard-Integration</span>
+<span class="var">tmux-sensible</span>   <span class="cmt">  Sinnvolle Defaults</span>
+<span class="var">catppuccin</span>      <span class="cmt">  Modernes Theme</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- SESSION SCRIPTING EXAMPLE -->
+  <div class="section theme-purple">
+    <div class="section-header">
+      <div class="section-icon">🚀</div>
+      <div class="section-title">Beispiel — Dev-Session per Skript</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Vollständiges Setup-Skript</div>
+        <code><span class="cmt">#!/usr/bin/env bash</span>
+SESSION=<span class="var">"dev"</span>
+
+<span class="cmt"># Session erstellen (falls nicht vorhanden)</span>
+<span class="kw">tmux</span> has-session <span class="flag">-t</span> $SESSION 2>/dev/null
+<span class="kw">if</span> [ $? != 0 ]; then
+
+  <span class="kw">tmux</span> new-session <span class="flag">-s</span> $SESSION <span class="flag">-d</span> <span class="flag">-n</span> <span class="val">editor</span>
+  <span class="kw">tmux</span> send-keys <span class="flag">-t</span> $SESSION <span class="var">'vim .'</span> Enter
+
+  <span class="kw">tmux</span> new-window <span class="flag">-t</span> $SESSION <span class="flag">-n</span> <span class="val">server</span>
+  <span class="kw">tmux</span> send-keys <span class="flag">-t</span> $SESSION <span class="var">'npm run dev'</span> Enter
+
+  <span class="kw">tmux</span> new-window <span class="flag">-t</span> $SESSION <span class="flag">-n</span> <span class="val">shell</span>
+  <span class="kw">tmux</span> split-window <span class="flag">-h</span> <span class="flag">-t</span> $SESSION
+
+  <span class="kw">tmux</span> select-window <span class="flag">-t</span> $SESSION:editor
+<span class="kw">fi</span>
+
+<span class="kw">tmux</span> attach <span class="flag">-t</span> $SESSION</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESURRECT -->
+  <div class="section theme-green">
+    <div class="section-header">
+      <div class="section-icon">💾</div>
+      <div class="section-title">Sessions speichern & wiederherstellen</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">tmux-resurrect (Plugin erforderlich)</div>
+        <code><span class="prefix">prefix</span> <span class="key">Ctrl+s</span>  <span class="cmt"> Session speichern</span>
+<span class="prefix">prefix</span> <span class="key">Ctrl+r</span>  <span class="cmt"> Session wiederherstellen</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">tmux-continuum (Auto-Backup)</div>
+        <code><span class="cmd">set</span> <span class="flag">-g</span> @continuum-restore <span class="val">'on'</span>
+<span class="cmd">set</span> <span class="flag">-g</span> @continuum-save-interval <span class="val">'15'</span>
+<span class="cmt"># Speichert automatisch alle 15 Minuten</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Manuell ohne Plugin (Workaround)</div>
+        <code><span class="kw">tmux</span> list-sessions <span class="flag">-F</span> <span class="var">"#{session_name}"</span>
+<span class="kw">tmux</span> display-message <span class="flag">-p</span> <span class="var">"#S"</span> <span class="cmt"> # Akt. Session</span></code>
+      </div>
+    </div>
+    <div class="tip">💡 Tipp: <strong>tmux-resurrect</strong> speichert auch vim-Sessions!</div>
+  </div>
+
+  <!-- VARIABLES & FORMATS -->
+  <div class="section theme-yellow">
+    <div class="section-header">
+      <div class="section-icon">🔣</div>
+      <div class="section-title">Format-Variablen (Statusbar etc.)</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Häufig verwendete Variablen</div>
+        <code><span class="var">#S</span>   <span class="cmt">  Session-Name</span>
+<span class="var">#W</span>   <span class="cmt">  Window-Name</span>
+<span class="var">#P</span>   <span class="cmt">  Pane-Index</span>
+<span class="var">#H</span>   <span class="cmt">  Hostname</span>
+<span class="var">#h</span>   <span class="cmt">  Hostname (kurz)</span>
+<span class="var">#D</span>   <span class="cmt">  Pane-ID</span>
+<span class="var">#I</span>   <span class="cmt">  Window-Index</span>
+<span class="var">#{session_windows}</span>  <span class="cmt"> Anzahl Windows</span>
+<span class="var">#{pane_current_path}</span><span class="cmt"> Aktueller Pfad</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Beispiel Statusbar</div>
+        <code><span class="cmd">set</span> <span class="flag">-g</span> status-left <span class="var">"[#S] "</span>
+<span class="cmd">set</span> <span class="flag">-g</span> status-right <span class="var">"#H | %Y-%m-%d %H:%M"</span>
+<span class="cmd">set</span> <span class="flag">-g</span> window-status-format <span class="var">" #I:#W "</span>
+<span class="cmd">set</span> <span class="flag">-g</span> window-status-current-format <span class="var">" #I:#W* "</span></code>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span>tmux</span> — Terminal Multiplexer &nbsp;·&nbsp;
+  <span>man tmux</span> &nbsp;·&nbsp;
+  github.com/tmux/tmux &nbsp;·&nbsp;
+  github.com/tmux-plugins/tpm
+</footer>
+
+</body>
+</html>

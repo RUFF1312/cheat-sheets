@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenStack CLI Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2330;
+    --border: #30363d;
+    --accent: #e8541a;
+    --accent2: #f0a030;
+    --blue: #3d8bcd;
+    --green: #3fb950;
+    --purple: #a371f7;
+    --cyan: #39c5cf;
+    --text: #e6edf3;
+    --muted: #7d8590;
+    --code-bg: #10161d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0d1117 0%, #1a0d00 50%, #0d1117 100%);
+    border-bottom: 2px solid var(--accent);
+    padding: 40px 48px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 600px 200px at 60% 50%, rgba(232,84,26,0.08), transparent);
+  }
+  .header-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 24px;
+    position: relative;
+  }
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(232,84,26,0.12);
+    border: 1px solid rgba(232,84,26,0.3);
+    padding: 3px 10px;
+    border-radius: 3px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  h1 span { color: var(--accent); }
+  .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .meta {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+  .meta strong { color: var(--accent2); }
+
+  /* LAYOUT */
+  main {
+    padding: 32px 48px;
+    max-width: 1400px;
+    margin: 0 auto;
+    columns: 3;
+    column-gap: 20px;
+  }
+
+  /* SECTION CARDS */
+  .section {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .section-count {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  /* COLOR THEMES */
+  .theme-orange .section-header { background: rgba(232,84,26,0.08); }
+  .theme-orange .section-icon { background: rgba(232,84,26,0.15); }
+  .theme-orange .section-title { color: var(--accent); }
+  .theme-orange .section-icon svg path, .theme-orange .section-icon { color: var(--accent); }
+
+  .theme-blue .section-header { background: rgba(61,139,205,0.08); }
+  .theme-blue .section-icon { background: rgba(61,139,205,0.15); }
+  .theme-blue .section-title { color: var(--blue); }
+
+  .theme-green .section-header { background: rgba(63,185,80,0.08); }
+  .theme-green .section-icon { background: rgba(63,185,80,0.15); }
+  .theme-green .section-title { color: var(--green); }
+
+  .theme-purple .section-header { background: rgba(163,113,247,0.08); }
+  .theme-purple .section-icon { background: rgba(163,113,247,0.15); }
+  .theme-purple .section-title { color: var(--purple); }
+
+  .theme-cyan .section-header { background: rgba(57,197,207,0.08); }
+  .theme-cyan .section-icon { background: rgba(57,197,207,0.15); }
+  .theme-cyan .section-title { color: var(--cyan); }
+
+  .theme-yellow .section-header { background: rgba(240,160,48,0.08); }
+  .theme-yellow .section-icon { background: rgba(240,160,48,0.15); }
+  .theme-yellow .section-title { color: var(--accent2); }
+
+  /* COMMAND ENTRIES */
+  .command-list { padding: 8px 0; }
+  .cmd-entry {
+    padding: 6px 16px;
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+  }
+  .cmd-entry:last-child { border-bottom: none; }
+  .cmd-desc {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 3px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--text);
+    background: var(--code-bg);
+    display: block;
+    padding: 5px 9px;
+    border-radius: 4px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  .kw { color: var(--accent); font-weight: 600; }
+  .sub { color: var(--accent2); }
+  .flag { color: var(--blue); }
+  .val { color: var(--green); }
+  .cmt { color: var(--muted); font-style: italic; }
+  .var { color: var(--purple); }
+
+  /* AUTH BLOCK */
+  .auth-block {
+    padding: 12px 16px;
+    background: rgba(232,84,26,0.05);
+    border-top: 1px dashed rgba(232,84,26,0.2);
+  }
+  .auth-title {
+    font-size: 10px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px 48px;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  footer span { color: var(--accent); }
+
+  /* TIP */
+  .tip {
+    padding: 8px 16px;
+    background: rgba(57,197,207,0.05);
+    border-left: 2px solid var(--cyan);
+    font-size: 11px;
+    color: var(--cyan);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  @media (max-width: 1100px) { main { columns: 2; } }
+  @media (max-width: 700px) { main { columns: 1; padding: 16px; } header { padding: 24px 16px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ CLI Reference v2024</div>
+      <h1>OpenStack <span>CLI</span><br>Cheat Sheet</h1>
+      <p class="subtitle">$ openstack [command] [options] -- unified client</p>
+    </div>
+    <div class="meta">
+      <strong>python-openstackclient</strong><br>
+      Keystone · Nova · Neutron<br>
+      Cinder · Glance · Swift<br>
+      Heat · Barbican
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- AUTHENTICATION -->
+  <div class="section theme-orange">
+    <div class="section-header">
+      <div class="section-icon">🔑</div>
+      <div class="section-title">Authentifizierung & Umgebung</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">RC-Datei einbinden</div>
+        <code><span class="kw">source</span> openrc.sh</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Umgebungsvariablen setzen</div>
+        <code><span class="kw">export</span> <span class="var">OS_AUTH_URL</span>=https://keystone:5000/v3
+<span class="kw">export</span> <span class="var">OS_PROJECT_NAME</span>=myproject
+<span class="kw">export</span> <span class="var">OS_USERNAME</span>=admin
+<span class="kw">export</span> <span class="var">OS_PASSWORD</span>=secret</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Token anzeigen</div>
+        <code><span class="kw">openstack</span> token issue</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Katalog anzeigen</div>
+        <code><span class="kw">openstack</span> catalog list</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Aktives Projekt anzeigen</div>
+        <code><span class="kw">openstack</span> configuration show</code>
+      </div>
+    </div>
+    <div class="auth-block">
+      <div class="auth-title">⚡ Kurzform mit Flags</div>
+      <code><span class="kw">openstack</span> <span class="flag">--os-cloud</span> <span class="val">mycloud</span> server list</code>
+    </div>
+  </div>
+
+  <!-- COMPUTE -->
+  <div class="section theme-blue">
+    <div class="section-header">
+      <div class="section-icon">⚡</div>
+      <div class="section-title">Compute — Server (Nova)</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Alle Server auflisten</div>
+        <code><span class="kw">openstack</span> server list
+<span class="kw">openstack</span> server list <span class="flag">--all-projects</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Server erstellen</div>
+        <code><span class="kw">openstack</span> server create \
+  <span class="flag">--flavor</span> <span class="val">m1.small</span> \
+  <span class="flag">--image</span> <span class="val">ubuntu-22.04</span> \
+  <span class="flag">--network</span> <span class="val">mynet</span> \
+  <span class="flag">--key-name</span> <span class="val">mykey</span> \
+  <span class="var">my-server</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Server-Details anzeigen</div>
+        <code><span class="kw">openstack</span> server show <span class="var">my-server</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Server starten / stoppen / neu starten</div>
+        <code><span class="kw">openstack</span> server start <span class="var">my-server</span>
+<span class="kw">openstack</span> server stop <span class="var">my-server</span>
+<span class="kw">openstack</span> server reboot <span class="var">my-server</span>
+<span class="kw">openstack</span> server reboot <span class="flag">--hard</span> <span class="var">my-server</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Server löschen</div>
+        <code><span class="kw">openstack</span> server delete <span class="var">my-server</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Konsole öffnen</div>
+        <code><span class="kw">openstack</span> console url show <span class="var">my-server</span>
+<span class="kw">openstack</span> console log show <span class="var">my-server</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Server resize (Flavor ändern)</div>
+        <code><span class="kw">openstack</span> server resize \
+  <span class="flag">--flavor</span> <span class="val">m1.large</span> <span class="var">my-server</span>
+<span class="kw">openstack</span> server resize confirm <span class="var">my-server</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Snapshot erstellen</div>
+        <code><span class="kw">openstack</span> server image create \
+  <span class="flag">--name</span> <span class="val">my-snapshot</span> <span class="var">my-server</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">SSH-Key hinzufügen</div>
+        <code><span class="kw">openstack</span> keypair create \
+  <span class="flag">--public-key</span> ~/.ssh/id_rsa.pub <span class="val">mykey</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLAVORS & IMAGES -->
+  <div class="section theme-green">
+    <div class="section-header">
+      <div class="section-icon">🖼</div>
+      <div class="section-title">Images (Glance) & Flavors</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Images auflisten</div>
+        <code><span class="kw">openstack</span> image list
+<span class="kw">openstack</span> image list <span class="flag">--public</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Image hochladen</div>
+        <code><span class="kw">openstack</span> image create \
+  <span class="flag">--file</span> <span class="val">ubuntu.qcow2</span> \
+  <span class="flag">--disk-format</span> <span class="val">qcow2</span> \
+  <span class="flag">--container-format</span> <span class="val">bare</span> \
+  <span class="flag">--public</span> <span class="var">ubuntu-22.04</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Image anzeigen / löschen</div>
+        <code><span class="kw">openstack</span> image show <span class="var">ubuntu-22.04</span>
+<span class="kw">openstack</span> image delete <span class="var">ubuntu-22.04</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Flavors auflisten / erstellen</div>
+        <code><span class="kw">openstack</span> flavor list
+<span class="kw">openstack</span> flavor create \
+  <span class="flag">--ram</span> <span class="val">2048</span> <span class="flag">--vcpus</span> <span class="val">2</span> \
+  <span class="flag">--disk</span> <span class="val">20</span> <span class="var">m1.small</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- NETWORK -->
+  <div class="section theme-cyan">
+    <div class="section-header">
+      <div class="section-icon">🌐</div>
+      <div class="section-title">Netzwerk (Neutron)</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Netzwerke auflisten</div>
+        <code><span class="kw">openstack</span> network list
+<span class="kw">openstack</span> subnet list</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Netzwerk erstellen</div>
+        <code><span class="kw">openstack</span> network create <span class="var">mynet</span>
+<span class="kw">openstack</span> subnet create \
+  <span class="flag">--network</span> <span class="val">mynet</span> \
+  <span class="flag">--subnet-range</span> <span class="val">192.168.1.0/24</span> \
+  <span class="var">mysubnet</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Router erstellen & verbinden</div>
+        <code><span class="kw">openstack</span> router create <span class="var">myrouter</span>
+<span class="kw">openstack</span> router add subnet <span class="var">myrouter mysubnet</span>
+<span class="kw">openstack</span> router set \
+  <span class="flag">--external-gateway</span> <span class="val">public</span> <span class="var">myrouter</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Floating IP verwalten</div>
+        <code><span class="kw">openstack</span> floating ip create <span class="val">public</span>
+<span class="kw">openstack</span> floating ip list
+<span class="kw">openstack</span> server add floating ip \
+  <span class="var">my-server</span> <span class="val">203.0.113.10</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Security Groups</div>
+        <code><span class="kw">openstack</span> security group list
+<span class="kw">openstack</span> security group create <span class="var">web-sg</span>
+<span class="kw">openstack</span> security group rule create \
+  <span class="flag">--proto</span> <span class="val">tcp</span> <span class="flag">--dst-port</span> <span class="val">80</span> <span class="var">web-sg</span>
+<span class="kw">openstack</span> server add security group \
+  <span class="var">my-server web-sg</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Ports anzeigen</div>
+        <code><span class="kw">openstack</span> port list <span class="flag">--server</span> <span class="var">my-server</span>
+<span class="kw">openstack</span> port show <span class="var">PORT_ID</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- VOLUMES -->
+  <div class="section theme-yellow">
+    <div class="section-header">
+      <div class="section-icon">💾</div>
+      <div class="section-title">Block Storage — Volumes (Cinder)</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Volumes auflisten / erstellen</div>
+        <code><span class="kw">openstack</span> volume list
+<span class="kw">openstack</span> volume create \
+  <span class="flag">--size</span> <span class="val">50</span> <span class="var">my-volume</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Volume anhängen / trennen</div>
+        <code><span class="kw">openstack</span> server add volume \
+  <span class="var">my-server my-volume</span>
+<span class="kw">openstack</span> server remove volume \
+  <span class="var">my-server my-volume</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Volume-Snapshot</div>
+        <code><span class="kw">openstack</span> volume snapshot create \
+  <span class="flag">--volume</span> <span class="val">my-volume</span> <span class="var">my-snap</span>
+<span class="kw">openstack</span> volume snapshot list</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Volume-Typ & löschen</div>
+        <code><span class="kw">openstack</span> volume type list
+<span class="kw">openstack</span> volume delete <span class="var">my-volume</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- IDENTITY -->
+  <div class="section theme-purple">
+    <div class="section-header">
+      <div class="section-icon">👤</div>
+      <div class="section-title">Identity — Users & Projekte (Keystone)</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Benutzer verwalten</div>
+        <code><span class="kw">openstack</span> user list
+<span class="kw">openstack</span> user create \
+  <span class="flag">--password</span> <span class="val">secret</span> <span class="var">newuser</span>
+<span class="kw">openstack</span> user show <span class="var">newuser</span>
+<span class="kw">openstack</span> user delete <span class="var">newuser</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Projekte verwalten</div>
+        <code><span class="kw">openstack</span> project list
+<span class="kw">openstack</span> project create <span class="var">myproject</span>
+<span class="kw">openstack</span> project delete <span class="var">myproject</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Rollen zuweisen</div>
+        <code><span class="kw">openstack</span> role list
+<span class="kw">openstack</span> role add \
+  <span class="flag">--user</span> <span class="val">newuser</span> \
+  <span class="flag">--project</span> <span class="val">myproject</span> \
+  <span class="var">member</span>
+<span class="kw">openstack</span> role assignment list</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Domain verwalten</div>
+        <code><span class="kw">openstack</span> domain list
+<span class="kw">openstack</span> domain create <span class="var">mydomain</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- OBJECT STORAGE -->
+  <div class="section theme-blue">
+    <div class="section-header">
+      <div class="section-icon">📦</div>
+      <div class="section-title">Object Storage (Swift)</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Container verwalten</div>
+        <code><span class="kw">openstack</span> container list
+<span class="kw">openstack</span> container create <span class="var">mybucket</span>
+<span class="kw">openstack</span> container show <span class="var">mybucket</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Objekte hochladen / herunterladen</div>
+        <code><span class="kw">openstack</span> object create <span class="var">mybucket</span> <span class="val">file.txt</span>
+<span class="kw">openstack</span> object list <span class="var">mybucket</span>
+<span class="kw">openstack</span> object save \
+  <span class="var">mybucket</span> <span class="val">file.txt</span>
+<span class="kw">openstack</span> object delete <span class="var">mybucket</span> <span class="val">file.txt</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEYPAIRS & QUOTA -->
+  <div class="section theme-green">
+    <div class="section-header">
+      <div class="section-icon">📊</div>
+      <div class="section-title">Quotas, Keypairs & Availability Zones</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Quota anzeigen / setzen</div>
+        <code><span class="kw">openstack</span> quota show
+<span class="kw">openstack</span> quota set \
+  <span class="flag">--instances</span> <span class="val">50</span> \
+  <span class="flag">--cores</span> <span class="val">100</span> <span class="var">myproject</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Keypairs verwalten</div>
+        <code><span class="kw">openstack</span> keypair list
+<span class="kw">openstack</span> keypair show <span class="var">mykey</span>
+<span class="kw">openstack</span> keypair delete <span class="var">mykey</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Availability Zones & Hosts</div>
+        <code><span class="kw">openstack</span> availability zone list
+<span class="kw">openstack</span> host list
+<span class="kw">openstack</span> hypervisor list</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORCHESTRATION -->
+  <div class="section theme-orange">
+    <div class="section-header">
+      <div class="section-icon">🔥</div>
+      <div class="section-title">Orchestration (Heat / Stacks)</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Stack erstellen</div>
+        <code><span class="kw">openstack</span> stack create \
+  <span class="flag">-t</span> <span class="val">template.yaml</span> <span class="var">my-stack</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Stacks verwalten</div>
+        <code><span class="kw">openstack</span> stack list
+<span class="kw">openstack</span> stack show <span class="var">my-stack</span>
+<span class="kw">openstack</span> stack update \
+  <span class="flag">-t</span> <span class="val">new-template.yaml</span> <span class="var">my-stack</span>
+<span class="kw">openstack</span> stack delete <span class="var">my-stack</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Stack Events & Ressourcen</div>
+        <code><span class="kw">openstack</span> stack event list <span class="var">my-stack</span>
+<span class="kw">openstack</span> stack resource list <span class="var">my-stack</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOAD BALANCER -->
+  <div class="section theme-purple">
+    <div class="section-header">
+      <div class="section-icon">⚖️</div>
+      <div class="section-title">Load Balancer (Octavia)</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Load Balancer erstellen</div>
+        <code><span class="kw">openstack</span> loadbalancer create \
+  <span class="flag">--name</span> <span class="val">my-lb</span> \
+  <span class="flag">--vip-subnet-id</span> <span class="val">SUBNET_ID</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Listener & Pool</div>
+        <code><span class="kw">openstack</span> loadbalancer listener create \
+  <span class="flag">--protocol</span> <span class="val">HTTP</span> <span class="flag">--protocol-port</span> <span class="val">80</span> \
+  <span class="flag">--name</span> <span class="val">my-listener</span> <span class="var">my-lb</span>
+<span class="kw">openstack</span> loadbalancer pool create \
+  <span class="flag">--lb-algorithm</span> <span class="val">ROUND_ROBIN</span> \
+  <span class="flag">--listener</span> <span class="val">my-listener</span> \
+  <span class="flag">--protocol</span> <span class="val">HTTP</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Member hinzufügen</div>
+        <code><span class="kw">openstack</span> loadbalancer member create \
+  <span class="flag">--address</span> <span class="val">192.168.1.10</span> \
+  <span class="flag">--protocol-port</span> <span class="val">8080</span> <span class="var">POOL_ID</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTPUT & FORMAT -->
+  <div class="section theme-cyan">
+    <div class="section-header">
+      <div class="section-icon">🎛</div>
+      <div class="section-title">Output-Formate & Filterung</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Format wählen</div>
+        <code><span class="kw">openstack</span> server list <span class="flag">-f</span> <span class="val">table</span>   <span class="cmt"># default</span>
+<span class="kw">openstack</span> server list <span class="flag">-f</span> <span class="val">json</span>
+<span class="kw">openstack</span> server list <span class="flag">-f</span> <span class="val">yaml</span>
+<span class="kw">openstack</span> server list <span class="flag">-f</span> <span class="val">csv</span>
+<span class="kw">openstack</span> server list <span class="flag">-f</span> <span class="val">value</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Spalten auswählen</div>
+        <code><span class="kw">openstack</span> server list \
+  <span class="flag">-c</span> <span class="val">ID</span> <span class="flag">-c</span> <span class="val">Name</span> <span class="flag">-c</span> <span class="val">Status</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Filtern</div>
+        <code><span class="kw">openstack</span> server list \
+  <span class="flag">--status</span> <span class="val">ACTIVE</span>
+<span class="kw">openstack</span> server list \
+  <span class="flag">--name</span> <span class="val">my-server</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Nur Wert ausgeben (für Skripte)</div>
+        <code><span class="kw">openstack</span> server show <span class="var">my-server</span> \
+  <span class="flag">-f</span> <span class="val">value</span> <span class="flag">-c</span> <span class="val">id</span></code>
+      </div>
+    </div>
+    <div class="tip">💡 Tipp: Mit <strong>--debug</strong> werden alle API-Calls ausgegeben</div>
+  </div>
+
+  <!-- DNS -->
+  <div class="section theme-yellow">
+    <div class="section-header">
+      <div class="section-icon">🔤</div>
+      <div class="section-title">DNS (Designate)</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Zonen verwalten</div>
+        <code><span class="kw">openstack</span> zone list
+<span class="kw">openstack</span> zone create \
+  <span class="flag">--email</span> <span class="val">admin@example.com</span> \
+  <span class="var">example.com.</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">DNS-Einträge</div>
+        <code><span class="kw">openstack</span> recordset list <span class="var">example.com.</span>
+<span class="kw">openstack</span> recordset create \
+  <span class="flag">--type</span> <span class="val">A</span> <span class="flag">--record</span> <span class="val">1.2.3.4</span> \
+  <span class="var">example.com.</span> <span class="val">www</span></code>
+      </div>
+    </div>
+  </div>
+
+  <!-- AGGREGATES -->
+  <div class="section theme-orange">
+    <div class="section-header">
+      <div class="section-icon">🧩</div>
+      <div class="section-title">Nützliche Kombinationen</div>
+    </div>
+    <div class="command-list">
+      <div class="cmd-entry">
+        <div class="cmd-desc">Server-IDs aller aktiven Server</div>
+        <code><span class="kw">openstack</span> server list \
+  <span class="flag">--status</span> <span class="val">ACTIVE</span> \
+  <span class="flag">-f</span> <span class="val">value</span> <span class="flag">-c</span> <span class="val">ID</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Floating IP an Server hängen</div>
+        <code>FIP=$(<span class="kw">openstack</span> floating ip create \
+  <span class="val">public</span> <span class="flag">-f</span> <span class="val">value</span> <span class="flag">-c</span> <span class="val">floating_ip_address</span>)
+<span class="kw">openstack</span> server add floating ip \
+  <span class="var">my-server</span> $FIP</code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Alle Ressourcen eines Projekts</div>
+        <code><span class="kw">openstack</span> server list <span class="flag">--project</span> <span class="var">myproject</span>
+<span class="kw">openstack</span> volume list <span class="flag">--project</span> <span class="var">myproject</span>
+<span class="kw">openstack</span> floating ip list \
+  <span class="flag">--project</span> <span class="var">myproject</span></code>
+      </div>
+      <div class="cmd-entry">
+        <div class="cmd-desc">Schnell-Hilfe</div>
+        <code><span class="kw">openstack</span> help
+<span class="kw">openstack</span> help server create
+<span class="kw">openstack</span> <span class="sub">command</span> <span class="val">RESOURCE</span> <span class="flag">--help</span></code>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span>openstack</span> — Python OpenStack Client &nbsp;·&nbsp; 
+  <span>pip install python-openstackclient</span> &nbsp;·&nbsp;
+  docs.openstack.org/python-openstackclient
+</footer>
+
+</body>
+</html>
