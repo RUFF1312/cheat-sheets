@@ -21,16 +21,21 @@ Die Basis des Designs verwendet eine stark vom GitHub Dark-Theme inspirierte Far
 
 ### Technologie-Spezifische Akzente
 Jedes Sheet / jede Karte hat ihre eigene Akzentfarbe (`--ac`), sowie semi-transparente Hintergrundfarben für Hover-Status und Badges (`--acs` auf 15% Deckkraft, `--acb` auf 25% Deckkraft):
-- **OpenStack:** `#e8541a`
+- **OpenStack:** `#007ac1` (Official Blue)
 - **tmux:** `#1aac8a`
-- **vi/vim:** `#c778dd`
-- **Ansible:** `#e8313a`
-- **Python:** `#f7c948` (Secondary: `#4b8bbe`)
-- **Bash:** `#4ec9b0` (Secondary: `#f0a030`)
-- **Git:** `#f05033`
-- **PowerShell:** `#2671be`
-- **Proxmox:** `#e36209`
+- **vi/vim:** `#199c07` (Vim Green)
+- **Ansible:** `#ee0000` (Red Hat Red)
+- **Python:** `#3776ab` (Secondary: `#ffd43b`)
+- **Bash:** `#a371f7` (Violet)
+- **Git:** `#f1502f` (Git Orange)
+- **PowerShell:** `#5391fe`
+- **Proxmox:** `#e57000`
 - **systemd:** `#30d475`
+- **SQL:** `#336791` (Postgres Blue)
+- **Docker:** `#0db7ed` (Docker Blue)
+- **Kubernetes:** `#326ce5` (K8s Blue)
+- **Helm:** `#277dc1` (Helm Blue)
+- **nmcli:** `#3584e4` (GNOME Blue)
 
 ## 2. Typografie (Typography)
 
