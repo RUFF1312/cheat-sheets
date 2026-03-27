@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kubernetes / kubectl - TheLayer0Guide</title>
+<meta name="description" content="Kubernetes kubectl Cheat Sheet — Pods, Deployments, Services, Namespaces, RBAC, Troubleshooting und mehr auf einen Blick.">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0d1117;--surface:#161b22;--border:#30363d;
+    --accent:#326CE5;--accent2:#6b9fff;
+    --blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;
+    --cyan:#39c5cf;--red:#f47067;--yellow:#f7c948;
+    --text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#080f1e 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(50,108,229,0.1),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(50,108,229,0.12);border:1px solid rgba(50,108,229,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span.tool{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  .legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600}
+  .chip.a{background:rgba(50,108,229,0.12);border:1px solid rgba(50,108,229,0.3);color:var(--accent)}
+  .chip.b{background:rgba(63,185,80,0.12);border:1px solid rgba(63,185,80,0.3);color:var(--green)}
+  .chip.c{background:rgba(247,201,72,0.12);border:1px solid rgba(247,201,72,0.3);color:var(--yellow)}
+  .chip.d{background:rgba(163,113,247,0.12);border:1px solid rgba(163,113,247,0.3);color:var(--purple)}
+  .chip.e{background:rgba(57,197,207,0.12);border:1px solid rgba(57,197,207,0.3);color:var(--cyan)}
+  .chip.f{background:rgba(244,112,103,0.12);border:1px solid rgba(244,112,103,0.3);color:var(--red)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  /* Themes */
+  .theme-blue .section-header{background:rgba(50,108,229,0.08)}.theme-blue .section-icon{background:rgba(50,108,229,0.15)}.theme-blue .section-title{color:var(--accent)}
+  .theme-green .section-header{background:rgba(63,185,80,0.08)}.theme-green .section-icon{background:rgba(63,185,80,0.15)}.theme-green .section-title{color:var(--green)}
+  .theme-purple .section-header{background:rgba(163,113,247,0.08)}.theme-purple .section-icon{background:rgba(163,113,247,0.15)}.theme-purple .section-title{color:var(--purple)}
+  .theme-yellow .section-header{background:rgba(247,201,72,0.08)}.theme-yellow .section-icon{background:rgba(247,201,72,0.15)}.theme-yellow .section-title{color:var(--yellow)}
+  .theme-red .section-header{background:rgba(244,112,103,0.08)}.theme-red .section-icon{background:rgba(244,112,103,0.15)}.theme-red .section-title{color:var(--red)}
+  .theme-cyan .section-header{background:rgba(57,197,207,0.08)}.theme-cyan .section-icon{background:rgba(57,197,207,0.15)}.theme-cyan .section-title{color:var(--cyan)}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:var(--accent);font-weight:700}
+  .bi{color:var(--blue);font-weight:600}
+  .st{color:var(--green)}
+  .nu{color:var(--red)}
+  .cm{color:var(--muted);font-style:italic}
+  .fn{color:var(--cyan);font-weight:600}
+  .va{color:var(--purple)}
+  .op{color:var(--yellow);font-weight:600}
+  .tip{padding:8px 16px;background:rgba(50,108,229,0.05);border-top:1px dashed rgba(50,108,229,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  .tip.y{background:rgba(247,201,72,0.05);border-color:rgba(247,201,72,0.2);color:var(--yellow)}
+  .tip.p{background:rgba(163,113,247,0.05);border-color:rgba(163,113,247,0.2);color:var(--purple)}
+  .tip.r{background:rgba(244,112,103,0.05);border-color:rgba(244,112,103,0.2);color:var(--red)}
+  .tip.c{background:rgba(57,197,207,0.05);border-color:rgba(57,197,207,0.2);color:var(--cyan)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(50,108,229,0.3);padding:4px 12px;border-radius:4px;background:rgba(50,108,229,0.08)}
+  .nav-link:hover{background:rgba(50,108,229,0.18)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+<link rel="icon" type="image/svg+xml" href="assets/kubernetes.svg">
+</head>
+<body>
+<header>
+  <a href="index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Container Orchestration</div>
+      <img src="assets/kubernetes.svg" alt="Kubernetes Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;">
+      <h1><span class="tool">Kubernetes</span> / kubectl<br>TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ kubectl [command] [TYPE] [NAME] [flags]</p>
+      <div class="legend">
+        <div class="chip a">⚙️ Cluster</div>
+        <div class="chip b">🚀 Workloads</div>
+        <div class="chip c">🌐 Services</div>
+        <div class="chip d">🔐 RBAC</div>
+        <div class="chip e">🔍 Debug</div>
+        <div class="chip f">📦 Config</div>
+      </div>
+    </div>
+    <div class="meta"><strong>kubernetes / kubectl</strong><br>Container Orchestrator<br>Pods · Deployments · Services<br>RBAC · ConfigMaps · Secrets</div>
+  </div>
+</header>
+<main>
+
+<!-- KONTEXT & CLUSTER -->
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">Kontext &amp; Cluster</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Cluster-Info</div>
+<code><span class="kw">kubectl cluster-info</span>
+<span class="kw">kubectl cluster-info</span> dump      <span class="cm"># ausführlich</span>
+<span class="kw">kubectl version</span>                 <span class="cm"># Client + Server</span>
+<span class="kw">kubectl api-resources</span>           <span class="cm"># alle Ressourcen</span>
+<span class="kw">kubectl api-versions</span>            <span class="cm"># API-Gruppen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Kontexte (kubeconfig)</div>
+<code><span class="kw">kubectl config get-contexts</span>
+<span class="kw">kubectl config current-context</span>
+<span class="kw">kubectl config use-context</span> <span class="va">my-cluster</span>
+<span class="kw">kubectl config set-context</span> <span class="op">--current</span> \
+  <span class="op">--namespace</span>=<span class="st">production</span>
+<span class="kw">kubectl config view</span>             <span class="cm"># kubeconfig anzeigen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Nodes</div>
+<code><span class="kw">kubectl get nodes</span>
+<span class="kw">kubectl get nodes</span> <span class="op">-o wide</span>       <span class="cm"># IP, OS, Kernel</span>
+<span class="kw">kubectl describe node</span> <span class="va">node01</span>
+<span class="kw">kubectl top node</span>                <span class="cm"># CPU/RAM (metrics-server)</span>
+<span class="kw">kubectl cordon</span>   <span class="va">node01</span>          <span class="cm"># kein Scheduling</span>
+<span class="kw">kubectl drain</span>    <span class="va">node01</span> <span class="op">--ignore-daemonsets</span>
+<span class="kw">kubectl uncordon</span> <span class="va">node01</span></code></div>
+  </div>
+  <div class="tip">💡 <strong>KUBECONFIG</strong>-Env-Variable überschreibt den Standardpfad <strong>~/.kube/config</strong>. Mehrere Dateien: <code>KUBECONFIG=a.yaml:b.yaml kubectl ...</code></div>
+</div>
+
+<!-- NAMESPACES -->
+<div class="section theme-cyan">
+  <div class="section-header"><div class="section-icon">📂</div><div class="section-title">Namespaces</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Verwalten</div>
+<code><span class="kw">kubectl get namespaces</span>
+<span class="kw">kubectl create namespace</span> <span class="st">staging</span>
+<span class="kw">kubectl delete namespace</span> <span class="st">staging</span>
+<span class="kw">kubectl describe namespace</span> <span class="st">kube-system</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Namespace-Flag</div>
+<code><span class="cm"># Kurzform -n</span>
+<span class="kw">kubectl get pods</span> <span class="op">-n</span> <span class="st">kube-system</span>
+<span class="cm"># Alle Namespaces</span>
+<span class="kw">kubectl get pods</span> <span class="op">--all-namespaces</span>
+<span class="kw">kubectl get pods</span> <span class="op">-A</span>              <span class="cm"># Kurzform</span></code></div>
+  </div>
+</div>
+
+<!-- PODS -->
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">🚀</div><div class="section-title">Pods</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Auflisten &amp; Inspizieren</div>
+<code><span class="kw">kubectl get pods</span>
+<span class="kw">kubectl get pods</span> <span class="op">-o wide</span>        <span class="cm"># Node, IP</span>
+<span class="kw">kubectl get pod</span> <span class="va">mypod</span> <span class="op">-o yaml</span>   <span class="cm"># vollständiges Manifest</span>
+<span class="kw">kubectl describe pod</span> <span class="va">mypod</span>
+<span class="kw">kubectl get pods</span> <span class="op">-l</span> <span class="st">app=nginx</span>   <span class="cm"># Labels filtern</span>
+<span class="kw">kubectl get pods</span> <span class="op">--field-selector</span> \
+  status.phase=Running</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen &amp; Löschen</div>
+<code><span class="cm"># Schnell: imperativer Pod</span>
+<span class="kw">kubectl run</span> <span class="va">mypod</span> <span class="op">--image</span>=<span class="st">nginx:alpine</span>
+
+<span class="cm"># Aus Manifest</span>
+<span class="kw">kubectl apply</span>  <span class="op">-f</span> pod.yaml
+<span class="kw">kubectl delete</span> <span class="op">-f</span> pod.yaml
+<span class="kw">kubectl delete pod</span> <span class="va">mypod</span>
+<span class="kw">kubectl delete pod</span> <span class="va">mypod</span> <span class="op">--force</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Logs &amp; Exec</div>
+<code><span class="kw">kubectl logs</span>    <span class="va">mypod</span>
+<span class="kw">kubectl logs</span>    <span class="va">mypod</span> <span class="op">-f</span>          <span class="cm"># follow</span>
+<span class="kw">kubectl logs</span>    <span class="va">mypod</span> <span class="op">--tail</span>=<span class="nu">100</span>
+<span class="kw">kubectl logs</span>    <span class="va">mypod</span> <span class="op">-c</span> <span class="st">sidecar</span>  <span class="cm"># Container wählen</span>
+<span class="kw">kubectl logs</span>    <span class="va">mypod</span> <span class="op">--previous</span>  <span class="cm"># letzter Absturz</span>
+
+<span class="cm"># Shell im Pod</span>
+<span class="kw">kubectl exec</span> <span class="op">-it</span> <span class="va">mypod</span> <span class="op">--</span> bash
+<span class="kw">kubectl exec</span> <span class="op">-it</span> <span class="va">mypod</span> <span class="op">-c</span> <span class="st">sidecar</span> <span class="op">--</span> sh</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Port-Forward &amp; Kopieren</div>
+<code><span class="cm"># Lokalen Port fortwarden</span>
+<span class="kw">kubectl port-forward</span> <span class="va">mypod</span> <span class="nu">8080</span>:<span class="nu">80</span>
+<span class="kw">kubectl port-forward</span> svc/<span class="st">myservice</span> <span class="nu">9090</span>:<span class="nu">9090</span>
+
+<span class="cm"># Dateien kopieren</span>
+<span class="kw">kubectl cp</span> <span class="va">mypod</span>:/etc/config ./config
+<span class="kw">kubectl cp</span> ./local.conf <span class="va">mypod</span>:/tmp/</code></div>
+  </div>
+  <div class="tip g">💡 <strong>kubectl run --rm -it --image=busybox -- sh</strong> startet einen temporären Debug-Pod, der nach dem Beenden automatisch gelöscht wird.</div>
+</div>
+
+<!-- DEPLOYMENTS -->
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">📋</div><div class="section-title">Deployments</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen &amp; Skalieren</div>
+<code><span class="cm"># Imperativ</span>
+<span class="kw">kubectl create deployment</span> <span class="va">web</span> \
+  <span class="op">--image</span>=<span class="st">nginx:1.25</span> <span class="op">--replicas</span>=<span class="nu">3</span>
+
+<span class="cm"># Aus Manifest</span>
+<span class="kw">kubectl apply</span> <span class="op">-f</span> deployment.yaml
+
+<span class="cm"># Skalieren</span>
+<span class="kw">kubectl scale deployment</span> <span class="va">web</span> <span class="op">--replicas</span>=<span class="nu">5</span>
+<span class="kw">kubectl autoscale deployment</span> <span class="va">web</span> \
+  <span class="op">--min</span>=<span class="nu">2</span> <span class="op">--max</span>=<span class="nu">10</span> <span class="op">--cpu-percent</span>=<span class="nu">70</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Updates &amp; Rollbacks</div>
+<code><span class="cm"># Image aktualisieren</span>
+<span class="kw">kubectl set image</span> deployment/<span class="va">web</span> \
+  <span class="st">nginx</span>=nginx:<span class="nu">1.26</span>
+
+<span class="cm"># Rollout-Status</span>
+<span class="kw">kubectl rollout status</span> deployment/<span class="va">web</span>
+<span class="kw">kubectl rollout history</span> deployment/<span class="va">web</span>
+
+<span class="cm"># Rollback</span>
+<span class="kw">kubectl rollout undo</span> deployment/<span class="va">web</span>
+<span class="kw">kubectl rollout undo</span> deployment/<span class="va">web</span> \
+  <span class="op">--to-revision</span>=<span class="nu">2</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Deployment YAML (Kurzform)</div>
+<code><span class="kw">apiVersion</span>: apps/v1
+<span class="kw">kind</span>: Deployment
+<span class="kw">metadata</span>:
+  <span class="fn">name</span>: <span class="st">web</span>
+<span class="kw">spec</span>:
+  <span class="va">replicas</span>: <span class="nu">3</span>
+  <span class="va">selector</span>:
+    <span class="fn">matchLabels</span>: {<span class="st">app</span>: web}
+  <span class="va">template</span>:
+    <span class="fn">metadata</span>:
+      <span class="fn">labels</span>: {<span class="st">app</span>: web}
+    <span class="fn">spec</span>:
+      <span class="fn">containers</span>:
+      - <span class="fn">name</span>: <span class="st">nginx</span>
+        <span class="fn">image</span>: <span class="st">nginx:1.25</span>
+        <span class="fn">ports</span>:
+        - <span class="fn">containerPort</span>: <span class="nu">80</span>
+        <span class="fn">resources</span>:
+          <span class="fn">requests</span>: {<span class="st">cpu</span>: 100m, <span class="st">memory</span>: 128Mi}
+          <span class="fn">limits</span>:   {<span class="st">cpu</span>: 500m, <span class="st">memory</span>: 256Mi}</code></div>
+  </div>
+  <div class="tip">💡 <strong>RollingUpdate</strong> (Standard): Null-Downtime-Updates. <strong>Recreate</strong>: alle alten Pods werden zuerst beendet — kurze Downtime.</div>
+</div>
+
+<!-- SERVICES -->
+<div class="section theme-cyan">
+  <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Services &amp; Networking</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Service-Typen</div>
+<code><span class="cm"># ClusterIP (intern, Standard)</span>
+<span class="kw">kubectl expose deployment</span> <span class="va">web</span> \
+  <span class="op">--port</span>=<span class="nu">80</span> <span class="op">--target-port</span>=<span class="nu">80</span>
+
+<span class="cm"># NodePort (Host-Port)</span>
+<span class="kw">kubectl expose deployment</span> <span class="va">web</span> \
+  <span class="op">--type</span>=NodePort <span class="op">--port</span>=<span class="nu">80</span>
+
+<span class="cm"># LoadBalancer (Cloud)</span>
+<span class="kw">kubectl expose deployment</span> <span class="va">web</span> \
+  <span class="op">--type</span>=LoadBalancer <span class="op">--port</span>=<span class="nu">80</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Service anzeigen &amp; löschen</div>
+<code><span class="kw">kubectl get svc</span>
+<span class="kw">kubectl get svc</span> <span class="op">-o wide</span>
+<span class="kw">kubectl describe svc</span> <span class="va">web</span>
+<span class="kw">kubectl delete svc</span> <span class="va">web</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Ingress</div>
+<code><span class="kw">kubectl get ingress</span>
+<span class="kw">kubectl describe ingress</span> <span class="va">my-ingress</span>
+<span class="kw">kubectl apply</span> <span class="op">-f</span> ingress.yaml
+
+<span class="cm"># Ingress YAML (nginx-ingress)</span>
+<span class="kw">apiVersion</span>: networking.k8s.io/v1
+<span class="kw">kind</span>: Ingress
+<span class="kw">metadata</span>:
+  <span class="fn">name</span>: <span class="st">my-ingress</span>
+  <span class="fn">annotations</span>:
+    <span class="st">nginx.ingress.kubernetes.io/rewrite-target</span>: /
+<span class="kw">spec</span>:
+  <span class="fn">rules</span>:
+  - <span class="fn">host</span>: <span class="st">app.example.com</span>
+    <span class="fn">http</span>:
+      <span class="fn">paths</span>:
+      - <span class="fn">path</span>: /
+        <span class="fn">pathType</span>: Prefix
+        <span class="fn">backend</span>:
+          <span class="fn">service</span>:
+            <span class="fn">name</span>: <span class="st">web</span>
+            <span class="fn">port</span>: {<span class="fn">number</span>: <span class="nu">80</span>}</code></div>
+  </div>
+  <div class="tip c">💡 DNS-Name im Cluster: <strong>servicename.namespace.svc.cluster.local</strong> — Services sind innerhalb des Clusters automatisch per DNS erreichbar.</div>
+</div>
+
+<!-- CONFIGMAPS & SECRETS -->
+<div class="section theme-yellow">
+  <div class="section-header"><div class="section-icon">📦</div><div class="section-title">ConfigMaps &amp; Secrets</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">ConfigMap erstellen</div>
+<code><span class="cm"># Aus Literalwerten</span>
+<span class="kw">kubectl create configmap</span> <span class="va">app-config</span> \
+  <span class="op">--from-literal</span>=<span class="st">DB_HOST=postgres</span> \
+  <span class="op">--from-literal</span>=<span class="st">DB_PORT=5432</span>
+
+<span class="cm"># Aus Datei</span>
+<span class="kw">kubectl create configmap</span> <span class="va">nginx-conf</span> \
+  <span class="op">--from-file</span>=nginx.conf
+
+<span class="kw">kubectl get configmap</span> <span class="va">app-config</span> <span class="op">-o yaml</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Secrets erstellen</div>
+<code><span class="cm"># Generic Secret</span>
+<span class="kw">kubectl create secret generic</span> <span class="va">db-secret</span> \
+  <span class="op">--from-literal</span>=<span class="st">password=s3cr3t</span>
+
+<span class="cm"># Docker Registry Secret</span>
+<span class="kw">kubectl create secret docker-registry</span> <span class="va">regcred</span> \
+  <span class="op">--docker-server</span>=ghcr.io \
+  <span class="op">--docker-username</span>=<span class="va">$USER</span> \
+  <span class="op">--docker-password</span>=<span class="va">$TOKEN</span>
+
+<span class="kw">kubectl get secret</span> <span class="va">db-secret</span> <span class="op">-o jsonpath</span>=\
+<span class="st">'{.data.password}'</span> | <span class="fn">base64</span> <span class="op">-d</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Als Env / Volume nutzen</div>
+<code><span class="cm"># Als Umgebungsvariable</span>
+<span class="fn">env</span>:
+- <span class="fn">name</span>: <span class="va">DB_PASSWORD</span>
+  <span class="fn">valueFrom</span>:
+    <span class="fn">secretKeyRef</span>:
+      <span class="fn">name</span>: <span class="st">db-secret</span>
+      <span class="fn">key</span>: <span class="st">password</span>
+
+<span class="cm"># Als Volume</span>
+<span class="fn">volumes</span>:
+- <span class="fn">name</span>: config
+  <span class="fn">configMap</span>:
+    <span class="fn">name</span>: <span class="st">app-config</span>
+<span class="fn">volumeMounts</span>:
+- <span class="fn">mountPath</span>: /etc/config
+  <span class="fn">name</span>: config</code></div>
+  </div>
+  <div class="tip y">⚠️ Secrets sind nur Base64-kodiert, nicht verschlüsselt! Für echte Verschlüsselung: <strong>Sealed Secrets</strong> oder <strong>External Secrets Operator</strong> verwenden.</div>
+</div>
+
+<!-- WORKLOADS: STATEFULSET, DAEMONSET, JOB -->
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">🔄</div><div class="section-title">StatefulSet · DaemonSet · Job</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">StatefulSet</div>
+<code><span class="kw">kubectl get statefulsets</span>           <span class="cm"># sts</span>
+<span class="kw">kubectl scale sts</span> <span class="va">mydb</span> <span class="op">--replicas</span>=<span class="nu">3</span>
+<span class="kw">kubectl rollout restart sts</span> <span class="va">mydb</span>
+<span class="cm"># PVCs bleiben nach Pod-Löschung erhalten</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">DaemonSet</div>
+<code><span class="kw">kubectl get daemonsets</span>             <span class="cm"># ds</span>
+<span class="kw">kubectl describe ds</span> <span class="va">fluentd</span> <span class="op">-n</span> <span class="st">kube-system</span>
+<span class="kw">kubectl rollout restart ds</span> <span class="va">fluentd</span>
+<span class="cm"># Läuft auf jedem (passenden) Node</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Job &amp; CronJob</div>
+<code><span class="cm"># Job einmalig ausführen</span>
+<span class="kw">kubectl create job</span> <span class="va">pi-calc</span> \
+  <span class="op">--image</span>=<span class="st">perl</span> <span class="op">--</span> perl -Mbignum=bpi -wle \
+  <span class="st">"print bpi(100)"</span>
+
+<span class="kw">kubectl get jobs</span>
+<span class="kw">kubectl get cronjobs</span>               <span class="cm"># cj</span>
+
+<span class="cm"># CronJob pausieren</span>
+<span class="kw">kubectl patch cronjob</span> <span class="va">my-cj</span> <span class="op">-p</span> \
+  <span class="st">'{"spec":{"suspend":true}}'</span></code></div>
+  </div>
+  <div class="tip p">💡 <strong>StatefulSet</strong>: stabile Netzwerkidentität + geordnetes Hoch-/Runterfahren. Ideal für Datenbanken wie PostgreSQL, Cassandra, Kafka.</div>
+</div>
+
+<!-- RBAC -->
+<div class="section theme-red">
+  <div class="section-header"><div class="section-icon">🔐</div><div class="section-title">RBAC</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">ServiceAccount &amp; Rollen</div>
+<code><span class="kw">kubectl create serviceaccount</span> <span class="va">my-sa</span>
+<span class="kw">kubectl get serviceaccounts</span>        <span class="cm"># sa</span>
+
+<span class="cm"># ClusterRole (clusterweit)</span>
+<span class="kw">kubectl create clusterrole</span> <span class="va">pod-reader</span> \
+  <span class="op">--verb</span>=get,list,watch \
+  <span class="op">--resource</span>=pods
+
+<span class="cm"># Namespace-spezifische Rolle</span>
+<span class="kw">kubectl create role</span> <span class="va">pod-reader</span> \
+  <span class="op">-n</span> <span class="st">staging</span> <span class="op">--verb</span>=get,list \
+  <span class="op">--resource</span>=pods</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">RoleBindings</div>
+<code><span class="kw">kubectl create rolebinding</span> <span class="va">read-pods</span> \
+  <span class="op">--role</span>=pod-reader \
+  <span class="op">--serviceaccount</span>=<span class="st">staging:my-sa</span> \
+  <span class="op">-n</span> <span class="st">staging</span>
+
+<span class="kw">kubectl create clusterrolebinding</span> <span class="va">admin-bind</span> \
+  <span class="op">--clusterrole</span>=cluster-admin \
+  <span class="op">--user</span>=<span class="st">alice</span>
+
+<span class="kw">kubectl get rolebindings</span>
+<span class="kw">kubectl get clusterrolebindings</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Berechtigungen prüfen</div>
+<code><span class="cm"># Eigene Rechte</span>
+<span class="kw">kubectl auth can-i</span> create pods
+<span class="kw">kubectl auth can-i</span> delete pods <span class="op">-n</span> <span class="st">prod</span>
+
+<span class="cm"># Für anderen User</span>
+<span class="kw">kubectl auth can-i</span> list nodes \
+  <span class="op">--as</span>=<span class="st">alice</span>
+<span class="kw">kubectl auth can-i</span> get secrets \
+  <span class="op">--as</span>=system:serviceaccount:<span class="st">default:my-sa</span></code></div>
+  </div>
+  <div class="tip r">⚠️ <strong>cluster-admin</strong> gibt vollen Zugriff — sparsam einsetzen! Principle of Least Privilege: nur nötige Verben und Ressourcen gewähren.</div>
+</div>
+
+<!-- STORAGE -->
+<div class="section theme-yellow">
+  <div class="section-header"><div class="section-icon">💾</div><div class="section-title">Storage (PV / PVC)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Überblick</div>
+<code><span class="kw">kubectl get pv</span>                    <span class="cm"># PersistentVolumes</span>
+<span class="kw">kubectl get pvc</span>                   <span class="cm"># PVC (Namespace)</span>
+<span class="kw">kubectl get storageclass</span>          <span class="cm"># sc</span>
+<span class="kw">kubectl describe pvc</span> <span class="va">my-pvc</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">PVC YAML</div>
+<code><span class="kw">apiVersion</span>: v1
+<span class="kw">kind</span>: PersistentVolumeClaim
+<span class="kw">metadata</span>:
+  <span class="fn">name</span>: <span class="st">my-pvc</span>
+<span class="kw">spec</span>:
+  <span class="va">accessModes</span>: [ReadWriteOnce]
+  <span class="va">storageClassName</span>: <span class="st">standard</span>
+  <span class="va">resources</span>:
+    <span class="fn">requests</span>:
+      <span class="fn">storage</span>: <span class="nu">10Gi</span></code></div>
+  </div>
+  <div class="tip y">💡 <strong>ReadWriteMany (RWX)</strong>: benötigt NFS oder Ceph/RBD. <strong>ReadWriteOnce (RWO)</strong>: nur ein Node gleichzeitig — für die meisten Datenbanken ausreichend.</div>
+</div>
+
+<!-- DEBUGGING & TROUBLESHOOTING -->
+<div class="section theme-red">
+  <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Debugging &amp; Troubleshooting</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Pod-Status prüfen</div>
+<code><span class="kw">kubectl get pod</span> <span class="va">mypod</span> <span class="op">-o yaml</span>
+<span class="kw">kubectl describe pod</span> <span class="va">mypod</span>
+<span class="kw">kubectl get events</span> <span class="op">--sort-by</span>=<span class="st">'.lastTimestamp'</span>
+<span class="kw">kubectl get events</span> <span class="op">-n</span> <span class="st">default</span> <span class="op">--field-selector</span> \
+  involvedObject.name=<span class="va">mypod</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Debug-Pods &amp; Ephemeral Container</div>
+<code><span class="cm"># Temporärer Debug-Pod</span>
+<span class="kw">kubectl run</span> <span class="va">debug</span> <span class="op">--rm -it</span> \
+  <span class="op">--image</span>=<span class="st">nicolaka/netshoot</span> <span class="op">--</span> bash
+
+<span class="cm"># Ephemeral Container (ab k8s 1.23)</span>
+<span class="kw">kubectl debug</span> <span class="op">-it</span> <span class="va">mypod</span> \
+  <span class="op">--image</span>=<span class="st">busybox</span> <span class="op">--target</span>=<span class="st">mycontainer</span>
+
+<span class="cm"># Kopie eines Pods mit anderem Image</span>
+<span class="kw">kubectl debug</span> <span class="va">mypod</span> <span class="op">-it</span> \
+  <span class="op">--copy-to</span>=<span class="st">debug-pod</span> \
+  <span class="op">--set-image</span>=<span class="st">*=ubuntu</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Ressourcen &amp; Status</div>
+<code><span class="kw">kubectl top pods</span>                  <span class="cm"># Ressourcenverbrauch</span>
+<span class="kw">kubectl top pods</span> <span class="op">--sort-by</span>=<span class="st">memory</span>
+<span class="kw">kubectl top nodes</span>
+
+<span class="cm"># Alle nicht-laufenden Pods</span>
+<span class="kw">kubectl get pods</span> <span class="op">-A</span> <span class="op">--field-selector</span> \
+  <span class="st">'status.phase!=Running'</span>
+
+<span class="cm"># Pending Pods (Scheduling-Problem)</span>
+<span class="kw">kubectl get pods</span> <span class="op">--field-selector</span>=\
+<span class="st">status.phase=Pending</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Häufige Pod-Zustände</div>
+<code><span class="cm">Pending       # kein passender Node</span>
+<span class="cm">CrashLoopBackOff # Container crasht wiederholt</span>
+<span class="cm">ImagePullBackOff # Image nicht pull-bar</span>
+<span class="cm">OOMKilled     # Speicherlimit überschritten</span>
+<span class="cm">Terminating   # wird beendet (Finalizer?)</span>
+<span class="cm">Error         # Exitcode != 0</span></code></div>
+  </div>
+  <div class="tip r">💡 <strong>CrashLoopBackOff</strong>: <code>kubectl logs --previous</code> zeigt Logs des letzten Abbruchs. <strong>ImagePullBackOff</strong>: Registry-Zugriff und <code>imagePullSecrets</code> prüfen.</div>
+</div>
+
+<!-- KUBECTL OUTPUT & JSONPATH -->
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">📊</div><div class="section-title">Output &amp; Selektoren</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Output-Formate</div>
+<code><span class="kw">kubectl get pods</span> <span class="op">-o yaml</span>         <span class="cm"># vollständig</span>
+<span class="kw">kubectl get pods</span> <span class="op">-o json</span>         <span class="cm"># JSON</span>
+<span class="kw">kubectl get pods</span> <span class="op">-o wide</span>         <span class="cm"># erweiterte Tabelle</span>
+<span class="kw">kubectl get pods</span> <span class="op">-o name</span>         <span class="cm"># nur Namen</span>
+
+<span class="cm"># Benutzerdefinierte Tabelle</span>
+<span class="kw">kubectl get pods</span> <span class="op">-o custom-columns</span>=\
+<span class="st">NAME:.metadata.name,STATUS:.status.phase</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">JSONPath &amp; Filtern</div>
+<code><span class="cm"># Pod-IP ausgeben</span>
+<span class="kw">kubectl get pod</span> <span class="va">mypod</span> \
+  <span class="op">-o jsonpath</span>=<span class="st">'{.status.podIP}'</span>
+
+<span class="cm"># Alle Images in allen Pods</span>
+<span class="kw">kubectl get pods</span> <span class="op">-A</span> \
+  <span class="op">-o jsonpath</span>=<span class="st">'{range .items[*]}{.metadata.name}{"\t"}{.spec.containers[*].image}{"\n"}{end}'</span>
+
+<span class="cm"># Labels filtern</span>
+<span class="kw">kubectl get pods</span> <span class="op">-l</span> <span class="st">app=web,env=prod</span>
+<span class="kw">kubectl get pods</span> <span class="op">-l</span> <span class="st">'app in (web,api)'</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Labels &amp; Annotations</div>
+<code><span class="cm"># Labels setzen</span>
+<span class="kw">kubectl label pod</span> <span class="va">mypod</span> <span class="st">env=prod</span>
+<span class="kw">kubectl label pod</span> <span class="va">mypod</span> <span class="st">env-</span>      <span class="cm"># entfernen</span>
+
+<span class="cm"># Annotation setzen</span>
+<span class="kw">kubectl annotate pod</span> <span class="va">mypod</span> \
+  <span class="st">owner=team-alpha</span>
+
+<span class="cm"># Alle Labels anzeigen</span>
+<span class="kw">kubectl get pods</span> <span class="op">--show-labels</span></code></div>
+  </div>
+</div>
+
+<!-- APPLY & MANIFEST MANAGEMENT -->
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">📄</div><div class="section-title">Apply &amp; Manifest-Management</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Apply vs. Create</div>
+<code><span class="cm"># Deklarativ (empfohlen)</span>
+<span class="kw">kubectl apply</span> <span class="op">-f</span> manifest.yaml
+<span class="kw">kubectl apply</span> <span class="op">-f</span> ./k8s/            <span class="cm"># Verzeichnis</span>
+<span class="kw">kubectl apply</span> <span class="op">-k</span> ./overlays/prod   <span class="cm"># Kustomize</span>
+
+<span class="cm"># Imperativ (einmalig)</span>
+<span class="kw">kubectl create</span> <span class="op">-f</span> manifest.yaml
+<span class="kw">kubectl replace</span> <span class="op">-f</span> manifest.yaml
+
+<span class="cm"># Dry-Run (ohne Anwendung)</span>
+<span class="kw">kubectl apply</span> <span class="op">-f</span> manifest.yaml <span class="op">--dry-run</span>=client
+<span class="kw">kubectl apply</span> <span class="op">-f</span> manifest.yaml <span class="op">--dry-run</span>=server</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Manifest generieren</div>
+<code><span class="cm"># Deployment-YAML ausgeben</span>
+<span class="kw">kubectl create deployment</span> <span class="va">web</span> \
+  <span class="op">--image</span>=<span class="st">nginx</span> \
+  <span class="op">--dry-run</span>=client <span class="op">-o yaml</span> > deploy.yaml
+
+<span class="cm"># Patch anwenden</span>
+<span class="kw">kubectl patch deployment</span> <span class="va">web</span> \
+  <span class="op">-p</span> <span class="st">'{"spec":{"replicas":5}}'</span>
+
+<span class="cm"># Live bearbeiten</span>
+<span class="kw">kubectl edit deployment</span> <span class="va">web</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Kustomize (integriert)</div>
+<code><span class="cm"># kustomization.yaml Beispiel</span>
+<span class="kw">resources</span>:
+  - deployment.yaml
+  - service.yaml
+<span class="kw">images</span>:
+  - <span class="fn">name</span>: <span class="st">nginx</span>
+    <span class="fn">newTag</span>: "<span class="nu">1.26</span>"
+<span class="kw">replicas</span>:
+  - <span class="fn">name</span>: <span class="st">web</span>
+    <span class="fn">count</span>: <span class="nu">5</span>
+
+<span class="cm"># Preview</span>
+<span class="kw">kubectl kustomize</span> ./overlays/prod</code></div>
+  </div>
+  <div class="tip p">💡 <strong>--dry-run=server</strong> validiert gegen die echte API (Admission Webhooks!), <strong>--dry-run=client</strong> nur lokal. Für CI/CD immer server-seitig testen.</div>
+</div>
+
+<!-- HILFREICHE FLAGS & ALIASE -->
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">⚡</div><div class="section-title">Nützliche Flags &amp; Aliase</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Kurzformen (Resource-Typen)</div>
+<code><span class="cm">po   → pods            cm  → configmaps</span>
+<span class="cm">svc  → services        sa  → serviceaccounts</span>
+<span class="cm">deploy → deployments   ep  → endpoints</span>
+<span class="cm">sts  → statefulsets    ds  → daemonsets</span>
+<span class="cm">pvc  → persistentvolumeclaims</span>
+<span class="cm">cj   → cronjobs        ns  → namespaces</span>
+<span class="cm">no   → nodes           sc  → storageclasses</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Nützliche Flags</div>
+<code><span class="op">-n</span> <span class="st">NS</span>          <span class="cm"># Namespace</span>
+<span class="op">-A</span>              <span class="cm"># alle Namespaces</span>
+<span class="op">-o</span> <span class="st">wide/yaml/json</span> <span class="cm"># Ausgabeformat</span>
+<span class="op">-l</span> <span class="st">key=val</span>     <span class="cm"># Label-Selector</span>
+<span class="op">--watch</span> / <span class="op">-w</span>   <span class="cm"># Live-Updates</span>
+<span class="op">--dry-run</span>=client <span class="cm"># ohne Anwendung</span>
+<span class="op">--force</span>         <span class="cm"># erzwingen</span>
+<span class="op">--grace-period</span>=<span class="nu">0</span> <span class="cm"># sofortiges Löschen</span>
+<span class="op">--record</span>        <span class="cm"># Rollout-History (deprecated)</span>
+<span class="op">--cascade</span>=<span class="st">false</span> <span class="cm"># nicht abhängig löschen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Shell-Aliase (empfohlen)</div>
+<code><span class="cm"># In ~/.bashrc oder ~/.zshrc</span>
+<span class="fn">alias</span> <span class="va">k</span>=kubectl
+<span class="fn">alias</span> <span class="va">kg</span>=<span class="st">'kubectl get'</span>
+<span class="fn">alias</span> <span class="va">kd</span>=<span class="st">'kubectl describe'</span>
+<span class="fn">alias</span> <span class="va">kl</span>=<span class="st">'kubectl logs'</span>
+<span class="fn">alias</span> <span class="va">ke</span>=<span class="st">'kubectl exec -it'</span>
+<span class="fn">alias</span> <span class="va">ka</span>=<span class="st">'kubectl apply -f'</span>
+
+<span class="cm"># kubectl-Autocomplete</span>
+<span class="fn">source</span> &lt;(kubectl completion bash)
+<span class="cm"># Für alias k:</span>
+<span class="fn">complete</span> -o default -F __start_kubectl k</code></div>
+  </div>
+  <div class="tip">💡 <strong>kubectx</strong> + <strong>kubens</strong> (von ahmetb): Komfortables Wechseln zwischen Contexts und Namespaces — <code>kubens staging</code> statt langen config-Befehlen.</div>
+</div>
+
+</main>
+<footer><span>kubernetes</span> — kubernetes.io · kubectl Reference · CNCF · TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span>Guide</footer>
+</body>
+</html>

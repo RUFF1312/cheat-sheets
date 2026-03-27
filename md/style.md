@@ -67,6 +67,7 @@ Die Seite verwendet ausschließlich **Google Fonts** (kein anderes CDN). Das Zus
 - **Hover-Effekt:** Leichte Aufwärtsbewegung `transform: translateY(-3px)`, Schattierung `box-shadow: 0 12px 40px rgba(0,0,0,0.4)` und Anpassung der Rahmenfarbe an das Tool-spezifische `--ac`.
 - **Top Accent Line:** Ein 3px hoher `div` (`.card-accent`) als farbige Kopfzeile.
 - **Icons:** Zentriert in einem 44x44px gerundeten Viereck, welches den semi-transparenten Farbton (`--acs`) des Tools nutzt.
+- **Icon-Farbe:** Alle Icon-Grafiken (`img` innerhalb `.card-icon`) werden durch `filter: brightness(0)` einheitlich **schwarz** dargestellt. So bleiben die Icons neutral, während der farbige Hintergrund (`--acs`) die Tool-Identität transportiert.
 
 ### Sections & Command Lists (Cheatsheets)
 - **Container (`.section`):** Umrandet mit `--border`, `8px` Radius, `break-inside: avoid;` (für sauberes Masonry-Muster in den CSS-Columns).
@@ -101,3 +102,10 @@ Wo auch immer der Markenname **"TheLayer0Guide"** im Layout sichtbar (`h1`, `foo
 - Das Layout besteht aus CSS Grid (Index) oder CSS Columns (Cheatsheets).
 - Unter `1100px`/`900px`: Spalten verringern.
 - Unter `700px`/`600px`: Einspaltiges Raster, reduziertes Header-Padding für mobile First-Ansicht.
+
+## 6. Favicon
+
+- **Datei:** `assets/favicon.svg`
+- **Design:** Schwarzer abgerundeter quadratischer Hintergrund (`#0d1117`, `rx="20"`), zentrierte violette **"0"** (`fill: #a371f7`) in `JetBrains Mono` Bold.
+- **Einbindung:** `<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">`
+- Die "0" übernimmt dabei exakt die Brand-Farbe des Projekts (`#a371f7`) und spiegelt die visuelle Identität von `TheLayer0Guide` im Browser-Tab wider.

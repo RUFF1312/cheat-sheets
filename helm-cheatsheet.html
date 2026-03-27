@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Helm - TheLayer0Guide</title>
+<meta name="description" content="Helm Cheat Sheet — der Kubernetes Package Manager. Releases, Charts, Repositories, Templating und Debugging auf einen Blick.">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0d1117;--surface:#161b22;--border:#30363d;
+    --accent:#277DC1;--accent2:#56a3d9;
+    --blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;
+    --cyan:#39c5cf;--red:#f47067;--yellow:#f7c948;
+    --text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#091520 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(39,125,193,0.08),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(39,125,193,0.12);border:1px solid rgba(39,125,193,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span.tool{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  .legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600}
+  .chip.a{background:rgba(39,125,193,0.12);border:1px solid rgba(39,125,193,0.3);color:var(--accent)}
+  .chip.b{background:rgba(63,185,80,0.12);border:1px solid rgba(63,185,80,0.3);color:var(--green)}
+  .chip.c{background:rgba(247,201,72,0.12);border:1px solid rgba(247,201,72,0.3);color:var(--yellow)}
+  .chip.d{background:rgba(163,113,247,0.12);border:1px solid rgba(163,113,247,0.3);color:var(--purple)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  /* Themes */
+  .theme-blue .section-header{background:rgba(39,125,193,0.08)}.theme-blue .section-icon{background:rgba(39,125,193,0.15)}.theme-blue .section-title{color:var(--accent)}
+  .theme-green .section-header{background:rgba(63,185,80,0.08)}.theme-green .section-icon{background:rgba(63,185,80,0.15)}.theme-green .section-title{color:var(--green)}
+  .theme-purple .section-header{background:rgba(163,113,247,0.08)}.theme-purple .section-icon{background:rgba(163,113,247,0.15)}.theme-purple .section-title{color:var(--purple)}
+  .theme-yellow .section-header{background:rgba(247,201,72,0.08)}.theme-yellow .section-icon{background:rgba(247,201,72,0.15)}.theme-yellow .section-title{color:var(--yellow)}
+  .theme-red .section-header{background:rgba(244,112,103,0.08)}.theme-red .section-icon{background:rgba(244,112,103,0.15)}.theme-red .section-title{color:var(--red)}
+  .theme-cyan .section-header{background:rgba(57,197,207,0.08)}.theme-cyan .section-icon{background:rgba(57,197,207,0.15)}.theme-cyan .section-title{color:var(--cyan)}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:var(--accent);font-weight:700}
+  .bi{color:var(--blue);font-weight:600}
+  .st{color:var(--green)}
+  .nu{color:var(--red)}
+  .cm{color:var(--muted);font-style:italic}
+  .fn{color:var(--cyan);font-weight:600}
+  .va{color:var(--purple)}
+  .op{color:var(--yellow);font-weight:600}
+  .tip{padding:8px 16px;background:rgba(39,125,193,0.05);border-top:1px dashed rgba(39,125,193,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  .tip.y{background:rgba(247,201,72,0.05);border-color:rgba(247,201,72,0.2);color:var(--yellow)}
+  .tip.p{background:rgba(163,113,247,0.05);border-color:rgba(163,113,247,0.2);color:var(--purple)}
+  .tip.r{background:rgba(244,112,103,0.05);border-color:rgba(244,112,103,0.2);color:var(--red)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(39,125,193,0.3);padding:4px 12px;border-radius:4px;background:rgba(39,125,193,0.08)}
+  .nav-link:hover{background:rgba(39,125,193,0.18)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+<link rel="icon" type="image/svg+xml" href="assets/helm.svg">
+</head>
+<body>
+<header>
+  <a href="index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Kubernetes Package Manager</div>
+      <img src="assets/helm.svg" alt="Helm Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;">
+      <h1><span class="tool">Helm</span><br>TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ helm [command] [chart] [flags]</p>
+      <div class="legend">
+        <div class="chip a">⚓ Releases</div>
+        <div class="chip b">📦 Charts</div>
+        <div class="chip c">🔧 Values</div>
+        <div class="chip d">📡 Repos</div>
+      </div>
+    </div>
+    <div class="meta"><strong>helm / Kubernetes</strong><br>Package Management<br>Templating · Hooks<br>Rollbacks · OCI</div>
+  </div>
+</header>
+<main>
+
+<!-- INSTALLATION / SETUP -->
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">Installation &amp; Setup</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Installieren (Linux)</div>
+<code><span class="cm"># Offizielles Installationsskript</span>
+<span class="fn">curl</span> https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | <span class="fn">bash</span>
+
+<span class="cm"># Über Package Manager</span>
+<span class="fn">snap</span> install helm --classic
+<span class="fn">brew</span> install helm</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Version &amp; Info</div>
+<code><span class="kw">helm version</span>
+<span class="kw">helm env</span>                  <span class="cm"># Helm-Umgebungsvariablen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Shell-Completion aktivieren</div>
+<code><span class="kw">helm completion</span> bash <span class="op">&gt;&gt;</span> ~/.bashrc
+<span class="kw">helm completion</span> zsh <span class="op">&gt;&gt;</span> ~/.zshrc</code></div>
+  </div>
+</div>
+
+<!-- REPOSITORIES -->
+<div class="section theme-cyan">
+  <div class="section-header"><div class="section-icon">📡</div><div class="section-title">Repositories</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Repo hinzufügen &amp; aktualisieren</div>
+<code><span class="kw">helm repo add</span> <span class="va">bitnami</span> https://charts.bitnami.com/bitnami
+<span class="kw">helm repo update</span>          <span class="cm"># Alle Repos aktualisieren</span>
+<span class="kw">helm repo update</span> <span class="va">bitnami</span>  <span class="cm"># Nur einen Repo</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Repos anzeigen &amp; entfernen</div>
+<code><span class="kw">helm repo list</span>            <span class="cm"># Alle konfigurierten Repos</span>
+<span class="kw">helm repo remove</span> <span class="va">bitnami</span>  <span class="cm"># Repo entfernen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Charts suchen</div>
+<code><span class="kw">helm search repo</span> <span class="st">nginx</span>         <span class="cm"># In lokalen Repos</span>
+<span class="kw">helm search hub</span> <span class="st">nginx</span>          <span class="cm"># Auf Artifact Hub</span>
+<span class="kw">helm search repo</span> <span class="st">nginx</span> <span class="op">--versions</span> <span class="cm"># Alle Versionen</span></code></div>
+  </div>
+  <div class="tip">💡 <strong>helm repo list -o json</strong> — JSON-Ausgabe für Scripting.</div>
+</div>
+
+<!-- RELEASES INSTALLIEREN / UPGRADE -->
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">⚓</div><div class="section-title">Install &amp; Upgrade</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Chart installieren</div>
+<code><span class="kw">helm install</span> <span class="va">my-release</span> <span class="st">bitnami/nginx</span>
+<span class="cm"># Mit Namespace (wird erstellt falls nötig)</span>
+<span class="kw">helm install</span> <span class="va">my-release</span> <span class="st">bitnami/nginx</span> \
+  <span class="op">--namespace</span> production <span class="op">--create-namespace</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Bestimmte Chart-Version</div>
+<code><span class="kw">helm install</span> <span class="va">my-release</span> <span class="st">bitnami/nginx</span> \
+  <span class="op">--version</span> <span class="nu">15.0.2</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Installieren mit Values-Überschreibung</div>
+<code><span class="kw">helm install</span> <span class="va">my-release</span> <span class="st">bitnami/nginx</span> \
+  <span class="op">--set</span> replicaCount=<span class="nu">3</span> \
+  <span class="op">--set</span> service.type=<span class="st">LoadBalancer</span>
+
+<span class="cm"># Aus einer values.yaml Datei</span>
+<span class="kw">helm install</span> <span class="va">my-release</span> <span class="st">bitnami/nginx</span> \
+  <span class="op">-f</span> values-prod.yaml</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Upgrade eines bestehenden Release</div>
+<code><span class="kw">helm upgrade</span> <span class="va">my-release</span> <span class="st">bitnami/nginx</span>
+<span class="cm"># Bei nicht existentem Release installieren</span>
+<span class="kw">helm upgrade --install</span> <span class="va">my-release</span> <span class="st">bitnami/nginx</span> \
+  <span class="op">--atomic</span> <span class="op">--timeout</span> 5m</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Dry-run (kein Deployment)</div>
+<code><span class="kw">helm install</span> <span class="va">my-release</span> <span class="st">bitnami/nginx</span> \
+  <span class="op">--dry-run</span> <span class="op">--debug</span></code></div>
+  </div>
+  <div class="tip g">💡 <strong>--atomic</strong> — Rollback automatisch bei fehlgeschlagenem Upgrade.</div>
+</div>
+
+<!-- RELEASES VERWALTEN -->
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">📋</div><div class="section-title">Releases verwalten</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Releases auflisten</div>
+<code><span class="kw">helm list</span>                 <span class="cm"># Im Default-Namespace</span>
+<span class="kw">helm list</span> <span class="op">-A</span>              <span class="cm"># Alle Namespaces</span>
+<span class="kw">helm list</span> <span class="op">-n</span> production   <span class="cm"># Nur production</span>
+<span class="kw">helm list</span> <span class="op">--failed</span>        <span class="cm"># Nur fehlerhafte</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Release Status &amp; Details</div>
+<code><span class="kw">helm status</span> <span class="va">my-release</span>
+<span class="kw">helm status</span> <span class="va">my-release</span> <span class="op">-n</span> production</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">History eines Release</div>
+<code><span class="kw">helm history</span> <span class="va">my-release</span>       <span class="cm"># Alle Revisionen</span>
+<span class="kw">helm history</span> <span class="va">my-release</span> <span class="op">--max</span> <span class="nu">5</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Rollback</div>
+<code><span class="kw">helm rollback</span> <span class="va">my-release</span>       <span class="cm"># Zur vorherigen Revision</span>
+<span class="kw">helm rollback</span> <span class="va">my-release</span> <span class="nu">2</span>    <span class="cm"># Zu Revision 2</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Release deinstallieren</div>
+<code><span class="kw">helm uninstall</span> <span class="va">my-release</span>
+<span class="kw">helm uninstall</span> <span class="va">my-release</span> <span class="op">--keep-history</span></code></div>
+  </div>
+</div>
+
+<!-- VALUES -->
+<div class="section theme-yellow">
+  <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">Values &amp; Konfiguration</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Default-Values eines Charts einsehen</div>
+<code><span class="kw">helm show values</span> <span class="st">bitnami/nginx</span>
+<span class="kw">helm show values</span> <span class="st">bitnami/nginx</span> <span class="op">&gt;</span> values.yaml</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Gesetzte Values eines Release</div>
+<code><span class="kw">helm get values</span> <span class="va">my-release</span>        <span class="cm"># User-defined Values</span>
+<span class="kw">helm get values</span> <span class="va">my-release</span> <span class="op">--all</span>  <span class="cm"># Inkl. Defaults</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Verschachtelte Werte mit --set</div>
+<code><span class="cm"># Punkt-Notation für Verschachtelung</span>
+<span class="op">--set</span> image.tag=<span class="st">"1.25"</span>
+<span class="op">--set</span> ingress.enabled=<span class="bi">true</span>
+
+<span class="cm"># Listen mit geschweiften Klammern</span>
+<span class="op">--set</span> <span class="st">"hosts={a.example.com,b.example.com}"</span>
+
+<span class="cm"># Strings erzwingen mit --set-string</span>
+<span class="op">--set-string</span> serviceAccount.annotations.role-arn=<span class="st">"arn:..."</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Mehrere Values-Files kombinieren</div>
+<code><span class="kw">helm upgrade</span> <span class="va">my-release</span> <span class="st">./mychart</span> \
+  <span class="op">-f</span> values.yaml \
+  <span class="op">-f</span> values-prod-overrides.yaml</code></div>
+  </div>
+  <div class="tip y">💡 Spätere <strong>-f</strong> Dateien überschreiben frühere. Reihenfolge ist wichtig!</div>
+</div>
+
+<!-- CHARTS ERSTELLEN -->
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">📦</div><div class="section-title">Chart Development</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Neues Chart erstellen</div>
+<code><span class="kw">helm create</span> <span class="st">mychart</span>        <span class="cm"># Scaffold-Verzeichnis</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Chart-Struktur</div>
+<code>mychart/
+├── Chart.yaml             <span class="cm"># Metadaten</span>
+├── values.yaml            <span class="cm"># Default-Werte</span>
+├── charts/                <span class="cm"># Abhängige Charts</span>
+└── templates/
+    ├── deployment.yaml
+    ├── service.yaml
+    ├── _helpers.tpl       <span class="cm"># Wiederverwendbare Snippets</span>
+    └── NOTES.txt          <span class="cm"># Post-Install Ausgabe</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Chart validieren &amp; analysieren</div>
+<code><span class="kw">helm lint</span> <span class="st">./mychart</span>         <span class="cm"># Syntax-Check</span>
+<span class="kw">helm lint</span> <span class="st">./mychart</span> <span class="op">-f</span> values.yaml</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Abhängigkeiten verwalten</div>
+<code><span class="cm"># In Chart.yaml definieren, dann:</span>
+<span class="kw">helm dependency update</span> <span class="st">./mychart</span>
+<span class="kw">helm dependency list</span> <span class="st">./mychart</span>
+<span class="kw">helm dependency build</span> <span class="st">./mychart</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Chart paketieren</div>
+<code><span class="kw">helm package</span> <span class="st">./mychart</span>      <span class="cm"># Erzeugt .tgz</span>
+<span class="kw">helm package</span> <span class="st">./mychart</span> <span class="op">--sign</span> <span class="op">--key</span> <span class="st">"My Key"</span></code></div>
+  </div>
+</div>
+
+<!-- TEMPLATING -->
+<div class="section theme-cyan">
+  <div class="section-header"><div class="section-icon">📄</div><div class="section-title">Templating</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Templates rendern (lokal)</div>
+<code><span class="kw">helm template</span> <span class="va">my-release</span> <span class="st">./mychart</span>
+<span class="kw">helm template</span> <span class="va">my-release</span> <span class="st">bitnami/nginx</span> \
+  <span class="op">-f</span> values.yaml</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Wichtige Built-in Objekte</div>
+<code><span class="cm"># In templates/*.yaml verfügbar:</span>
+{{ <span class="fn">.Release.Name</span> }}          <span class="cm"># Release-Name</span>
+{{ <span class="fn">.Release.Namespace</span> }}     <span class="cm"># Namespace</span>
+{{ <span class="fn">.Chart.Name</span> }}            <span class="cm"># Chart-Name</span>
+{{ <span class="fn">.Chart.Version</span> }}         <span class="cm"># Chart-Version</span>
+{{ <span class="fn">.Values.replicaCount</span> }}   <span class="cm"># Aus values.yaml</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Häufige Template-Funktionen</div>
+<code>{{ <span class="fn">include</span> <span class="st">"mychart.labels"</span> . }}
+{{ <span class="fn">toYaml</span> .Values.resources | <span class="fn">indent</span> <span class="nu">10</span> }}
+{{ <span class="fn">default</span> <span class="st">"latest"</span> .Values.image.tag | <span class="fn">quote</span> }}
+{{ <span class="fn">tpl</span> .Values.configTemplate . }}
+{{ <span class="fn">required</span> <span class="st">"image.tag is required!"</span> .Values.image.tag }}</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Bedingte Logik</div>
+<code>{{- <span class="kw">if</span> .Values.ingress.enabled }}
+<span class="cm"># Ingress YAML hier</span>
+{{- <span class="kw">end</span> }}
+
+{{- <span class="kw">range</span> .Values.env }}
+- name: {{ .name }}
+  value: {{ .value | <span class="fn">quote</span> }}
+{{- <span class="kw">end</span> }}</code></div>
+  </div>
+  <div class="tip p">💡 Der <strong>_helpers.tpl</strong>-Prefix-Unterstrich sorgt dafür, dass die Datei nicht als K8s-Manifest gerendert wird.</div>
+</div>
+
+<!-- DEBUGGING & TROUBLESHOOTING -->
+<div class="section theme-red">
+  <div class="section-header"><div class="section-icon">🐛</div><div class="section-title">Debugging &amp; Troubleshooting</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Generierte Manifeste einsehen</div>
+<code><span class="kw">helm get manifest</span> <span class="va">my-release</span>
+<span class="kw">helm get manifest</span> <span class="va">my-release</span> <span class="op">--revision</span> <span class="nu">2</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Helm Notes einsehen</div>
+<code><span class="kw">helm get notes</span> <span class="va">my-release</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Alle Release-Infos</div>
+<code><span class="kw">helm get all</span> <span class="va">my-release</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Verbose-Ausgabe</div>
+<code><span class="kw">helm install</span> <span class="va">my-release</span> <span class="st">bitnami/nginx</span> \
+  <span class="op">--debug</span> <span class="op">--dry-run</span>      <span class="cm"># Dry-run mit Debug</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Chart-Info anzeigen</div>
+<code><span class="kw">helm show chart</span> <span class="st">bitnami/nginx</span>    <span class="cm"># Chart.yaml</span>
+<span class="kw">helm show readme</span> <span class="st">bitnami/nginx</span>   <span class="cm"># README.md</span>
+<span class="kw">helm show all</span> <span class="st">bitnami/nginx</span>      <span class="cm"># Alles</span></code></div>
+  </div>
+  <div class="tip r">⚠️ Fehler? <strong>helm status</strong> + <strong>kubectl describe pod</strong> kombinieren.</div>
+</div>
+
+<!-- OCI REGISTRY & PUSH -->
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">🏷️</div><div class="section-title">OCI &amp; Registry</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Registry-Login</div>
+<code><span class="kw">helm registry login</span> registry.example.com \
+  <span class="op">--username</span> <span class="va">user</span> <span class="op">--password</span> <span class="va">pass</span>
+<span class="kw">helm registry logout</span> registry.example.com</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Chart pushen (OCI)</div>
+<code><span class="kw">helm push</span> mychart-1.0.0.tgz \
+  oci://registry.example.com/charts</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Chart aus OCI installieren</div>
+<code><span class="kw">helm install</span> <span class="va">my-release</span> \
+  oci://registry.example.com/charts/mychart \
+  <span class="op">--version</span> <span class="nu">1.0.0</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">OCI Chart pullen</div>
+<code><span class="kw">helm pull</span> oci://registry.example.com/charts/mychart \
+  <span class="op">--version</span> <span class="nu">1.0.0</span> <span class="op">--untar</span></code></div>
+  </div>
+  <div class="tip p">💡 OCI-Registry-Support ist seit Helm 3.8.0 stabil (kein <code>HELM_EXPERIMENTAL_OCI</code> mehr nötig).</div>
+</div>
+
+<!-- PLUGINS -->
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">🔌</div><div class="section-title">Plugins</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Plugin verwalten</div>
+<code><span class="kw">helm plugin list</span>
+<span class="kw">helm plugin install</span> https://github.com/helm/helm-2to3
+<span class="kw">helm plugin update</span> <span class="va">2to3</span>
+<span class="kw">helm plugin uninstall</span> <span class="va">2to3</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Nützliche Plugins</div>
+<code><span class="cm"># helm-diff — Diff vor Upgrades</span>
+<span class="kw">helm plugin install</span> \
+  https://github.com/databus23/helm-diff
+<span class="kw">helm diff upgrade</span> <span class="va">my-release</span> <span class="st">bitnami/nginx</span>
+
+<span class="cm"># helm-secrets — Secrets verschlüsseln</span>
+<span class="kw">helm plugin install</span> \
+  https://github.com/jkroepke/helm-secrets</code></div>
+  </div>
+  <div class="tip g">💡 <strong>helm-diff</strong> ist unverzichtbar für sichere Upgrades in Production.</div>
+</div>
+
+<!-- HÄUFIGE FLAGS & TIPPS -->
+<div class="section theme-yellow">
+  <div class="section-header"><div class="section-icon">⭐</div><div class="section-title">Häufige Flags &amp; Tipps</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Wichtige globale Flags</div>
+<code><span class="op">-n</span>, <span class="op">--namespace</span>   <span class="cm"># Ziel-Namespace</span>
+<span class="op">-o</span>, <span class="op">--output</span>      <span class="cm"># json | yaml | table</span>
+<span class="op">--kube-context</span>   <span class="cm"># Kubeconfig-Kontext</span>
+<span class="op">--kubeconfig</span>     <span class="cm"># Alternativer Kubeconfig-Pfad</span>
+<span class="op">--timeout</span>        <span class="cm"># Default: 5m0s</span>
+<span class="op">--wait</span>           <span class="cm"># Wartet auf Ready-Status</span>
+<span class="op">--debug</span>          <span class="cm"># Verbose-Ausgabe</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Lokales Chart-Verzeichnis nutzen</div>
+<code><span class="cm"># Direkt aus lokalem Verzeichnis installieren</span>
+<span class="kw">helm install</span> <span class="va">my-release</span> <span class="st">./mychart</span>
+<span class="kw">helm upgrade</span> <span class="va">my-release</span> <span class="st">./mychart</span> <span class="op">-f</span> values.yaml</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Chart downloaden &amp; inspizieren</div>
+<code><span class="kw">helm pull</span> <span class="st">bitnami/nginx</span> <span class="op">--untar</span>   <span class="cm"># Entpackt</span>
+<span class="kw">helm pull</span> <span class="st">bitnami/nginx</span> <span class="op">--version</span> <span class="nu">15.0.2</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Release-Daten als JSON/YAML ausgeben</div>
+<code><span class="kw">helm list</span> <span class="op">-A</span> <span class="op">-o</span> json
+<span class="kw">helm get values</span> <span class="va">my-release</span> <span class="op">-o</span> yaml</code></div>
+  </div>
+  <div class="tip y">💡 <strong>helm upgrade --install</strong> ist ideal für CI/CD-Pipelines: install oder upgrade in einem Befehl.</div>
+</div>
+
+</main>
+<footer><span>helm</span> — helm.sh · kubernetes.io · v3 · TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span>Guide</footer>
+</body>
+</html>

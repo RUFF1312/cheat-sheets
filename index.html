@@ -39,6 +39,7 @@
   .card-body{padding:20px 22px 22px}
   .card-icon-row{display:flex;align-items:center;gap:14px;margin-bottom:14px}
   .card-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+  .card-icon img{filter:brightness(0);transition:filter 0.18s}
   .card-name{font-size:20px;font-weight:800;letter-spacing:-0.5px}
   .card-tagline{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.4}
   .card-tags{display:flex;flex-wrap:wrap;gap:6px}
@@ -65,6 +66,16 @@
   .c-ps{--ac:#2671be;--acs:rgba(38,113,190,0.15);--acb:rgba(38,113,190,0.25)}
   /* Proxmox */
   .c-proxmox{--ac:#e36209;--acs:rgba(227,98,9,0.15);--acb:rgba(227,98,9,0.25)}
+  /* nmcli */
+  .c-nmcli{--ac:#39c5cf;--acs:rgba(57,197,207,0.15);--acb:rgba(57,197,207,0.25)}
+  /* SQL */
+  .c-sql{--ac:#3b82f6;--acs:rgba(59,130,246,0.15);--acb:rgba(59,130,246,0.25)}
+  /* Helm */
+  .c-helm{--ac:#277DC1;--acs:rgba(39,125,193,0.15);--acb:rgba(39,125,193,0.25)}
+  /* Kubernetes */
+  .c-kubernetes{--ac:#326CE5;--acs:rgba(50,108,229,0.15);--acb:rgba(50,108,229,0.25)}
+  /* Docker */
+  .c-docker{--ac:#2496ED;--acs:rgba(36,150,237,0.15);--acb:rgba(36,150,237,0.25)}
 
   .card .card-accent{background:var(--ac)}
   .card:hover{border-color:var(--ac)}
@@ -85,7 +96,7 @@
   @media(max-width:900px){main{padding:24px}.grid{grid-template-columns:1fr}}
   @media(max-width:600px){header{padding:32px 20px}}
 </style>
-<link rel="icon" type="image/svg+xml" href="assets/gnubash.svg">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 </head>
 <body>
 
@@ -93,7 +104,7 @@
   <div class="header-eyebrow">Developer Reference Collection</div>
   <h1><span class="h1-accent">TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span></span><br>Guide</h1>
   <p class="header-sub">Alle Referenz-Sheets auf einen Blick — dark-themed, vollständig, offline-fähig.</p>
-  <div class="header-count"><span>9</span> Sheets · CLI · Scripting · DevOps · Virtualisierung</div>
+  <div class="header-count"><span>13</span> Sheets · CLI · Scripting · DevOps · Kubernetes</div>
 </header>
 
 <main>
@@ -242,6 +253,86 @@
         <div class="card-tagline">$ qm / pct / pvecm -- Virtualization Platform<br>KVM · LXC · Cluster · Ceph · Backup</div>
         <div class="card-tags">
           <span class="tag">VMs (qm)</span><span class="tag">LXC (pct)</span><span class="tag">Storage</span><span class="tag">Cluster</span><span class="tag">API</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Nmcli -->
+    <a href="nmcli-cheatsheet.html" class="card c-nmcli">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/network.svg" alt="network.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">nmcli</div>
+        </div>
+        <div class="card-tagline">$ nmcli [object] [command] -- NetworkManager<br>Connections · Devices · Wi-Fi · Status</div>
+        <div class="card-tags">
+          <span class="tag">Network</span><span class="tag">IP</span><span class="tag">Wi-Fi</span><span class="tag">DNS</span><span class="tag">Routing</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- SQL -->
+    <a href="sql-cheatsheet.html" class="card c-sql">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/sql.svg" alt="sql.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">SQL</div>
+        </div>
+        <div class="card-tagline">SELECT * FROM ... -- Relational Databases<br>PostgreSQL · MySQL · SQLite</div>
+        <div class="card-tags">
+          <span class="tag">DML</span><span class="tag">DDL</span><span class="tag">Joins</span><span class="tag">Filter</span><span class="tag">Aggregation</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Kubernetes -->
+    <a href="kubernetes-cheatsheet.html" class="card c-kubernetes">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/kubernetes.svg" alt="kubernetes.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Kubernetes</div>
+        </div>
+        <div class="card-tagline">$ kubectl [command] [TYPE] [NAME] -- Container Orchestration<br>Pods · Deployments · Services · RBAC · ConfigMaps</div>
+        <div class="card-tags">
+          <span class="tag">Pods</span><span class="tag">Deployments</span><span class="tag">Services</span><span class="tag">RBAC</span><span class="tag">Kustomize</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Helm -->
+    <a href="helm-cheatsheet.html" class="card c-helm">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/helm.svg" alt="helm.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Helm</div>
+        </div>
+        <div class="card-tagline">$ helm [command] [chart] -- K8s Package Manager<br>Releases · Charts · Repos · Templating · OCI</div>
+        <div class="card-tags">
+          <span class="tag">Releases</span><span class="tag">Charts</span><span class="tag">Values</span><span class="tag">Templating</span><span class="tag">OCI</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Docker -->
+    <a href="docker-cheatsheet.html" class="card c-docker">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/docker.svg" alt="docker.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Docker</div>
+        </div>
+        <div class="card-tagline">$ docker [command] [OPTIONS] -- Container Runtime<br>Images · Volumes · Netzwerk · Compose · Registry</div>
+        <div class="card-tags">
+          <span class="tag">Container</span><span class="tag">Images</span><span class="tag">Compose</span><span class="tag">Volumes</span><span class="tag">BuildKit</span>
         </div>
         <div class="card-arrow">→</div>
       </div>

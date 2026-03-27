@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Docker - TheLayer0Guide</title>
+<meta name="description" content="Docker Cheat Sheet — Container-Lifecycle, Images, Netzwerke, Volumes, Compose und Registry auf einen Blick.">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0d1117;--surface:#161b22;--border:#30363d;
+    --accent:#2496ED;--accent2:#5fb3f5;
+    --blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;
+    --cyan:#39c5cf;--red:#f47067;--yellow:#f7c948;
+    --text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#091520 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(36,150,237,0.08),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(36,150,237,0.12);border:1px solid rgba(36,150,237,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span.tool{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  .legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600}
+  .chip.a{background:rgba(36,150,237,0.12);border:1px solid rgba(36,150,237,0.3);color:var(--accent)}
+  .chip.b{background:rgba(63,185,80,0.12);border:1px solid rgba(63,185,80,0.3);color:var(--green)}
+  .chip.c{background:rgba(247,201,72,0.12);border:1px solid rgba(247,201,72,0.3);color:var(--yellow)}
+  .chip.d{background:rgba(163,113,247,0.12);border:1px solid rgba(163,113,247,0.3);color:var(--purple)}
+  .chip.e{background:rgba(57,197,207,0.12);border:1px solid rgba(57,197,207,0.3);color:var(--cyan)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  /* Themes */
+  .theme-blue .section-header{background:rgba(36,150,237,0.08)}.theme-blue .section-icon{background:rgba(36,150,237,0.15)}.theme-blue .section-title{color:var(--accent)}
+  .theme-green .section-header{background:rgba(63,185,80,0.08)}.theme-green .section-icon{background:rgba(63,185,80,0.15)}.theme-green .section-title{color:var(--green)}
+  .theme-purple .section-header{background:rgba(163,113,247,0.08)}.theme-purple .section-icon{background:rgba(163,113,247,0.15)}.theme-purple .section-title{color:var(--purple)}
+  .theme-yellow .section-header{background:rgba(247,201,72,0.08)}.theme-yellow .section-icon{background:rgba(247,201,72,0.15)}.theme-yellow .section-title{color:var(--yellow)}
+  .theme-red .section-header{background:rgba(244,112,103,0.08)}.theme-red .section-icon{background:rgba(244,112,103,0.15)}.theme-red .section-title{color:var(--red)}
+  .theme-cyan .section-header{background:rgba(57,197,207,0.08)}.theme-cyan .section-icon{background:rgba(57,197,207,0.15)}.theme-cyan .section-title{color:var(--cyan)}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:var(--accent);font-weight:700}
+  .bi{color:var(--blue);font-weight:600}
+  .st{color:var(--green)}
+  .nu{color:var(--red)}
+  .cm{color:var(--muted);font-style:italic}
+  .fn{color:var(--cyan);font-weight:600}
+  .va{color:var(--purple)}
+  .op{color:var(--yellow);font-weight:600}
+  .tip{padding:8px 16px;background:rgba(36,150,237,0.05);border-top:1px dashed rgba(36,150,237,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  .tip.y{background:rgba(247,201,72,0.05);border-color:rgba(247,201,72,0.2);color:var(--yellow)}
+  .tip.p{background:rgba(163,113,247,0.05);border-color:rgba(163,113,247,0.2);color:var(--purple)}
+  .tip.r{background:rgba(244,112,103,0.05);border-color:rgba(244,112,103,0.2);color:var(--red)}
+  .tip.c{background:rgba(57,197,207,0.05);border-color:rgba(57,197,207,0.2);color:var(--cyan)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(36,150,237,0.3);padding:4px 12px;border-radius:4px;background:rgba(36,150,237,0.08)}
+  .nav-link:hover{background:rgba(36,150,237,0.18)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+<link rel="icon" type="image/svg+xml" href="assets/docker.svg">
+</head>
+<body>
+<header>
+  <a href="index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Container Runtime</div>
+      <img src="assets/docker.svg" alt="Docker Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;">
+      <h1><span class="tool">Docker</span><br>TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ docker [command] [OPTIONS] [ARG...]</p>
+      <div class="legend">
+        <div class="chip a">🐳 Container</div>
+        <div class="chip b">📦 Images</div>
+        <div class="chip c">🔗 Netzwerk</div>
+        <div class="chip d">💾 Volumes</div>
+        <div class="chip e">🚀 Compose</div>
+      </div>
+    </div>
+    <div class="meta"><strong>docker / moby</strong><br>Container Engine<br>BuildKit · Compose<br>Registry · Swarm</div>
+  </div>
+</header>
+<main>
+
+<!-- INSTALLATION & SETUP -->
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">Installation &amp; Setup</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Installation (Linux)</div>
+<code><span class="cm"># Offizielles Convenience-Script</span>
+<span class="fn">curl</span> -fsSL https://get.docker.com | <span class="fn">sh</span>
+
+<span class="cm"># Paketmanager (Debian/Ubuntu)</span>
+<span class="fn">apt</span> install docker.io docker-compose-plugin</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Daemon &amp; Benutzer</div>
+<code><span class="fn">systemctl</span> enable --now docker
+<span class="cm"># Gruppe hinzufügen (kein sudo nötig)</span>
+<span class="fn">usermod</span> -aG docker <span class="va">$USER</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Version &amp; Info</div>
+<code><span class="kw">docker version</span>          <span class="cm"># Client & Server</span>
+<span class="kw">docker info</span>             <span class="cm"># Systemübersicht</span>
+<span class="kw">docker system df</span>        <span class="cm"># Disk-Nutzung</span></code></div>
+  </div>
+</div>
+
+<!-- CONTAINER LIFECYCLE -->
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">🐳</div><div class="section-title">Container Lifecycle</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Starten &amp; Ausführen</div>
+<code><span class="cm"># Interaktiv mit TTY</span>
+<span class="kw">docker run</span> <span class="op">-it</span> ubuntu bash
+
+<span class="cm"># Detached (Hintergrund)</span>
+<span class="kw">docker run</span> <span class="op">-d</span> <span class="op">--name</span> <span class="va">webserver</span> <span class="st">nginx</span>
+
+<span class="cm"># Port-Mapping: host:container</span>
+<span class="kw">docker run</span> <span class="op">-d</span> <span class="op">-p</span> <span class="nu">8080</span>:<span class="nu">80</span> nginx</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Container steuern</div>
+<code><span class="kw">docker start</span>   <span class="va">webserver</span>
+<span class="kw">docker stop</span>    <span class="va">webserver</span>   <span class="cm"># SIGTERM</span>
+<span class="kw">docker kill</span>    <span class="va">webserver</span>   <span class="cm"># SIGKILL</span>
+<span class="kw">docker restart</span> <span class="va">webserver</span>
+<span class="kw">docker pause</span>   <span class="va">webserver</span>
+<span class="kw">docker unpause</span> <span class="va">webserver</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Container auflisten</div>
+<code><span class="kw">docker ps</span>              <span class="cm"># laufende</span>
+<span class="kw">docker ps</span> <span class="op">-a</span>           <span class="cm"># alle inkl. gestoppte</span>
+<span class="kw">docker ps</span> <span class="op">-q</span>           <span class="cm"># nur IDs</span>
+<span class="kw">docker ps</span> <span class="op">--filter</span> <span class="st">"status=exited"</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Entfernen</div>
+<code><span class="kw">docker rm</span> <span class="va">webserver</span>
+<span class="kw">docker rm</span> <span class="op">-f</span> <span class="va">webserver</span>    <span class="cm"># erzwungen</span>
+<span class="cm"># Alle gestoppten Container löschen</span>
+<span class="kw">docker container prune</span>
+<span class="cm"># Nützlich: Auto-Cleanup</span>
+<span class="kw">docker run</span> <span class="op">--rm</span> ubuntu echo <span class="st">"done"</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">run — wichtige Flags</div>
+<code><span class="op">-d</span>                    <span class="cm"># detached</span>
+<span class="op">-it</span>                   <span class="cm"># interaktiv + TTY</span>
+<span class="op">--rm</span>                  <span class="cm"># auto-remove nach Stop</span>
+<span class="op">--name</span> <span class="va">NAME</span>           <span class="cm"># Container-Name</span>
+<span class="op">-p</span> <span class="nu">HOST</span>:<span class="nu">CONT</span>          <span class="cm"># Port-Mapping</span>
+<span class="op">-v</span> <span class="va">VOL</span>:<span class="va">/pfad</span>          <span class="cm"># Volume-Mount</span>
+<span class="op">-e</span> <span class="va">VAR</span>=<span class="st">wert</span>           <span class="cm"># Env-Variable</span>
+<span class="op">--env-file</span> <span class="st">.env</span>      <span class="cm"># Env-Datei</span>
+<span class="op">--network</span> <span class="va">NET</span>         <span class="cm"># Netzwerk</span>
+<span class="op">--restart</span> always      <span class="cm"># Restart-Policy</span>
+<span class="op">--cpus</span> <span class="nu">"1.5"</span>          <span class="cm"># CPU-Limit</span>
+<span class="op">--memory</span> <span class="st">512m</span>         <span class="cm"># Speicher-Limit</span>
+<span class="op">-u</span> <span class="nu">1000</span>:<span class="nu">1000</span>          <span class="cm"># User:Group</span></code></div>
+  </div>
+  <div class="tip g">💡 <strong>--restart unless-stopped</strong> startet den Container automatisch neu, aber nicht nach manuellem Stop.</div>
+</div>
+
+<!-- IMAGES -->
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">📦</div><div class="section-title">Images</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Suchen &amp; Pullen</div>
+<code><span class="kw">docker search</span> <span class="st">nginx</span>          <span class="cm"># Docker Hub</span>
+<span class="kw">docker pull</span> <span class="st">nginx</span>             <span class="cm"># latest</span>
+<span class="kw">docker pull</span> <span class="st">nginx</span>:<span class="nu">1.25</span>-alpine <span class="cm"># bestimmter Tag</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Images auflisten &amp; entfernen</div>
+<code><span class="kw">docker images</span>              <span class="cm"># alle Images</span>
+<span class="kw">docker images</span> <span class="op">-q</span>           <span class="cm"># nur IDs</span>
+<span class="kw">docker rmi</span> <span class="st">nginx</span>:<span class="nu">1.25</span>
+<span class="kw">docker image prune</span>         <span class="cm"># dangling images</span>
+<span class="kw">docker image prune</span> <span class="op">-a</span>      <span class="cm"># alle ungenutzten</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Image inspizieren</div>
+<code><span class="kw">docker inspect</span> <span class="st">nginx</span>       <span class="cm"># JSON-Details</span>
+<span class="kw">docker history</span> <span class="st">nginx</span>       <span class="cm"># Layer-History</span>
+<span class="kw">docker image ls</span> <span class="op">--digests</span>  <span class="cm"># mit SHA256</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Taggen &amp; Exportieren</div>
+<code><span class="kw">docker tag</span> <span class="st">nginx</span> <span class="va">myreg/nginx</span>:<span class="nu">1.0</span>
+<span class="kw">docker save</span> <span class="st">nginx</span> <span class="op">-o</span> nginx.tar
+<span class="kw">docker load</span> <span class="op">-i</span> nginx.tar</code></div>
+  </div>
+  <div class="tip">💡 <strong>alpine</strong>-Varianten sind deutlich kleiner. Für Production-Images bevorzugen.</div>
+</div>
+
+<!-- DOCKERFILE -->
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">📄</div><div class="section-title">Dockerfile</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Wichtige Anweisungen</div>
+<code><span class="kw">FROM</span> <span class="st">node:20-alpine</span>         <span class="cm"># Basis-Image</span>
+<span class="kw">LABEL</span> maintainer=<span class="st">"you"</span>
+<span class="kw">WORKDIR</span> <span class="st">/app</span>               <span class="cm"># Arbeitsverzeichnis</span>
+<span class="kw">COPY</span> package*.json ./       <span class="cm"># Dateien kopieren</span>
+<span class="kw">ADD</span>  src.tar.gz /app/       <span class="cm"># + entpacken</span>
+<span class="kw">RUN</span>  <span class="fn">npm</span> ci --omit=dev
+<span class="kw">COPY</span> . .
+<span class="kw">ENV</span>  <span class="va">NODE_ENV</span>=<span class="st">production</span>   <span class="cm"># Env-Variable</span>
+<span class="kw">EXPOSE</span> <span class="nu">3000</span>                 <span class="cm"># Doku-Port</span>
+<span class="kw">USER</span> <span class="nu">1001</span>                   <span class="cm"># Non-root!</span>
+<span class="kw">ENTRYPOINT</span> [<span class="st">"node"</span>]        <span class="cm"># Haupt-Prozess</span>
+<span class="kw">CMD</span> [<span class="st">"server.js"</span>]          <span class="cm"># Default-Args</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Multi-Stage Build</div>
+<code><span class="cm"># Stage 1: Kompilieren</span>
+<span class="kw">FROM</span> <span class="st">golang:1.22</span> AS <span class="va">builder</span>
+<span class="kw">WORKDIR</span> /src
+<span class="kw">COPY</span> . .
+<span class="kw">RUN</span> <span class="fn">go</span> build -o /app
+
+<span class="cm"># Stage 2: Minimales Finale-Image</span>
+<span class="kw">FROM</span> <span class="st">gcr.io/distroless/static</span>
+<span class="kw">COPY</span> <span class="op">--from</span>=<span class="va">builder</span> /app /app
+<span class="kw">ENTRYPOINT</span> [<span class="st">"/app"</span>]</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">.dockerignore</div>
+<code><span class="cm"># .dockerignore Beispiel</span>
+<span class="st">.git</span>
+<span class="st">node_modules</span>
+<span class="st">*.log</span>
+<span class="st">.env</span>
+<span class="st">dist/</span>
+<span class="st">coverage/</span></code></div>
+  </div>
+  <div class="tip p">💡 <strong>ENTRYPOINT</strong> = was läuft immer. <strong>CMD</strong> = überschreibbare Default-Args bei <code>docker run</code>.</div>
+</div>
+
+<!-- BUILD -->
+<div class="section theme-cyan">
+  <div class="section-header"><div class="section-icon">🔨</div><div class="section-title">Build</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Image bauen</div>
+<code><span class="kw">docker build</span> <span class="op">-t</span> <span class="st">myapp</span>:<span class="nu">1.0</span> .
+<span class="kw">docker build</span> <span class="op">-t</span> <span class="st">myapp</span> <span class="op">-f</span> Dockerfile.prod .
+<span class="kw">docker build</span> <span class="op">--no-cache</span> <span class="op">-t</span> <span class="st">myapp</span> .</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">BuildKit &amp; Build-Args</div>
+<code><span class="cm"># BuildKit (Standard ab Docker 23)</span>
+<span class="fn">DOCKER_BUILDKIT</span>=<span class="nu">1</span> <span class="kw">docker build</span> <span class="op">-t</span> <span class="st">myapp</span> .
+
+<span class="cm"># Build-Argumente übergeben</span>
+<span class="kw">docker build</span> <span class="op">--build-arg</span> <span class="va">VERSION</span>=<span class="nu">1.0</span> <span class="op">-t</span> <span class="st">myapp</span> .
+<span class="cm"># In Dockerfile: ARG VERSION</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Multi-Platform Build</div>
+<code><span class="kw">docker buildx build</span> \
+  <span class="op">--platform</span> linux/amd64,linux/arm64 \
+  <span class="op">-t</span> <span class="st">myapp:latest</span> <span class="op">--push</span> .</code></div>
+  </div>
+  <div class="tip c">💡 Layer-Cache nutzen: <strong>COPY</strong> package.json vor <strong>RUN npm install</strong> — nur bei Änderungen neu bauen.</div>
+</div>
+
+<!-- DEBUGGING & INSPECTION -->
+<div class="section theme-red">
+  <div class="section-header"><div class="section-icon">🐛</div><div class="section-title">Debugging &amp; Inspection</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Logs</div>
+<code><span class="kw">docker logs</span> <span class="va">webserver</span>
+<span class="kw">docker logs</span> <span class="op">-f</span> <span class="va">webserver</span>       <span class="cm"># follow</span>
+<span class="kw">docker logs</span> <span class="op">--tail</span> <span class="nu">100</span> <span class="va">webserver</span>
+<span class="kw">docker logs</span> <span class="op">--since</span> <span class="st">5m</span> <span class="va">webserver</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">In Container ausführen</div>
+<code><span class="cm"># Shell im laufenden Container</span>
+<span class="kw">docker exec</span> <span class="op">-it</span> <span class="va">webserver</span> bash
+<span class="kw">docker exec</span> <span class="op">-it</span> <span class="va">webserver</span> sh
+
+<span class="cm"># Einzelner Befehl</span>
+<span class="kw">docker exec</span> <span class="va">webserver</span> cat /etc/nginx/nginx.conf</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Ressourcen &amp; Details</div>
+<code><span class="kw">docker stats</span>               <span class="cm"># Live-Ressourcen</span>
+<span class="kw">docker stats</span> <span class="op">--no-stream</span>   <span class="cm"># Einmalig</span>
+<span class="kw">docker top</span> <span class="va">webserver</span>       <span class="cm"># Prozesse</span>
+<span class="kw">docker inspect</span> <span class="va">webserver</span>   <span class="cm"># vollständige JSON-Info</span>
+<span class="kw">docker port</span> <span class="va">webserver</span>      <span class="cm"># Port-Mappings</span>
+<span class="kw">docker diff</span> <span class="va">webserver</span>      <span class="cm"># Dateisystem-Änderungen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Dateien kopieren</div>
+<code><span class="cm"># Host → Container</span>
+<span class="kw">docker cp</span> config.json <span class="va">webserver</span>:/etc/app/
+<span class="cm"># Container → Host</span>
+<span class="kw">docker cp</span> <span class="va">webserver</span>:/var/log/app.log ./</code></div>
+  </div>
+  <div class="tip r">⚠️ <strong>docker exec</strong> setzt voraus, dass der Container läuft. Für einen gestoppten Container: <strong>docker start</strong> zuerst.</div>
+</div>
+
+<!-- NETZWERK -->
+<div class="section theme-cyan">
+  <div class="section-header"><div class="section-icon">🔗</div><div class="section-title">Netzwerk</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Netzwerke verwalten</div>
+<code><span class="kw">docker network ls</span>
+<span class="kw">docker network create</span> <span class="st">mynet</span>
+<span class="kw">docker network create</span> <span class="op">--driver</span> overlay <span class="st">mynet</span>
+<span class="kw">docker network rm</span> <span class="st">mynet</span>
+<span class="kw">docker network inspect</span> <span class="st">mynet</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Container verbinden</div>
+<code><span class="cm"># Beim Start</span>
+<span class="kw">docker run</span> <span class="op">--network</span> <span class="st">mynet</span> nginx
+<span class="cm"># Nachträglich</span>
+<span class="kw">docker network connect</span>    <span class="st">mynet</span> <span class="va">webserver</span>
+<span class="kw">docker network disconnect</span> <span class="st">mynet</span> <span class="va">webserver</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Netzwerk-Treiber</div>
+<code><span class="cm">bridge</span>    <span class="cm"># Standard, isoliertes Subnetz</span>
+<span class="cm">host</span>      <span class="cm"># Teilt Host-Netzwerk-Stack</span>
+<span class="cm">none</span>      <span class="cm"># Kein Netzwerk</span>
+<span class="cm">overlay</span>   <span class="cm"># Multi-Host (Swarm)</span>
+<span class="cm">macvlan</span>   <span class="cm"># Eigene MAC-Adresse</span></code></div>
+  </div>
+  <div class="tip c">💡 Container im selben Bridge-Netzwerk kommunizieren über <strong>Container-Namen</strong> als DNS-Hostnamen.</div>
+</div>
+
+<!-- VOLUMES -->
+<div class="section theme-yellow">
+  <div class="section-header"><div class="section-icon">💾</div><div class="section-title">Volumes &amp; Bind Mounts</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Volumes verwalten</div>
+<code><span class="kw">docker volume create</span> <span class="st">mydata</span>
+<span class="kw">docker volume ls</span>
+<span class="kw">docker volume inspect</span> <span class="st">mydata</span>
+<span class="kw">docker volume rm</span> <span class="st">mydata</span>
+<span class="kw">docker volume prune</span>      <span class="cm"># ungenutzte löschen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Mount-Typen</div>
+<code><span class="cm"># Named Volume (empfohlen für Daten)</span>
+<span class="kw">docker run</span> <span class="op">-v</span> <span class="st">mydata</span>:/var/lib/data nginx
+
+<span class="cm"># Bind Mount (Host-Pfad → Container)</span>
+<span class="kw">docker run</span> <span class="op">-v</span> /host/pfad:/container/pfad nginx
+
+<span class="cm"># Read-only</span>
+<span class="kw">docker run</span> <span class="op">-v</span> mydata:/data:<span class="op">ro</span> nginx
+
+<span class="cm"># tmpfs (RAM, nicht persistent)</span>
+<span class="kw">docker run</span> <span class="op">--tmpfs</span> /tmp nginx</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">--mount Syntax (expliziter)</div>
+<code><span class="kw">docker run</span> \
+  <span class="op">--mount</span> type=volume,src=<span class="st">mydata</span>,dst=/data \
+  nginx
+
+<span class="kw">docker run</span> \
+  <span class="op">--mount</span> type=bind,src=/host/path,dst=/app,<span class="op">readonly</span> \
+  nginx</code></div>
+  </div>
+  <div class="tip y">💡 <strong>Named Volumes</strong> überleben Container-Neustarts und Upgrades. Bind Mounts sind gut für Entwicklung.</div>
+</div>
+
+<!-- REGISTRY -->
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">🏷️</div><div class="section-title">Registry &amp; Push</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Registry Login &amp; Push</div>
+<code><span class="kw">docker login</span>              <span class="cm"># Docker Hub</span>
+<span class="kw">docker login</span> registry.example.com
+<span class="kw">docker logout</span>
+
+<span class="cm"># Image taggen und pushen</span>
+<span class="kw">docker tag</span> <span class="st">myapp</span>:<span class="nu">1.0</span> <span class="va">user/myapp</span>:<span class="nu">1.0</span>
+<span class="kw">docker push</span> <span class="va">user/myapp</span>:<span class="nu">1.0</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Lokale Registry (GHCR / ECR)</div>
+<code><span class="cm"># GitHub Container Registry</span>
+<span class="fn">echo</span> <span class="va">$GH_TOKEN</span> | <span class="kw">docker login</span> ghcr.io \
+  <span class="op">-u</span> <span class="va">USERNAME</span> <span class="op">--password-stdin</span>
+<span class="kw">docker tag</span> myapp ghcr.io/<span class="va">USER</span>/myapp:<span class="nu">1.0</span>
+<span class="kw">docker push</span> ghcr.io/<span class="va">USER</span>/myapp:<span class="nu">1.0</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Lokale Registry starten</div>
+<code><span class="cm"># Private Registry auf Port 5000</span>
+<span class="kw">docker run</span> <span class="op">-d</span> <span class="op">-p</span> <span class="nu">5000</span>:<span class="nu">5000</span> <span class="op">--name</span> registry \
+  <span class="op">-v</span> registry-data:/var/lib/registry registry:<span class="nu">2</span>
+
+<span class="kw">docker tag</span> myapp localhost:<span class="nu">5000</span>/myapp
+<span class="kw">docker push</span> localhost:<span class="nu">5000</span>/myapp</code></div>
+  </div>
+</div>
+
+<!-- DOCKER COMPOSE -->
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">🚀</div><div class="section-title">Docker Compose</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">compose.yml Beispiel</div>
+<code><span class="kw">services</span>:
+  <span class="fn">web</span>:
+    <span class="va">build</span>: .
+    <span class="va">ports</span>: [<span class="st">"8080:80"</span>]
+    <span class="va">environment</span>:
+      - <span class="va">DB_HOST</span>=db
+    <span class="va">depends_on</span>: [db]
+    <span class="va">networks</span>: [appnet]
+    <span class="va">volumes</span>: [<span class="st">./src:/app/src</span>]
+  <span class="fn">db</span>:
+    <span class="va">image</span>: <span class="st">postgres:16</span>
+    <span class="va">volumes</span>: [pgdata:/var/lib/postgresql/data]
+    <span class="va">env_file</span>: .env
+<span class="kw">volumes</span>:
+  pgdata:
+<span class="kw">networks</span>:
+  <span class="fn">appnet</span>:</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Compose Befehle</div>
+<code><span class="kw">docker compose up</span>          <span class="cm"># Start (fg)</span>
+<span class="kw">docker compose up</span> <span class="op">-d</span>       <span class="cm"># detached</span>
+<span class="kw">docker compose up</span> <span class="op">--build</span>  <span class="cm"># immer neu bauen</span>
+<span class="kw">docker compose down</span>        <span class="cm"># Stop + rm</span>
+<span class="kw">docker compose down</span> <span class="op">-v</span>     <span class="cm"># inkl. Volumes</span>
+<span class="kw">docker compose restart</span> web
+<span class="kw">docker compose pull</span>        <span class="cm"># Images aktualisieren</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Compose Status &amp; Logs</div>
+<code><span class="kw">docker compose ps</span>
+<span class="kw">docker compose logs</span> <span class="op">-f</span> web
+<span class="kw">docker compose exec</span> web bash
+<span class="kw">docker compose run</span> <span class="op">--rm</span> web npm test</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Mehrere Compose-Dateien</div>
+<code><span class="cm"># Override Datei für Dev vs Prod</span>
+<span class="kw">docker compose</span> \
+  <span class="op">-f</span> compose.yml \
+  <span class="op">-f</span> compose.override.yml up <span class="op">-d</span></code></div>
+  </div>
+  <div class="tip g">💡 <strong>depends_on</strong> wartet nur auf Container-Start, nicht auf Readiness. Für Health-Checks: <strong>healthcheck</strong> definieren.</div>
+</div>
+
+<!-- SYSTEM & CLEANUP -->
+<div class="section theme-red">
+  <div class="section-header"><div class="section-icon">🧹</div><div class="section-title">System &amp; Cleanup</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Aufräumen</div>
+<code><span class="cm"># Gestoppte Container</span>
+<span class="kw">docker container prune</span>
+
+<span class="cm"># Ungenutzte Images (dangling)</span>
+<span class="kw">docker image prune</span>
+<span class="cm"># Alle ungenutzten Images</span>
+<span class="kw">docker image prune</span> <span class="op">-a</span>
+
+<span class="cm"># Ungenutzte Netzwerke</span>
+<span class="kw">docker network prune</span>
+
+<span class="cm"># Ungenutzte Volumes</span>
+<span class="kw">docker volume prune</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Alles auf einmal</div>
+<code><span class="cm"># Container, Images, Netzwerke (nicht Volumes)</span>
+<span class="kw">docker system prune</span>
+
+<span class="cm"># Inkl. Volumes — VORSICHT!</span>
+<span class="kw">docker system prune</span> <span class="op">-a</span> <span class="op">--volumes</span>
+
+<span class="cm"># Disk-Nutzung anzeigen</span>
+<span class="kw">docker system df</span>
+<span class="kw">docker system df</span> <span class="op">-v</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Alle laufenden stoppen</div>
+<code><span class="cm"># Alle Container stoppen</span>
+<span class="kw">docker stop</span> $(<span class="kw">docker ps</span> <span class="op">-q</span>)
+<span class="cm"># Alle Container entfernen</span>
+<span class="kw">docker rm</span> $(<span class="kw">docker ps</span> <span class="op">-aq</span>)</code></div>
+  </div>
+  <div class="tip r">⚠️ <strong>system prune --volumes</strong> löscht persistente Daten unwiderruflich. Kein Backup → kein Mitleid.</div>
+</div>
+
+<!-- CONTEXT & SWARM -->
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">Context &amp; Swarm</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Docker Contexts</div>
+<code><span class="kw">docker context ls</span>
+<span class="kw">docker context create</span> <span class="st">remote</span> \
+  <span class="op">--docker</span> <span class="st">"host=ssh://user@host"</span>
+<span class="kw">docker context use</span> <span class="st">remote</span>
+<span class="kw">docker context use</span> <span class="st">default</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Swarm Basics</div>
+<code><span class="kw">docker swarm init</span>
+<span class="kw">docker swarm join</span> <span class="op">--token</span> <span class="va">TOKEN</span> HOST:<span class="nu">2377</span>
+<span class="kw">docker node ls</span>
+<span class="kw">docker service create</span> <span class="op">--replicas</span> <span class="nu">3</span> \
+  <span class="op">--name</span> <span class="st">web</span> <span class="op">-p</span> <span class="nu">80</span>:<span class="nu">80</span> nginx
+<span class="kw">docker service ls</span>
+<span class="kw">docker service scale</span> web=<span class="nu">5</span>
+<span class="kw">docker stack deploy</span> <span class="op">-c</span> compose.yml <span class="st">mystack</span></code></div>
+  </div>
+  <div class="tip p">💡 Für moderne Multi-Host-Deployments ist <strong>Kubernetes</strong> (mit Helm) heute die bevorzugte Lösung gegenüber Swarm.</div>
+</div>
+
+</main>
+<footer><span>docker</span> — docs.docker.com · BuildKit · Compose v2 · TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span>Guide</footer>
+</body>
+</html>
