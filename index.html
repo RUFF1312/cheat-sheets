@@ -84,6 +84,40 @@
   .c-terraform{--ac:#7b42bc;--acs:rgba(123,66,188,0.15);--acb:rgba(123,66,188,0.25)}
   /* OVS */
   .c-ovs{--ac:#00b4a0;--acs:rgba(0,180,160,0.15);--acb:rgba(0,180,160,0.25)}
+  /* HAProxy */
+  .c-haproxy{--ac:#106490;--acs:rgba(16,100,144,0.15);--acb:rgba(16,100,144,0.25)}
+  /* Pacemaker */
+  .c-pacemaker{--ac:#c41e3a;--acs:rgba(196,30,58,0.15);--acb:rgba(196,30,58,0.25)}
+  /* Vault */
+  .c-vault{--ac:#c9a227;--acs:rgba(201,162,39,0.15);--acb:rgba(201,162,39,0.25)}
+  /* Prometheus */
+  .c-prometheus{--ac:#e6522c;--acs:rgba(230,82,44,0.15);--acb:rgba(230,82,44,0.25)}
+  /* Podman */
+  .c-podman{--ac:#892ca0;--acs:rgba(137,44,160,0.15);--acb:rgba(137,44,160,0.25)}
+  /* iptables */
+  .c-iptables{--ac:#e53e3e;--acs:rgba(229,62,62,0.15);--acb:rgba(229,62,62,0.25)}
+  /* SSH */
+  .c-ssh{--ac:#22863a;--acs:rgba(34,134,58,0.15);--acb:rgba(34,134,58,0.25)}
+  /* LVM */
+  .c-lvm{--ac:#c45f17;--acs:rgba(196,95,23,0.15);--acb:rgba(196,95,23,0.25)}
+  /* OpenSSL */
+  .c-openssl{--ac:#5a40d4;--acs:rgba(90,64,212,0.15);--acb:rgba(90,64,212,0.25)}
+  /* tcpdump */
+  .c-tcpdump{--ac:#0070c0;--acs:rgba(0,112,192,0.15);--acb:rgba(0,112,192,0.25)}
+  /* jq */
+  .c-jq{--ac:#d4a017;--acs:rgba(212,160,23,0.15);--acb:rgba(212,160,23,0.25)}
+  /* curl */
+  .c-curl{--ac:#0081c2;--acs:rgba(0,129,194,0.15);--acb:rgba(0,129,194,0.25)}
+  /* GitLab CI */
+  .c-gitlab-ci{--ac:#fc6d26;--acs:rgba(252,109,38,0.15);--acb:rgba(252,109,38,0.25)}
+  /* Make */
+  .c-make{--ac:#2e7c5e;--acs:rgba(46,124,94,0.15);--acb:rgba(46,124,94,0.25)}
+  /* Regex */
+  .c-regex{--ac:#16a34a;--acs:rgba(22,163,74,0.15);--acb:rgba(22,163,74,0.25)}
+  /* chronyc */
+  .c-chronyc{--ac:#2563eb;--acs:rgba(37,99,235,0.15);--acb:rgba(37,99,235,0.25)}
+  /* Kickstart */
+  .c-kickstart{--ac:#c42b2b;--acs:rgba(196,43,43,0.15);--acb:rgba(196,43,43,0.25)}
 
   .card .card-accent{background:var(--ac)}
   .card:hover{border-color:var(--ac)}
@@ -116,7 +150,7 @@
   <div class="header-eyebrow">Developer Reference Collection</div>
   <h1><span class="h1-accent">TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span></span><br>Guide</h1>
   <p class="header-sub">Alle Referenz-Sheets auf einen Blick — dark-themed, vollständig, offline-fähig.</p>
-  <div class="header-count"><span>18</span> Sheets · CLI · Scripting · DevOps · Kubernetes</div>
+  <div class="header-count"><span>35</span> Sheets · CLI · Scripting · DevOps · Kubernetes</div>
 </header>
 
 <main>
@@ -406,6 +440,278 @@
         <div class="card-tagline">$ ovs-vsctl / ovn-nbctl -- Virtual Networking<br>Bridges · Flows · VXLAN · OVN · Neutron</div>
         <div class="card-tags">
           <span class="tag">Bridges</span><span class="tag">OpenFlow</span><span class="tag">VXLAN</span><span class="tag">OVN</span><span class="tag">Neutron</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- HAProxy -->
+    <a href="haproxy-cheatsheet.html" class="card c-haproxy" data-title="HAProxy" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/haproxy.svg" alt="haproxy.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">HAProxy</div>
+        </div>
+        <div class="card-tagline">$ haproxy -f haproxy.cfg -- Load Balancer<br>Frontend · Backend · ACL · SSL · Stats API</div>
+        <div class="card-tags">
+          <span class="tag">Load Balancing</span><span class="tag">SSL/TLS</span><span class="tag">ACL</span><span class="tag">Stats</span><span class="tag">HA</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Pacemaker / Corosync -->
+    <a href="pacemaker-cheatsheet.html" class="card c-pacemaker" data-title="Pacemaker / Corosync" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/pacemaker.svg" alt="pacemaker.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Pacemaker / Corosync</div>
+        </div>
+        <div class="card-tagline">$ pcs -- High Availability Cluster<br>Resources · STONITH · Constraints · Quorum</div>
+        <div class="card-tags">
+          <span class="tag">HA Cluster</span><span class="tag">STONITH</span><span class="tag">VIP</span><span class="tag">Fencing</span><span class="tag">OpenStack HA</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- HashiCorp Vault -->
+    <a href="vault-cheatsheet.html" class="card c-vault" data-title="HashiCorp Vault" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/vault.svg" alt="vault.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">HashiCorp Vault</div>
+        </div>
+        <div class="card-tagline">$ vault kv / auth / pki -- Secrets Manager<br>KV · AppRole · PKI · Dynamic Secrets · Policies</div>
+        <div class="card-tags">
+          <span class="tag">Secrets</span><span class="tag">PKI</span><span class="tag">AppRole</span><span class="tag">Dynamic</span><span class="tag">Policies</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Prometheus -->
+    <a href="prometheus-cheatsheet.html" class="card c-prometheus" data-title="Prometheus / PromQL" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/prometheus.svg" alt="prometheus.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Prometheus / PromQL</div>
+        </div>
+        <div class="card-tagline">$ promtool / http://prometheus:9090 -- Monitoring<br>PromQL · Alerting · Recording Rules · Exporters</div>
+        <div class="card-tags">
+          <span class="tag">PromQL</span><span class="tag">Alerting</span><span class="tag">Recording</span><span class="tag">Exporters</span><span class="tag">Ceph</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Podman -->
+    <a href="podman-cheatsheet.html" class="card c-podman" data-title="Podman" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/podman.svg" alt="podman.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Podman</div>
+        </div>
+        <div class="card-tagline">$ podman run / pod / compose -- Daemonless Containers<br>Rootless · Pods · Quadlet · Systemd-Integration</div>
+        <div class="card-tags">
+          <span class="tag">Rootless</span><span class="tag">Pods</span><span class="tag">Quadlet</span><span class="tag">Compose</span><span class="tag">Kubernetes</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- iptables / nftables -->
+    <a href="iptables-cheatsheet.html" class="card c-iptables" data-title="iptables / nftables" data-group="System & Netz">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/iptables.svg" alt="iptables.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">iptables / nftables</div>
+        </div>
+        <div class="card-tagline">$ iptables -L -n -v / nft list ruleset -- Firewall<br>filter · nat · mangle · INPUT · FORWARD · POSTROUTING</div>
+        <div class="card-tags">
+          <span class="tag">Firewall</span><span class="tag">NAT</span><span class="tag">DNAT</span><span class="tag">nftables</span><span class="tag">Rate Limit</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- SSH -->
+    <a href="ssh-cheatsheet.html" class="card c-ssh" data-title="SSH" data-group="System & Netz">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/ssh.svg" alt="ssh.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">SSH</div>
+        </div>
+        <div class="card-tagline">$ ssh / scp / sftp / ssh-keygen -- Secure Shell<br>Keys · Tunneling · ProxyJump · Config · Zertifikate</div>
+        <div class="card-tags">
+          <span class="tag">Keys</span><span class="tag">Tunneling</span><span class="tag">ProxyJump</span><span class="tag">SFTP</span><span class="tag">CA</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- LVM -->
+    <a href="lvm-cheatsheet.html" class="card c-lvm" data-title="LVM" data-group="System & Netz">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/lvm.svg" alt="lvm.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">LVM</div>
+        </div>
+        <div class="card-tagline">$ pvcreate / vgcreate / lvcreate -- Logical Volumes<br>PV · VG · LV · Snapshots · Thin · RAID</div>
+        <div class="card-tags">
+          <span class="tag">PV/VG/LV</span><span class="tag">Resize</span><span class="tag">Snapshots</span><span class="tag">Thin</span><span class="tag">RAID</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- OpenSSL -->
+    <a href="openssl-cheatsheet.html" class="card c-openssl" data-title="OpenSSL / PKI" data-group="System & Netz">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/openssl.svg" alt="openssl.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">OpenSSL / PKI</div>
+        </div>
+        <div class="card-tagline">$ openssl req / x509 / s_client -- Crypto & TLS<br>Keys · CSR · CA · Zertifikate · PKCS12 · mTLS</div>
+        <div class="card-tags">
+          <span class="tag">TLS</span><span class="tag">CSR</span><span class="tag">CA/PKI</span><span class="tag">Zertifikate</span><span class="tag">PKCS12</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- tcpdump / ss -->
+    <a href="tcpdump-cheatsheet.html" class="card c-tcpdump" data-title="tcpdump / ss" data-group="System & Netz">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/tcpdump.svg" alt="tcpdump.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">tcpdump / ss</div>
+        </div>
+        <div class="card-tagline">$ tcpdump -i eth0 port 80 / ss -tlnp -- Netzdiagnose<br>BPF-Filter · Capture · Sockets · ip Route</div>
+        <div class="card-tags">
+          <span class="tag">Capture</span><span class="tag">BPF-Filter</span><span class="tag">ss</span><span class="tag">ip</span><span class="tag">Wireshark</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- jq / yq -->
+    <a href="jq-cheatsheet.html" class="card c-jq" data-title="jq / yq" data-group="Dev & Automation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/jq.svg" alt="jq.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">jq / yq</div>
+        </div>
+        <div class="card-tagline">$ jq '.[] | .name' / yq '.spec' -- JSON & YAML<br>select · map · filter · transform · convert</div>
+        <div class="card-tags">
+          <span class="tag">JSON</span><span class="tag">YAML</span><span class="tag">select</span><span class="tag">map</span><span class="tag">OpenStack</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- curl -->
+    <a href="curl-cheatsheet.html" class="card c-curl" data-title="curl" data-group="Dev & Automation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/curl.svg" alt="curl.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">curl</div>
+        </div>
+        <div class="card-tagline">$ curl -X POST -H "Content-Type: application/json" -- HTTP<br>REST API · Auth · TLS · Proxy · Upload · Timing</div>
+        <div class="card-tags">
+          <span class="tag">HTTP</span><span class="tag">REST API</span><span class="tag">Auth</span><span class="tag">TLS</span><span class="tag">Upload</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- GitLab CI / GitHub Actions -->
+    <a href="gitlab-ci-cheatsheet.html" class="card c-gitlab-ci" data-title="GitLab CI / GitHub Actions" data-group="Dev & Automation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/gitlab-ci.svg" alt="gitlab-ci.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">GitLab CI / GH Actions</div>
+        </div>
+        <div class="card-tagline">$ .gitlab-ci.yml / .github/workflows/ -- CI/CD<br>Stages · Jobs · Rules · Artifacts · Environments</div>
+        <div class="card-tags">
+          <span class="tag">Pipeline</span><span class="tag">Stages</span><span class="tag">Artifacts</span><span class="tag">Cache</span><span class="tag">Environments</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Make -->
+    <a href="make-cheatsheet.html" class="card c-make" data-title="Make / Makefile" data-group="Dev & Automation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/make.svg" alt="make.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Make / Makefile</div>
+        </div>
+        <div class="card-tagline">$ make build / make -j4 -- Build Automation<br>Targets · Variables · Patterns · Functions · Phony</div>
+        <div class="card-tags">
+          <span class="tag">Targets</span><span class="tag">Variables</span><span class="tag">Patterns</span><span class="tag">DevOps</span><span class="tag">Parallel</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Regex -->
+    <a href="regex-cheatsheet.html" class="card c-regex" data-title="Regex" data-group="Dev & Automation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/regex.svg" alt="regex.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Regex</div>
+        </div>
+        <div class="card-tagline">$ grep -E / sed / python re -- Regular Expressions<br>PCRE · ERE · BRE · Gruppen · Lookahead</div>
+        <div class="card-tags">
+          <span class="tag">PCRE</span><span class="tag">Gruppen</span><span class="tag">Lookahead</span><span class="tag">grep/sed</span><span class="tag">Python</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- chronyc -->
+    <a href="chronyc-cheatsheet.html" class="card c-chronyc" data-title="chronyc / NTP" data-group="System & Netz">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/chronyc.svg" alt="chronyc.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">chronyc / NTP</div>
+        </div>
+        <div class="card-tagline">$ chronyc tracking / sources -- Zeitsynchronisation<br>chrony.conf · NTP-Server · makestep · OpenStack</div>
+        <div class="card-tags">
+          <span class="tag">NTP</span><span class="tag">Sync</span><span class="tag">chrony.conf</span><span class="tag">PXE</span><span class="tag">OpenStack</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Kickstart -->
+    <a href="kickstart-cheatsheet.html" class="card c-kickstart" data-title="Kickstart" data-group="Dev & Automation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/kickstart.svg" alt="kickstart.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Kickstart</div>
+        </div>
+        <div class="card-tagline">$ inst.ks=http://... -- Unattended Installation<br>RHEL · Rocky · Alma · PXE · %pre/%post · LVM</div>
+        <div class="card-tags">
+          <span class="tag">Unattended</span><span class="tag">PXE</span><span class="tag">Partitionen</span><span class="tag">%post</span><span class="tag">RHEL</span>
         </div>
         <div class="card-arrow">→</div>
       </div>

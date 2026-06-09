@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LVM - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#c45f17;--accent2:#e07830;--blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#1a0900 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(196,95,23,0.09),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(196,95,23,0.12);border:1px solid rgba(196,95,23,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  .t-orange .section-header{background:rgba(196,95,23,0.08)}.t-orange .section-icon{background:rgba(196,95,23,0.15)}.t-orange .section-title{color:var(--accent)}
+  .t-green .section-header{background:rgba(63,185,80,0.08)}.t-green .section-icon{background:rgba(63,185,80,0.15)}.t-green .section-title{color:var(--green)}
+  .t-blue .section-header{background:rgba(61,139,205,0.08)}.t-blue .section-icon{background:rgba(61,139,205,0.15)}.t-blue .section-title{color:var(--blue)}
+  .t-purple .section-header{background:rgba(163,113,247,0.08)}.t-purple .section-icon{background:rgba(163,113,247,0.15)}.t-purple .section-title{color:var(--purple)}
+  .t-cyan .section-header{background:rgba(57,197,207,0.08)}.t-cyan .section-icon{background:rgba(57,197,207,0.15)}.t-cyan .section-title{color:var(--cyan)}
+  .t-yellow .section-header{background:rgba(240,160,48,0.08)}.t-yellow .section-icon{background:rgba(240,160,48,0.15)}.t-yellow .section-title{color:#f0a030}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:#c45f17;font-weight:700}.fl{color:#3d8bcd}.val{color:#3fb950}.cm{color:#7d8590;font-style:italic}.var{color:#a371f7}.nu{color:#f47067}.cy{color:#39c5cf}
+  .tip{padding:8px 16px;background:rgba(196,95,23,0.05);border-top:1px dashed rgba(196,95,23,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(196,95,23,0.3);padding:4px 12px;border-radius:4px;background:rgba(196,95,23,0.08)}
+  .nav-link:hover{background:rgba(196,95,23,0.18)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+<link rel="icon" type="image/svg+xml" href="assets/lvm.svg">
+</head>
+<body>
+<header>
+  <a href="index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Logical Volume Manager</div>
+      <img src="assets/lvm.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(45%) sepia(70%) saturate(600%) hue-rotate(10deg)">
+      <h1><span>LVM</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ pvcreate / vgcreate / lvcreate / lvextend</p>
+    </div>
+    <div class="meta"><strong>LVM2 — Linux</strong><br>PV · VG · LV<br>Snapshots · Thin<br>Resize · Migrate</div>
+  </div>
+</header>
+<main>
+
+<div class="section t-orange">
+  <div class="section-header"><div class="section-icon">💾</div><div class="section-title">LVM-Architektur</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Konzept PV → VG → LV</div>
+      <code><span class="cm"># Schichten:</span>
+<span class="cm">PV (Physical Volume)  = Disk/Partition</span>
+<span class="cm">VG (Volume Group)     = Pool aus PVs</span>
+<span class="cm">LV (Logical Volume)   = Virtuelles Block-Gerät</span>
+
+<span class="cm"># Überblick:</span>
+<span class="kw">pvs</span>  / <span class="kw">pvscan</span> / <span class="kw">pvdisplay</span>
+<span class="kw">vgs</span>  / <span class="kw">vgscan</span> / <span class="kw">vgdisplay</span>
+<span class="kw">lvs</span>  / <span class="kw">lvscan</span> / <span class="kw">lvdisplay</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-blue">
+  <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">Physical Volumes (PV)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">PV erstellen &amp; verwalten</div>
+      <code><span class="kw">pvcreate</span> /dev/sdb /dev/sdc
+<span class="kw">pvcreate</span> /dev/sdb1         <span class="cm"># auf Partition</span>
+<span class="kw">pvdisplay</span> /dev/sdb
+<span class="kw">pvremove</span> /dev/sdb
+<span class="kw">pvmove</span> /dev/sdb             <span class="cm"># Daten verschieben</span>
+<span class="kw">pvmove</span> /dev/sdb /dev/sdd   <span class="cm"># auf Ziel-PV</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-green">
+  <div class="section-header"><div class="section-icon">📦</div><div class="section-title">Volume Groups (VG)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">VG erstellen &amp; erweitern</div>
+      <code><span class="kw">vgcreate</span> vg_data /dev/sdb /dev/sdc
+<span class="kw">vgextend</span> vg_data /dev/sdd    <span class="cm"># PV hinzufügen</span>
+<span class="kw">vgreduce</span> vg_data /dev/sdb    <span class="cm"># PV entfernen</span>
+<span class="kw">vgremove</span> vg_data</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">VG exportieren / importieren</div>
+      <code><span class="kw">vgexport</span> vg_data
+<span class="kw">vgimport</span> vg_data
+<span class="kw">vgrename</span> vg_data vg_newname</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-purple">
+  <div class="section-header"><div class="section-icon">📊</div><div class="section-title">Logical Volumes (LV)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">LV erstellen</div>
+      <code><span class="cm"># Mit Größenangabe:</span>
+<span class="kw">lvcreate</span> <span class="fl">-L</span> 50G <span class="fl">-n</span> lv_data vg_data
+<span class="kw">lvcreate</span> <span class="fl">-l</span> 100%FREE <span class="fl">-n</span> lv_data vg_data
+<span class="kw">lvcreate</span> <span class="fl">-l</span> <span class="nu">50</span>%VG <span class="fl">-n</span> lv_home vg_data</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">LV vergrößern / verkleinern</div>
+      <code><span class="cm"># Vergrößern + Filesystem erweitern:</span>
+<span class="kw">lvextend</span> <span class="fl">-L</span> +20G /dev/vg_data/lv_data
+<span class="kw">lvextend</span> <span class="fl">-l</span> +100%FREE /dev/vg_data/lv_data
+<span class="cm"># Mit Resize-Filesystem:</span>
+<span class="kw">lvextend</span> <span class="fl">-r</span> <span class="fl">-L</span> +20G /dev/vg_data/lv_data
+<span class="cm"># Manuell ext4:</span>
+<span class="kw">resize2fs</span> /dev/vg_data/lv_data
+<span class="cm"># Verkleinern (erst FS, dann LV!):</span>
+<span class="kw">resize2fs</span> /dev/vg_data/lv_home 30G
+<span class="kw">lvreduce</span> <span class="fl">-L</span> 30G /dev/vg_data/lv_home</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">LV löschen &amp; umbenennen</div>
+      <code><span class="kw">lvremove</span> /dev/vg_data/lv_data
+<span class="kw">lvrename</span> vg_data lv_old lv_new</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-cyan">
+  <div class="section-header"><div class="section-icon">📸</div><div class="section-title">Snapshots</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Snapshot erstellen &amp; nutzen</div>
+      <code><span class="cm"># Snapshot von lv_data:</span>
+<span class="kw">lvcreate</span> <span class="fl">-s</span> <span class="fl">-n</span> lv_snap <span class="fl">-L</span> 10G \
+    /dev/vg_data/lv_data
+<span class="cm"># Snapshot mounten (Read-Only):</span>
+<span class="kw">mount</span> <span class="fl">-o</span> ro /dev/vg_data/lv_snap /mnt/snap
+<span class="cm"># Snapshot zurückspielen:</span>
+<span class="kw">umount</span> /dev/vg_data/lv_data
+<span class="kw">lvconvert</span> <span class="fl">--merge</span> /dev/vg_data/lv_snap</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-yellow">
+  <div class="section-header"><div class="section-icon">🔄</div><div class="section-title">Thin Provisioning</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Thin Pool &amp; Thin Volume</div>
+      <code><span class="cm"># Thin Pool erstellen:</span>
+<span class="kw">lvcreate</span> <span class="fl">--type</span> thin-pool \
+    <span class="fl">-L</span> 100G <span class="fl">-n</span> thin_pool vg_data
+<span class="cm"># Thin Volume (virtuell 200G auf 100G Pool):</span>
+<span class="kw">lvcreate</span> <span class="fl">--type</span> thin \
+    <span class="fl">-V</span> 200G <span class="fl">--thinpool</span> thin_pool \
+    <span class="fl">-n</span> lv_thin vg_data
+<span class="cm"># Pool-Status:</span>
+<span class="kw">lvdisplay</span> <span class="fl">--maps</span> vg_data/thin_pool</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-orange">
+  <div class="section-header"><div class="section-icon">🔁</div><div class="section-title">RAID &amp; Mirroring</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">LVM-eigenes RAID</div>
+      <code><span class="cm"># RAID1 (Mirror):</span>
+<span class="kw">lvcreate</span> <span class="fl">--type</span> raid1 <span class="fl">-m</span> 1 \
+    <span class="fl">-L</span> 50G <span class="fl">-n</span> lv_mirror vg_data
+<span class="cm"># RAID5 (3+ Disks):</span>
+<span class="kw">lvcreate</span> <span class="fl">--type</span> raid5 <span class="fl">-i</span> 3 \
+    <span class="fl">-L</span> 100G <span class="fl">-n</span> lv_raid5 vg_data
+<span class="cm"># RAID-Status:</span>
+<span class="kw">lvs</span> <span class="fl">-a</span> <span class="fl">-o</span> name,copy_percent,devices</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Filesystem erstellen &amp; mounten</div>
+      <code><span class="kw">mkfs.ext4</span> /dev/vg_data/lv_data
+<span class="kw">mkfs.xfs</span> /dev/vg_data/lv_data
+<span class="cm"># fstab-Eintrag:</span>
+/dev/vg_data/lv_data /data ext4 defaults 0 2
+<span class="cm"># Device-Pfade:</span>
+/dev/vg_data/lv_data
+/dev/mapper/vg_data-lv_data</code>
+    </div>
+  </div>
+  <div class="tip g">💡 <strong>lvextend -r</strong> erweitert LV und Filesystem in einem Schritt (ext4, xfs)</div>
+</div>
+
+</main>
+<footer><span>LVM</span> — Logical Volume Manager &nbsp;·&nbsp; man lvm &nbsp;·&nbsp; Red Hat Storage Administration Guide</footer>
+</body>
+</html>
