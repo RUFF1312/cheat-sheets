@@ -78,6 +78,12 @@
   .c-docker{--ac:#0db7ed;--acs:rgba(13,183,237,0.15);--acb:rgba(13,183,237,0.25)}
   /* systemd */
   .c-systemd{--ac:#30D475;--acs:rgba(48,212,117,0.15);--acb:rgba(48,212,117,0.25)}
+  /* Ceph */
+  .c-ceph{--ac:#e33a2e;--acs:rgba(227,58,46,0.15);--acb:rgba(227,58,46,0.25)}
+  /* Terraform */
+  .c-terraform{--ac:#7b42bc;--acs:rgba(123,66,188,0.15);--acb:rgba(123,66,188,0.25)}
+  /* OVS */
+  .c-ovs{--ac:#00b4a0;--acs:rgba(0,180,160,0.15);--acb:rgba(0,180,160,0.25)}
 
   .card .card-accent{background:var(--ac)}
   .card:hover{border-color:var(--ac)}
@@ -110,7 +116,7 @@
   <div class="header-eyebrow">Developer Reference Collection</div>
   <h1><span class="h1-accent">TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span></span><br>Guide</h1>
   <p class="header-sub">Alle Referenz-Sheets auf einen Blick — dark-themed, vollständig, offline-fähig.</p>
-  <div class="header-count"><span>14</span> Sheets · CLI · Scripting · DevOps · Kubernetes</div>
+  <div class="header-count"><span>18</span> Sheets · CLI · Scripting · DevOps · Kubernetes</div>
 </header>
 
 <main>
@@ -352,6 +358,54 @@
         <div class="card-tagline">$ docker [command] [OPTIONS] -- Container Runtime<br>Images · Volumes · Netzwerk · Compose · Registry</div>
         <div class="card-tags">
           <span class="tag">Container</span><span class="tag">Images</span><span class="tag">Compose</span><span class="tag">Volumes</span><span class="tag">BuildKit</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Ceph -->
+    <a href="ceph-cheatsheet.html" class="card c-ceph" data-title="Ceph" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/ceph.svg" alt="ceph.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Ceph</div>
+        </div>
+        <div class="card-tagline">$ ceph / rbd / rados -- Distributed Storage<br>OSD · Pool · RBD · CephFS · RGW · OpenStack</div>
+        <div class="card-tags">
+          <span class="tag">OSD</span><span class="tag">Pools</span><span class="tag">RBD</span><span class="tag">CephFS</span><span class="tag">S3/RGW</span><span class="tag">OpenStack</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Terraform -->
+    <a href="terraform-cheatsheet.html" class="card c-terraform" data-title="Terraform" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/terraform.svg" alt="terraform.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Terraform / OpenTofu</div>
+        </div>
+        <div class="card-tagline">$ terraform init|plan|apply -- Infrastructure as Code<br>HCL · State · Module · OpenStack Provider</div>
+        <div class="card-tags">
+          <span class="tag">Plan</span><span class="tag">State</span><span class="tag">Module</span><span class="tag">OpenStack</span><span class="tag">Workspace</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- OVS / OVN -->
+    <a href="ovs-cheatsheet.html" class="card c-ovs" data-title="Open vSwitch / OVN" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/ovs.svg" alt="ovs.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Open vSwitch / OVN</div>
+        </div>
+        <div class="card-tagline">$ ovs-vsctl / ovn-nbctl -- Virtual Networking<br>Bridges · Flows · VXLAN · OVN · Neutron</div>
+        <div class="card-tags">
+          <span class="tag">Bridges</span><span class="tag">OpenFlow</span><span class="tag">VXLAN</span><span class="tag">OVN</span><span class="tag">Neutron</span>
         </div>
         <div class="card-arrow">→</div>
       </div>
