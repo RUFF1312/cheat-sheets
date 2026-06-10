@@ -72,11 +72,11 @@
       <div class="legend">
         <div class="chip a">📑 DML</div>
         <div class="chip b">🏗️ DDL</div>
-        <div class="chip c">🔍 Filter & Join</div>
-        <div class="chip d">🧮 Aggregation</div>
+        <div class="chip c">🔍 Joins & Filter</div>
+        <div class="chip d">🪟 Window & CTEs</div>
       </div>
     </div>
-    <div class="meta"><strong>SQL (Structured Query Language)</strong><br>Relational Databases<br>PostgreSQL · MySQL · SQLite<br>Data Manipulation</div>
+    <div class="meta"><strong>SQL (Structured Query Language)</strong><br>Relational Databases<br>PostgreSQL · MySQL · SQLite<br>DML · DDL · Joins · CTEs · Window</div>
   </div>
 </header>
 <main>
@@ -181,6 +181,197 @@
 <span class="kw">CREATE UNIQUE INDEX</span> idx_user_username <span class="kw">ON</span> users (username);
 <span class="kw">DROP INDEX</span> idx_user_email;</code></div>
   </div>
+</div>
+
+
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">🔗</div><div class="section-title">Alle JOIN-Typen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">RIGHT JOIN - alle von rechts + matches links</div>
+<code><span class="kw">SELECT</span> u.name, o.total
+<span class="kw">FROM</span> users u
+<span class="kw">RIGHT JOIN</span> orders o <span class="kw">ON</span> u.id = o.user_id;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">FULL OUTER JOIN - alle Zeilen beider Seiten</div>
+<code><span class="kw">SELECT</span> u.name, o.total
+<span class="kw">FROM</span> users u
+<span class="kw">FULL OUTER JOIN</span> orders o <span class="kw">ON</span> u.id = o.user_id;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">CROSS JOIN - kartesisches Produkt</div>
+<code><span class="kw">SELECT</span> a.color, b.size
+<span class="kw">FROM</span> colors a <span class="kw">CROSS JOIN</span> sizes b;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Self JOIN - Tabelle mit sich selbst</div>
+<code><span class="kw">SELECT</span> e.name, m.name <span class="kw">AS</span> manager
+<span class="kw">FROM</span> employees e
+<span class="kw">LEFT JOIN</span> employees m <span class="kw">ON</span> e.manager_id = m.id;</code></div>
+  </div>
+  <div class="tip g">💡 MySQL kennt kein FULL OUTER JOIN — stattdessen: LEFT JOIN <strong>UNION</strong> RIGHT JOIN</div>
+</div>
+
+<div class="section theme-cyan">
+  <div class="section-header"><div class="section-icon">🔀</div><div class="section-title">NULL & CASE</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">NULL prüfen</div>
+<code><span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> email <span class="kw">IS NULL</span>;
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> email <span class="kw">IS NOT NULL</span>;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">COALESCE & NULLIF</div>
+<code><span class="fn">COALESCE</span>(email, <span class="st">'n/a'</span>)  <span class="cm">-- erster Nicht-NULL-Wert</span>
+<span class="fn">NULLIF</span>(score, <span class="nu">0</span>)       <span class="cm">-- NULL wenn score = 0</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">CASE WHEN</div>
+<code><span class="kw">SELECT</span> name,
+  <span class="kw">CASE</span>
+    <span class="kw">WHEN</span> age &lt; <span class="nu">18</span> <span class="kw">THEN</span> <span class="st">'Junior'</span>
+    <span class="kw">WHEN</span> age &lt; <span class="nu">65</span> <span class="kw">THEN</span> <span class="st">'Erwachsen'</span>
+    <span class="kw">ELSE</span>               <span class="st">'Senior'</span>
+  <span class="kw">END</span> <span class="kw">AS</span> gruppe
+<span class="kw">FROM</span> users;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">CASE in Aggregation (Pivot)</div>
+<code><span class="kw">SELECT</span>
+  <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> status=<span class="st">'active'</span>   <span class="kw">THEN</span> <span class="nu">1</span> <span class="kw">ELSE</span> <span class="nu">0</span> <span class="kw">END</span>) <span class="kw">AS</span> aktive,
+  <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> status=<span class="st">'inactive'</span> <span class="kw">THEN</span> <span class="nu">1</span> <span class="kw">ELSE</span> <span class="nu">0</span> <span class="kw">END</span>) <span class="kw">AS</span> inaktive
+<span class="kw">FROM</span> users;</code></div>
+  </div>
+</div>
+
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">⛙</div><div class="section-title">Mengenoperationen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">UNION — vereinigt, Duplikate entfernt</div>
+<code><span class="kw">SELECT</span> name <span class="kw">FROM</span> customers
+<span class="kw">UNION</span>
+<span class="kw">SELECT</span> name <span class="kw">FROM</span> employees;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">UNION ALL — mit Duplikaten (schneller)</div>
+<code><span class="kw">SELECT</span> id, <span class="st">'order'</span>  <span class="kw">AS</span> type <span class="kw">FROM</span> orders
+<span class="kw">UNION ALL</span>
+<span class="kw">SELECT</span> id, <span class="st">'return'</span> <span class="kw">AS</span> type <span class="kw">FROM</span> returns;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">INTERSECT & EXCEPT</div>
+<code><span class="kw">SELECT</span> name <span class="kw">FROM</span> t1 <span class="kw">INTERSECT SELECT</span> name <span class="kw">FROM</span> t2;
+<span class="cm">-- Schnittmenge (in beiden)</span>
+<span class="kw">SELECT</span> name <span class="kw">FROM</span> t1 <span class="kw">EXCEPT    SELECT</span> name <span class="kw">FROM</span> t2;
+<span class="cm">-- Differenz (nur in t1)</span></code></div>
+  </div>
+  <div class="tip">💡 Alle Mengenoperationen erfordern gleiche Spaltenanzahl und kompatible Typen</div>
+</div>
+
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">🔎</div><div class="section-title">Subqueries & CTEs</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Subquery in WHERE</div>
+<code><span class="kw">SELECT</span> * <span class="kw">FROM</span> users
+<span class="kw">WHERE</span> id <span class="kw">IN</span> (
+  <span class="kw">SELECT</span> user_id <span class="kw">FROM</span> orders
+  <span class="kw">WHERE</span> total &gt; <span class="nu">100</span>
+);</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">EXISTS / NOT EXISTS</div>
+<code><span class="kw">SELECT</span> * <span class="kw">FROM</span> users u
+<span class="kw">WHERE EXISTS</span> (
+  <span class="kw">SELECT</span> <span class="nu">1</span> <span class="kw">FROM</span> orders o
+  <span class="kw">WHERE</span> o.user_id = u.id
+);
+<span class="cm">-- NOT EXISTS: Nutzer ohne Bestellungen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Skalare Subquery in SELECT</div>
+<code><span class="kw">SELECT</span> name,
+  (<span class="kw">SELECT</span> <span class="fn">COUNT</span>(*) <span class="kw">FROM</span> orders
+   <span class="kw">WHERE</span> user_id = u.id) <span class="kw">AS</span> anzahl_bestellungen
+<span class="kw">FROM</span> users u;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">CTE — WITH ... AS</div>
+<code><span class="kw">WITH</span> top_users <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> user_id, <span class="fn">SUM</span>(total) <span class="kw">AS</span> umsatz
+  <span class="kw">FROM</span> orders
+  <span class="kw">GROUP BY</span> user_id
+  <span class="kw">HAVING</span> <span class="fn">SUM</span>(total) &gt; <span class="nu">500</span>
+)
+<span class="kw">SELECT</span> u.name, t.umsatz
+<span class="kw">FROM</span> top_users t
+<span class="kw">JOIN</span> users u <span class="kw">ON</span> u.id = t.user_id;</code></div>
+  </div>
+  <div class="tip p">💡 Mehrere CTEs: <strong>WITH cte1 AS (...), cte2 AS (...) SELECT ...</strong> — für lesbarere Queries</div>
+</div>
+
+<div class="section theme-yellow">
+  <div class="section-header"><div class="section-icon">🪟</div><div class="section-title">Window-Funktionen (OVER)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Grundsyntax</div>
+<code><span class="fn">funktion</span>() <span class="kw">OVER</span> (
+  [<span class="kw">PARTITION BY</span> spalte]
+  [<span class="kw">ORDER BY</span> spalte <span class="kw">ASC</span>|<span class="kw">DESC</span>]
+)</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Ranking-Funktionen</div>
+<code><span class="kw">SELECT</span> name, salary,
+  <span class="fn">ROW_NUMBER</span>() <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> salary <span class="kw">DESC</span>) <span class="kw">AS</span> zeile,
+  <span class="fn">RANK</span>()       <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> salary <span class="kw">DESC</span>) <span class="kw">AS</span> rang,
+  <span class="fn">DENSE_RANK</span>() <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> salary <span class="kw">DESC</span>) <span class="kw">AS</span> dichte
+<span class="kw">FROM</span> employees;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">PARTITION BY — Rang pro Gruppe</div>
+<code><span class="kw">SELECT</span> dept, name, salary,
+  <span class="fn">RANK</span>() <span class="kw">OVER</span> (
+    <span class="kw">PARTITION BY</span> dept
+    <span class="kw">ORDER BY</span> salary <span class="kw">DESC</span>
+  ) <span class="kw">AS</span> rang_im_dept
+<span class="kw">FROM</span> employees;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">LAG & LEAD — Vor-/Nachzeile</div>
+<code><span class="kw">SELECT</span> date, revenue,
+  <span class="fn">LAG</span>(revenue)  <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> date) <span class="kw">AS</span> vorher,
+  <span class="fn">LEAD</span>(revenue) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> date) <span class="kw">AS</span> danach
+<span class="kw">FROM</span> sales;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Laufende Summe / Durchschnitt</div>
+<code><span class="kw">SELECT</span> name, salary,
+  <span class="fn">SUM</span>(salary) <span class="kw">OVER</span> (<span class="kw">PARTITION BY</span> dept) <span class="kw">AS</span> dept_sum,
+  <span class="fn">AVG</span>(salary) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> date <span class="kw">ROWS BETWEEN</span>
+    <span class="nu">2</span> <span class="kw">PRECEDING AND CURRENT ROW</span>) <span class="kw">AS</span> moving_avg
+<span class="kw">FROM</span> employees;</code></div>
+  </div>
+</div>
+
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">🏛</div><div class="section-title">Views & Constraints</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Views (virtuelle Tabellen)</div>
+<code><span class="kw">CREATE VIEW</span> aktive_nutzer <span class="kw">AS</span>
+  <span class="kw">SELECT</span> id, name, email
+  <span class="kw">FROM</span> users
+  <span class="kw">WHERE</span> active = <span class="kw">true</span>;
+
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> aktive_nutzer;
+<span class="kw">DROP VIEW</span> aktive_nutzer;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Constraints beim CREATE TABLE</div>
+<code><span class="kw">CREATE TABLE</span> orders (
+  id      <span class="bi">SERIAL</span> <span class="kw">PRIMARY KEY</span>,
+  user_id <span class="bi">INT</span>    <span class="kw">NOT NULL REFERENCES</span> users(id)
+                   <span class="kw">ON DELETE CASCADE</span>,
+  total   <span class="bi">NUMERIC</span>(<span class="nu">10</span>,<span class="nu">2</span>) <span class="kw">CHECK</span> (total &gt;= <span class="nu">0</span>),
+  status  <span class="bi">VARCHAR</span>(<span class="nu">20</span>) <span class="kw">DEFAULT</span> <span class="st">'pending'</span>,
+  code    <span class="bi">VARCHAR</span>(<span class="nu">20</span>) <span class="kw">UNIQUE</span>
+);</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Constraint nachträglich hinzufügen</div>
+<code><span class="kw">ALTER TABLE</span> orders
+  <span class="kw">ADD CONSTRAINT</span> fk_user
+  <span class="kw">FOREIGN KEY</span> (user_id) <span class="kw">REFERENCES</span> users(id);</code></div>
+  </div>
+</div>
+
+<div class="section theme-cyan">
+  <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">Nützliche Funktionen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">String-Funktionen</div>
+<code><span class="fn">UPPER</span>(name)     <span class="fn">LOWER</span>(name)
+<span class="fn">LENGTH</span>(name)    <span class="fn">TRIM</span>(name)
+<span class="fn">CONCAT</span>(first, <span class="st">' '</span>, last)
+<span class="fn">SUBSTRING</span>(name, <span class="nu">1</span>, <span class="nu">3</span>)       <span class="cm">-- ab Pos 1, 3 Zeichen</span>
+<span class="fn">REPLACE</span>(txt, <span class="st">'alt'</span>, <span class="st">'neu'</span>)
+<span class="fn">LPAD</span>(id::<span class="bi">TEXT</span>, <span class="nu">5</span>, <span class="st">'0'</span>)      <span class="cm">-- "00042"</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Datumsfunktionen (PostgreSQL)</div>
+<code><span class="fn">NOW</span>()                         <span class="cm">-- aktueller Timestamp</span>
+<span class="fn">CURRENT_DATE</span>
+<span class="fn">DATE_TRUNC</span>(<span class="st">'month'</span>, created_at)
+<span class="fn">EXTRACT</span>(<span class="kw">YEAR FROM</span> created_at)
+created_at <span class="op">+</span> <span class="kw">INTERVAL</span> <span class="st">'7 days'</span>
+<span class="fn">AGE</span>(birthdate)</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Typumwandlung (CAST)</div>
+<code><span class="kw">CAST</span>(age <span class="kw">AS</span> <span class="bi">VARCHAR</span>)
+price::<span class="bi">INT</span>                    <span class="cm">-- PostgreSQL Kurzform</span>
+<span class="fn">TO_CHAR</span>(ts, <span class="st">'YYYY-MM-DD'</span>)
+<span class="fn">TO_NUMBER</span>(<span class="st">'42.5'</span>, <span class="st">'99.9'</span>)</code></div>
+  </div>
+  <div class="tip">💡 MySQL: <strong>DATE_FORMAT(date, '%Y-%m-%d')</strong> statt TO_CHAR; <strong>IFNULL</strong> statt COALESCE</div>
 </div>
 
 </main>
