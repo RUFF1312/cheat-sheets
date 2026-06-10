@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>nginx - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#269539;--accent2:#4cca5a;--blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#041008 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(38,149,57,0.1),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(38,149,57,0.12);border:1px solid rgba(38,149,57,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  .t-green .section-header{background:rgba(38,149,57,0.08)}.t-green .section-icon{background:rgba(38,149,57,0.15)}.t-green .section-title{color:var(--accent)}
+  .t-lime .section-header{background:rgba(63,185,80,0.08)}.t-lime .section-icon{background:rgba(63,185,80,0.15)}.t-lime .section-title{color:var(--green)}
+  .t-blue .section-header{background:rgba(61,139,205,0.08)}.t-blue .section-icon{background:rgba(61,139,205,0.15)}.t-blue .section-title{color:var(--blue)}
+  .t-purple .section-header{background:rgba(163,113,247,0.08)}.t-purple .section-icon{background:rgba(163,113,247,0.15)}.t-purple .section-title{color:var(--purple)}
+  .t-cyan .section-header{background:rgba(57,197,207,0.08)}.t-cyan .section-icon{background:rgba(57,197,207,0.15)}.t-cyan .section-title{color:var(--cyan)}
+  .t-red .section-header{background:rgba(244,112,103,0.08)}.t-red .section-icon{background:rgba(244,112,103,0.15)}.t-red .section-title{color:var(--red)}
+  .t-yellow .section-header{background:rgba(240,160,48,0.08)}.t-yellow .section-icon{background:rgba(240,160,48,0.15)}.t-yellow .section-title{color:#f0a030}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:#269539;font-weight:700}.fl{color:#3d8bcd}.val{color:#3fb950}.cm{color:#7d8590;font-style:italic}.var{color:#a371f7}.nu{color:#f47067}.cy{color:#39c5cf}.st{color:#3fb950}.op{color:#e8a24e}
+  .tip{padding:8px 16px;background:rgba(38,149,57,0.05);border-top:1px dashed rgba(38,149,57,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(38,149,57,0.3);padding:4px 12px;border-radius:4px;background:rgba(38,149,57,0.08)}
+  .nav-link:hover{background:rgba(38,149,57,0.18)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+<link rel="icon" type="image/svg+xml" href="../assets/nginx.svg">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Web Server & Reverse Proxy Reference</div>
+      <img src="../assets/nginx.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(35%) sepia(80%) saturate(500%) hue-rotate(93deg)">
+      <h1><span>nginx</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ nginx -t &amp;&amp; nginx -s reload -- High-Performance HTTP Server</p>
+    </div>
+    <div class="meta"><strong>nginx 1.24+ / 1.26+</strong><br>Server · Location · SSL/TLS<br>Reverse Proxy · Upstream<br>Rate Limiting · Logging</div>
+  </div>
+</header>
+<main>
+
+<div class="section t-green">
+  <div class="section-header"><div class="section-icon">⚡</div><div class="section-title">CLI — Steuerung</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Konfiguration & Signale</div>
+      <code><span class="kw">nginx</span> <span class="fl">-t</span>                    <span class="cm"># Syntax-Check</span>
+<span class="kw">nginx</span> <span class="fl">-T</span>                    <span class="cm"># Syntax + Config ausgeben</span>
+<span class="kw">nginx</span> <span class="fl">-s</span> reload             <span class="cm"># graceful reload</span>
+<span class="kw">nginx</span> <span class="fl">-s</span> stop               <span class="cm"># sofort stoppen</span>
+<span class="kw">nginx</span> <span class="fl">-s</span> quit               <span class="cm"># graceful stoppen</span>
+<span class="kw">nginx</span> <span class="fl">-s</span> reopen             <span class="cm"># Log-Dateien neu öffnen</span>
+<span class="kw">nginx</span> <span class="fl">-v</span>                    <span class="cm"># Version</span>
+<span class="kw">nginx</span> <span class="fl">-V</span>                    <span class="cm"># Version + Compile-Optionen</span>
+<span class="kw">systemctl</span> reload nginx</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Wichtige Pfade</div>
+      <code>/etc/nginx/nginx.conf         <span class="cm"># Hauptkonfiguration</span>
+/etc/nginx/conf.d/*.conf      <span class="cm"># Vhost-Configs (include)</span>
+/etc/nginx/sites-available/   <span class="cm"># Debian/Ubuntu</span>
+/etc/nginx/sites-enabled/     <span class="cm"># Symlinks</span>
+/var/log/nginx/access.log
+/var/log/nginx/error.log</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-blue">
+  <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Server-Block (VHost)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Einfacher HTTP-Vhost</div>
+      <code><span class="kw">server</span> {
+  <span class="var">listen</span>       <span class="nu">80</span>;
+  <span class="var">server_name</span>  example.com www.example.com;
+  <span class="var">root</span>         /var/www/html;
+  <span class="var">index</span>        index.html index.php;
+
+  <span class="var">access_log</span>   /var/log/nginx/example.access.log;
+  <span class="var">error_log</span>    /var/log/nginx/example.error.log;
+
+  <span class="kw">location</span> / {
+    <span class="var">try_files</span> <span class="val">$uri $uri/</span> =404;
+  }
+}</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">HTTP → HTTPS Redirect</div>
+      <code><span class="kw">server</span> {
+  <span class="var">listen</span>      <span class="nu">80</span>;
+  <span class="var">server_name</span> example.com;
+  <span class="var">return</span>      <span class="nu">301</span> https://<span class="val">$host$request_uri</span>;
+}</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-cyan">
+  <div class="section-header"><div class="section-icon">📍</div><div class="section-title">Location-Blöcke</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Location-Typen (Priorität: = > ^~ > ~ > /)</div>
+      <code><span class="kw">location</span> = /exact { }          <span class="cm"># exakter Match</span>
+<span class="kw">location</span> ^~ /static/ { }      <span class="cm"># Präfix, kein Regex</span>
+<span class="kw">location</span> ~ \.php$ { }          <span class="cm"># Regex case-sensitive</span>
+<span class="kw">location</span> ~* \.(jpg|png)$ { }  <span class="cm"># Regex case-insensitive</span>
+<span class="kw">location</span> /prefix/ { }          <span class="cm"># Präfix-Match</span>
+<span class="kw">location</span> / { }                 <span class="cm"># Fallback</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Nützliche Location-Direktiven</div>
+      <code><span class="kw">location</span> /app/ {
+  <span class="var">alias</span>        /srv/app/;     <span class="cm"># Pfad ersetzen</span>
+  <span class="var">try_files</span>    <span class="val">$uri $uri/</span> /index.html;
+  <span class="var">expires</span>      <span class="nu">30d</span>;
+  <span class="var">add_header</span>   Cache-Control <span class="st">"public"</span>;
+  <span class="var">deny</span>         10.0.0.5;
+  <span class="var">allow</span>        10.0.0.0/24;
+  <span class="var">deny</span>         all;
+}</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-lime">
+  <div class="section-header"><div class="section-icon">🔒</div><div class="section-title">SSL / TLS</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">HTTPS-Server-Block</div>
+      <code><span class="kw">server</span> {
+  <span class="var">listen</span>              <span class="nu">443</span> ssl http2;
+  <span class="var">server_name</span>         example.com;
+
+  <span class="var">ssl_certificate</span>     /etc/ssl/certs/example.crt;
+  <span class="var">ssl_certificate_key</span> /etc/ssl/private/example.key;
+  <span class="var">ssl_protocols</span>       TLSv1.2 TLSv1.3;
+  <span class="var">ssl_ciphers</span>         HIGH:!aNULL:!MD5;
+  <span class="var">ssl_prefer_server_ciphers</span> on;
+  <span class="var">ssl_session_cache</span>   shared:SSL:10m;
+  <span class="var">ssl_session_timeout</span> <span class="nu">1d</span>;
+
+  <span class="cm"># HSTS</span>
+  <span class="var">add_header</span> Strict-Transport-Security
+    <span class="st">"max-age=31536000; includeSubDomains"</span> always;
+}</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Let's Encrypt / certbot</div>
+      <code><span class="kw">certbot</span> <span class="fl">--nginx</span> <span class="fl">-d</span> example.com <span class="fl">-d</span> www.example.com
+<span class="kw">certbot</span> renew <span class="fl">--dry-run</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-purple">
+  <div class="section-header"><div class="section-icon">🔀</div><div class="section-title">Reverse Proxy</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Proxy-Konfiguration</div>
+      <code><span class="kw">location</span> /api/ {
+  <span class="var">proxy_pass</span>         http://127.0.0.1:8080/;
+  <span class="var">proxy_http_version</span> <span class="nu">1.1</span>;
+  <span class="var">proxy_set_header</span>   Host              <span class="val">$host</span>;
+  <span class="var">proxy_set_header</span>   X-Real-IP         <span class="val">$remote_addr</span>;
+  <span class="var">proxy_set_header</span>   X-Forwarded-For   <span class="val">$proxy_add_x_forwarded_for</span>;
+  <span class="var">proxy_set_header</span>   X-Forwarded-Proto <span class="val">$scheme</span>;
+  <span class="var">proxy_set_header</span>   Upgrade           <span class="val">$http_upgrade</span>;
+  <span class="var">proxy_set_header</span>   Connection        <span class="st">"upgrade"</span>;
+  <span class="var">proxy_read_timeout</span>    <span class="nu">60s</span>;
+  <span class="var">proxy_connect_timeout</span> <span class="nu">10s</span>;
+  <span class="var">proxy_buffering</span>    off;
+}</code>
+    </div>
+  </div>
+  <div class="tip">💡 proxy_buffering off für SSE/WebSocket/Streaming-Responses</div>
+</div>
+
+<div class="section t-blue">
+  <div class="section-header"><div class="section-icon">⚖️</div><div class="section-title">Upstream & Load Balancing</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Upstream-Block</div>
+      <code><span class="kw">upstream</span> backend {
+  <span class="cm"># Methoden: (default round-robin) | least_conn | ip_hash | hash</span>
+  <span class="kw">least_conn</span>;
+
+  <span class="kw">server</span> 10.0.0.1:8080 <span class="var">weight</span>=<span class="nu">3</span>;
+  <span class="kw">server</span> 10.0.0.2:8080;
+  <span class="kw">server</span> 10.0.0.3:8080 <span class="var">backup</span>;
+  <span class="kw">server</span> 10.0.0.4:8080 <span class="var">down</span>;
+
+  <span class="var">keepalive</span> <span class="nu">32</span>;               <span class="cm"># Keepalive-Verbindungen</span>
+}
+
+<span class="kw">server</span> {
+  <span class="kw">location</span> / {
+    <span class="var">proxy_pass</span> http://backend;
+  }
+}</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Health Checks (nginx Plus) / OSS Alternative</div>
+      <code><span class="cm"># OSS: passive health check via max_fails</span>
+<span class="kw">server</span> 10.0.0.1:8080 <span class="var">max_fails</span>=<span class="nu">3</span> <span class="var">fail_timeout</span>=<span class="nu">30s</span>;</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-red">
+  <div class="section-header"><div class="section-icon">🚦</div><div class="section-title">Rate Limiting</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Rate Limit konfigurieren</div>
+      <code><span class="kw">http</span> {
+  <span class="cm"># Zone definieren (10m = ca. 160k IPs)</span>
+  <span class="var">limit_req_zone</span> <span class="val">$binary_remote_addr</span>
+    zone=api:<span class="nu">10m</span> rate=<span class="nu">10r/s</span>;
+  <span class="var">limit_conn_zone</span> <span class="val">$binary_remote_addr</span>
+    zone=conn:<span class="nu">10m</span>;
+}
+
+<span class="kw">location</span> /api/ {
+  <span class="var">limit_req</span>  zone=api burst=<span class="nu">20</span> nodelay;
+  <span class="var">limit_conn</span> conn <span class="nu">10</span>;
+  <span class="var">limit_req_status</span>  <span class="nu">429</span>;
+  <span class="var">limit_conn_status</span> <span class="nu">429</span>;
+}</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-yellow">
+  <div class="section-header"><div class="section-icon">📊</div><div class="section-title">Logging & Gzip</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Custom Log-Format</div>
+      <code><span class="kw">log_format</span> main <span class="st">'$remote_addr - $remote_user [$time_local] '
+  '"$request" $status $body_bytes_sent '
+  '"$http_referer" "$http_user_agent" '
+  '$request_time $upstream_response_time'</span>;
+
+<span class="var">access_log</span> /var/log/nginx/access.log main;
+<span class="var">error_log</span>  /var/log/nginx/error.log warn;</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Gzip-Komprimierung</div>
+      <code><span class="kw">gzip</span>              on;
+<span class="var">gzip_comp_level</span>   <span class="nu">6</span>;
+<span class="var">gzip_min_length</span>   <span class="nu">1000</span>;
+<span class="var">gzip_types</span>        text/plain text/css application/json
+                   application/javascript text/xml
+                   application/xml image/svg+xml;</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Sicherheits-Header</div>
+      <code><span class="var">add_header</span> X-Frame-Options <span class="st">"SAMEORIGIN"</span>;
+<span class="var">add_header</span> X-Content-Type-Options <span class="st">"nosniff"</span>;
+<span class="var">add_header</span> Referrer-Policy <span class="st">"strict-origin"</span>;
+<span class="var">server_tokens</span> off;           <span class="cm"># Version verbergen</span></code>
+    </div>
+  </div>
+  <div class="tip g">💡 nginx -T 2>/dev/null | grep -E 'server_name|listen' — alle VHosts auflisten</div>
+</div>
+
+</main>
+<footer>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide · nginx · Web Server · Reverse Proxy</footer>
+</body>
+</html>

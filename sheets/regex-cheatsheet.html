@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regex - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#16a34a;--accent2:#22c55e;--blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#021a0a 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(22,163,74,0.09),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(22,163,74,0.12);border:1px solid rgba(22,163,74,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  .t-green .section-header{background:rgba(22,163,74,0.08)}.t-green .section-icon{background:rgba(22,163,74,0.15)}.t-green .section-title{color:var(--accent)}
+  .t-blue .section-header{background:rgba(61,139,205,0.08)}.t-blue .section-icon{background:rgba(61,139,205,0.15)}.t-blue .section-title{color:var(--blue)}
+  .t-purple .section-header{background:rgba(163,113,247,0.08)}.t-purple .section-icon{background:rgba(163,113,247,0.15)}.t-purple .section-title{color:var(--purple)}
+  .t-cyan .section-header{background:rgba(57,197,207,0.08)}.t-cyan .section-icon{background:rgba(57,197,207,0.15)}.t-cyan .section-title{color:var(--cyan)}
+  .t-yellow .section-header{background:rgba(240,160,48,0.08)}.t-yellow .section-icon{background:rgba(240,160,48,0.15)}.t-yellow .section-title{color:#f0a030}
+  .t-red .section-header{background:rgba(244,112,103,0.08)}.t-red .section-icon{background:rgba(244,112,103,0.15)}.t-red .section-title{color:var(--red)}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:#16a34a;font-weight:700}.fl{color:#3d8bcd}.val{color:#3fb950}.cm{color:#7d8590;font-style:italic}.var{color:#a371f7}.nu{color:#f47067}.cy{color:#39c5cf}
+  .tip{padding:8px 16px;background:rgba(22,163,74,0.05);border-top:1px dashed rgba(22,163,74,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.b{background:rgba(61,139,205,0.05);border-color:rgba(61,139,205,0.2);color:var(--blue)}
+  .tip.p{background:rgba(163,113,247,0.05);border-color:rgba(163,113,247,0.2);color:var(--purple)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(22,163,74,0.3);padding:4px 12px;border-radius:4px;background:rgba(22,163,74,0.08)}
+  .nav-link:hover{background:rgba(22,163,74,0.18)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+  .tbl{width:100%;font-size:11.5px;font-family:'JetBrains Mono',monospace}
+  .tbl td{padding:3px 8px;border-bottom:1px solid rgba(48,54,61,0.3)}
+  .tbl td:first-child{color:var(--accent);white-space:nowrap}
+  .tbl td:last-child{color:var(--muted)}
+</style>
+<link rel="icon" type="image/svg+xml" href="../assets/regex.svg">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Regular Expressions</div>
+      <img src="../assets/regex.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(40%) sepia(70%) saturate(500%) hue-rotate(90deg)">
+      <h1><span>Regex</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ grep -E / sed / awk / python re / js RegExp</p>
+    </div>
+    <div class="meta"><strong>PCRE · ERE · BRE</strong><br>Metacharacters<br>Groups · Lookahead<br>Flags · Backrefs</div>
+  </div>
+</header>
+<main>
+
+<div class="section t-green">
+  <div class="section-header"><div class="section-icon">.*</div><div class="section-title">Metazeichen — Grundlagen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Einzelzeichen</div>
+      <code><table class="tbl">
+<tr><td>.</td><td>Beliebiges Zeichen (außer Newline)</td></tr>
+<tr><td>\d</td><td>Ziffer [0-9]</td></tr>
+<tr><td>\D</td><td>Keine Ziffer</td></tr>
+<tr><td>\w</td><td>Wortzeichen [a-zA-Z0-9_]</td></tr>
+<tr><td>\W</td><td>Kein Wortzeichen</td></tr>
+<tr><td>\s</td><td>Whitespace (Space, Tab, etc.)</td></tr>
+<tr><td>\S</td><td>Kein Whitespace</td></tr>
+<tr><td>\t</td><td>Tab-Zeichen</td></tr>
+<tr><td>\n</td><td>Newline</td></tr>
+</table></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Quantifier</div>
+      <code><table class="tbl">
+<tr><td>*</td><td>0 oder mehr (greedy)</td></tr>
+<tr><td>+</td><td>1 oder mehr (greedy)</td></tr>
+<tr><td>?</td><td>0 oder 1 (optional)</td></tr>
+<tr><td>{n}</td><td>Genau n Mal</td></tr>
+<tr><td>{n,}</td><td>Mindestens n Mal</td></tr>
+<tr><td>{n,m}</td><td>n bis m Mal</td></tr>
+<tr><td>*?</td><td>0 oder mehr (lazy)</td></tr>
+<tr><td>+?</td><td>1 oder mehr (lazy)</td></tr>
+</table></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Anker &amp; Grenzen</div>
+      <code><table class="tbl">
+<tr><td>^</td><td>Zeilenanfang</td></tr>
+<tr><td>$</td><td>Zeilenende</td></tr>
+<tr><td>\A</td><td>String-Anfang (PCRE)</td></tr>
+<tr><td>\Z</td><td>String-Ende (PCRE)</td></tr>
+<tr><td>\b</td><td>Wortgrenze</td></tr>
+<tr><td>\B</td><td>Keine Wortgrenze</td></tr>
+</table></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-blue">
+  <div class="section-header"><div class="section-icon">[]</div><div class="section-title">Zeichenklassen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Zeichenklassen</div>
+      <code><span class="cm">[abc]</span>      <span class="cm"># a oder b oder c</span>
+<span class="cm">[a-z]</span>      <span class="cm"># Kleinbuchstaben</span>
+<span class="cm">[A-Z]</span>      <span class="cm"># Großbuchstaben</span>
+<span class="cm">[0-9]</span>      <span class="cm"># Ziffern</span>
+<span class="cm">[^abc]</span>     <span class="cm"># NICHT a, b oder c</span>
+<span class="cm">[a-zA-Z0-9]</span><span class="cm"># Alphanumerisch</span>
+<span class="cm">[-.]</span>       <span class="cm"># Literal - oder . (am Anfang/Ende)</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">POSIX-Klassen (grep/awk)</div>
+      <code><span class="cm">[:alpha:]</span>  <span class="cm"># Buchstaben</span>
+<span class="cm">[:digit:]</span>  <span class="cm"># Ziffern</span>
+<span class="cm">[:alnum:]</span>  <span class="cm"># Alphanumerisch</span>
+<span class="cm">[:space:]</span>  <span class="cm"># Whitespace</span>
+<span class="cm">[:upper:]</span>  <span class="cm"># Großbuchstaben</span>
+<span class="cm">[:lower:]</span>  <span class="cm"># Kleinbuchstaben</span>
+<span class="cm"># Verwendung: [[:alpha:]]</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-purple">
+  <div class="section-header"><div class="section-icon">()</div><div class="section-title">Gruppen &amp; Alternation</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Gruppen</div>
+      <code><span class="cm">(abc)</span>     <span class="cm"># Capture Group 1</span>
+<span class="cm">(?:abc)</span>   <span class="cm"># Non-capturing Group</span>
+<span class="cm">(?&lt;name&gt;abc)</span> <span class="cm"># Named Group</span>
+<span class="cm">cat|dog</span>   <span class="cm"># Alternation (oder)</span>
+<span class="cm">(cat|dog)s</span> <span class="cm"># cats oder dogs</span>
+<span class="cm">\1 \2</span>     <span class="cm"># Rückwärtsreferenz auf Gruppe 1/2</span>
+<span class="cm">\k&lt;name&gt;</span>  <span class="cm"># Named Backref (PCRE)</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Lookahead &amp; Lookbehind (PCRE)</div>
+      <code><span class="cm">(?=abc)</span>   <span class="cm"># Lookahead: gefolgt von abc</span>
+<span class="cm">(?!abc)</span>   <span class="cm"># Neg. Lookahead: NICHT gefolgt von abc</span>
+<span class="cm">(?&lt;=abc)</span>  <span class="cm"># Lookbehind: preceded by abc</span>
+<span class="cm">(?&lt;!abc)</span>  <span class="cm"># Neg. Lookbehind</span>
+<span class="cm"># Beispiel: Preis ohne €-Zeichen:</span>
+<span class="cm">(?&lt;=€)\d+(\.\d{2})?</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-cyan">
+  <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">grep / sed / awk</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">grep-Varianten</div>
+      <code><span class="kw">grep</span> <span class="val">'pattern'</span> file        <span class="cm"># BRE</span>
+<span class="kw">grep</span> <span class="fl">-E</span> <span class="val">'pat+'</span> file       <span class="cm"># ERE</span>
+<span class="kw">grep</span> <span class="fl">-P</span> <span class="val">'\d{3}'</span> file       <span class="cm"># PCRE</span>
+<span class="kw">grep</span> <span class="fl">-n</span>                    <span class="cm"># Zeilennummern</span>
+<span class="kw">grep</span> <span class="fl">-i</span>                    <span class="cm"># Case-insensitiv</span>
+<span class="kw">grep</span> <span class="fl">-v</span>                    <span class="cm"># Invertiert</span>
+<span class="kw">grep</span> <span class="fl">-o</span>                    <span class="cm"># Nur Match ausgeben</span>
+<span class="kw">grep</span> <span class="fl">-r</span>                    <span class="cm"># Rekursiv</span>
+<span class="kw">grep</span> <span class="fl">-l</span>                    <span class="cm"># Nur Dateinamen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">sed (Stream Editor)</div>
+      <code><span class="cm"># Ersetzen (s/alt/neu/flags):</span>
+<span class="kw">sed</span> <span class="val">'s/foo/bar/'</span> file      <span class="cm"># 1. Vorkommen</span>
+<span class="kw">sed</span> <span class="val">'s/foo/bar/g'</span> file     <span class="cm"># Global</span>
+<span class="kw">sed</span> <span class="val">'s/foo/bar/gi'</span> file    <span class="cm"># Global + CaseInsens</span>
+<span class="kw">sed</span> <span class="fl">-E</span> <span class="val">'s/([0-9]+)/NUM/'</span>   <span class="cm"># ERE + Gruppe</span>
+<span class="kw">sed</span> <span class="fl">-i</span> <span class="val">'s/old/new/g'</span> file  <span class="cm"># In-place</span>
+<span class="cm"># Gruppen in sed:</span>
+<span class="kw">sed</span> <span class="fl">-E</span> <span class="val">'s/(foo)(bar)/\2\1/'</span> <span class="cm"># Tauschen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">awk-Beispiele</div>
+      <code><span class="cm"># Felder filtern:</span>
+<span class="kw">awk</span> <span class="val">'/pattern/{print $1}'</span> file
+<span class="cm"># Regex auf Spalte:</span>
+<span class="kw">awk</span> <span class="val">'$2 ~ /^[0-9]+$/{print}'</span> file
+<span class="cm"># Nicht-Match:</span>
+<span class="kw">awk</span> <span class="val">'$1 !~ /error/'</span> file</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-yellow">
+  <div class="section-header"><div class="section-icon">💡</div><div class="section-title">Wichtige Muster</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Häufige Regex-Muster</div>
+      <code><span class="cm"># IPv4-Adresse:</span>
+<span class="var">^(\d{1,3}\.){3}\d{1,3}$</span>
+<span class="cm"># E-Mail (vereinfacht):</span>
+<span class="var">[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}</span>
+<span class="cm"># URL:</span>
+<span class="var">https?://[^\s"&lt;&gt;]+</span>
+<span class="cm"># ISO-Datum:</span>
+<span class="var">\d{4}-\d{2}-\d{2}</span>
+<span class="cm"># UUID:</span>
+<span class="var">[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}</span>
+<span class="cm"># MAC-Adresse:</span>
+<span class="var">([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}</span>
+<span class="cm"># Leerzeilen löschen:</span>
+<span class="kw">grep</span> <span class="fl">-v</span> <span class="val">'^$'</span></code>
+    </div>
+  </div>
+  <div class="tip b">💡 BRE (grep): <strong>+ ? | ( )</strong> müssen escaped werden. ERE (grep -E): nicht nötig.</div>
+</div>
+
+<div class="section t-red">
+  <div class="section-header"><div class="section-icon">🏁</div><div class="section-title">Flags &amp; Modifier</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">PCRE Inline-Flags</div>
+      <code><span class="cm">(?i)</span>   <span class="cm"># Case-insensitiv</span>
+<span class="cm">(?m)</span>   <span class="cm"># Multiline (^ und $ pro Zeile)</span>
+<span class="cm">(?s)</span>   <span class="cm"># Dotall (. matched auch \n)</span>
+<span class="cm">(?x)</span>   <span class="cm"># Extended (Leerzeichen + Kommentare)</span>
+<span class="cm">(?ix)</span>  <span class="cm"># Kombiniert</span>
+<span class="cm"># Beispiel Extended Mode:</span>
+<span class="var">(?x)
+\d{4}  # Jahr
+-\d{2} # Monat
+-\d{2} # Tag</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Python-Beispiele</div>
+      <code><span class="kw">import</span> re
+m = re.search(<span class="val">r'(\d+)'</span>, <span class="val">'Port 8080'</span>)
+m.group(<span class="nu">1</span>)          <span class="cm"># → '8080'</span>
+re.findall(<span class="val">r'\d+'</span>, s)  <span class="cm"># alle Matches</span>
+re.sub(<span class="val">r'foo'</span>, <span class="val">'bar'</span>, s) <span class="cm"># Ersetzen</span>
+re.match(<span class="val">r'^abc'</span>, s)    <span class="cm"># nur am Anfang</span>
+re.compile(<span class="val">r'\d+'</span>, re.I|re.M)</code>
+    </div>
+  </div>
+</div>
+
+</main>
+<footer><span>Regex</span> — Regular Expressions &nbsp;·&nbsp; regex101.com &nbsp;·&nbsp; man grep · man sed</footer>
+</body>
+</html>

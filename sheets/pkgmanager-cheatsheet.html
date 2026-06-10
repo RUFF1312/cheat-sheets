@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Package Manager - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#e88a2f;--accent2:#f2c811;--blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--orange:#f0a030;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#0e0c0a 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(232,138,47,0.1),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(232,138,47,0.12);border:1px solid rgba(232,138,47,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  .legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600}
+  .chip.a{background:rgba(232,138,47,0.12);border:1px solid rgba(232,138,47,0.3);color:var(--accent)}
+  .chip.b{background:rgba(61,139,205,0.12);border:1px solid rgba(61,139,205,0.3);color:var(--blue)}
+  .chip.c{background:rgba(63,185,80,0.12);border:1px solid rgba(63,185,80,0.3);color:var(--green)}
+  .chip.d{background:rgba(163,113,247,0.12);border:1px solid rgba(163,113,247,0.3);color:var(--purple)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  .theme-accent .section-header{background:rgba(232,138,47,0.08)}.theme-accent .section-icon{background:rgba(232,138,47,0.15)}.theme-accent .section-title{color:var(--accent)}
+  .theme-blue .section-header{background:rgba(61,139,205,0.08)}.theme-blue .section-icon{background:rgba(61,139,205,0.15)}.theme-blue .section-title{color:var(--blue)}
+  .theme-green .section-header{background:rgba(63,185,80,0.08)}.theme-green .section-icon{background:rgba(63,185,80,0.15)}.theme-green .section-title{color:var(--green)}
+  .theme-purple .section-header{background:rgba(163,113,247,0.08)}.theme-purple .section-icon{background:rgba(163,113,247,0.15)}.theme-purple .section-title{color:var(--purple)}
+  .theme-yellow .section-header{background:rgba(240,160,48,0.08)}.theme-yellow .section-icon{background:rgba(240,160,48,0.15)}.theme-yellow .section-title{color:var(--orange)}
+  .theme-red .section-header{background:rgba(244,112,103,0.08)}.theme-red .section-icon{background:rgba(244,112,103,0.15)}.theme-red .section-title{color:var(--red)}
+  .theme-cyan .section-header{background:rgba(57,197,207,0.08)}.theme-cyan .section-icon{background:rgba(57,197,207,0.15)}.theme-cyan .section-title{color:var(--cyan)}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:var(--accent);font-weight:700}.fl{color:var(--blue)}.val{color:var(--green)}.cm{color:var(--muted);font-style:italic}.var{color:var(--purple)}.nu{color:var(--red)}.fn{color:var(--cyan);font-weight:600}.st{color:var(--green)}.bi{color:var(--blue);font-weight:600}.op{color:var(--orange)}
+  .tip{padding:8px 16px;background:rgba(232,138,47,0.05);border-top:1px dashed rgba(232,138,47,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  .tip.b{background:rgba(61,139,205,0.05);border-color:rgba(61,139,205,0.2);color:var(--blue)}
+  .tip.p{background:rgba(163,113,247,0.05);border-color:rgba(163,113,247,0.2);color:var(--purple)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(232,138,47,0.3);padding:4px 12px;border-radius:4px;background:rgba(232,138,47,0.08)}
+  .nav-link:hover{background:rgba(232,138,47,0.15)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+<link rel="icon" type="image/svg+xml" href="../assets/pkgmanager.svg">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Linux Package Management</div>
+      <img src="../assets/pkgmanager.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(38%) sepia(78%) saturate(700%) hue-rotate(352deg)">
+      <h1><span>Package Manager</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ apt / dnf / zypper / pacman -- distro package management</p>
+      <div class="legend">
+        <div class="chip a">🟠 apt / dpkg</div>
+        <div class="chip b">🔵 dnf / rpm</div>
+        <div class="chip c">🟢 zypper</div>
+        <div class="chip d">🟣 pacman</div>
+      </div>
+    </div>
+    <div class="meta"><strong>Paketmanager</strong><br>Debian · Ubuntu · RHEL<br>Fedora · openSUSE · Arch<br>snap · flatpak</div>
+  </div>
+</header>
+<main>
+
+<div class="section theme-accent">
+  <div class="section-header"><div class="section-icon">📦</div><div class="section-title">apt — Pakete verwalten</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Paketlisten aktualisieren & upgraden</div>
+<code><span class="kw">apt</span> update
+<span class="kw">apt</span> upgrade
+<span class="kw">apt</span> full-upgrade          <span class="cm"># dist-upgrade (Abhängigkeiten lösen)</span>
+<span class="kw">apt</span> dist-upgrade          <span class="cm"># Alias für full-upgrade</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Pakete installieren / entfernen</div>
+<code><span class="kw">apt</span> install <span class="val">nginx</span>
+<span class="kw">apt</span> install <span class="fl">-y</span> <span class="val">nginx curl wget</span>  <span class="cm"># ohne Nachfrage</span>
+<span class="kw">apt</span> remove  <span class="val">nginx</span>               <span class="cm"># Paket, Konfig bleibt</span>
+<span class="kw">apt</span> purge   <span class="val">nginx</span>               <span class="cm"># Paket + Konfig</span>
+<span class="kw">apt</span> autoremove                   <span class="cm"># verwaiste Abhängigkeiten</span>
+<span class="kw">apt</span> install <span class="fl">--reinstall</span> <span class="val">nginx</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Suche & Informationen</div>
+<code><span class="kw">apt</span> search <span class="val">nginx</span>
+<span class="kw">apt</span> show    <span class="val">nginx</span>
+<span class="kw">apt</span> list <span class="fl">--installed</span>
+<span class="kw">apt</span> list <span class="fl">--upgradable</span>
+<span class="kw">apt-cache</span> depends  <span class="val">nginx</span>
+<span class="kw">apt-cache</span> rdepends <span class="val">nginx</span>        <span class="cm"># wer braucht nginx?</span></code></div>
+  </div>
+  <div class="tip">💡 <strong>apt-get</strong> für Skripte bevorzugen (stabile Ausgabe), <strong>apt</strong> für interaktive Nutzung</div>
+</div>
+
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">dpkg — Low-Level</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Pakete auflisten & abfragen</div>
+<code><span class="kw">dpkg</span> <span class="fl">-l</span>                        <span class="cm"># alle installierten Pakete</span>
+<span class="kw">dpkg</span> <span class="fl">-l</span> <span class="val">nginx*</span>
+<span class="kw">dpkg</span> <span class="fl">-L</span> <span class="val">nginx</span>                  <span class="cm"># Dateien des Pakets</span>
+<span class="kw">dpkg</span> <span class="fl">-S</span> <span class="val">/usr/sbin/nginx</span>        <span class="cm"># welches Paket? (file → pkg)</span>
+<span class="kw">dpkg</span> <span class="fl">-s</span> <span class="val">nginx</span>                  <span class="cm"># Paket-Status</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Paket installieren / entfernen</div>
+<code><span class="kw">dpkg</span> <span class="fl">-i</span>  <span class="val">paket.deb</span>             <span class="cm"># .deb installieren</span>
+<span class="kw">dpkg</span> <span class="fl">-r</span>  <span class="val">nginx</span>                  <span class="cm"># entfernen (Konfig bleibt)</span>
+<span class="kw">dpkg</span> <span class="fl">-P</span>  <span class="val">nginx</span>                  <span class="cm"># purge</span>
+<span class="kw">dpkg</span> <span class="fl">--configure</span> <span class="fl">-a</span>            <span class="cm"># unterbrochene Konfigurationen reparieren</span></code></div>
+  </div>
+</div>
+
+<div class="section theme-accent">
+  <div class="section-header"><div class="section-icon">🗄</div><div class="section-title">apt — Repositories & Schlüssel</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Quellen verwalten</div>
+<code><span class="cm"># /etc/apt/sources.list</span>
+deb https://deb.debian.org/debian bookworm main
+deb-src https://deb.debian.org/debian bookworm main
+
+<span class="cm"># Einzeldatei in /etc/apt/sources.list.d/</span>
+<span class="kw">add-apt-repository</span> <span class="st">"deb https://pkg.example.com bookworm main"</span>
+<span class="kw">add-apt-repository</span> <span class="fl">--remove</span> <span class="st">"deb ..."</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">GPG-Schlüssel (moderner Weg)</div>
+<code><span class="kw">curl</span> <span class="fl">-fsSL</span> https://pkg.example.com/key.gpg \
+  | <span class="kw">gpg</span> <span class="fl">--dearmor</span> <span class="fl">-o</span> /etc/apt/keyrings/example.gpg
+
+<span class="cm"># sources.list mit signed-by</span>
+deb [signed-by=/etc/apt/keyrings/example.gpg] \
+  https://pkg.example.com bookworm main</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">apt-mark — Pakete fixieren</div>
+<code><span class="kw">apt-mark</span> hold   <span class="val">nginx</span>           <span class="cm"># Version einfrieren</span>
+<span class="kw">apt-mark</span> unhold <span class="val">nginx</span>
+<span class="kw">apt-mark</span> showhold               <span class="cm"># alle gehaltenen Pakete</span>
+<span class="kw">apt-mark</span> manual <span class="val">nginx</span>          <span class="cm"># als manuell markieren</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Pinning (/etc/apt/preferences)</div>
+<code>Package: nginx
+Pin: release a=stable
+Pin-Priority: 1001       <span class="cm"># &gt;1000 = erzwingen</span>
+
+Package: *
+Pin: release o=Ubuntu
+Pin-Priority: 500        <span class="cm"># Standard</span></code></div>
+  </div>
+  <div class="tip">💡 <strong>apt-cache policy nginx</strong> — zeigt verfügbare Versionen und Prioritäten</div>
+</div>
+
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">🔴</div><div class="section-title">dnf / yum — RHEL, Fedora, CentOS</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Pakete verwalten</div>
+<code><span class="kw">dnf</span> check-update
+<span class="kw">dnf</span> upgrade
+<span class="kw">dnf</span> install  <span class="val">nginx</span>
+<span class="kw">dnf</span> remove   <span class="val">nginx</span>
+<span class="kw">dnf</span> autoremove
+<span class="kw">dnf</span> reinstall <span class="val">nginx</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Suche & Informationen</div>
+<code><span class="kw">dnf</span> search  <span class="val">nginx</span>
+<span class="kw">dnf</span> info    <span class="val">nginx</span>
+<span class="kw">dnf</span> list    <span class="fl">--installed</span>
+<span class="kw">dnf</span> provides <span class="val">/usr/sbin/nginx</span>   <span class="cm"># welches Paket liefert Datei?</span>
+<span class="kw">dnf</span> repoquery <span class="fl">-l</span> <span class="val">nginx</span>         <span class="cm"># Dateien des Pakets</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Repositories</div>
+<code><span class="kw">dnf</span> repolist
+<span class="kw">dnf</span> repolist <span class="fl">--all</span>
+<span class="kw">dnf</span> config-manager <span class="fl">--enable</span>  <span class="val">epel</span>
+<span class="kw">dnf</span> config-manager <span class="fl">--disable</span> <span class="val">epel</span>
+<span class="kw">dnf</span> config-manager <span class="fl">--add-repo</span> <span class="val">https://repo.example.com/el9.repo</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Gruppen & Historie</div>
+<code><span class="kw">dnf</span> group list
+<span class="kw">dnf</span> group install <span class="st">"Development Tools"</span>
+<span class="kw">dnf</span> history
+<span class="kw">dnf</span> history undo  <span class="nu">5</span>             <span class="cm"># Transaktion 5 rückgängig</span>
+<span class="kw">dnf</span> history info  <span class="nu">5</span></code></div>
+  </div>
+  <div class="tip b">💡 <strong>yum</strong> ist unter RHEL 8+ ein Alias für dnf — gleiche Syntax</div>
+</div>
+
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">🔵</div><div class="section-title">rpm — Low-Level (RHEL/Fedora)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Abfragen</div>
+<code><span class="kw">rpm</span> <span class="fl">-qa</span>                        <span class="cm"># alle installierten Pakete</span>
+<span class="kw">rpm</span> <span class="fl">-qi</span> <span class="val">nginx</span>                  <span class="cm"># Paket-Info</span>
+<span class="kw">rpm</span> <span class="fl">-ql</span> <span class="val">nginx</span>                  <span class="cm"># Dateien des Pakets</span>
+<span class="kw">rpm</span> <span class="fl">-qf</span> <span class="val">/usr/sbin/nginx</span>       <span class="cm"># welches Paket?</span>
+<span class="kw">rpm</span> <span class="fl">-qR</span> <span class="val">nginx</span>                  <span class="cm"># Abhängigkeiten</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Installieren / Entfernen</div>
+<code><span class="kw">rpm</span> <span class="fl">-Uvh</span> <span class="val">paket.rpm</span>             <span class="cm"># upgrade (auch neu-install)</span>
+<span class="kw">rpm</span> <span class="fl">-ivh</span> <span class="val">paket.rpm</span>             <span class="cm"># nur install</span>
+<span class="kw">rpm</span> <span class="fl">-e</span>   <span class="val">nginx</span>                  <span class="cm"># entfernen</span>
+<span class="kw">rpm</span> <span class="fl">-V</span>   <span class="val">nginx</span>                  <span class="cm"># Paket verifizieren</span></code></div>
+  </div>
+</div>
+
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">🦎</div><div class="section-title">zypper — openSUSE / SLES</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Pakete verwalten</div>
+<code><span class="kw">zypper</span> refresh                 <span class="cm"># Repos aktualisieren</span>
+<span class="kw">zypper</span> update
+<span class="kw">zypper</span> dist-upgrade            <span class="cm"># du</span>
+<span class="kw">zypper</span> install <span class="val">nginx</span>          <span class="cm"># in</span>
+<span class="kw">zypper</span> remove  <span class="val">nginx</span>          <span class="cm"># rm / remove</span>
+<span class="kw">zypper</span> clean                  <span class="cm"># Cache leeren</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Suche & Repos</div>
+<code><span class="kw">zypper</span> search  <span class="val">nginx</span>          <span class="cm"># se</span>
+<span class="kw">zypper</span> info    <span class="val">nginx</span>
+<span class="kw">zypper</span> repos                  <span class="cm"># lr</span>
+<span class="kw">zypper</span> addrepo  <span class="val">URL</span> <span class="val">NAME</span>      <span class="cm"># ar</span>
+<span class="kw">zypper</span> removerepo <span class="val">NAME</span>        <span class="cm"># rr</span>
+<span class="kw">zypper</span> modifyrepo <span class="fl">--enable</span> <span class="val">1</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Locks (Pinning)</div>
+<code><span class="kw">zypper</span> addlock    <span class="val">nginx</span>
+<span class="kw">zypper</span> removelock <span class="val">nginx</span>
+<span class="kw">zypper</span> locks</code></div>
+  </div>
+</div>
+
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">🔷</div><div class="section-title">pacman — Arch Linux</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Pakete verwalten</div>
+<code><span class="kw">pacman</span> <span class="fl">-Syu</span>                   <span class="cm"># sync + update (immer beides!)</span>
+<span class="kw">pacman</span> <span class="fl">-S</span>  <span class="val">nginx</span>              <span class="cm"># installieren</span>
+<span class="kw">pacman</span> <span class="fl">-R</span>  <span class="val">nginx</span>              <span class="cm"># entfernen</span>
+<span class="kw">pacman</span> <span class="fl">-Rns</span> <span class="val">nginx</span>             <span class="cm"># + Abhängigkeiten + Konfig</span>
+<span class="kw">pacman</span> <span class="fl">-Sc</span>                    <span class="cm"># Cache bereinigen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Suche & Abfragen</div>
+<code><span class="kw">pacman</span> <span class="fl">-Ss</span>  <span class="val">nginx</span>             <span class="cm"># suchen</span>
+<span class="kw">pacman</span> <span class="fl">-Si</span>  <span class="val">nginx</span>             <span class="cm"># Info (remote)</span>
+<span class="kw">pacman</span> <span class="fl">-Qi</span>  <span class="val">nginx</span>             <span class="cm"># Info (installiert)</span>
+<span class="kw">pacman</span> <span class="fl">-Ql</span>  <span class="val">nginx</span>             <span class="cm"># Dateien des Pakets</span>
+<span class="kw">pacman</span> <span class="fl">-Qo</span>  <span class="val">/usr/sbin/nginx</span>  <span class="cm"># welches Paket?</span>
+<span class="kw">pacman</span> <span class="fl">-Qdt</span>                   <span class="cm"># verwaiste Pakete</span></code></div>
+  </div>
+  <div class="tip p">💡 AUR-Helper: <strong>yay -Syu</strong> oder <strong>paru -Syu</strong> (auch AUR-Pakete updaten)</div>
+</div>
+
+<div class="section theme-yellow">
+  <div class="section-header"><div class="section-icon">🫧</div><div class="section-title">snap & flatpak</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">snap (Canonical)</div>
+<code><span class="kw">snap</span> find   <span class="val">vscode</span>
+<span class="kw">snap</span> install <span class="val">code</span> <span class="fl">--classic</span>
+<span class="kw">snap</span> list
+<span class="kw">snap</span> refresh                   <span class="cm"># alle aktualisieren</span>
+<span class="kw">snap</span> refresh <span class="val">code</span>
+<span class="kw">snap</span> remove  <span class="val">code</span>
+<span class="kw">snap</span> info    <span class="val">code</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">flatpak</div>
+<code><span class="kw">flatpak</span> remote-add <span class="fl">--if-not-exists</span> \
+  flathub https://flathub.org/repo/flathub.flatpakrepo
+<span class="kw">flatpak</span> search  <span class="val">firefox</span>
+<span class="kw">flatpak</span> install <span class="val">flathub org.mozilla.firefox</span>
+<span class="kw">flatpak</span> list
+<span class="kw">flatpak</span> update
+<span class="kw">flatpak</span> uninstall <span class="val">org.mozilla.firefox</span></code></div>
+  </div>
+</div>
+
+<div class="section theme-cyan">
+  <div class="section-header"><div class="section-icon">⚡</div><div class="section-title">Nützliche Einzeiler</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Welches Paket liefert eine Datei? (apt)</div>
+<code><span class="kw">apt-file</span> search <span class="val">/usr/bin/netstat</span>
+<span class="kw">dpkg</span> <span class="fl">-S</span> <span class="val">/usr/bin/netstat</span>      <span class="cm"># nur installierte Pakete</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Größte installierte Pakete</div>
+<code><span class="kw">dpkg-query</span> <span class="fl">-W</span> <span class="fl">-f</span> <span class="st">'${Installed-Size}\t${Package}\n'</span> \
+  | <span class="kw">sort</span> <span class="fl">-rn</span> | <span class="kw">head</span> <span class="fl">-20</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Sicherheitsupdates (apt)</div>
+<code><span class="kw">apt</span> <span class="fl">-s</span> upgrade | <span class="kw">grep</span> <span class="val">security</span>
+<span class="kw">unattended-upgrades</span> <span class="fl">--dry-run</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Paket-Cache bereinigen</div>
+<code><span class="kw">apt</span> clean             <span class="cm"># heruntergeladene .deb löschen</span>
+<span class="kw">apt</span> autoclean         <span class="cm"># nur veraltete .deb löschen</span>
+<span class="kw">dnf</span> clean all
+<span class="kw">pacman</span> <span class="fl">-Sc</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Nicht verwaltete Pakete finden</div>
+<code><span class="kw">deborphan</span>             <span class="cm"># Debian: verwaiste Pakete</span>
+<span class="kw">pacman</span> <span class="fl">-Qdt</span>           <span class="cm"># Arch: nicht benötigte Pakete</span>
+<span class="kw">dnf</span> leaves            <span class="cm"># RHEL: Blätter-Pakete (kein Dependent)</span></code></div>
+  </div>
+  <div class="tip g">💡 <strong>needrestart</strong> nach apt upgrade — zeigt Dienste die neu gestartet werden müssen</div>
+</div>
+
+</main>
+<footer><span>apt</span> · <span>dnf</span> · <span>zypper</span> · <span>pacman</span> — TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</footer>
+</body>
+</html>

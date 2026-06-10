@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MariaDB / MySQL - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#0074c1;--accent2:#39aaff;--blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#001828 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(0,116,193,0.1),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(0,116,193,0.12);border:1px solid rgba(0,116,193,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  .t-blue .section-header{background:rgba(0,116,193,0.08)}.t-blue .section-icon{background:rgba(0,116,193,0.15)}.t-blue .section-title{color:var(--accent)}
+  .t-green .section-header{background:rgba(63,185,80,0.08)}.t-green .section-icon{background:rgba(63,185,80,0.15)}.t-green .section-title{color:var(--green)}
+  .t-cyan .section-header{background:rgba(57,197,207,0.08)}.t-cyan .section-icon{background:rgba(57,197,207,0.15)}.t-cyan .section-title{color:var(--cyan)}
+  .t-purple .section-header{background:rgba(163,113,247,0.08)}.t-purple .section-icon{background:rgba(163,113,247,0.15)}.t-purple .section-title{color:var(--purple)}
+  .t-yellow .section-header{background:rgba(240,160,48,0.08)}.t-yellow .section-icon{background:rgba(240,160,48,0.15)}.t-yellow .section-title{color:#f0a030}
+  .t-red .section-header{background:rgba(244,112,103,0.08)}.t-red .section-icon{background:rgba(244,112,103,0.15)}.t-red .section-title{color:var(--red)}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:#0074c1;font-weight:700}.fl{color:#3d8bcd}.val{color:#3fb950}.cm{color:#7d8590;font-style:italic}.var{color:#a371f7}.nu{color:#f47067}.cy{color:#39c5cf}.st{color:#3fb950}.op{color:#e8a24e}
+  .tip{padding:8px 16px;background:rgba(0,116,193,0.05);border-top:1px dashed rgba(0,116,193,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(0,116,193,0.3);padding:4px 12px;border-radius:4px;background:rgba(0,116,193,0.08)}
+  .nav-link:hover{background:rgba(0,116,193,0.18)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+<link rel="icon" type="image/svg+xml" href="../assets/mariadb.svg">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Relational Database Reference</div>
+      <img src="../assets/mariadb.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(30%) sepia(80%) saturate(600%) hue-rotate(170deg)">
+      <h1><span>MariaDB</span> / MySQL<br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ mysql -u root -p -- MariaDB 10.x / MySQL 8.x</p>
+    </div>
+    <div class="meta"><strong>MariaDB 10.11 / MySQL 8.x</strong><br>CLI · DDL · DML · Grants<br>Backup · Replikation · Galera<br>EXPLAIN · OpenStack</div>
+  </div>
+</header>
+<main>
+
+<div class="section t-blue">
+  <div class="section-header"><div class="section-icon">🔌</div><div class="section-title">mysql CLI — Verbindung & Grundbefehle</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Verbinden</div>
+      <code><span class="kw">mysql</span> <span class="fl">-u</span> root <span class="fl">-p</span>
+<span class="kw">mysql</span> <span class="fl">-u</span> user <span class="fl">-p</span> <span class="fl">-h</span> 10.0.0.1 <span class="fl">-P</span> <span class="nu">3306</span> dbname
+<span class="kw">mysql</span> <span class="fl">-u</span> root <span class="fl">-p</span> <span class="fl">-e</span> <span class="st">"SHOW DATABASES;"</span>
+<span class="kw">mysql</span> <span class="fl">--defaults-file</span>=<span class="val">/root/.my.cnf</span> dbname</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">CLI-Befehle (im mysql-Prompt)</div>
+      <code><span class="kw">SHOW DATABASES</span>;
+<span class="kw">USE</span> <span class="var">nova</span>;
+<span class="kw">SHOW TABLES</span>;
+<span class="kw">DESCRIBE</span> <span class="var">instances</span>;
+<span class="kw">SHOW CREATE TABLE</span> <span class="var">instances</span>\G
+<span class="kw">SHOW PROCESSLIST</span>;
+<span class="kw">SHOW FULL PROCESSLIST</span>;
+<span class="kw">SHOW GLOBAL STATUS</span> <span class="kw">LIKE</span> <span class="st">'Threads%'</span>;
+<span class="kw">SHOW VARIABLES</span> <span class="kw">LIKE</span> <span class="st">'max_connections'</span>;
+<span class="kw">STATUS</span>;   <span class="kw">EXIT</span>;   <span class="kw">QUIT</span>;</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-green">
+  <div class="section-header"><div class="section-icon">🏗️</div><div class="section-title">DDL — Datenbanken & Tabellen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Datenbanken</div>
+      <code><span class="kw">CREATE DATABASE</span> nova <span class="kw">CHARACTER SET</span> utf8mb4 <span class="kw">COLLATE</span> utf8mb4_general_ci;
+<span class="kw">DROP DATABASE IF EXISTS</span> nova;
+<span class="kw">SHOW CREATE DATABASE</span> nova;</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Tabellen erstellen & ändern</div>
+      <code><span class="kw">CREATE TABLE</span> <span class="var">servers</span> (
+  <span class="var">id</span>      <span class="fl">INT</span> <span class="kw">NOT NULL AUTO_INCREMENT</span>,
+  <span class="var">uuid</span>    <span class="fl">VARCHAR</span>(<span class="nu">36</span>) <span class="kw">UNIQUE NOT NULL</span>,
+  <span class="var">name</span>    <span class="fl">VARCHAR</span>(<span class="nu">255</span>),
+  <span class="var">status</span>  <span class="fl">ENUM</span>(<span class="st">'active','error'</span>) <span class="kw">DEFAULT</span> <span class="st">'active'</span>,
+  <span class="var">created</span> <span class="fl">DATETIME</span> <span class="kw">DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>,
+  <span class="kw">PRIMARY KEY</span> (<span class="var">id</span>),
+  <span class="kw">INDEX</span> <span class="var">idx_uuid</span> (<span class="var">uuid</span>)
+) <span class="kw">ENGINE</span>=InnoDB;
+
+<span class="kw">ALTER TABLE</span> servers <span class="kw">ADD COLUMN</span> deleted <span class="fl">TINYINT</span> <span class="kw">DEFAULT</span> <span class="nu">0</span>;
+<span class="kw">ALTER TABLE</span> servers <span class="kw">ADD INDEX</span> (<span class="var">status</span>);
+<span class="kw">ALTER TABLE</span> servers <span class="kw">DROP COLUMN</span> old_col;
+<span class="kw">RENAME TABLE</span> old_name <span class="kw">TO</span> new_name;</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-cyan">
+  <div class="section-header"><div class="section-icon">👤</div><div class="section-title">Benutzerverwaltung & Berechtigungen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Benutzer anlegen & löschen</div>
+      <code><span class="kw">CREATE USER</span> <span class="st">'nova'</span>@<span class="st">'%'</span> <span class="kw">IDENTIFIED BY</span> <span class="st">'secret'</span>;
+<span class="kw">CREATE USER</span> <span class="st">'nova'</span>@<span class="st">'10.0.0.%'</span> <span class="kw">IDENTIFIED BY</span> <span class="st">'secret'</span>;
+<span class="kw">ALTER USER</span> <span class="st">'nova'</span>@<span class="st">'%'</span> <span class="kw">IDENTIFIED BY</span> <span class="st">'newpass'</span>;
+<span class="kw">DROP USER</span> <span class="st">'nova'</span>@<span class="st">'%'</span>;
+<span class="kw">SHOW GRANTS FOR</span> <span class="st">'nova'</span>@<span class="st">'%'</span>;</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Berechtigungen vergeben</div>
+      <code><span class="kw">GRANT ALL PRIVILEGES ON</span> nova.* <span class="kw">TO</span> <span class="st">'nova'</span>@<span class="st">'%'</span>;
+<span class="kw">GRANT SELECT, INSERT, UPDATE ON</span> db.* <span class="kw">TO</span> <span class="st">'user'</span>@<span class="st">'%'</span>;
+<span class="kw">GRANT REPLICATION SLAVE ON</span> *.* <span class="kw">TO</span> <span class="st">'replica'</span>@<span class="st">'%'</span>;
+<span class="kw">REVOKE ALL ON</span> nova.* <span class="kw">FROM</span> <span class="st">'nova'</span>@<span class="st">'%'</span>;
+<span class="kw">FLUSH PRIVILEGES</span>;</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-blue">
+  <div class="section-header"><div class="section-icon">💾</div><div class="section-title">Backup & Restore — mysqldump</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Backup erstellen</div>
+      <code><span class="cm"># Einzelne Datenbank</span>
+<span class="kw">mysqldump</span> <span class="fl">-u</span> root <span class="fl">-p</span> nova > nova_backup.sql
+<span class="cm"># Mit Struktur-DDL und Daten</span>
+<span class="kw">mysqldump</span> <span class="fl">--single-transaction</span> <span class="fl">--routines</span> \
+  <span class="fl">--triggers</span> nova > nova.sql
+<span class="cm"># Alle Datenbanken</span>
+<span class="kw">mysqldump</span> <span class="fl">--all-databases</span> <span class="fl">--single-transaction</span> > all.sql
+<span class="cm"># Nur Struktur</span>
+<span class="kw">mysqldump</span> <span class="fl">--no-data</span> nova > schema.sql
+<span class="cm"># Komprimiert</span>
+<span class="kw">mysqldump</span> nova | <span class="kw">gzip</span> > nova.sql.gz</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Restore</div>
+      <code><span class="kw">mysql</span> <span class="fl">-u</span> root <span class="fl">-p</span> nova < nova_backup.sql
+<span class="kw">zcat</span> nova.sql.gz | <span class="kw">mysql</span> <span class="fl">-u</span> root <span class="fl">-p</span> nova</code>
+    </div>
+  </div>
+  <div class="tip">💡 --single-transaction sichert InnoDB ohne table locks (MVCC)</div>
+</div>
+
+<div class="section t-purple">
+  <div class="section-header"><div class="section-icon">🔁</div><div class="section-title">Replikation — Master/Slave (klassisch)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Master konfigurieren</div>
+      <code><span class="cm"># /etc/mysql/my.cnf</span>
+<span class="kw">[mysqld]</span>
+<span class="var">server-id</span> = <span class="nu">1</span>
+<span class="var">log_bin</span>   = /var/log/mysql/mysql-bin.log
+<span class="var">binlog_do_db</span> = nova
+
+<span class="kw">SHOW MASTER STATUS</span>;  <span class="cm"># File + Position merken</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Slave konfigurieren</div>
+      <code><span class="kw">CHANGE MASTER TO</span>
+  <span class="var">MASTER_HOST</span>=<span class="st">'10.0.0.1'</span>,
+  <span class="var">MASTER_USER</span>=<span class="st">'replica'</span>,
+  <span class="var">MASTER_PASSWORD</span>=<span class="st">'secret'</span>,
+  <span class="var">MASTER_LOG_FILE</span>=<span class="st">'mysql-bin.000001'</span>,
+  <span class="var">MASTER_LOG_POS</span>=<span class="nu">154</span>;
+<span class="kw">START SLAVE</span>;
+<span class="kw">SHOW SLAVE STATUS</span>\G
+<span class="cm"># Seconds_Behind_Master prüfen</span>
+<span class="kw">STOP SLAVE</span>;   <span class="kw">RESET SLAVE</span>;</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-cyan">
+  <div class="section-header"><div class="section-icon">🔗</div><div class="section-title">Galera Cluster (MariaDB Cluster)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Cluster-Status</div>
+      <code><span class="kw">SHOW STATUS LIKE</span> <span class="st">'wsrep%'</span>;
+<span class="kw">SHOW STATUS LIKE</span> <span class="st">'wsrep_cluster_size'</span>;
+<span class="kw">SHOW STATUS LIKE</span> <span class="st">'wsrep_local_state_comment'</span>;
+<span class="cm"># Synced = OK, Joined = in sync</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">galera.cnf — Schlüsseloptionen</div>
+      <code><span class="kw">[galera]</span>
+<span class="var">wsrep_on</span>               = ON
+<span class="var">wsrep_provider</span>         = /usr/lib/galera/libgalera_smm.so
+<span class="var">wsrep_cluster_name</span>     = <span class="st">"openstack_cluster"</span>
+<span class="var">wsrep_cluster_address</span>  = <span class="st">"gcomm://10.0.0.1,10.0.0.2,10.0.0.3"</span>
+<span class="var">wsrep_sst_method</span>       = rsync
+<span class="var">binlog_format</span>          = ROW</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Cluster starten (nach Totalausfall)</div>
+      <code><span class="cm"># Auf dem letzten aktiven Node:</span>
+<span class="kw">galera_new_cluster</span>     <span class="cm"># oder:</span>
+<span class="kw">mysqld_safe</span> <span class="fl">--wsrep-new-cluster</span> &</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-yellow">
+  <div class="section-header"><div class="section-icon">🔬</div><div class="section-title">EXPLAIN & Query-Analyse</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">EXPLAIN verwenden</div>
+      <code><span class="kw">EXPLAIN</span> <span class="kw">SELECT</span> * <span class="kw">FROM</span> instances <span class="kw">WHERE</span> uuid=<span class="st">'...'</span>;
+<span class="kw">EXPLAIN FORMAT</span>=JSON <span class="kw">SELECT</span> ...;
+<span class="kw">EXPLAIN EXTENDED</span> <span class="kw">SELECT</span> ...;  <span class="cm"># + SHOW WARNINGS</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">EXPLAIN-Ausgabe verstehen</div>
+      <code><span class="cm">type:    ALL(schlecht) → index → range → ref → eq_ref → const(gut)</span>
+<span class="cm">key:     verwendeter Index (NULL = kein Index)</span>
+<span class="cm">rows:    geschätzte Zeilenanzahl</span>
+<span class="cm">Extra:   Using filesort / Using temporary = ACHTUNG</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Slow Query Log</div>
+      <code><span class="kw">SET GLOBAL</span> <span class="var">slow_query_log</span>        = <span class="st">'ON'</span>;
+<span class="kw">SET GLOBAL</span> <span class="var">long_query_time</span>        = <span class="nu">1</span>;
+<span class="kw">SET GLOBAL</span> <span class="var">slow_query_log_file</span>    = <span class="st">'/var/log/mysql/slow.log'</span>;
+<span class="kw">mysqldumpslow</span> <span class="fl">-t</span> <span class="nu">10</span> /var/log/mysql/slow.log</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-green">
+  <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">my.cnf — Wichtige Konfigurationsoptionen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Performance & InnoDB</div>
+      <code><span class="kw">[mysqld]</span>
+<span class="var">innodb_buffer_pool_size</span>     = <span class="nu">4G</span>     <span class="cm"># 60-80% RAM</span>
+<span class="var">innodb_log_file_size</span>        = <span class="nu">256M</span>
+<span class="var">innodb_flush_log_at_trx_commit</span> = <span class="nu">2</span>   <span class="cm"># 1=sicher, 2=schneller</span>
+<span class="var">innodb_flush_method</span>         = O_DIRECT
+<span class="var">max_connections</span>             = <span class="nu">500</span>
+<span class="var">thread_cache_size</span>           = <span class="nu">100</span>
+<span class="var">query_cache_size</span>            = <span class="nu">0</span>       <span class="cm"># deaktivieren</span>
+<span class="var">tmp_table_size</span>              = <span class="nu">64M</span>
+<span class="var">max_heap_table_size</span>         = <span class="nu">64M</span>
+<span class="var">open_files_limit</span>            = <span class="nu">65535</span>
+<span class="var">character-set-server</span>        = <span class="val">utf8mb4</span>
+<span class="var">collation-server</span>            = <span class="val">utf8mb4_general_ci</span></code>
+    </div>
+  </div>
+  <div class="tip g">💡 OpenStack-DBs: nova, neutron, cinder, keystone, heat — alle brauchen UTF8MB4</div>
+</div>
+
+<div class="section t-red">
+  <div class="section-header"><div class="section-icon">🔥</div><div class="section-title">OpenStack — DB-Integration</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">OpenStack DBs anlegen</div>
+      <code><span class="kw">CREATE DATABASE</span> nova;
+<span class="kw">CREATE DATABASE</span> nova_api;
+<span class="kw">CREATE DATABASE</span> nova_cell0;
+<span class="kw">GRANT ALL ON</span> nova.* <span class="kw">TO</span> <span class="st">'nova'</span>@<span class="st">'%'</span> <span class="kw">IDENTIFIED BY</span> <span class="st">'NOVA_PASS'</span>;
+<span class="kw">GRANT ALL ON</span> nova_api.* <span class="kw">TO</span> <span class="st">'nova'</span>@<span class="st">'%'</span>;
+<span class="kw">GRANT ALL ON</span> nova_cell0.* <span class="kw">TO</span> <span class="st">'nova'</span>@<span class="st">'%'</span>;</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">DB-Migrations (OpenStack-Dienste)</div>
+      <code><span class="kw">nova-manage</span> db sync
+<span class="kw">nova-manage</span> api_db sync
+<span class="kw">nova-manage</span> cell_v2 map_cell0
+<span class="kw">neutron-db-manage</span> <span class="fl">--config-file</span> /etc/neutron/neutron.conf upgrade head
+<span class="kw">keystone-manage</span> db_sync</code>
+    </div>
+  </div>
+</div>
+
+</main>
+<footer>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide · MariaDB / MySQL · 10.11 LTS</footer>
+</body>
+</html>

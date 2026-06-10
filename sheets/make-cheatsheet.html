@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Make / Makefile - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#2e7c5e;--accent2:#40a07a;--blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#021410 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(46,124,94,0.09),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(46,124,94,0.12);border:1px solid rgba(46,124,94,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  .t-teal .section-header{background:rgba(46,124,94,0.08)}.t-teal .section-icon{background:rgba(46,124,94,0.15)}.t-teal .section-title{color:var(--accent)}
+  .t-green .section-header{background:rgba(63,185,80,0.08)}.t-green .section-icon{background:rgba(63,185,80,0.15)}.t-green .section-title{color:var(--green)}
+  .t-blue .section-header{background:rgba(61,139,205,0.08)}.t-blue .section-icon{background:rgba(61,139,205,0.15)}.t-blue .section-title{color:var(--blue)}
+  .t-purple .section-header{background:rgba(163,113,247,0.08)}.t-purple .section-icon{background:rgba(163,113,247,0.15)}.t-purple .section-title{color:var(--purple)}
+  .t-cyan .section-header{background:rgba(57,197,207,0.08)}.t-cyan .section-icon{background:rgba(57,197,207,0.15)}.t-cyan .section-title{color:var(--cyan)}
+  .t-yellow .section-header{background:rgba(240,160,48,0.08)}.t-yellow .section-icon{background:rgba(240,160,48,0.15)}.t-yellow .section-title{color:#f0a030}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:#2e7c5e;font-weight:700}.fl{color:#3d8bcd}.val{color:#3fb950}.cm{color:#7d8590;font-style:italic}.var{color:#a371f7}.nu{color:#f47067}.cy{color:#39c5cf}
+  .tip{padding:8px 16px;background:rgba(46,124,94,0.05);border-top:1px dashed rgba(46,124,94,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  .tip.b{background:rgba(61,139,205,0.05);border-color:rgba(61,139,205,0.2);color:var(--blue)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(46,124,94,0.3);padding:4px 12px;border-radius:4px;background:rgba(46,124,94,0.08)}
+  .nav-link:hover{background:rgba(46,124,94,0.18)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+<link rel="icon" type="image/svg+xml" href="../assets/make.svg">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Build-Automatisierung</div>
+      <img src="../assets/make.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(40%) sepia(60%) saturate(500%) hue-rotate(120deg)">
+      <h1><span>Make</span> / Makefile<br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ make build / make -j4 / make -n (dry-run)</p>
+    </div>
+    <div class="meta"><strong>GNU Make 4.x</strong><br>Targets · Rules<br>Variables · Functions<br>Patterns · Phony</div>
+  </div>
+</header>
+<main>
+
+<div class="section t-teal">
+  <div class="section-header"><div class="section-icon">⚙</div><div class="section-title">Makefile — Grundstruktur</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Grundlegende Syntax</div>
+      <code><span class="cm"># Kommentar</span>
+<span class="cm"># target: prerequisites</span>
+<span class="cm">#	command (TAB, kein Leerzeichen!)</span>
+
+<span class="kw">all:</span> build test
+
+<span class="kw">build:</span> main.c utils.c
+	gcc <span class="fl">-o</span> app main.c utils.c
+
+<span class="kw">clean:</span>
+	rm <span class="fl">-f</span> app *.o
+
+<span class="kw">.PHONY:</span> all build clean test</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">make — Aufruf</div>
+      <code><span class="kw">make</span>                  <span class="cm"># Standard-Target</span>
+<span class="kw">make</span> build            <span class="cm"># Spezifisches Target</span>
+<span class="kw">make</span> <span class="fl">-n</span>               <span class="cm"># Dry-run (nur anzeigen)</span>
+<span class="kw">make</span> <span class="fl">-j4</span>              <span class="cm"># 4 parallele Jobs</span>
+<span class="kw">make</span> <span class="fl">-f</span> other.mk      <span class="cm"># anderes Makefile</span>
+<span class="kw">make</span> <span class="fl">-B</span>               <span class="cm"># Immer neu bauen</span>
+<span class="kw">make</span> <span class="fl">-k</span>               <span class="cm"># Weitermachen bei Fehler</span>
+<span class="kw">make</span> VAR=<span class="val">value</span>        <span class="cm"># Variable übergeben</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-blue">
+  <div class="section-header"><div class="section-icon">📝</div><div class="section-title">Variablen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Definition &amp; Expansion</div>
+      <code><span class="cm"># Sofortige Expansion (:=):</span>
+<span class="var">CC</span> := gcc
+<span class="var">CFLAGS</span> := <span class="fl">-Wall</span> <span class="fl">-O2</span>
+<span class="var">SRCS</span> := $(wildcard src/*.c)
+<span class="var">OBJS</span> := $(<span class="var">SRCS</span>:.c=.o)
+
+<span class="cm"># Verzögerte Expansion (=):</span>
+<span class="var">LDFLAGS</span> = $(<span class="var">EXTRA_FLAGS</span>)
+
+<span class="cm"># Anhängen (+=):</span>
+<span class="var">CFLAGS</span> += <span class="fl">-g</span>
+
+<span class="cm"># Nur wenn ungesetzt (?=):</span>
+<span class="var">PREFIX</span> ?= /usr/local</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Automatische Variablen</div>
+      <code><span class="var">$@</span>   <span class="cm"># Target-Name</span>
+<span class="var">$<</span>   <span class="cm"># Erste Voraussetzung</span>
+<span class="var">$^</span>   <span class="cm"># Alle Voraussetzungen (ohne Dups)</span>
+<span class="var">$+</span>   <span class="cm"># Alle Voraussetzungen (mit Dups)</span>
+<span class="var">$?</span>   <span class="cm"># Neuere Voraussetzungen</span>
+<span class="var">$*</span>   <span class="cm"># Pattern-Stem (%)</span>
+<span class="var">$(@D)</span> <span class="cm"># Directory von $@</span>
+<span class="var">$(@F)</span> <span class="cm"># Dateiname von $@</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-green">
+  <div class="section-header"><div class="section-icon">🎯</div><div class="section-title">Pattern Rules</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Pattern-Regeln</div>
+      <code><span class="cm"># Generische Kompilierungsregel:</span>
+<span class="kw">%.o:</span> %.c
+	$(<span class="var">CC</span>) $(<span class="var">CFLAGS</span>) <span class="fl">-c</span> <span class="fl">-o</span> <span class="var">$@</span> <span class="var">$<</span>
+
+<span class="cm"># Generisches Test-Target:</span>
+<span class="kw">test-%:</span>
+	pytest tests/<span class="var">$*</span>_test.py
+
+<span class="cm"># Alle .c → .o:</span>
+<span class="kw">%.o:</span> %.c %.h
+	$(<span class="var">CC</span>) $(<span class="var">CFLAGS</span>) <span class="fl">-c</span> <span class="var">$<</span> <span class="fl">-o</span> <span class="var">$@</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Static Pattern Rules</div>
+      <code><span class="var">OBJS</span> := foo.o bar.o baz.o
+
+<span class="kw">$(OBJS):</span> %.o: %.c
+	$(<span class="var">CC</span>) <span class="fl">-c</span> <span class="fl">-o</span> <span class="var">$@</span> <span class="var">$<</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-purple">
+  <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">Funktionen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Text-Funktionen</div>
+      <code><span class="cm"># Dateisuche:</span>
+<span class="var">SRCS</span> := $(wildcard src/*.c)
+<span class="cm"># Pfad-Substitution:</span>
+<span class="var">OBJS</span> := $(<span class="var">SRCS</span>:src/%.c=build/%.o)
+<span class="cm"># Oder mit patsubst:</span>
+<span class="var">OBJS</span> := $(patsubst src/%.c,build/%.o,<span class="var">$(<span class="var">SRCS</span>)</span>)
+<span class="cm"># Textoperationen:</span>
+$(subst .c,.o,<span class="var">$(<span class="var">SRCS</span>)</span>)      <span class="cm"># Ersetzen</span>
+$(filter %.c,<span class="var">$(<span class="var">FILES</span>)</span>)       <span class="cm"># Filtern</span>
+$(filter-out %.h,<span class="var">$(<span class="var">FILES</span>)</span>)   <span class="cm"># Ausschließen</span>
+$(sort <span class="var">$(<span class="var">LIST</span>)</span>)               <span class="cm"># Sortieren</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Shell &amp; Kontrollfluss</div>
+      <code><span class="var">DATE</span> := $(shell date +%Y%m%d)
+<span class="var">GIT_HASH</span> := $(shell git rev-parse --short HEAD)
+
+ifeq ($(<span class="var">DEBUG</span>),<span class="nu">1</span>)
+<span class="var">CFLAGS</span> += <span class="fl">-g</span>
+endif
+
+ifdef <span class="var">VERBOSE</span>
+<span class="var">Q</span> :=
+else
+<span class="var">Q</span> := @
+endif</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-cyan">
+  <div class="section-header"><div class="section-icon">🛠</div><div class="section-title">DevOps-Makefile Muster</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Standard-DevOps-Makefile</div>
+      <code><span class="kw">.DEFAULT_GOAL</span> := help
+<span class="kw">.PHONY:</span> help build push deploy clean
+
+<span class="var">IMAGE</span> := registry.example.com/myapp
+<span class="var">TAG</span>   := $(shell git rev-parse --short HEAD)
+
+<span class="kw">help:</span>
+	@grep -E <span class="val">'^[a-zA-Z_-]+:.*?##'</span> $(<span class="var">MAKEFILE_LIST</span>) | \
+        awk <span class="val">'BEGIN{FS=":.*?## "}{printf "%-15s %s\n",$$1,$$2}'</span>
+
+<span class="kw">build:</span> ## Docker-Image bauen
+	docker build <span class="fl">-t</span> $(<span class="var">IMAGE</span>):$(<span class="var">TAG</span>) .
+
+<span class="kw">push:</span> build ## Image in Registry pushen
+	docker push $(<span class="var">IMAGE</span>):$(<span class="var">TAG</span>)
+
+<span class="kw">deploy:</span> push ## In Kubernetes deployen
+	kubectl set image deploy/myapp app=$(<span class="var">IMAGE</span>):$(<span class="var">TAG</span>)</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Stille Ausgabe &amp; Fehlerbehandlung</div>
+      <code><span class="kw">clean:</span>
+	@rm <span class="fl">-rf</span> dist/          <span class="cm"># @ = kein Echo</span>
+	-rm <span class="fl">-f</span> *.log            <span class="cm"># - = Fehler ignorieren</span>
+
+<span class="kw">install:</span>
+	$(if $(shell which curl),,$(error curl not found))
+	@echo <span class="val">"Installing..."</span></code>
+    </div>
+  </div>
+  <div class="tip">⚠ Makefile-Befehle <strong>MÜSSEN</strong> mit einem echten TAB-Zeichen eingerückt sein — keine Leerzeichen!</div>
+</div>
+
+</main>
+<footer><span>Make</span> — GNU Make Build System &nbsp;·&nbsp; gnu.org/software/make/manual &nbsp;·&nbsp; man make</footer>
+</body>
+</html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0d1117;--surface:#161b22;--border:#30363d;
+    --accent:#336791;--accent2:#f2c811;
+    --blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;
+    --cyan:#39c5cf;--red:#f47067;--text:#e6edf3;
+    --muted:#7d8590;--code-bg:#10161d;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#0a151d 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(51,103,145,0.1),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(51,103,145,0.12);border:1px solid rgba(51,103,145,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  .legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600}
+  .chip.a{background:rgba(61,139,205,0.12);border:1px solid rgba(61,139,205,0.3);color:var(--blue)}
+  .chip.b{background:rgba(163,113,247,0.12);border:1px solid rgba(163,113,247,0.3);color:var(--purple)}
+  .chip.c{background:rgba(63,185,80,0.12);border:1px solid rgba(63,185,80,0.3);color:var(--green)}
+  .chip.d{background:rgba(240,160,48,0.12);border:1px solid rgba(240,160,48,0.3);color:var(--accent2)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  .theme-teal .section-header{background:rgba(78,201,176,0.08)}.theme-teal .section-icon{background:rgba(78,201,176,0.15)}.theme-teal .section-title{color:var(--teal)}
+  .theme-green .section-header{background:rgba(63,185,80,0.08)}.theme-green .section-icon{background:rgba(63,185,80,0.15)}.theme-green .section-title{color:var(--green)}
+  .theme-blue .section-header{background:rgba(61,139,205,0.08)}.theme-blue .section-icon{background:rgba(61,139,205,0.15)}.theme-blue .section-title{color:var(--blue)}
+  .theme-purple .section-header{background:rgba(163,113,247,0.08)}.theme-purple .section-icon{background:rgba(163,113,247,0.15)}.theme-purple .section-title{color:var(--purple)}
+  .theme-yellow .section-header{background:rgba(240,160,48,0.08)}.theme-yellow .section-icon{background:rgba(240,160,48,0.15)}.theme-yellow .section-title{color:var(--accent2)}
+  .theme-red .section-header{background:rgba(244,112,103,0.08)}.theme-red .section-icon{background:rgba(244,112,103,0.15)}.theme-red .section-title{color:var(--red)}
+  .theme-cyan .section-header{background:rgba(57,197,207,0.08)}.theme-cyan .section-icon{background:rgba(57,197,207,0.15)}.theme-cyan .section-title{color:var(--cyan)}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:var(--accent);font-weight:700}.bi{color:var(--blue);font-weight:600}.st{color:var(--green)}.nu{color:var(--red)}.cm{color:var(--muted);font-style:italic}.fn{color:var(--cyan);font-weight:600}.va{color:var(--purple)}.op{color:var(--accent2);font-weight:600}
+  .tip{padding:8px 16px;background:rgba(51,103,145,0.05);border-top:1px dashed rgba(51,103,145,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  .tip.y{background:rgba(240,160,48,0.05);border-color:rgba(240,160,48,0.2);color:var(--accent2)}
+  .tip.p{background:rgba(163,113,247,0.05);border-color:rgba(163,113,247,0.2);color:var(--purple)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(51,103,145,0.3);padding:4px 12px;border-radius:4px;background:rgba(51,103,145,0.08)}
+  .nav-link:hover{background:rgba(51,103,145,0.15)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+<link rel="icon" type="image/svg+xml" href="../assets/sql.svg">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Database Reference</div>
+      <img src="../assets/sql.svg" alt="Logo" style="width:48px; height:48px; margin-bottom:12px; display:block;">
+<h1><span>SQL</span><br>TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span>Guide</h1>
+      <p class="subtitle">SELECT * FROM cheatsheet WHERE query = 'fast';</p>
+      <div class="legend">
+        <div class="chip a">📑 DML</div>
+        <div class="chip b">🏗️ DDL</div>
+        <div class="chip c">🔍 Joins & Filter</div>
+        <div class="chip d">🪟 Window & CTEs</div>
+      </div>
+    </div>
+    <div class="meta"><strong>SQL (Structured Query Language)</strong><br>Relational Databases<br>PostgreSQL · MySQL · SQLite<br>DML · DDL · Joins · CTEs · Window</div>
+  </div>
+</header>
+<main>
+
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">📑</div><div class="section-title">Data Manipulation (DML)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">SELECT - Daten abfragen</div>
+<code><span class="kw">SELECT</span> id, name <span class="kw">FROM</span> users;
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users; <span class="cm">-- Alle Spalten</span>
+<span class="kw">SELECT DISTINCT</span> role <span class="kw">FROM</span> users; <span class="cm">-- Duplikate entfernen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">INSERT - Zeilen hinzufügen</div>
+<code><span class="kw">INSERT INTO</span> users (name, age)
+<span class="kw">VALUES</span> (<span class="st">'Alice'</span>, <span class="nu">30</span>), (<span class="st">'Bob'</span>, <span class="nu">25</span>);</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">UPDATE - Daten ändern</div>
+<code><span class="kw">UPDATE</span> users
+<span class="kw">SET</span> age = <span class="nu">31</span>, active = <span class="kw">true</span>
+<span class="kw">WHERE</span> name = <span class="st">'Alice'</span>;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">DELETE - Zeilen löschen</div>
+<code><span class="kw">DELETE FROM</span> users
+<span class="kw">WHERE</span> id = <span class="nu">5</span>;</code></div>
+  </div>
+</div>
+
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">🏗️</div><div class="section-title">Data Definition (DDL)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">CREATE - Tabellen erstellen</div>
+<code><span class="kw">CREATE TABLE</span> users (
+    id <span class="bi">SERIAL</span> <span class="kw">PRIMARY KEY</span>,
+    name <span class="bi">VARCHAR</span>(<span class="nu">50</span>) <span class="kw">NOT NULL</span>,
+    created_at <span class="bi">TIMESTAMP</span> <span class="kw">DEFAULT</span> <span class="fn">CURRENT_TIMESTAMP</span>
+);</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">ALTER - Tabellenstruktur ändern</div>
+<code><span class="kw">ALTER TABLE</span> users <span class="kw">ADD COLUMN</span> age <span class="bi">INT</span>;
+<span class="kw">ALTER TABLE</span> users <span class="kw">DROP COLUMN</span> age;
+<span class="kw">ALTER TABLE</span> users <span class="kw">RENAME TO</span> customers;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">DROP - Tabellen/Datenbanken löschen</div>
+<code><span class="kw">DROP TABLE</span> users;
+<span class="kw">DROP TABLE IF EXISTS</span> users; <span class="cm">-- Ohne Fehler, falls nicht existent</span>
+<span class="kw">DROP DATABASE</span> my_db;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">TRUNCATE - Tabelle leeren</div>
+<code><span class="kw">TRUNCATE TABLE</span> users; <span class="cm">-- Schneller als DELETE, resettet IDs</span></code></div>
+  </div>
+</div>
+
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Filter & Joins</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">WHERE - Bedingungen</div>
+<code><span class="kw">SELECT</span> * <span class="kw">FROM</span> users
+<span class="kw">WHERE</span> age >= <span class="nu">18</span> <span class="kw">AND</span> status = <span class="st">'active'</span>;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">LIKE - Mustererkennung (Pattern Matching)</div>
+<code><span class="kw">SELECT</span> * <span class="kw">FROM</span> users
+<span class="kw">WHERE</span> name <span class="kw">LIKE</span> <span class="st">'A%'</span>;  <span class="cm">-- Beginnt mit A</span>
+<span class="cm">-- % = beliebig viele Zeichen, _ = genau ein Zeichen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">IN & BETWEEN</div>
+<code><span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> role <span class="kw">IN</span> (<span class="st">'admin'</span>, <span class="st">'editor'</span>);
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> age <span class="kw">BETWEEN</span> <span class="nu">20</span> <span class="kw">AND</span> <span class="nu">30</span>;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">INNER JOIN - Schnittmenge</div>
+<code><span class="kw">SELECT</span> u.name, o.total
+<span class="kw">FROM</span> users u
+<span class="kw">INNER JOIN</span> orders o <span class="kw">ON</span> u.id = o.user_id;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">LEFT JOIN - Alle von links & Matches von rechts</div>
+<code><span class="kw">SELECT</span> u.name, o.total
+<span class="kw">FROM</span> users u
+<span class="kw">LEFT JOIN</span> orders o <span class="kw">ON</span> u.id = o.user_id;</code></div>
+  </div>
+</div>
+
+<div class="section theme-yellow">
+  <div class="section-header"><div class="section-icon">🧮</div><div class="section-title">Aggregation & Sortierung</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">ORDER BY & LIMIT</div>
+<code><span class="kw">SELECT</span> * <span class="kw">FROM</span> users
+<span class="kw">ORDER BY</span> created_at <span class="kw">DESC</span>   <span class="cm">-- DESC absteigend, ASC aufsteigend</span>
+<span class="kw">LIMIT</span> <span class="nu">10</span> <span class="kw">OFFSET</span> <span class="nu">20</span>;        <span class="cm">-- Paginierung: Zeige Ergebnisse 21-30</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Aggregatfunktionen</div>
+<code><span class="kw">SELECT</span> <span class="fn">COUNT</span>(*) <span class="kw">FROM</span> users;                <span class="cm">-- Anzahl Zeilen</span>
+<span class="kw">SELECT</span> <span class="fn">SUM</span>(total), <span class="fn">AVG</span>(total) <span class="kw">FROM</span> orders; <span class="cm">-- Summe &amp; Durchschnitt</span>
+<span class="kw">SELECT</span> <span class="fn">MIN</span>(age), <span class="fn">MAX</span>(age) <span class="kw">FROM</span> users;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">GROUP BY & HAVING</div>
+<code><span class="kw">SELECT</span> role, <span class="fn">COUNT</span>(*) <span class="kw">AS</span> user_count
+<span class="kw">FROM</span> users
+<span class="kw">GROUP BY</span> role
+<span class="kw">HAVING</span> <span class="fn">COUNT</span>(*) > <span class="nu">5</span>; <span class="cm">-- HAVING filtert nach Aggregation</span></code></div>
+  </div>
+  <div class="tip y">💡 <strong>WHERE</strong> filtert vor dem Gruppieren, <strong>HAVING</strong> filtert nach dem Gruppieren.</div>
+</div>
+
+<div class="section theme-red">
+  <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">Transaktionen & Indizes</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Transaktionen (ACID)</div>
+<code><span class="kw">BEGIN</span>;               <span class="cm">-- Oder START TRANSACTION;</span>
+<span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance = balance - <span class="nu">100</span> <span class="kw">WHERE</span> id = <span class="nu">1</span>;
+<span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance = balance + <span class="nu">100</span> <span class="kw">WHERE</span> id = <span class="nu">2</span>;
+<span class="kw">COMMIT</span>;              <span class="cm">-- Bestätigen</span>
+<span class="cm">-- ROLLBACK;         -- Falls Fehler, alles rückgängig machen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Indizes (Performance)</div>
+<code><span class="kw">CREATE INDEX</span> idx_user_email <span class="kw">ON</span> users (email);
+<span class="kw">CREATE UNIQUE INDEX</span> idx_user_username <span class="kw">ON</span> users (username);
+<span class="kw">DROP INDEX</span> idx_user_email;</code></div>
+  </div>
+</div>
+
+
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">🔗</div><div class="section-title">Alle JOIN-Typen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">RIGHT JOIN - alle von rechts + matches links</div>
+<code><span class="kw">SELECT</span> u.name, o.total
+<span class="kw">FROM</span> users u
+<span class="kw">RIGHT JOIN</span> orders o <span class="kw">ON</span> u.id = o.user_id;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">FULL OUTER JOIN - alle Zeilen beider Seiten</div>
+<code><span class="kw">SELECT</span> u.name, o.total
+<span class="kw">FROM</span> users u
+<span class="kw">FULL OUTER JOIN</span> orders o <span class="kw">ON</span> u.id = o.user_id;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">CROSS JOIN - kartesisches Produkt</div>
+<code><span class="kw">SELECT</span> a.color, b.size
+<span class="kw">FROM</span> colors a <span class="kw">CROSS JOIN</span> sizes b;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Self JOIN - Tabelle mit sich selbst</div>
+<code><span class="kw">SELECT</span> e.name, m.name <span class="kw">AS</span> manager
+<span class="kw">FROM</span> employees e
+<span class="kw">LEFT JOIN</span> employees m <span class="kw">ON</span> e.manager_id = m.id;</code></div>
+  </div>
+  <div class="tip g">💡 MySQL kennt kein FULL OUTER JOIN — stattdessen: LEFT JOIN <strong>UNION</strong> RIGHT JOIN</div>
+</div>
+
+<div class="section theme-cyan">
+  <div class="section-header"><div class="section-icon">🔀</div><div class="section-title">NULL & CASE</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">NULL prüfen</div>
+<code><span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> email <span class="kw">IS NULL</span>;
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users <span class="kw">WHERE</span> email <span class="kw">IS NOT NULL</span>;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">COALESCE & NULLIF</div>
+<code><span class="fn">COALESCE</span>(email, <span class="st">'n/a'</span>)  <span class="cm">-- erster Nicht-NULL-Wert</span>
+<span class="fn">NULLIF</span>(score, <span class="nu">0</span>)       <span class="cm">-- NULL wenn score = 0</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">CASE WHEN</div>
+<code><span class="kw">SELECT</span> name,
+  <span class="kw">CASE</span>
+    <span class="kw">WHEN</span> age &lt; <span class="nu">18</span> <span class="kw">THEN</span> <span class="st">'Junior'</span>
+    <span class="kw">WHEN</span> age &lt; <span class="nu">65</span> <span class="kw">THEN</span> <span class="st">'Erwachsen'</span>
+    <span class="kw">ELSE</span>               <span class="st">'Senior'</span>
+  <span class="kw">END</span> <span class="kw">AS</span> gruppe
+<span class="kw">FROM</span> users;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">CASE in Aggregation (Pivot)</div>
+<code><span class="kw">SELECT</span>
+  <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> status=<span class="st">'active'</span>   <span class="kw">THEN</span> <span class="nu">1</span> <span class="kw">ELSE</span> <span class="nu">0</span> <span class="kw">END</span>) <span class="kw">AS</span> aktive,
+  <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> status=<span class="st">'inactive'</span> <span class="kw">THEN</span> <span class="nu">1</span> <span class="kw">ELSE</span> <span class="nu">0</span> <span class="kw">END</span>) <span class="kw">AS</span> inaktive
+<span class="kw">FROM</span> users;</code></div>
+  </div>
+</div>
+
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">⛙</div><div class="section-title">Mengenoperationen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">UNION — vereinigt, Duplikate entfernt</div>
+<code><span class="kw">SELECT</span> name <span class="kw">FROM</span> customers
+<span class="kw">UNION</span>
+<span class="kw">SELECT</span> name <span class="kw">FROM</span> employees;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">UNION ALL — mit Duplikaten (schneller)</div>
+<code><span class="kw">SELECT</span> id, <span class="st">'order'</span>  <span class="kw">AS</span> type <span class="kw">FROM</span> orders
+<span class="kw">UNION ALL</span>
+<span class="kw">SELECT</span> id, <span class="st">'return'</span> <span class="kw">AS</span> type <span class="kw">FROM</span> returns;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">INTERSECT & EXCEPT</div>
+<code><span class="kw">SELECT</span> name <span class="kw">FROM</span> t1 <span class="kw">INTERSECT SELECT</span> name <span class="kw">FROM</span> t2;
+<span class="cm">-- Schnittmenge (in beiden)</span>
+<span class="kw">SELECT</span> name <span class="kw">FROM</span> t1 <span class="kw">EXCEPT    SELECT</span> name <span class="kw">FROM</span> t2;
+<span class="cm">-- Differenz (nur in t1)</span></code></div>
+  </div>
+  <div class="tip">💡 Alle Mengenoperationen erfordern gleiche Spaltenanzahl und kompatible Typen</div>
+</div>
+
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">🔎</div><div class="section-title">Subqueries & CTEs</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Subquery in WHERE</div>
+<code><span class="kw">SELECT</span> * <span class="kw">FROM</span> users
+<span class="kw">WHERE</span> id <span class="kw">IN</span> (
+  <span class="kw">SELECT</span> user_id <span class="kw">FROM</span> orders
+  <span class="kw">WHERE</span> total &gt; <span class="nu">100</span>
+);</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">EXISTS / NOT EXISTS</div>
+<code><span class="kw">SELECT</span> * <span class="kw">FROM</span> users u
+<span class="kw">WHERE EXISTS</span> (
+  <span class="kw">SELECT</span> <span class="nu">1</span> <span class="kw">FROM</span> orders o
+  <span class="kw">WHERE</span> o.user_id = u.id
+);
+<span class="cm">-- NOT EXISTS: Nutzer ohne Bestellungen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Skalare Subquery in SELECT</div>
+<code><span class="kw">SELECT</span> name,
+  (<span class="kw">SELECT</span> <span class="fn">COUNT</span>(*) <span class="kw">FROM</span> orders
+   <span class="kw">WHERE</span> user_id = u.id) <span class="kw">AS</span> anzahl_bestellungen
+<span class="kw">FROM</span> users u;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">CTE — WITH ... AS</div>
+<code><span class="kw">WITH</span> top_users <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> user_id, <span class="fn">SUM</span>(total) <span class="kw">AS</span> umsatz
+  <span class="kw">FROM</span> orders
+  <span class="kw">GROUP BY</span> user_id
+  <span class="kw">HAVING</span> <span class="fn">SUM</span>(total) &gt; <span class="nu">500</span>
+)
+<span class="kw">SELECT</span> u.name, t.umsatz
+<span class="kw">FROM</span> top_users t
+<span class="kw">JOIN</span> users u <span class="kw">ON</span> u.id = t.user_id;</code></div>
+  </div>
+  <div class="tip p">💡 Mehrere CTEs: <strong>WITH cte1 AS (...), cte2 AS (...) SELECT ...</strong> — für lesbarere Queries</div>
+</div>
+
+<div class="section theme-yellow">
+  <div class="section-header"><div class="section-icon">🪟</div><div class="section-title">Window-Funktionen (OVER)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Grundsyntax</div>
+<code><span class="fn">funktion</span>() <span class="kw">OVER</span> (
+  [<span class="kw">PARTITION BY</span> spalte]
+  [<span class="kw">ORDER BY</span> spalte <span class="kw">ASC</span>|<span class="kw">DESC</span>]
+)</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Ranking-Funktionen</div>
+<code><span class="kw">SELECT</span> name, salary,
+  <span class="fn">ROW_NUMBER</span>() <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> salary <span class="kw">DESC</span>) <span class="kw">AS</span> zeile,
+  <span class="fn">RANK</span>()       <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> salary <span class="kw">DESC</span>) <span class="kw">AS</span> rang,
+  <span class="fn">DENSE_RANK</span>() <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> salary <span class="kw">DESC</span>) <span class="kw">AS</span> dichte
+<span class="kw">FROM</span> employees;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">PARTITION BY — Rang pro Gruppe</div>
+<code><span class="kw">SELECT</span> dept, name, salary,
+  <span class="fn">RANK</span>() <span class="kw">OVER</span> (
+    <span class="kw">PARTITION BY</span> dept
+    <span class="kw">ORDER BY</span> salary <span class="kw">DESC</span>
+  ) <span class="kw">AS</span> rang_im_dept
+<span class="kw">FROM</span> employees;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">LAG & LEAD — Vor-/Nachzeile</div>
+<code><span class="kw">SELECT</span> date, revenue,
+  <span class="fn">LAG</span>(revenue)  <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> date) <span class="kw">AS</span> vorher,
+  <span class="fn">LEAD</span>(revenue) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> date) <span class="kw">AS</span> danach
+<span class="kw">FROM</span> sales;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Laufende Summe / Durchschnitt</div>
+<code><span class="kw">SELECT</span> name, salary,
+  <span class="fn">SUM</span>(salary) <span class="kw">OVER</span> (<span class="kw">PARTITION BY</span> dept) <span class="kw">AS</span> dept_sum,
+  <span class="fn">AVG</span>(salary) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> date <span class="kw">ROWS BETWEEN</span>
+    <span class="nu">2</span> <span class="kw">PRECEDING AND CURRENT ROW</span>) <span class="kw">AS</span> moving_avg
+<span class="kw">FROM</span> employees;</code></div>
+  </div>
+</div>
+
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">🏛</div><div class="section-title">Views & Constraints</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Views (virtuelle Tabellen)</div>
+<code><span class="kw">CREATE VIEW</span> aktive_nutzer <span class="kw">AS</span>
+  <span class="kw">SELECT</span> id, name, email
+  <span class="kw">FROM</span> users
+  <span class="kw">WHERE</span> active = <span class="kw">true</span>;
+
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> aktive_nutzer;
+<span class="kw">DROP VIEW</span> aktive_nutzer;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Constraints beim CREATE TABLE</div>
+<code><span class="kw">CREATE TABLE</span> orders (
+  id      <span class="bi">SERIAL</span> <span class="kw">PRIMARY KEY</span>,
+  user_id <span class="bi">INT</span>    <span class="kw">NOT NULL REFERENCES</span> users(id)
+                   <span class="kw">ON DELETE CASCADE</span>,
+  total   <span class="bi">NUMERIC</span>(<span class="nu">10</span>,<span class="nu">2</span>) <span class="kw">CHECK</span> (total &gt;= <span class="nu">0</span>),
+  status  <span class="bi">VARCHAR</span>(<span class="nu">20</span>) <span class="kw">DEFAULT</span> <span class="st">'pending'</span>,
+  code    <span class="bi">VARCHAR</span>(<span class="nu">20</span>) <span class="kw">UNIQUE</span>
+);</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Constraint nachträglich hinzufügen</div>
+<code><span class="kw">ALTER TABLE</span> orders
+  <span class="kw">ADD CONSTRAINT</span> fk_user
+  <span class="kw">FOREIGN KEY</span> (user_id) <span class="kw">REFERENCES</span> users(id);</code></div>
+  </div>
+</div>
+
+<div class="section theme-cyan">
+  <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">Nützliche Funktionen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">String-Funktionen</div>
+<code><span class="fn">UPPER</span>(name)     <span class="fn">LOWER</span>(name)
+<span class="fn">LENGTH</span>(name)    <span class="fn">TRIM</span>(name)
+<span class="fn">CONCAT</span>(first, <span class="st">' '</span>, last)
+<span class="fn">SUBSTRING</span>(name, <span class="nu">1</span>, <span class="nu">3</span>)       <span class="cm">-- ab Pos 1, 3 Zeichen</span>
+<span class="fn">REPLACE</span>(txt, <span class="st">'alt'</span>, <span class="st">'neu'</span>)
+<span class="fn">LPAD</span>(id::<span class="bi">TEXT</span>, <span class="nu">5</span>, <span class="st">'0'</span>)      <span class="cm">-- "00042"</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Datumsfunktionen (PostgreSQL)</div>
+<code><span class="fn">NOW</span>()                         <span class="cm">-- aktueller Timestamp</span>
+<span class="fn">CURRENT_DATE</span>
+<span class="fn">DATE_TRUNC</span>(<span class="st">'month'</span>, created_at)
+<span class="fn">EXTRACT</span>(<span class="kw">YEAR FROM</span> created_at)
+created_at <span class="op">+</span> <span class="kw">INTERVAL</span> <span class="st">'7 days'</span>
+<span class="fn">AGE</span>(birthdate)</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Typumwandlung (CAST)</div>
+<code><span class="kw">CAST</span>(age <span class="kw">AS</span> <span class="bi">VARCHAR</span>)
+price::<span class="bi">INT</span>                    <span class="cm">-- PostgreSQL Kurzform</span>
+<span class="fn">TO_CHAR</span>(ts, <span class="st">'YYYY-MM-DD'</span>)
+<span class="fn">TO_NUMBER</span>(<span class="st">'42.5'</span>, <span class="st">'99.9'</span>)</code></div>
+  </div>
+  <div class="tip">💡 MySQL: <strong>DATE_FORMAT(date, '%Y-%m-%d')</strong> statt TO_CHAR; <strong>IFNULL</strong> statt COALESCE</div>
+</div>
+
+</main>
+<footer><span>SQL</span> — Structured Query Language · TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span>Guide</footer>
+</body>
+</html>

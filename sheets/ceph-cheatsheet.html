@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ceph - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#e33a2e;--accent2:#f0a030;--blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#1a0402 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(227,58,46,0.09),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(227,58,46,0.12);border:1px solid rgba(227,58,46,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  .legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600}
+  .chip.a{background:rgba(227,58,46,0.12);border:1px solid rgba(227,58,46,0.3);color:var(--accent)}
+  .chip.b{background:rgba(63,185,80,0.12);border:1px solid rgba(63,185,80,0.3);color:var(--green)}
+  .chip.c{background:rgba(61,139,205,0.12);border:1px solid rgba(61,139,205,0.3);color:var(--blue)}
+  .chip.d{background:rgba(163,113,247,0.12);border:1px solid rgba(163,113,247,0.3);color:var(--purple)}
+  .chip.e{background:rgba(57,197,207,0.12);border:1px solid rgba(57,197,207,0.3);color:var(--cyan)}
+  main{padding:32px 48px;max-width:1600px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  .theme-red .section-header{background:rgba(227,58,46,0.08)}.theme-red .section-icon{background:rgba(227,58,46,0.15)}.theme-red .section-title{color:var(--accent)}
+  .theme-green .section-header{background:rgba(63,185,80,0.08)}.theme-green .section-icon{background:rgba(63,185,80,0.15)}.theme-green .section-title{color:var(--green)}
+  .theme-blue .section-header{background:rgba(61,139,205,0.08)}.theme-blue .section-icon{background:rgba(61,139,205,0.15)}.theme-blue .section-title{color:var(--blue)}
+  .theme-purple .section-header{background:rgba(163,113,247,0.08)}.theme-purple .section-icon{background:rgba(163,113,247,0.15)}.theme-purple .section-title{color:var(--purple)}
+  .theme-yellow .section-header{background:rgba(240,160,48,0.08)}.theme-yellow .section-icon{background:rgba(240,160,48,0.15)}.theme-yellow .section-title{color:var(--accent2)}
+  .theme-cyan .section-header{background:rgba(57,197,207,0.08)}.theme-cyan .section-icon{background:rgba(57,197,207,0.15)}.theme-cyan .section-title{color:var(--cyan)}
+  .theme-darkred .section-header{background:rgba(244,112,103,0.08)}.theme-darkred .section-icon{background:rgba(244,112,103,0.15)}.theme-darkred .section-title{color:var(--red)}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:#e33a2e;font-weight:700}.fl{color:#3d8bcd}.val{color:#3fb950}.cm{color:#7d8590;font-style:italic}.var{color:#a371f7}.nu{color:#f47067}.cy{color:#39c5cf;font-weight:600}
+  .tip{padding:8px 16px;background:rgba(227,58,46,0.05);border-top:1px dashed rgba(227,58,46,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  .tip.b{background:rgba(61,139,205,0.05);border-color:rgba(61,139,205,0.2);color:var(--blue)}
+  .tip.p{background:rgba(163,113,247,0.05);border-color:rgba(163,113,247,0.2);color:var(--purple)}
+  .tip.y{background:rgba(240,160,48,0.05);border-color:rgba(240,160,48,0.2);color:var(--accent2)}
+  .tip.c{background:rgba(57,197,207,0.05);border-color:rgba(57,197,207,0.2);color:var(--cyan)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1600px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(227,58,46,0.3);padding:4px 12px;border-radius:4px;background:rgba(227,58,46,0.08)}
+  .nav-link:hover{background:rgba(227,58,46,0.18)}
+  .tbl{width:100%;font-size:11px;font-family:'JetBrains Mono',monospace;border-collapse:collapse}
+  .tbl td{padding:3px 6px;border-bottom:1px solid rgba(48,54,61,0.4);vertical-align:top}
+  .tbl td:first-child{color:var(--accent);white-space:nowrap;padding-right:10px}
+  .tbl td:last-child{color:var(--muted)}
+  @media(max-width:1200px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+<link rel="icon" type="image/svg+xml" href="../assets/ceph.svg">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Distributed Storage — Vollständige Referenz</div>
+      <img src="../assets/ceph.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(35%) sepia(90%) saturate(600%) hue-rotate(340deg)">
+      <h1>Ceph<br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ ceph / rbd / rados / radosgw-admin / cephadm / crushtool</p>
+      <div class="legend">
+        <div class="chip a">💾 RADOS</div>
+        <div class="chip b">📦 RBD</div>
+        <div class="chip c">📁 CephFS</div>
+        <div class="chip d">🌐 RGW/S3</div>
+        <div class="chip e">🗺 CRUSH</div>
+      </div>
+    </div>
+    <div class="meta"><strong>Ceph Reef / Squid</strong><br>OSD · MON · MGR · MDS<br>cephadm · Orchestrator<br>OpenStack Integration</div>
+  </div>
+</header>
+<main>
+
+<!-- ═══ CLUSTER STATUS ═══ -->
+<div class="section theme-red">
+  <div class="section-header"><div class="section-icon">🩺</div><div class="section-title">Cluster Health &amp; Status</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Überblick</div>
+      <code><span class="kw">ceph</span> -s                  <span class="cm"># Kurzstatus</span>
+<span class="kw">ceph</span> status              <span class="cm"># Gleich wie -s</span>
+<span class="kw">ceph</span> -w                  <span class="cm"># Live-Events</span>
+<span class="kw">ceph</span> health              <span class="cm"># HEALTH_OK / WARN / ERR</span>
+<span class="kw">ceph</span> health detail       <span class="cm"># Detaillierte Warnungen</span>
+<span class="kw">ceph</span> health mute <span class="var">WARN_CODE</span>  <span class="cm"># Warnung stumm</span>
+<span class="kw">ceph</span> health unmute <span class="var">WARN_CODE</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Speicher &amp; Statistiken</div>
+      <code><span class="kw">ceph</span> df                  <span class="cm"># Pool-Auslastung</span>
+<span class="kw">ceph</span> df detail           <span class="cm"># Detailliert</span>
+<span class="kw">ceph</span> osd stat            <span class="cm"># OSD-Übersicht</span>
+<span class="kw">ceph</span> mon stat            <span class="cm"># MON-Status</span>
+<span class="kw">ceph</span> mgr stat            <span class="cm"># MGR-Status</span>
+<span class="kw">ceph</span> pg stat             <span class="cm"># PG-Status</span>
+<span class="kw">ceph</span> versions            <span class="cm"># Versionen aller Daemons</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Quorum &amp; Cluster-ID</div>
+      <code><span class="kw">ceph</span> quorum_status       <span class="cm"># MON-Quorum</span>
+<span class="kw">ceph</span> fsid                <span class="cm"># Cluster-UUID</span>
+<span class="kw">ceph</span> time-sync-status    <span class="cm"># Zeitsync-Status</span>
+<span class="kw">ceph</span> config dump         <span class="cm"># Alle Config-Optionen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Performance &amp; I/O</div>
+      <code><span class="kw">ceph</span> iostat <span class="nu">2</span>           <span class="cm"># I/O alle 2s</span>
+<span class="kw">ceph</span> osd perf            <span class="cm"># OSD Latenz</span>
+<span class="kw">ceph</span> osd blocked-by      <span class="cm"># Blockierende OSDs</span>
+<span class="kw">ceph</span> log last <span class="nu">100</span>        <span class="cm"># Cluster-Log</span></code>
+    </div>
+  </div>
+  <div class="tip">💡 <strong>HEALTH_WARN</strong> meist tolerierbar — <strong>HEALTH_ERR</strong> kann I/O blockieren</div>
+</div>
+
+<!-- ═══ OSD FLAGS ═══ -->
+<div class="section theme-red">
+  <div class="section-header"><div class="section-icon">🚩</div><div class="section-title">OSD-Flags — vollständig</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Flags setzen / löschen / anzeigen</div>
+      <code><span class="kw">ceph</span> osd set <span class="var">FLAG</span>
+<span class="kw">ceph</span> osd unset <span class="var">FLAG</span>
+<span class="kw">ceph</span> osd dump | grep flags
+<span class="kw">ceph</span> osd dump | grep -E <span class="val">"^flags"</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Alle verfügbaren Flags</div>
+      <code><span class="cm">Flag              Bedeutung</span>
+<span class="val">noout</span>       <span class="cm">OSDs die down gehen NICHT als out markieren</span>
+<span class="val">noin</span>        <span class="cm">OSDs nicht automatisch als in markieren</span>
+<span class="val">noup</span>        <span class="cm">OSDs nicht als up markieren</span>
+<span class="val">nodown</span>      <span class="cm">OSDs nicht als down markieren</span>
+<span class="val">nobackfill</span>  <span class="cm">Kein Backfill nach Recovery</span>
+<span class="val">norebalance</span> <span class="cm">Kein Rebalancing bei CRUSH-Änderungen</span>
+<span class="val">norecover</span>   <span class="cm">Keine Recovery (gefährlich!)</span>
+<span class="val">noscrub</span>     <span class="cm">Kein normales Scrubbing</span>
+<span class="val">nodeep-scrub</span><span class="cm">Kein Deep-Scrubbing</span>
+<span class="val">pause</span>       <span class="cm">Alle Client-I/Os pausieren</span>
+<span class="val">full</span>        <span class="cm">Cluster als voll markieren (blockt Writes)</span>
+<span class="val">purged_snapdirs</span><span class="cm">Interne Migration (nicht manuell setzen)</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Wartungs-Workflow (Node-Neustart)</div>
+      <code><span class="cm"># VOR Wartung:</span>
+<span class="kw">ceph</span> osd set noout
+<span class="kw">ceph</span> osd set norebalance
+<span class="cm"># Optional für ruhigere Wartung:</span>
+<span class="kw">ceph</span> osd set noscrub
+<span class="kw">ceph</span> osd set nodeep-scrub
+
+<span class="cm"># NACH Wartung (Reihenfolge wichtig):</span>
+<span class="kw">ceph</span> osd unset norebalance
+<span class="kw">ceph</span> osd unset noout
+<span class="kw">ceph</span> osd unset noscrub
+<span class="kw">ceph</span> osd unset nodeep-scrub
+<span class="cm"># Danach: ceph -w und warten bis HEALTH_OK</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Per-OSD flags (individuelle OSDs)</div>
+      <code><span class="cm"># Einzelnen OSD aus Rebalancing nehmen:</span>
+<span class="kw">ceph</span> osd add-noout osd.<span class="nu">3</span>
+<span class="kw">ceph</span> osd rm-noout osd.<span class="nu">3</span>
+<span class="kw">ceph</span> osd add-noin osd.<span class="nu">3</span>
+<span class="kw">ceph</span> osd rm-noin osd.<span class="nu">3</span>
+<span class="kw">ceph</span> osd add-noup osd.<span class="nu">3</span>
+<span class="kw">ceph</span> osd rm-noup osd.<span class="nu">3</span>
+<span class="kw">ceph</span> osd add-nodown osd.<span class="nu">3</span>
+<span class="kw">ceph</span> osd rm-nodown osd.<span class="nu">3</span></code>
+    </div>
+  </div>
+  <div class="tip">⚠️ <strong>pause</strong> pausiert ALLE Client-I/Os — nur im Notfall verwenden!</div>
+</div>
+
+<!-- ═══ OSD MANAGEMENT ═══ -->
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">💿</div><div class="section-title">OSD Management</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Status &amp; Überblick</div>
+      <code><span class="kw">ceph</span> osd tree           <span class="cm"># CRUSH-Baum + Status</span>
+<span class="kw">ceph</span> osd df tree        <span class="cm"># Belegung pro OSD</span>
+<span class="kw">ceph</span> osd dump           <span class="cm"># Vollständiger OSD-Dump</span>
+<span class="kw">ceph</span> osd ls             <span class="cm"># Liste aller OSD-IDs</span>
+<span class="kw">ceph</span> osd find osd.<span class="nu">5</span>    <span class="cm"># Wo liegt OSD 5?</span>
+<span class="kw">ceph</span> osd metadata osd.<span class="nu">5</span><span class="cm"># Gerätedaten</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">OSD-Zustand ändern</div>
+      <code><span class="kw">ceph</span> osd down osd.<span class="nu">0</span>    <span class="cm"># OSD als down markieren</span>
+<span class="kw">ceph</span> osd up osd.<span class="nu">0</span>      <span class="cm"># OSD als up markieren</span>
+<span class="kw">ceph</span> osd out osd.<span class="nu">0</span>    <span class="cm"># Aus Cluster herausnehmen (löst Rebalance aus)</span>
+<span class="kw">ceph</span> osd in osd.<span class="nu">0</span>     <span class="cm"># Zurück in Cluster aufnehmen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">OSD sicher entfernen (Workflow)</div>
+      <code><span class="cm"># 1. Prüfen ob sicher:</span>
+<span class="kw">ceph</span> osd safe-to-destroy osd.<span class="nu">5</span>
+<span class="cm"># 2. OSD herausnehmen (löst Rebalance aus):</span>
+<span class="kw">ceph</span> osd out osd.<span class="nu">5</span>
+<span class="cm"># 3. Warten bis HEALTH_OK, dann:</span>
+<span class="kw">ceph</span> osd down osd.<span class="nu">5</span>
+<span class="cm"># 4. Daemon stoppen (auf dem Host):</span>
+<span class="kw">systemctl</span> stop ceph-osd@5
+<span class="cm"># 5. OSD aus Cluster entfernen:</span>
+<span class="kw">ceph</span> osd destroy osd.<span class="nu">5</span> <span class="fl">--yes-i-really-mean-it</span>
+<span class="cm"># 6. Auth + CRUSH bereinigen:</span>
+<span class="kw">ceph</span> osd purge osd.<span class="nu">5</span> <span class="fl">--yes-i-really-mean-it</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Scrubbing steuern</div>
+      <code><span class="kw">ceph</span> osd scrub osd.<span class="nu">0</span>
+<span class="kw">ceph</span> osd deep-scrub osd.<span class="nu">0</span>
+<span class="kw">ceph</span> pg scrub <span class="var">1.4a</span>
+<span class="kw">ceph</span> pg deep-scrub <span class="var">1.4a</span>
+<span class="cm"># Scrub-Zeiten einschränken (Config):</span>
+<span class="kw">ceph</span> config set osd osd_scrub_begin_hour <span class="nu">22</span>
+<span class="kw">ceph</span> config set osd osd_scrub_end_hour <span class="nu">6</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Performance &amp; Throttling</div>
+      <code><span class="kw">ceph</span> tell osd.<span class="nu">0</span> bench
+<span class="kw">ceph</span> tell osd.<span class="nu">*</span> bench
+<span class="kw">ceph</span> daemon osd.<span class="nu">0</span> perf dump
+<span class="cm"># Recovery drosseln:</span>
+<span class="kw">ceph</span> config set osd osd_recovery_max_active <span class="nu">2</span>
+<span class="kw">ceph</span> config set osd osd_max_backfills <span class="nu">1</span>
+<span class="kw">ceph</span> config set osd osd_recovery_sleep <span class="nu">0.1</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Blocklist (IP-/Client-Sperrung)</div>
+      <code><span class="kw">ceph</span> osd blocklist add <span class="var">192.168.1.10</span>:<span class="nu">0/1234567890</span>
+<span class="kw">ceph</span> osd blocklist rm <span class="var">192.168.1.10</span>:<span class="nu">0/1234567890</span>
+<span class="kw">ceph</span> osd blocklist ls
+<span class="cm"># Alle Einträge löschen:</span>
+<span class="kw">ceph</span> osd blocklist clear</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Live-Config ändern</div>
+      <code><span class="kw">ceph</span> tell osd.<span class="nu">*</span> config set \
+  osd_recovery_max_active <span class="nu">3</span>
+<span class="kw">ceph</span> tell osd.<span class="nu">0</span> config get \
+  osd_max_backfills
+<span class="kw">ceph</span> config show osd.<span class="nu">0</span>  <span class="cm"># Aktive Config</span></code>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CEPH-VOLUME / OSD-DEPLOYMENT ═══ -->
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">🔩</div><div class="section-title">ceph-volume — OSD Deployment</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Verfügbare Geräte anzeigen</div>
+      <code><span class="kw">ceph-volume</span> inventory
+<span class="kw">ceph-volume</span> inventory <span class="val">/dev/sdb</span>
+<span class="kw">ceph-volume</span> lvm list   <span class="cm"># Existierende LVM-OSDs</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">OSD erstellen (LVM — empfohlen)</div>
+      <code><span class="cm"># Ganze Disk (auto-LVM):</span>
+<span class="kw">ceph-volume</span> lvm create \
+  <span class="fl">--bluestore</span> \
+  <span class="fl">--data</span> <span class="val">/dev/sdb</span>
+
+<span class="cm"># Mit separatem WAL + DB (NVMe):</span>
+<span class="kw">ceph-volume</span> lvm create \
+  <span class="fl">--bluestore</span> \
+  <span class="fl">--data</span> <span class="val">/dev/sdb</span> \
+  <span class="fl">--block.wal</span> <span class="val">/dev/nvme0n1p1</span> \
+  <span class="fl">--block.db</span> <span class="val">/dev/nvme0n1p2</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Prepare + Activate (getrennt)</div>
+      <code><span class="cm"># Schritt 1 — OSD vorbereiten:</span>
+<span class="kw">ceph-volume</span> lvm prepare \
+  <span class="fl">--bluestore</span> <span class="fl">--data</span> <span class="val">/dev/sdb</span>
+<span class="cm"># Schritt 2 — OSD aktivieren:</span>
+<span class="kw">ceph-volume</span> lvm activate \
+  <span class="var">OSD_ID</span> <span class="var">OSD_FSID</span>
+<span class="cm"># Alle aktivieren (nach Reboot):</span>
+<span class="kw">ceph-volume</span> lvm activate <span class="fl">--all</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">OSD-Disk ersetzen (Replace-Workflow)</div>
+      <code><span class="cm"># 1. OSD herausnehmen + Daten migrieren:</span>
+<span class="kw">ceph</span> osd out osd.<span class="nu">7</span>
+<span class="cm"># 2. Warten auf HEALTH_OK</span>
+<span class="cm"># 3. Daemon stoppen + OSD entfernen:</span>
+<span class="kw">systemctl</span> stop ceph-osd@7
+<span class="kw">ceph</span> osd purge osd.<span class="nu">7</span> <span class="fl">--yes-i-really-mean-it</span>
+<span class="cm"># 4. LVM-Volumes aufräumen:</span>
+<span class="kw">ceph-volume</span> lvm zap <span class="val">/dev/sdb</span> <span class="fl">--destroy</span>
+<span class="cm"># 5. Neue Disk deployen:</span>
+<span class="kw">ceph-volume</span> lvm create <span class="fl">--bluestore</span> \
+  <span class="fl">--data</span> <span class="val">/dev/sdb</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Simple (RAW-Mode, kein LVM)</div>
+      <code><span class="kw">ceph-volume</span> raw prepare \
+  <span class="fl">--bluestore</span> <span class="fl">--data</span> <span class="val">/dev/sdb</span>
+<span class="kw">ceph-volume</span> raw activate \
+  <span class="fl">--device</span> <span class="val">/dev/sdb</span>
+<span class="kw">ceph-volume</span> raw list</code>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CRUSH MAP ═══ -->
+<div class="section theme-yellow">
+  <div class="section-header"><div class="section-icon">🗺</div><div class="section-title">CRUSH Map — vollständig</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">CRUSH Map export / import / edit</div>
+      <code><span class="cm"># Binary-Map exportieren:</span>
+<span class="kw">ceph</span> osd getcrushmap <span class="fl">-o</span> crushmap.bin
+<span class="cm"># In Text decompilieren:</span>
+<span class="kw">crushtool</span> <span class="fl">-d</span> crushmap.bin <span class="fl">-o</span> crushmap.txt
+<span class="cm"># Text → Binary kompilieren:</span>
+<span class="kw">crushtool</span> <span class="fl">-c</span> crushmap.txt <span class="fl">-o</span> crushmap-new.bin
+<span class="cm"># Map zurückspielen (Achtung!):</span>
+<span class="kw">ceph</span> osd setcrushmap <span class="fl">-i</span> crushmap-new.bin</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">CRUSH-Baum anzeigen</div>
+      <code><span class="kw">ceph</span> osd crush dump       <span class="cm"># JSON-Dump</span>
+<span class="kw">ceph</span> osd tree             <span class="cm"># Baumansicht</span>
+<span class="kw">ceph</span> osd tree <span class="fl">--format</span> json
+<span class="kw">ceph</span> osd crush tree <span class="fl">--show-shadow</span>
+<span class="cm"># CRUSH-Regeln anzeigen:</span>
+<span class="kw">ceph</span> osd crush rule ls
+<span class="kw">ceph</span> osd crush rule dump
+<span class="kw">ceph</span> osd crush rule dump <span class="var">replicated_rule</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Buckets hinzufügen / verschieben</div>
+      <code><span class="cm"># Neuen Host-Bucket erstellen:</span>
+<span class="kw">ceph</span> osd crush add-bucket <span class="var">node04</span> host
+<span class="cm"># Rack erstellen:</span>
+<span class="kw">ceph</span> osd crush add-bucket <span class="var">rack01</span> rack
+<span class="cm"># Datacenter:</span>
+<span class="kw">ceph</span> osd crush add-bucket <span class="var">dc1</span> datacenter
+
+<span class="cm"># Host unter Rack verschieben:</span>
+<span class="kw">ceph</span> osd crush move <span class="var">node04</span> rack=<span class="var">rack01</span>
+<span class="cm"># Rack unter Datacenter:</span>
+<span class="kw">ceph</span> osd crush move <span class="var">rack01</span> \
+  datacenter=<span class="var">dc1</span> root=<span class="val">default</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">OSD zu CRUSH hinzufügen / entfernen</div>
+      <code><span class="cm"># OSD zu Host hinzufügen:</span>
+<span class="kw">ceph</span> osd crush add osd.<span class="nu">5</span> <span class="nu">1.0</span> host=<span class="var">node04</span>
+<span class="cm"># OSD-Gewicht anpassen (TB-Wert):</span>
+<span class="kw">ceph</span> osd crush reweight osd.<span class="nu">5</span> <span class="nu">1.8</span>
+<span class="cm"># Alle OSD-Gewichte neu berechnen:</span>
+<span class="kw">ceph</span> osd crush reweight-all
+<span class="cm"># OSD aus CRUSH entfernen:</span>
+<span class="kw">ceph</span> osd crush rm osd.<span class="nu">5</span>
+<span class="cm"># Bucket entfernen (erst leeren):</span>
+<span class="kw">ceph</span> osd crush rm <span class="var">node04</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">CRUSH-Regeln erstellen</div>
+      <code><span class="cm"># Replicated-Regel auf Host-Ebene:</span>
+<span class="kw">ceph</span> osd crush rule create-replicated \
+  <span class="var">myrule</span> <span class="val">default</span> host
+<span class="cm"># Auf Rack-Ebene (Rack Awareness):</span>
+<span class="kw">ceph</span> osd crush rule create-replicated \
+  <span class="var">rack_rule</span> <span class="val">default</span> rack
+<span class="cm"># Erasure-Coding-Regel:</span>
+<span class="kw">ceph</span> osd crush rule create-erasure \
+  <span class="var">ec_rule</span> <span class="var">myec_profile</span>
+<span class="cm"># Regel löschen:</span>
+<span class="kw">ceph</span> osd crush rule rm <span class="var">myrule</span>
+<span class="cm"># Regel einem Pool zuweisen:</span>
+<span class="kw">ceph</span> osd pool set <span class="var">mypool</span> crush_rule <span class="var">rack_rule</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Device Classes (NVMe, SSD, HDD)</div>
+      <code><span class="cm"># Klassen anzeigen:</span>
+<span class="kw">ceph</span> osd crush class ls
+<span class="cm"># Geräte pro Klasse:</span>
+<span class="kw">ceph</span> osd crush class ls-osd <span class="val">ssd</span>
+<span class="kw">ceph</span> osd crush class ls-osd <span class="val">hdd</span>
+<span class="kw">ceph</span> osd crush class ls-osd <span class="val">nvme</span>
+<span class="cm"># Klasse manuell setzen:</span>
+<span class="kw">ceph</span> osd crush set-device-class <span class="val">ssd</span> osd.<span class="nu">0</span> osd.<span class="nu">1</span>
+<span class="kw">ceph</span> osd crush set-device-class <span class="val">hdd</span> osd.<span class="nu">2</span>
+<span class="cm"># Klasse entfernen:</span>
+<span class="kw">ceph</span> osd crush rm-device-class osd.<span class="nu">0</span>
+<span class="cm"># Neue Klasse erstellen:</span>
+<span class="kw">ceph</span> osd crush class create <span class="val">myclass</span>
+<span class="kw">ceph</span> osd crush class rm <span class="val">myclass</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Klassen-basierte Regeln (z.B. nur SSD)</div>
+      <code><span class="cm"># SSD-Pool mit SSD-Regel:</span>
+<span class="kw">ceph</span> osd crush rule create-replicated \
+  <span class="var">ssd_rule</span> <span class="val">default</span> host <span class="val">ssd</span>
+<span class="kw">ceph</span> osd pool create <span class="var">fast-pool</span>
+<span class="kw">ceph</span> osd pool set <span class="var">fast-pool</span> \
+  crush_rule <span class="var">ssd_rule</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">CRUSH Map testen (crushtool)</div>
+      <code><span class="cm"># Placement simulieren:</span>
+<span class="kw">crushtool</span> <span class="fl">-i</span> crushmap.bin <span class="fl">--test</span> \
+  <span class="fl">--show-mappings</span> \
+  <span class="fl">--rule</span> <span class="nu">0</span> <span class="fl">--num-rep</span> <span class="nu">3</span> \
+  <span class="fl">--min-x</span> <span class="nu">0</span> <span class="fl">--max-x</span> <span class="nu">100</span>
+<span class="cm"># Verteilung prüfen:</span>
+<span class="kw">crushtool</span> <span class="fl">-i</span> crushmap.bin <span class="fl">--test</span> \
+  <span class="fl">--show-utilization</span>
+<span class="cm"># Map-Gültigkeit prüfen:</span>
+<span class="kw">crushtool</span> <span class="fl">--check</span> crushmap.bin</code>
+    </div>
+  </div>
+  <div class="tip y">💡 Rack Awareness: Replicas auf verschiedenen Racks verhindert Datenverlust bei Rack-Ausfall</div>
+</div>
+
+<!-- ═══ NODE / HOST MANAGEMENT ═══ -->
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">🖥</div><div class="section-title">Node &amp; Host Management</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Hosts anzeigen (cephadm/Orchestrator)</div>
+      <code><span class="kw">ceph</span> orch host ls
+<span class="kw">ceph</span> orch host ls <span class="fl">--format</span> yaml
+<span class="kw">ceph</span> orch device ls           <span class="cm"># Alle Geräte</span>
+<span class="kw">ceph</span> orch device ls <span class="var">node01</span>   <span class="cm"># Geräte eines Hosts</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Host hinzufügen / entfernen</div>
+      <code><span class="cm"># SSH-Key auf neuen Host deployen:</span>
+<span class="kw">ssh-copy-id</span> <span class="fl">-i</span> /etc/ceph/ceph.pub root@<span class="var">node04</span>
+<span class="cm"># Host zum Cluster hinzufügen:</span>
+<span class="kw">ceph</span> orch host add <span class="var">node04</span> <span class="var">192.168.10.4</span>
+<span class="cm"># Label vergeben:</span>
+<span class="kw">ceph</span> orch host add <span class="var">node04</span> <span class="var">192.168.10.4</span> \
+  <span class="val">osd storage</span>
+<span class="cm"># Host aus Cluster entfernen:</span>
+<span class="kw">ceph</span> orch host drain <span class="var">node04</span>  <span class="cm"># OSDs leeren</span>
+<span class="kw">ceph</span> orch host rm <span class="var">node04</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Host-Labels</div>
+      <code><span class="kw">ceph</span> orch host label add <span class="var">node01</span> <span class="val">mon</span>
+<span class="kw">ceph</span> orch host label add <span class="var">node01</span> <span class="val">mgr</span>
+<span class="kw">ceph</span> orch host label add <span class="var">node02</span> <span class="val">osd</span>
+<span class="kw">ceph</span> orch host label rm  <span class="var">node01</span> <span class="val">mon</span>
+<span class="cm"># Spezielle Labels:</span>
+<span class="cm">_no_schedule  = keine neuen Daemons</span>
+<span class="cm">_no_autotune_memory = kein RAM-Tuning</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Maintenance Mode (Host in Wartung)</div>
+      <code><span class="cm"># Host in Wartungsmodus setzen:</span>
+<span class="kw">ceph</span> orch host maintenance enter <span class="var">node02</span>
+<span class="cm"># Wartung beenden:</span>
+<span class="kw">ceph</span> orch host maintenance exit <span class="var">node02</span>
+<span class="cm"># Mit erzwingen (auch wenn HEALTH_WARN):</span>
+<span class="kw">ceph</span> orch host maintenance enter <span class="var">node02</span> \
+  <span class="fl">--force</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">CRUSH-Host manuell verwalten</div>
+      <code><span class="cm"># Alle Hosts im CRUSH-Baum:</span>
+<span class="kw">ceph</span> osd tree | grep host
+<span class="cm"># Leeren Host-Bucket löschen:</span>
+<span class="kw">ceph</span> osd crush rm <span class="var">node04</span>
+<span class="cm"># Host unter anderen Bucket verschieben:</span>
+<span class="kw">ceph</span> osd crush move <span class="var">node04</span> root=<span class="val">default</span>
+<span class="kw">ceph</span> osd crush move <span class="var">node04</span> rack=<span class="var">rack02</span></code>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CEPHADM / ORCHESTRATOR ═══ -->
+<div class="section theme-cyan">
+  <div class="section-header"><div class="section-icon">🐙</div><div class="section-title">cephadm &amp; Orchestrator</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Bootstrap (Neues Cluster)</div>
+      <code><span class="kw">cephadm</span> bootstrap \
+  <span class="fl">--mon-ip</span> <span class="var">192.168.10.1</span> \
+  <span class="fl">--cluster-network</span> <span class="var">10.0.0.0/24</span> \
+  <span class="fl">--initial-dashboard-user</span> admin \
+  <span class="fl">--initial-dashboard-password</span> <span class="var">PASS</span>
+<span class="cm"># SSH-Key generieren:</span>
+<span class="kw">ceph</span> cephadm get-pub-key</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Dienste verwalten (orch)</div>
+      <code><span class="kw">ceph</span> orch ls                <span class="cm"># Alle Services</span>
+<span class="kw">ceph</span> orch ls osd            <span class="cm"># OSD-Services</span>
+<span class="kw">ceph</span> orch ps                <span class="cm"># Laufende Daemons</span>
+<span class="kw">ceph</span> orch ps <span class="var">node01</span>        <span class="cm"># Daemons auf Host</span>
+<span class="kw">ceph</span> orch status            <span class="cm"># Orchestrator-Status</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">OSDs deployen</div>
+      <code><span class="cm"># Alle verfügbaren Disks nutzen:</span>
+<span class="kw">ceph</span> orch apply osd \
+  <span class="fl">--all-available-devices</span>
+<span class="cm"># Spezifische Disk:</span>
+<span class="kw">ceph</span> orch daemon add osd \
+  <span class="var">node01</span>:<span class="val">/dev/sdb</span>
+<span class="cm"># Mit Device-Filter (YAML):</span>
+<span class="kw">ceph</span> orch apply <span class="fl">-i</span> osd-spec.yaml</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Daemons steuern</div>
+      <code><span class="kw">ceph</span> orch daemon restart osd.<span class="nu">3</span>
+<span class="kw">ceph</span> orch daemon stop osd.<span class="nu">3</span>
+<span class="kw">ceph</span> orch daemon start osd.<span class="nu">3</span>
+<span class="kw">ceph</span> orch daemon redeploy osd.<span class="nu">3</span>
+<span class="cm"># Daemon-Logs:</span>
+<span class="kw">ceph</span> orch daemon logs osd.<span class="nu">3</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">MON / MGR deployen</div>
+      <code><span class="cm"># MON auf bestimmten Hosts:</span>
+<span class="kw">ceph</span> orch apply mon \
+  <span class="val">"node01,node02,node03"</span>
+<span class="cm"># MGR:</span>
+<span class="kw">ceph</span> orch apply mgr \
+  <span class="val">"node01,node02"</span>
+<span class="cm"># MDS für CephFS:</span>
+<span class="kw">ceph</span> orch apply mds myfs \
+  <span class="fl">--placement</span> <span class="val">"node01,node02"</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">cephadm Shell &amp; Diagnose</div>
+      <code><span class="kw">cephadm</span> shell            <span class="cm"># Ceph-Shell im Container</span>
+<span class="kw">cephadm</span> ls               <span class="cm"># Lokale Daemons</span>
+<span class="kw">cephadm</span> logs <span class="fl">--name</span> osd.<span class="nu">3</span>
+<span class="kw">cephadm</span> check-host       <span class="cm"># Anforderungen prüfen</span>
+<span class="kw">cephadm</span> inspect-image</code>
+    </div>
+  </div>
+  <div class="tip c">💡 cephadm nutzt Container (podman/docker) — jeder Daemon läuft isoliert</div>
+</div>
+
+<!-- ═══ MON MANAGEMENT ═══ -->
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">👁</div><div class="section-title">MON Management</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">MON-Status</div>
+      <code><span class="kw">ceph</span> mon stat             <span class="cm"># Überblick</span>
+<span class="kw">ceph</span> mon dump             <span class="cm"># Detailliert</span>
+<span class="kw">ceph</span> quorum_status        <span class="cm"># Quorum-Info</span>
+<span class="kw">ceph</span> mon map              <span class="cm"># MON-Map</span>
+<span class="kw">ceph</span> tell mon.<span class="var">*</span> mon_status</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">MON hinzufügen / entfernen</div>
+      <code><span class="cm"># Via Orchestrator (empfohlen):</span>
+<span class="kw">ceph</span> orch daemon add mon <span class="var">node04</span>
+<span class="kw">ceph</span> orch daemon rm mon.<span class="var">node04</span>
+<span class="cm"># Manuell (Legacy):</span>
+<span class="kw">ceph</span> mon add <span class="var">node04</span> <span class="var">192.168.10.4</span>:6789
+<span class="kw">ceph</span> mon remove <span class="var">node04</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">MON-Konfiguration</div>
+      <code><span class="cm"># Auth-Key für MON:</span>
+<span class="kw">ceph</span> auth get mon.              <span class="cm"># Alle MON-Keys</span>
+<span class="kw">ceph</span> daemon mon.<span class="var">node01</span> mon_status
+<span class="cm"># Compact MON-DB (wenn groß):</span>
+<span class="kw">ceph</span> tell mon.<span class="var">node01</span> compact
+<span class="cm"># MON-Synchronisation erzwingen:</span>
+<span class="kw">ceph</span> tell mon.<span class="var">node01</span> sync_force \
+  <span class="fl">--yes-i-really-mean-it</span></code>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MGR MANAGEMENT ═══ -->
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">🎛</div><div class="section-title">MGR &amp; Module Management</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">MGR-Status &amp; Failover</div>
+      <code><span class="kw">ceph</span> mgr stat
+<span class="kw">ceph</span> mgr dump
+<span class="kw">ceph</span> mgr module ls         <span class="cm"># Alle Module</span>
+<span class="cm"># Aktiven MGR wechseln:</span>
+<span class="kw">ceph</span> mgr fail <span class="var">node01</span>      <span class="cm"># Failover auslösen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Module aktivieren / deaktivieren</div>
+      <code><span class="kw">ceph</span> mgr module enable prometheus
+<span class="kw">ceph</span> mgr module enable dashboard
+<span class="kw">ceph</span> mgr module enable pg_autoscaler
+<span class="kw">ceph</span> mgr module enable balancer
+<span class="kw">ceph</span> mgr module enable rook
+<span class="kw">ceph</span> mgr module disable crash
+<span class="cm"># Prometheus-Port:</span>
+<span class="kw">ceph</span> config set mgr mgr/prometheus/port <span class="nu">9283</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Dashboard</div>
+      <code><span class="kw">ceph</span> mgr module enable dashboard
+<span class="kw">ceph</span> dashboard create-self-signed-cert
+<span class="kw">ceph</span> dashboard ac-user-create admin \
+  <span class="fl">-i</span> /tmp/pass administrator
+<span class="cm"># Dashboard-URL:</span>
+<span class="kw">ceph</span> mgr services
+<span class="cm"># HTTPS-Port setzen:</span>
+<span class="kw">ceph</span> config set mgr mgr/dashboard/ssl_port <span class="nu">8443</span></code>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ POOL MANAGEMENT ═══ -->
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">🗄</div><div class="section-title">Pool Management</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Pools auflisten &amp; prüfen</div>
+      <code><span class="kw">ceph</span> osd pool ls
+<span class="kw">ceph</span> osd pool ls detail
+<span class="kw">rados</span> df                  <span class="cm"># Belegung pro Pool</span>
+<span class="kw">ceph</span> osd pool stats <span class="var">mypool</span>
+<span class="kw">ceph</span> osd pool get <span class="var">mypool</span> all <span class="cm"># Alle Parameter</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Pool erstellen</div>
+      <code><span class="cm"># Replicated (PG-Autoscaler, empfohlen):</span>
+<span class="kw">ceph</span> osd pool create <span class="var">mypool</span> \
+  <span class="fl">--autoscale-mode</span> <span class="val">on</span>
+<span class="cm"># Mit fixer PG-Anzahl:</span>
+<span class="kw">ceph</span> osd pool create <span class="var">mypool</span> <span class="nu">128</span>
+<span class="cm"># Erasure Coding:</span>
+<span class="kw">ceph</span> osd erasure-code-profile set \
+  <span class="var">ec42</span> k=<span class="nu">4</span> m=<span class="nu">2</span> crush-failure-domain=<span class="val">host</span>
+<span class="kw">ceph</span> osd pool create <span class="var">ecpool</span> \
+  erasure <span class="var">ec42</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Pool-Parameter anpassen</div>
+      <code><span class="kw">ceph</span> osd pool set <span class="var">mypool</span> size <span class="nu">3</span>
+<span class="kw">ceph</span> osd pool set <span class="var">mypool</span> min_size <span class="nu">2</span>
+<span class="kw">ceph</span> osd pool set <span class="var">mypool</span> pg_num <span class="nu">256</span>
+<span class="kw">ceph</span> osd pool set <span class="var">mypool</span> pgp_num <span class="nu">256</span>
+<span class="kw">ceph</span> osd pool set <span class="var">mypool</span> \
+  pg_autoscale_mode <span class="val">on</span>
+<span class="kw">ceph</span> osd pool set <span class="var">mypool</span> \
+  crush_rule <span class="var">rack_rule</span>
+<span class="kw">ceph</span> osd pool set <span class="var">mypool</span> \
+  nosizechange <span class="val">true</span>       <span class="cm"># Größe sperren</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Pool-Typ als RBD initialisieren</div>
+      <code><span class="kw">rbd</span> pool init <span class="var">volumes</span>
+<span class="kw">rbd</span> pool init <span class="var">images</span>
+<span class="kw">rbd</span> pool init <span class="var">vms</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Erasure-Code-Profile</div>
+      <code><span class="kw">ceph</span> osd erasure-code-profile ls
+<span class="kw">ceph</span> osd erasure-code-profile get <span class="var">ec42</span>
+<span class="kw">ceph</span> osd erasure-code-profile rm <span class="var">ec42</span>
+<span class="cm"># Profile-Parameter:</span>
+<span class="cm">k=4 m=2          → 4 Daten + 2 Parity = 6 OSDs</span>
+<span class="cm">crush-failure-domain=host → pro Host eine Shard</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Pool-Quoten &amp; Snapshots</div>
+      <code><span class="kw">ceph</span> osd pool set-quota <span class="var">mypool</span> \
+  max_bytes <span class="nu">107374182400</span>   <span class="cm"># 100 GB</span>
+<span class="kw">ceph</span> osd pool set-quota <span class="var">mypool</span> \
+  max_objects <span class="nu">1000000</span>
+<span class="kw">ceph</span> osd pool get-quota <span class="var">mypool</span>
+<span class="kw">ceph</span> osd pool mksnap <span class="var">mypool</span> <span class="val">snap1</span>
+<span class="kw">ceph</span> osd pool rmsnap <span class="var">mypool</span> <span class="val">snap1</span>
+<span class="kw">ceph</span> osd pool rename <span class="var">old</span> <span class="var">new</span>
+<span class="kw">ceph</span> osd pool delete <span class="var">mypool</span> <span class="var">mypool</span> \
+  <span class="fl">--yes-i-really-really-mean-it</span></code>
+    </div>
+  </div>
+  <div class="tip g">💡 PG-Autoscaler (pg_autoscale_mode on) — bevorzugt gegenüber manueller PG-Konfiguration</div>
+</div>
+
+<!-- ═══ PG STATES ═══ -->
+<div class="section theme-red">
+  <div class="section-header"><div class="section-icon">📊</div><div class="section-title">Placement Groups (PG) — States</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">PG-Befehle</div>
+      <code><span class="kw">ceph</span> pg stat              <span class="cm"># PG-Zusammenfassung</span>
+<span class="kw">ceph</span> pg dump              <span class="cm"># Alle PGs</span>
+<span class="kw">ceph</span> pg dump_stuck         <span class="cm"># Hängende PGs</span>
+<span class="kw">ceph</span> pg dump_stuck stale
+<span class="kw">ceph</span> pg dump_stuck inactive
+<span class="kw">ceph</span> pg dump_stuck unclean
+<span class="kw">ceph</span> pg <span class="var">1.4a</span> query        <span class="cm"># Detail-Query</span>
+<span class="kw">ceph</span> pg repair <span class="var">1.4a</span>       <span class="cm"># Inkonsistenz reparieren</span>
+<span class="kw">ceph</span> pg scrub <span class="var">1.4a</span>
+<span class="kw">ceph</span> osd map <span class="var">mypool</span> <span class="val">obj</span>   <span class="cm"># Objekt → PG → OSDs</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">PG-Zustände &amp; Bedeutung</div>
+      <code><span class="cm">Zustand             Bedeutung</span>
+<span class="val">active+clean</span>  <span class="cm">Normal — alles OK</span>
+<span class="val">active+degraded</span><span class="cm">Replica fehlt, aber I/O möglich</span>
+<span class="val">active+recovering</span><span class="cm">Recovery läuft (Daten werden kopiert)</span>
+<span class="val">active+backfilling</span><span class="cm">Backfill auf neuen OSD</span>
+<span class="val">active+remapped</span><span class="cm">Umgemappt (z.B. nach OSD-Hinzufügen)</span>
+<span class="val">peering</span>       <span class="cm">PG handelt sich ab (kurz OK)</span>
+<span class="val">stale</span>         <span class="cm">Kein Status-Update — Primary OSD down?</span>
+<span class="val">incomplete</span>    <span class="cm">Zu wenige OSDs für Quorum (Datenverlust!)</span>
+<span class="val">unknown</span>       <span class="cm">Kein Report vom Primary</span>
+<span class="val">inconsistent</span>  <span class="cm">Scrub-Fehler gefunden → repair nötig</span>
+<span class="val">repair</span>        <span class="cm">Reparatur läuft gerade</span>
+<span class="val">forced_backfill</span><span class="cm">Manuell priorisierter Backfill</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">PG-Autoscaler</div>
+      <code><span class="kw">ceph</span> osd pool autoscale-status
+<span class="kw">ceph</span> config set global \
+  osd_pool_default_pg_autoscale_mode <span class="val">on</span>
+<span class="cm"># Ziel-PGs manuell setzen:</span>
+<span class="kw">ceph</span> osd pool set <span class="var">mypool</span> \
+  pg_num_min <span class="nu">32</span>
+<span class="kw">ceph</span> osd pool set <span class="var">mypool</span> \
+  target_size_ratio <span class="nu">0.1</span>    <span class="cm"># 10% des Clusters</span></code>
+    </div>
+  </div>
+  <div class="tip">⚠️ <strong>incomplete</strong>-PGs = potentieller Datenverlust — sofort untersuchen!</div>
+</div>
+
+<!-- ═══ RBD ═══ -->
+<div class="section theme-yellow">
+  <div class="section-header"><div class="section-icon">📦</div><div class="section-title">RBD — RADOS Block Device</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Image erstellen / auflisten</div>
+      <code><span class="kw">rbd</span> create <span class="fl">--size</span> <span class="val">10G</span> <span class="var">volumes/myimage</span>
+<span class="kw">rbd</span> create <span class="fl">--size</span> <span class="val">10G</span> <span class="fl">-p</span> <span class="var">volumes</span> <span class="var">myimage</span>
+<span class="kw">rbd</span> ls <span class="var">volumes</span>
+<span class="kw">rbd</span> info <span class="var">volumes/myimage</span>
+<span class="kw">rbd</span> du <span class="var">volumes</span>            <span class="cm"># Disk Usage</span>
+<span class="kw">rbd</span> du <span class="var">volumes/myimage</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Image mounten / trennen</div>
+      <code><span class="kw">rbd</span> map <span class="var">volumes/myimage</span>
+<span class="kw">rbd</span> showmapped
+<span class="kw">rbd</span> unmap <span class="val">/dev/rbd0</span>
+<span class="kw">rbd</span> unmap <span class="var">volumes/myimage</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Snapshots</div>
+      <code><span class="kw">rbd</span> snap create <span class="var">volumes/img</span>@<span class="val">snap1</span>
+<span class="kw">rbd</span> snap ls <span class="var">volumes/img</span>
+<span class="kw">rbd</span> snap rollback <span class="var">volumes/img</span>@<span class="val">snap1</span>
+<span class="kw">rbd</span> snap rm <span class="var">volumes/img</span>@<span class="val">snap1</span>
+<span class="kw">rbd</span> snap purge <span class="var">volumes/img</span>  <span class="cm"># Alle löschen</span>
+<span class="kw">rbd</span> snap limit set <span class="fl">--limit</span> <span class="nu">10</span> <span class="var">volumes/img</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Klonen &amp; Flatten</div>
+      <code><span class="kw">rbd</span> snap protect <span class="var">images/ubuntu</span>@<span class="val">snap</span>
+<span class="kw">rbd</span> clone <span class="var">images/ubuntu</span>@<span class="val">snap</span> \
+  <span class="var">volumes/new-vm</span>
+<span class="kw">rbd</span> children <span class="var">images/ubuntu</span>@<span class="val">snap</span>
+<span class="kw">rbd</span> flatten <span class="var">volumes/new-vm</span>
+<span class="kw">rbd</span> snap unprotect \
+  <span class="var">images/ubuntu</span>@<span class="val">snap</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Resize / Export / Import / Migration</div>
+      <code><span class="kw">rbd</span> resize <span class="fl">--size</span> <span class="val">20G</span> <span class="var">volumes/img</span>
+<span class="kw">rbd</span> resize <span class="fl">--size</span> <span class="val">5G</span> \
+  <span class="fl">--allow-shrink</span> <span class="var">volumes/img</span>
+<span class="kw">rbd</span> export <span class="var">volumes/img</span> <span class="val">/tmp/backup.img</span>
+<span class="kw">rbd</span> export-diff \
+  <span class="var">volumes/img</span>@<span class="val">snap1</span> <span class="val">/tmp/diff.img</span>
+<span class="kw">rbd</span> import <span class="val">/tmp/backup.img</span> \
+  <span class="var">volumes/restored</span>
+<span class="kw">rbd</span> migration prepare \
+  <span class="var">volumes/img</span> <span class="var">newpool/img</span>
+<span class="kw">rbd</span> migration execute <span class="var">newpool/img</span>
+<span class="kw">rbd</span> migration commit <span class="var">newpool/img</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Features</div>
+      <code><span class="kw">rbd</span> feature disable <span class="var">volumes/img</span> \
+  <span class="val">object-map fast-diff deep-flatten</span>
+<span class="kw">rbd</span> feature enable <span class="var">volumes/img</span> \
+  <span class="val">exclusive-lock layering</span>
+<span class="cm"># Default-Features global setzen:</span>
+<span class="kw">ceph</span> config set global \
+  rbd_default_features <span class="nu">1</span>   <span class="cm"># nur layering</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">RBD-Spiegel (Mirroring)</div>
+      <code><span class="kw">rbd</span> mirror pool enable <span class="var">volumes</span> <span class="val">pool</span>
+<span class="kw">rbd</span> mirror image enable \
+  <span class="var">volumes/img</span> <span class="val">journal</span>
+<span class="kw">rbd</span> mirror image status <span class="var">volumes/img</span>
+<span class="kw">rbd</span> mirror pool status <span class="var">volumes</span></code>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CEPHFS ═══ -->
+<div class="section theme-cyan">
+  <div class="section-header"><div class="section-icon">📁</div><div class="section-title">CephFS — Filesystem</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Filesystem verwalten</div>
+      <code><span class="kw">ceph</span> fs ls
+<span class="kw">ceph</span> fs status
+<span class="kw">ceph</span> fs status <span class="var">myfs</span>
+<span class="kw">ceph</span> mds stat
+<span class="kw">ceph</span> fs dump            <span class="cm"># Alle FSMap-Details</span>
+<span class="kw">ceph</span> fs get <span class="var">myfs</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Filesystem erstellen</div>
+      <code><span class="kw">ceph</span> osd pool create cephfs_data
+<span class="kw">ceph</span> osd pool create cephfs_meta
+<span class="kw">ceph</span> fs new <span class="var">myfs</span> cephfs_meta cephfs_data
+<span class="cm"># Via Orchestrator:</span>
+<span class="kw">ceph</span> orch apply mds <span class="var">myfs</span> \
+  <span class="fl">--placement</span> <span class="val">"2 node01 node02"</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Mounten (Kernel-Client)</div>
+      <code><span class="kw">mount</span> <span class="fl">-t</span> ceph <span class="var">mon1,mon2,mon3</span>:/ \
+  <span class="val">/mnt/cephfs</span> \
+  <span class="fl">-o</span> name=admin,secret=<span class="var">KEY</span>
+<span class="cm"># Mit Keyring-File:</span>
+<span class="kw">mount</span> <span class="fl">-t</span> ceph <span class="var">mon1</span>:/ /mnt/cephfs \
+  <span class="fl">-o</span> name=admin,\
+  secretfile=/etc/ceph/admin.secret</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Mounten (FUSE)</div>
+      <code><span class="kw">ceph-fuse</span> <span class="fl">-m</span> <span class="var">mon1</span>:6789 <span class="val">/mnt/cephfs</span>
+<span class="kw">ceph-fuse</span> <span class="fl">-n</span> client.admin \
+  <span class="fl">-m</span> <span class="var">mon1</span>:6789 /mnt/cephfs
+<span class="cm"># fstab-Eintrag:</span>
+none /mnt/cephfs fuse.ceph \
+  ceph.id=admin,_netdev,defaults 0 0</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Quoten &amp; Layout</div>
+      <code><span class="cm"># Byte-Quota auf Verzeichnis:</span>
+<span class="kw">setfattr</span> <span class="fl">-n</span> ceph.quota.max_bytes \
+  <span class="fl">-v</span> <span class="nu">10737418240</span> <span class="val">/mnt/cephfs/mydir</span>
+<span class="cm"># File-Anzahl-Quota:</span>
+<span class="kw">setfattr</span> <span class="fl">-n</span> ceph.quota.max_files \
+  <span class="fl">-v</span> <span class="nu">10000</span> <span class="val">/mnt/cephfs/mydir</span>
+<span class="cm"># Quota anzeigen:</span>
+<span class="kw">getfattr</span> <span class="fl">-n</span> ceph.quota <span class="val">/mnt/cephfs/mydir</span>
+<span class="cm"># Layout (Stripe) anzeigen:</span>
+<span class="kw">getfattr</span> <span class="fl">-n</span> ceph.file.layout <span class="val">/mnt/cephfs/file</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">MDS &amp; Subvolumes</div>
+      <code><span class="kw">ceph</span> fs subvolume create <span class="var">myfs</span> <span class="var">subvol1</span>
+<span class="kw">ceph</span> fs subvolume ls <span class="var">myfs</span>
+<span class="kw">ceph</span> fs subvolume getpath <span class="var">myfs</span> <span class="var">subvol1</span>
+<span class="kw">ceph</span> fs subvolume rm <span class="var">myfs</span> <span class="var">subvol1</span>
+<span class="cm"># MDS-Failover:</span>
+<span class="kw">ceph</span> mds fail <span class="var">myfs</span>:<span class="nu">0</span>
+<span class="cm"># Standby-MDS-Anzahl:</span>
+<span class="kw">ceph</span> fs set <span class="var">myfs</span> standby_count_wanted <span class="nu">1</span></code>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RGW / S3 ═══ -->
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">RADOS Gateway — S3 / Swift</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">RGW deployen</div>
+      <code><span class="kw">ceph</span> orch apply rgw <span class="var">myrgw</span> \
+  <span class="fl">--placement</span> <span class="val">"2 node01 node02"</span> \
+  <span class="fl">--port</span> <span class="nu">7480</span>
+<span class="kw">ceph</span> orch ls rgw</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Benutzer verwalten</div>
+      <code><span class="kw">radosgw-admin</span> user create \
+  <span class="fl">--uid</span>=<span class="var">user1</span> \
+  <span class="fl">--display-name</span>=<span class="val">"Max Muster"</span>
+<span class="kw">radosgw-admin</span> user info <span class="fl">--uid</span>=<span class="var">user1</span>
+<span class="kw">radosgw-admin</span> user list
+<span class="kw">radosgw-admin</span> user rm <span class="fl">--uid</span>=<span class="var">user1</span>
+<span class="kw">radosgw-admin</span> user modify \
+  <span class="fl">--uid</span>=<span class="var">user1</span> <span class="fl">--max-buckets</span>=<span class="nu">100</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Access-Keys &amp; Berechtigungen</div>
+      <code><span class="kw">radosgw-admin</span> key create \
+  <span class="fl">--uid</span>=<span class="var">user1</span> <span class="fl">--key-type</span>=<span class="val">s3</span>
+<span class="kw">radosgw-admin</span> key rm \
+  <span class="fl">--uid</span>=<span class="var">user1</span> <span class="fl">--key-type</span>=<span class="val">s3</span> \
+  <span class="fl">--access-key</span>=<span class="var">KEY</span>
+<span class="cm"># S3-Caps setzen:</span>
+<span class="kw">radosgw-admin</span> caps add \
+  <span class="fl">--uid</span>=<span class="var">user1</span> \
+  <span class="fl">--caps</span>=<span class="val">"users=read;buckets=read,write"</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Buckets</div>
+      <code><span class="kw">radosgw-admin</span> bucket list
+<span class="kw">radosgw-admin</span> bucket list \
+  <span class="fl">--uid</span>=<span class="var">user1</span>
+<span class="kw">radosgw-admin</span> bucket stats \
+  <span class="fl">--bucket</span>=<span class="var">mybucket</span>
+<span class="kw">radosgw-admin</span> bucket link \
+  <span class="fl">--uid</span>=<span class="var">user1</span> <span class="fl">--bucket</span>=<span class="var">mybucket</span>
+<span class="kw">radosgw-admin</span> bucket unlink \
+  <span class="fl">--uid</span>=<span class="var">user1</span> <span class="fl">--bucket</span>=<span class="var">mybucket</span>
+<span class="kw">radosgw-admin</span> bucket rm \
+  <span class="fl">--bucket</span>=<span class="var">mybucket</span> <span class="fl">--purge-objects</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Quoten &amp; GC</div>
+      <code><span class="kw">radosgw-admin</span> quota set \
+  <span class="fl">--uid</span>=<span class="var">user1</span> <span class="fl">--quota-scope</span>=<span class="val">user</span> \
+  <span class="fl">--max-size</span>=<span class="val">50G</span> <span class="fl">--max-objects</span>=<span class="nu">1000000</span>
+<span class="kw">radosgw-admin</span> quota enable \
+  <span class="fl">--uid</span>=<span class="var">user1</span> <span class="fl">--quota-scope</span>=<span class="val">user</span>
+<span class="kw">radosgw-admin</span> gc list
+<span class="kw">radosgw-admin</span> gc process
+<span class="kw">radosgw-admin</span> usage show \
+  <span class="fl">--uid</span>=<span class="var">user1</span></code>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ AUTH ═══ -->
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">🔑</div><div class="section-title">Auth &amp; Keyrings</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Keys anzeigen</div>
+      <code><span class="kw">ceph</span> auth ls
+<span class="kw">ceph</span> auth get client.admin
+<span class="kw">ceph</span> auth get-key client.admin  <span class="cm"># Nur Key</span>
+<span class="kw">ceph</span> auth print-key client.admin
+<span class="kw">ceph</span> auth export client.admin \
+  <span class="fl">-o</span> admin.keyring</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Key erstellen / Caps ändern</div>
+      <code><span class="cm"># Neuen Key erstellen:</span>
+<span class="kw">ceph</span> auth add client.<span class="var">cinder</span> \
+  osd <span class="fl">"allow rwx pool=volumes"</span> \
+  mon <span class="fl">"allow r"</span> \
+  mgr <span class="fl">"allow rw"</span>
+<span class="cm"># Key-Datei ausgeben:</span>
+<span class="kw">ceph</span> auth get client.<span class="var">cinder</span> \
+  <span class="fl">-o</span> /etc/ceph/ceph.client.cinder.keyring
+<span class="cm"># Caps ändern:</span>
+<span class="kw">ceph</span> auth caps client.<span class="var">cinder</span> \
+  osd <span class="fl">"allow rwx"</span> mon <span class="fl">"allow r"</span>
+<span class="cm"># Key löschen:</span>
+<span class="kw">ceph</span> auth del client.<span class="var">cinder</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">OpenStack-Keys (Best Practice)</div>
+      <code><span class="kw">ceph</span> auth add client.glance \
+  osd <span class="fl">"allow rwx pool=images"</span> \
+  mon <span class="fl">"allow r"</span>
+<span class="kw">ceph</span> auth add client.cinder \
+  osd <span class="fl">"allow rwx pool=volumes,\</span>
+      pool=vms,pool=backups"</span> \
+  mon <span class="fl">"allow r"</span> mgr <span class="fl">"allow rw"</span>
+<span class="kw">ceph</span> auth add client.nova \
+  osd <span class="fl">"allow rwx pool=vms,pool=volumes"</span> \
+  mon <span class="fl">"allow r"</span></code>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RADOS CLI ═══ -->
+<div class="section theme-darkred">
+  <div class="section-header"><div class="section-icon">🔵</div><div class="section-title">RADOS — Objektzugriff</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Objekte lesen / schreiben</div>
+      <code><span class="kw">rados</span> <span class="fl">-p</span> <span class="var">mypool</span> ls          <span class="cm"># Objekte auflisten</span>
+<span class="kw">rados</span> <span class="fl">-p</span> <span class="var">mypool</span> ls | wc <span class="fl">-l</span> <span class="cm"># Anzahl</span>
+<span class="kw">rados</span> <span class="fl">-p</span> <span class="var">mypool</span> get <span class="var">myobj</span> <span class="val">/tmp/obj</span>
+<span class="kw">rados</span> <span class="fl">-p</span> <span class="var">mypool</span> put <span class="var">myobj</span> <span class="val">/tmp/file</span>
+<span class="kw">rados</span> <span class="fl">-p</span> <span class="var">mypool</span> rm <span class="var">myobj</span>
+<span class="kw">rados</span> <span class="fl">-p</span> <span class="var">mypool</span> stat <span class="var">myobj</span>  <span class="cm"># Größe + mtime</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">RADOS-Benchmark</div>
+      <code><span class="cm"># Write-Benchmark:</span>
+<span class="kw">rados</span> bench <span class="fl">-p</span> <span class="var">mypool</span> <span class="nu">10</span> write \
+  <span class="fl">--no-cleanup</span>
+<span class="cm"># Sequential Read:</span>
+<span class="kw">rados</span> bench <span class="fl">-p</span> <span class="var">mypool</span> <span class="nu">10</span> seq
+<span class="cm"># Random Read:</span>
+<span class="kw">rados</span> bench <span class="fl">-p</span> <span class="var">mypool</span> <span class="nu">10</span> rand
+<span class="cm"># Aufräumen:</span>
+<span class="kw">rados</span> bench <span class="fl">-p</span> <span class="var">mypool</span> <span class="nu">10</span> write \
+  <span class="fl">--run-name</span> cleanup <span class="fl">--no-hints</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Objekt-Attribute (xattr)</div>
+      <code><span class="kw">rados</span> <span class="fl">-p</span> <span class="var">mypool</span> listxattr <span class="var">myobj</span>
+<span class="kw">rados</span> <span class="fl">-p</span> <span class="var">mypool</span> getxattr <span class="var">myobj</span> <span class="var">mykey</span>
+<span class="kw">rados</span> <span class="fl">-p</span> <span class="var">mypool</span> setxattr \
+  <span class="var">myobj</span> <span class="var">mykey</span> <span class="val">myvalue</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Pool-Statistiken</div>
+      <code><span class="kw">rados</span> df                   <span class="cm"># Alle Pools</span>
+<span class="kw">rados</span> <span class="fl">-p</span> <span class="var">mypool</span> df         <span class="cm"># Einzelner Pool</span>
+<span class="kw">rados</span> <span class="fl">-p</span> <span class="var">mypool</span> ls \
+  <span class="fl">--all</span>                    <span class="cm"># inkl. Snapshots</span></code>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BALANCER ═══ -->
+<div class="section theme-red">
+  <div class="section-header"><div class="section-icon">⚖</div><div class="section-title">Balancer &amp; Recovery-Steuerung</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Balancer</div>
+      <code><span class="kw">ceph</span> balancer status
+<span class="kw">ceph</span> balancer on
+<span class="kw">ceph</span> balancer off
+<span class="kw">ceph</span> balancer mode upmap      <span class="cm"># Empfohlen</span>
+<span class="kw">ceph</span> balancer mode crush-compat
+<span class="kw">ceph</span> balancer eval            <span class="cm"># Score berechnen</span>
+<span class="kw">ceph</span> balancer optimize plan   <span class="cm"># Plan erstellen</span>
+<span class="kw">ceph</span> balancer execute plan    <span class="cm"># Plan anwenden</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Recovery-Throttling</div>
+      <code><span class="cm"># Max. gleichzeitige Recoveries:</span>
+<span class="kw">ceph</span> config set osd \
+  osd_recovery_max_active <span class="nu">2</span>
+<span class="cm"># Max. Backfills:</span>
+<span class="kw">ceph</span> config set osd \
+  osd_max_backfills <span class="nu">1</span>
+<span class="cm"># Sleep zwischen Recoveries (s):</span>
+<span class="kw">ceph</span> config set osd \
+  osd_recovery_sleep <span class="nu">0.1</span>
+<span class="cm"># Recovery-Ops-Limit:</span>
+<span class="kw">ceph</span> config set osd \
+  osd_recovery_op_priority <span class="nu">3</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">PG-Repair &amp; Inkonsistenzen</div>
+      <code><span class="cm"># Inkonsistente PGs finden:</span>
+<span class="kw">ceph</span> health detail | grep inconsistent
+<span class="kw">ceph</span> pg dump | grep inconsistent
+<span class="cm"># Reparieren:</span>
+<span class="kw">ceph</span> pg repair <span class="var">1.4a</span>
+<span class="cm"># Alle inkonsistenten PGs reparieren:</span>
+<span class="kw">ceph</span> pg dump | awk \
+  <span class="val">'/inconsistent/ {print $1}'</span> | \
+  xargs <span class="fl">-I{}</span> <span class="kw">ceph</span> pg repair {}</code>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ OPENSTACK INTEGRATION ═══ -->
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">🔗</div><div class="section-title">OpenStack Integration</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Pools erstellen &amp; initialisieren</div>
+      <code><span class="kw">for</span> pool in volumes images vms backups; do
+  <span class="kw">ceph</span> osd pool create $pool
+  <span class="kw">rbd</span> pool init $pool
+done</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Client-Keys für alle OpenStack-Services</div>
+      <code><span class="kw">ceph</span> auth add client.glance \
+  osd <span class="fl">"allow rwx pool=images"</span> \
+  mon <span class="fl">"allow r"</span>
+<span class="kw">ceph</span> auth add client.cinder \
+  osd <span class="fl">"allow rwx pool=volumes,</span>
+      pool=vms,pool=backups"</span> \
+  mon <span class="fl">"allow r"</span> mgr <span class="fl">"allow rw"</span>
+<span class="kw">ceph</span> auth add client.nova \
+  osd <span class="fl">"allow rwx pool=vms,pool=volumes"</span> \
+  mon <span class="fl">"allow r"</span>
+<span class="cm"># Keyrings exportieren:</span>
+<span class="kw">for</span> svc in glance cinder nova; do
+  <span class="kw">ceph</span> auth get client.$svc \
+    <span class="fl">-o</span> /etc/ceph/ceph.client.$svc.keyring
+done</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">ceph.conf für OpenStack-Nodes</div>
+      <code><span class="cm"># /etc/ceph/ceph.conf:</span>
+[global]
+  fsid = <span class="var">CLUSTER_UUID</span>
+  mon_host = mon1:6789,mon2:6789,mon3:6789
+  auth_cluster_required = cephx
+  auth_service_required = cephx
+  auth_client_required  = cephx
+
+[client]
+  rbd_cache = true
+  rbd_cache_size = <span class="nu">268435456</span>
+  rbd_cache_max_dirty = <span class="nu">134217728</span>
+
+[client.cinder]
+  keyring = /etc/ceph/ceph.client.cinder.keyring
+  rbd_default_features = <span class="nu">1</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Cinder-Backend (cinder.conf)</div>
+      <code>[ceph]
+volume_driver = \
+  cinder.volume.drivers.rbd.RBDDriver
+rbd_pool = volumes
+rbd_ceph_conf = /etc/ceph/ceph.conf
+rbd_flatten_volume_from_snapshot = false
+rbd_max_clone_depth = <span class="nu">5</span>
+rbd_user = cinder
+rbd_keyring_conf = \
+  /etc/ceph/ceph.client.cinder.keyring
+rbd_secret_uuid = <span class="var">LIBVIRT_SECRET_UUID</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Glance-Config (glance-api.conf)</div>
+      <code>[glance_store]
+stores = rbd
+default_store = rbd
+rbd_store_pool = images
+rbd_store_user = glance
+rbd_store_ceph_conf = /etc/ceph/ceph.conf
+rbd_store_chunk_size = <span class="nu">8</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Nova-Config (nova.conf)</div>
+      <code>[libvirt]
+images_type = rbd
+images_rbd_pool = vms
+images_rbd_ceph_conf = /etc/ceph/ceph.conf
+rbd_user = nova
+rbd_secret_uuid = <span class="var">LIBVIRT_SECRET_UUID</span>
+<span class="cm"># Libvirt-Secret erstellen:</span>
+<span class="kw">virsh</span> secret-define secret.xml
+<span class="kw">virsh</span> secret-set-value \
+  --secret <span class="var">LIBVIRT_SECRET_UUID</span> \
+  --base64 $(<span class="kw">ceph</span> auth get-key client.nova)</code>
+    </div>
+  </div>
+  <div class="tip g">💡 Nova braucht <strong>ceph.client.nova.keyring</strong> auf JEDEM Compute-Node</div>
+</div>
+
+<!-- ═══ DIAGNOSE ═══ -->
+<div class="section theme-darkred">
+  <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Diagnose &amp; Debug</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Logs</div>
+      <code><span class="kw">ceph</span> log last <span class="nu">100</span>
+<span class="kw">ceph</span> <span class="fl">-w</span>                        <span class="cm"># Live</span>
+<span class="kw">journalctl</span> <span class="fl">-u</span> ceph-osd@0 <span class="fl">-f</span>
+<span class="kw">journalctl</span> <span class="fl">-u</span> ceph-mon@<span class="var">node01</span> <span class="fl">-f</span>
+<span class="kw">journalctl</span> <span class="fl">-u</span> ceph-mgr@<span class="var">node01</span> <span class="fl">-f</span>
+<span class="cm"># Log-Level temporär erhöhen:</span>
+<span class="kw">ceph</span> tell osd.<span class="nu">0</span> injectargs \
+  <span class="fl">--debug-osd</span> <span class="nu">20</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Daemon-Debugging</div>
+      <code><span class="kw">ceph</span> daemon osd.<span class="nu">0</span> status
+<span class="kw">ceph</span> daemon osd.<span class="nu">0</span> config show
+<span class="kw">ceph</span> daemon osd.<span class="nu">0</span> perf dump
+<span class="kw">ceph</span> daemon osd.<span class="nu">0</span> dump_historic_ops
+<span class="kw">ceph</span> daemon osd.<span class="nu">0</span> dump_ops_in_flight
+<span class="kw">ceph</span> daemon mon.<span class="var">node01</span> mon_status</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Objekt lokalisieren</div>
+      <code><span class="cm"># Objekt → PG → OSDs:</span>
+<span class="kw">ceph</span> osd map <span class="var">mypool</span> <span class="val">myobject</span>
+<span class="cm"># PG direkt abfragen:</span>
+<span class="kw">ceph</span> pg <span class="var">1.4a</span> query
+<span class="cm"># Welche PGs auf OSD 3?</span>
+<span class="kw">ceph</span> osd <span class="var">3</span> pgs</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Perf-Counters &amp; I/O</div>
+      <code><span class="kw">ceph</span> osd perf           <span class="cm"># Latenz aller OSDs</span>
+<span class="kw">ceph</span> iostat <span class="nu">5</span>           <span class="cm"># I/O alle 5s</span>
+<span class="kw">ceph</span> tell osd.<span class="nu">*</span> bench   <span class="cm"># Alle OSDs benchen</span>
+<span class="kw">ceph</span> osd blocked-by     <span class="cm"># Blockierende OSDs</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Crash-Reports</div>
+      <code><span class="kw">ceph</span> crash ls           <span class="cm"># Crash-Liste</span>
+<span class="kw">ceph</span> crash ls-new        <span class="cm"># Neue Crashes</span>
+<span class="kw">ceph</span> crash info <span class="var">CRASH_ID</span>
+<span class="kw">ceph</span> crash archive <span class="var">CRASH_ID</span>
+<span class="kw">ceph</span> crash archive-all   <span class="cm"># Alle archivieren</span>
+<span class="kw">ceph</span> crash prune \
+  <span class="fl">--keep</span> <span class="nu">30</span>               <span class="cm"># Älter als 30 Tage löschen</span></code>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <span>ceph</span> — Distributed Storage System &nbsp;·&nbsp;
+  docs.ceph.com &nbsp;·&nbsp;
+  ceph -s | ceph osd tree | ceph osd dump | crushtool | cephadm
+</footer>
+
+</body>
+</html>

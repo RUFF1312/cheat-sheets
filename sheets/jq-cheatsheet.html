@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>jq / yq - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#d4a017;--accent2:#f0c040;--blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#1a1200 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(212,160,23,0.09),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(212,160,23,0.12);border:1px solid rgba(212,160,23,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  .t-yellow .section-header{background:rgba(212,160,23,0.08)}.t-yellow .section-icon{background:rgba(212,160,23,0.15)}.t-yellow .section-title{color:var(--accent)}
+  .t-green .section-header{background:rgba(63,185,80,0.08)}.t-green .section-icon{background:rgba(63,185,80,0.15)}.t-green .section-title{color:var(--green)}
+  .t-blue .section-header{background:rgba(61,139,205,0.08)}.t-blue .section-icon{background:rgba(61,139,205,0.15)}.t-blue .section-title{color:var(--blue)}
+  .t-purple .section-header{background:rgba(163,113,247,0.08)}.t-purple .section-icon{background:rgba(163,113,247,0.15)}.t-purple .section-title{color:var(--purple)}
+  .t-cyan .section-header{background:rgba(57,197,207,0.08)}.t-cyan .section-icon{background:rgba(57,197,207,0.15)}.t-cyan .section-title{color:var(--cyan)}
+  .t-red .section-header{background:rgba(244,112,103,0.08)}.t-red .section-icon{background:rgba(244,112,103,0.15)}.t-red .section-title{color:var(--red)}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:#d4a017;font-weight:700}.fl{color:#3d8bcd}.val{color:#3fb950}.cm{color:#7d8590;font-style:italic}.var{color:#a371f7}.nu{color:#f47067}.cy{color:#39c5cf}
+  .tip{padding:8px 16px;background:rgba(212,160,23,0.05);border-top:1px dashed rgba(212,160,23,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  .tip.b{background:rgba(61,139,205,0.05);border-color:rgba(61,139,205,0.2);color:var(--blue)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(212,160,23,0.3);padding:4px 12px;border-radius:4px;background:rgba(212,160,23,0.08)}
+  .nav-link:hover{background:rgba(212,160,23,0.18)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+<link rel="icon" type="image/svg+xml" href="../assets/jq.svg">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ JSON / YAML Processing</div>
+      <img src="../assets/jq.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(70%) sepia(60%) saturate(500%) hue-rotate(10deg)">
+      <h1><span>jq</span> / yq<br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ jq '.[] | .name' / yq '.spec.containers[0]'</p>
+    </div>
+    <div class="meta"><strong>jq 1.7 · yq 4.x</strong><br>JSON · YAML · TOML<br>Filter · Transform<br>select · map · reduce</div>
+  </div>
+</header>
+<main>
+
+<div class="section t-yellow">
+  <div class="section-header"><div class="section-icon">{}</div><div class="section-title">jq — Grundlagen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Basis-Zugriff</div>
+      <code><span class="cm"># Identity (pretty-print):</span>
+<span class="kw">jq</span> <span class="val">'.'</span> file.json
+<span class="cm"># Feld-Zugriff:</span>
+<span class="kw">jq</span> <span class="val">'.name'</span> file.json
+<span class="kw">jq</span> <span class="val">'.user.email'</span> file.json
+<span class="kw">jq</span> <span class="val">'.items[0]'</span> file.json
+<span class="kw">jq</span> <span class="val">'.items[1:3]'</span> file.json  <span class="cm"># Slice</span>
+<span class="kw">jq</span> <span class="val">'.items[-1]'</span> file.json  <span class="cm"># Letztes Element</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Arrays iterieren</div>
+      <code><span class="cm"># Array-Iterator:</span>
+<span class="kw">jq</span> <span class="val">'.[]'</span> file.json
+<span class="cm"># Feld aus Array:</span>
+<span class="kw">jq</span> <span class="val">'.[] | .name'</span> file.json
+<span class="cm"># Kompakt (-c) + Raw (-r für Strings):</span>
+<span class="kw">jq</span> <span class="fl">-r</span> <span class="val">'.[] | .name'</span> file.json
+<span class="kw">jq</span> <span class="fl">-c</span> <span class="val">'.items[]'</span> file.json</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Objekte konstruieren</div>
+      <code><span class="cm"># Neues Objekt bauen:</span>
+<span class="kw">jq</span> <span class="val">'.[] | {name: .name, age: .age}'</span> file.json
+<span class="cm"># Array bauen:</span>
+<span class="kw">jq</span> <span class="val">'[.[] | .name]'</span> file.json
+<span class="cm"># String-Interpolation:</span>
+<span class="kw">jq</span> <span class="fl">-r</span> <span class="val">'.[] | "\(.name) - \(.age)"'</span> file.json</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-green">
+  <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">jq — Filtern &amp; Suchen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">select / map / if</div>
+      <code><span class="cm"># Filtern:</span>
+<span class="kw">jq</span> <span class="val">'.[] | select(.age > 30)'</span> file.json
+<span class="kw">jq</span> <span class="val">'.[] | select(.name == "Alice")'</span> file.json
+<span class="kw">jq</span> <span class="val">'.[] | select(.name | test("^Al"))'</span> file.json
+<span class="cm"># map (auf Arrays):</span>
+<span class="kw">jq</span> <span class="val">'map(select(.active == true))'</span> file.json
+<span class="kw">jq</span> <span class="val">'map(.name)'</span> file.json</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Nützliche Funktionen</div>
+      <code><span class="kw">jq</span> <span class="val">'length'</span> file.json           <span class="cm"># Länge</span>
+<span class="kw">jq</span> <span class="val">'keys'</span> file.json             <span class="cm"># Objekt-Keys</span>
+<span class="kw">jq</span> <span class="val">'values'</span> file.json           <span class="cm"># Werte</span>
+<span class="kw">jq</span> <span class="val">'has("name")'</span> file.json      <span class="cm"># Key vorhanden?</span>
+<span class="kw">jq</span> <span class="val">'.name // "default"'</span>         <span class="cm"># Alternative</span>
+<span class="kw">jq</span> <span class="val">'unique_by(.name)'</span>           <span class="cm"># Deduplizierung</span>
+<span class="kw">jq</span> <span class="val">'group_by(.type)'</span>            <span class="cm"># Gruppieren</span>
+<span class="kw">jq</span> <span class="val">'sort_by(.age)'</span>              <span class="cm"># Sortieren</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Aggregation &amp; Reduce</div>
+      <code><span class="kw">jq</span> <span class="val">'[.[] | .price] | add'</span>      <span class="cm"># Summe</span>
+<span class="kw">jq</span> <span class="val">'[.[] | .price] | max'</span>      <span class="cm"># Maximum</span>
+<span class="kw">jq</span> <span class="val">'[.[] | .price] | min'</span>      <span class="cm"># Minimum</span>
+<span class="kw">jq</span> <span class="val">'reduce .[] as $x (0; . + $x.price)'</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-blue">
+  <div class="section-header"><div class="section-icon">🔄</div><div class="section-title">jq — Mutation &amp; Update</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Felder ändern / hinzufügen</div>
+      <code><span class="cm"># Feld setzen:</span>
+<span class="kw">jq</span> <span class="val">'.name = "Bob"'</span> file.json
+<span class="cm"># Update-Operator |=:</span>
+<span class="kw">jq</span> <span class="val">'.items[] |= .price * 1.1'</span> file.json
+<span class="cm"># Feld löschen:</span>
+<span class="kw">jq</span> <span class="val">'del(.password)'</span> file.json
+<span class="kw">jq</span> <span class="val">'del(.[] | .secret)'</span> file.json
+<span class="cm"># Mergen:</span>
+<span class="kw">jq</span> <span class="val">'. + {"newkey": "value"}'</span> file.json</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Multi-Input</div>
+      <code><span class="cm"># Mehrere Dateien:</span>
+<span class="kw">jq</span> <span class="fl">-n</span> <span class="val">'[inputs]'</span> a.json b.json
+<span class="cm"># Aus Pipe:</span>
+<span class="kw">curl</span> <span class="fl">-s</span> api/endpoint | <span class="kw">jq</span> <span class="val">'.data[]'</span>
+<span class="cm"># Env-Variablen in jq:</span>
+<span class="kw">jq</span> <span class="fl">-n</span> <span class="fl">--arg</span> name <span class="val">"$NAME"</span> <span class="val">'{"name": $name}'</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-purple">
+  <div class="section-header"><div class="section-icon">📄</div><div class="section-title">yq — YAML-Verarbeitung</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Grundbefehle (yq v4 — mikefarah)</div>
+      <code><span class="kw">yq</span> <span class="val">'.'</span> file.yaml
+<span class="kw">yq</span> <span class="val">'.metadata.name'</span> pod.yaml
+<span class="kw">yq</span> <span class="val">'.spec.containers[0].image'</span> pod.yaml
+<span class="kw">yq</span> <span class="val">'.spec.containers[].name'</span> pod.yaml
+<span class="cm"># Mehrere Dokumente:</span>
+<span class="kw">yq</span> <span class="val">'select(.kind == "Deployment")'</span> manifest.yaml</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Werte setzen &amp; löschen</div>
+      <code><span class="cm"># In-place update (-i):</span>
+<span class="kw">yq</span> <span class="fl">-i</span> <span class="val">'.metadata.labels.env = "prod"'</span> pod.yaml
+<span class="kw">yq</span> <span class="fl">-i</span> <span class="val">'del(.metadata.annotations)'</span> pod.yaml
+<span class="cm"># Neuen Eintrag hinzufügen:</span>
+<span class="kw">yq</span> <span class="fl">-i</span> <span class="val">'.spec.replicas = 3'</span> deploy.yaml</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Konvertierung</div>
+      <code><span class="cm"># YAML → JSON:</span>
+<span class="kw">yq</span> <span class="fl">-o=json</span> file.yaml
+<span class="cm"># JSON → YAML:</span>
+<span class="kw">yq</span> <span class="fl">-p=json</span> file.json
+<span class="cm"># TOML → YAML:</span>
+<span class="kw">yq</span> <span class="fl">-p=toml</span> <span class="fl">-o=yaml</span> config.toml
+<span class="cm"># Merge mehrerer YAML-Dateien:</span>
+<span class="kw">yq</span> <span class="val">'. *+ load("override.yaml")'</span> base.yaml</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-cyan">
+  <div class="section-header"><div class="section-icon">☸</div><div class="section-title">Kubernetes + OpenStack Use Cases</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">OpenStack API-Antworten verarbeiten</div>
+      <code><span class="cm"># Server-Liste filtern:</span>
+<span class="kw">openstack</span> server list <span class="fl">-f</span> json | \
+    <span class="kw">jq</span> <span class="val">'.[] | select(.Status=="ACTIVE") | .Name'</span>
+<span class="cm"># IPs extrahieren:</span>
+<span class="kw">openstack</span> server show myvm <span class="fl">-f</span> json | \
+    <span class="kw">jq</span> <span class="val">'.addresses | to_entries[] | .value[].addr'</span>
+<span class="cm"># Volumes ohne Attachment:</span>
+<span class="kw">openstack</span> volume list <span class="fl">-f</span> json | \
+    <span class="kw">jq</span> <span class="val">'.[] | select(.Attachments==[]) | .ID'</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Kubernetes Manifests</div>
+      <code><span class="cm"># Image-Version aller Pods:</span>
+<span class="kw">kubectl</span> get pods <span class="fl">-o</span> json | \
+    <span class="kw">jq</span> <span class="val">'.items[] | {name:.metadata.name, img:.spec.containers[0].image}'</span>
+<span class="cm"># Pod-Status filtern:</span>
+<span class="kw">kubectl</span> get pods <span class="fl">-o</span> json | \
+    <span class="kw">jq</span> <span class="val">'.items[] | select(.status.phase!="Running") | .metadata.name'</span></code>
+    </div>
+  </div>
+  <div class="tip">💡 <strong>jq -r</strong> gibt Raw-Strings aus (ohne Anführungszeichen) — gut für Shell-Pipes</div>
+</div>
+
+</main>
+<footer><span>jq / yq</span> — JSON &amp; YAML Prozessoren &nbsp;·&nbsp; jqlang.github.io/jq · github.com/mikefarah/yq</footer>
+</body>
+</html>

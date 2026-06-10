@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAProxy - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#106490;--accent2:#39c5cf;--blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#001a28 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(16,100,144,0.1),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(16,100,144,0.12);border:1px solid rgba(16,100,144,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  .t-blue .section-header{background:rgba(16,100,144,0.08)}.t-blue .section-icon{background:rgba(16,100,144,0.15)}.t-blue .section-title{color:var(--accent)}
+  .t-green .section-header{background:rgba(63,185,80,0.08)}.t-green .section-icon{background:rgba(63,185,80,0.15)}.t-green .section-title{color:var(--green)}
+  .t-cyan .section-header{background:rgba(57,197,207,0.08)}.t-cyan .section-icon{background:rgba(57,197,207,0.15)}.t-cyan .section-title{color:var(--cyan)}
+  .t-purple .section-header{background:rgba(163,113,247,0.08)}.t-purple .section-icon{background:rgba(163,113,247,0.15)}.t-purple .section-title{color:var(--purple)}
+  .t-yellow .section-header{background:rgba(240,160,48,0.08)}.t-yellow .section-icon{background:rgba(240,160,48,0.15)}.t-yellow .section-title{color:#f0a030}
+  .t-red .section-header{background:rgba(244,112,103,0.08)}.t-red .section-icon{background:rgba(244,112,103,0.15)}.t-red .section-title{color:var(--red)}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:#106490;font-weight:700}.fl{color:#3d8bcd}.val{color:#3fb950}.cm{color:#7d8590;font-style:italic}.var{color:#a371f7}.nu{color:#f47067}.cy{color:#39c5cf}
+  .tip{padding:8px 16px;background:rgba(16,100,144,0.05);border-top:1px dashed rgba(16,100,144,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(16,100,144,0.3);padding:4px 12px;border-radius:4px;background:rgba(16,100,144,0.08)}
+  .nav-link:hover{background:rgba(16,100,144,0.18)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+<link rel="icon" type="image/svg+xml" href="../assets/haproxy.svg">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Load Balancer Reference</div>
+      <img src="../assets/haproxy.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(30%) sepia(80%) saturate(500%) hue-rotate(180deg)">
+      <h1><span>HAProxy</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ haproxy -f /etc/haproxy/haproxy.cfg -- Reliable Load Balancer</p>
+    </div>
+    <div class="meta"><strong>HAProxy 2.8 / 3.x</strong><br>Frontend · Backend · ACL<br>SSL/TLS · Health Checks<br>Stats · Runtime API</div>
+  </div>
+</header>
+<main>
+
+<div class="section t-blue">
+  <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">Grundstruktur — haproxy.cfg</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Minimale Konfigurationsstruktur</div>
+      <code><span class="kw">global</span>
+    log /dev/log local0
+    maxconn <span class="nu">4096</span>
+    user haproxy
+    group haproxy
+    daemon
+
+<span class="kw">defaults</span>
+    mode <span class="val">http</span>
+    timeout connect <span class="nu">5s</span>
+    timeout client  <span class="nu">30s</span>
+    timeout server  <span class="nu">30s</span>
+    log global
+    option httplog</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Config testen &amp; neu laden</div>
+      <code><span class="kw">haproxy</span> <span class="fl">-f</span> /etc/haproxy/haproxy.cfg <span class="fl">-c</span>
+<span class="kw">systemctl</span> reload haproxy
+<span class="kw">haproxy</span> <span class="fl">-f</span> haproxy.cfg <span class="fl">-sf</span> $(cat /var/run/haproxy.pid)</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-cyan">
+  <div class="section-header"><div class="section-icon">🔌</div><div class="section-title">Frontend</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">HTTP Frontend</div>
+      <code><span class="kw">frontend</span> <span class="val">http-in</span>
+    bind *:<span class="nu">80</span>
+    default_backend <span class="val">webservers</span>
+    <span class="cm"># Mit ACL-Routing:</span>
+    use_backend <span class="val">api-servers</span> if { path_beg <span class="fl">/api/</span> }</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">HTTPS Frontend (SSL-Termination)</div>
+      <code><span class="kw">frontend</span> <span class="val">https-in</span>
+    bind *:<span class="nu">443</span> ssl crt <span class="val">/etc/haproxy/certs/</span>
+    bind *:<span class="nu">443</span> ssl crt <span class="val">/etc/ssl/cert.pem</span>
+    http-request redirect scheme https unless { ssl_fc }
+    default_backend <span class="val">webservers</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">TCP Frontend (L4 Load Balancing)</div>
+      <code><span class="kw">frontend</span> <span class="val">mysql-in</span>
+    bind *:<span class="nu">3306</span>
+    mode <span class="val">tcp</span>
+    default_backend <span class="val">mysql-cluster</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-green">
+  <div class="section-header"><div class="section-icon">🖥</div><div class="section-title">Backend</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">HTTP Backend mit Health Check</div>
+      <code><span class="kw">backend</span> <span class="val">webservers</span>
+    balance <span class="val">roundrobin</span>
+    option httpchk GET <span class="fl">/health</span>
+    http-check expect status <span class="nu">200</span>
+    server <span class="val">web1</span> <span class="nu">10.0.0.1:80</span> check
+    server <span class="val">web2</span> <span class="nu">10.0.0.2:80</span> check
+    server <span class="val">web3</span> <span class="nu">10.0.0.3:80</span> check backup</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Server-Optionen</div>
+      <code>server <span class="val">web1</span> <span class="nu">10.0.0.1:80</span> \
+    check inter <span class="nu">2s</span> rise <span class="nu">2</span> fall <span class="nu">3</span> \
+    weight <span class="nu">10</span> maxconn <span class="nu">100</span>
+server <span class="val">web2</span> <span class="nu">10.0.0.2:80</span> \
+    check ssl verify none</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Load-Balancing Algorithmen</div>
+      <code>balance <span class="val">roundrobin</span>   <span class="cm"># Standard</span>
+balance <span class="val">leastconn</span>    <span class="cm"># Wenigste Verbindungen</span>
+balance <span class="val">source</span>       <span class="cm"># IP-Hash (sticky)</span>
+balance <span class="val">uri</span>          <span class="cm"># URI-Hash</span>
+balance <span class="val">first</span>        <span class="cm"># Erster verfügbarer</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Sticky Sessions (Cookie)</div>
+      <code><span class="kw">backend</span> <span class="val">webservers</span>
+    cookie <span class="val">SERVERID</span> insert indirect nocache
+    server <span class="val">web1</span> <span class="nu">10.0.0.1:80</span> check cookie <span class="val">web1</span>
+    server <span class="val">web2</span> <span class="nu">10.0.0.2:80</span> check cookie <span class="val">web2</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-yellow">
+  <div class="section-header"><div class="section-icon">🎯</div><div class="section-title">ACLs &amp; Conditions</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">ACL Definitionen</div>
+      <code><span class="cm"># In frontend/listen:</span>
+acl <span class="val">is_api</span>     path_beg <span class="fl">/api/</span>
+acl <span class="val">is_static</span>  path_end <span class="fl">.jpg .png .css .js</span>
+acl <span class="val">is_post</span>    method POST
+acl <span class="val">is_local</span>   src <span class="nu">192.168.0.0/24</span>
+acl <span class="val">is_host</span>    hdr(host) -i api.example.com</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">ACL-basiertes Routing</div>
+      <code>use_backend <span class="val">api-servers</span>    if <span class="val">is_api</span>
+use_backend <span class="val">static-servers</span> if <span class="val">is_static</span>
+use_backend <span class="val">api-servers</span>    if <span class="val">is_host</span>
+http-request deny             if !<span class="val">is_local</span>
+http-request redirect location <span class="val">https://%[hdr(Host)]%[capture.req.uri]</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Header manipulieren</div>
+      <code>http-request set-header X-Forwarded-Proto https
+http-request add-header X-Real-IP %[src]
+http-response del-header Server
+http-response set-header Strict-Transport-Security \
+    "max-age=31536000"</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-blue">
+  <div class="section-header"><div class="section-icon">🔒</div><div class="section-title">SSL/TLS</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">SSL Konfiguration</div>
+      <code>bind *:<span class="nu">443</span> ssl crt <span class="val">/etc/haproxy/cert.pem</span> \
+    alpn h2,http/1.1 \
+    ssl-min-ver TLSv1.2
+ssl-default-bind-ciphers ECDHE+AESGCM:ECDHE+CHACHA20
+ssl-default-bind-options no-sslv3 no-tlsv10 no-tlsv11</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Let's Encrypt / Multi-Cert</div>
+      <code><span class="cm"># Alle .pem aus Ordner laden:</span>
+bind *:<span class="nu">443</span> ssl crt <span class="val">/etc/haproxy/certs/</span>
+<span class="cm"># Zertifikat per SNI auswählen:</span>
+bind *:<span class="nu">443</span> ssl crt <span class="val">default.pem</span> \
+    crt-list <span class="val">/etc/haproxy/crt-list.txt</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">SSL Passthrough (TCP-Mode)</div>
+      <code><span class="kw">frontend</span> <span class="val">ssl-passthrough</span>
+    mode tcp
+    tcp-request inspect-delay 5s
+    tcp-request content accept if { req.ssl_hello_type 1 }
+    use_backend <span class="val">ssl-backend</span> if { req.ssl_sni -i secure.example.com }</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-purple">
+  <div class="section-header"><div class="section-icon">📊</div><div class="section-title">Stats &amp; Runtime API</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Stats-Seite aktivieren</div>
+      <code><span class="kw">listen</span> <span class="val">stats</span>
+    bind *:<span class="nu">8404</span>
+    stats enable
+    stats uri /stats
+    stats refresh <span class="nu">10s</span>
+    stats auth <span class="val">admin:secret</span>
+    stats show-node
+    stats show-legends</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Runtime API (UNIX Socket)</div>
+      <code><span class="cm"># In global:</span>
+stats socket /var/run/haproxy.sock mode <span class="nu">600</span> level admin
+
+<span class="cm"># Befehle via socat:</span>
+<span class="kw">echo</span> "show stat" | <span class="kw">socat</span> stdio /var/run/haproxy.sock
+<span class="kw">echo</span> "show info" | <span class="kw">socat</span> stdio /var/run/haproxy.sock</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Server dynamisch steuern</div>
+      <code><span class="cm"># Server deaktivieren:</span>
+<span class="kw">echo</span> "disable server webservers/web1" | \
+    <span class="kw">socat</span> stdio /var/run/haproxy.sock
+<span class="cm"># Server aktivieren:</span>
+<span class="kw">echo</span> "enable server webservers/web1" | \
+    <span class="kw">socat</span> stdio /var/run/haproxy.sock
+<span class="cm"># Server-Gewicht ändern:</span>
+<span class="kw">echo</span> "set weight webservers/web1 50" | \
+    <span class="kw">socat</span> stdio /var/run/haproxy.sock</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">haproxyctl / hatop</div>
+      <code><span class="kw">hatop</span> <span class="fl">-s</span> /var/run/haproxy.sock   <span class="cm"># Interaktiv</span>
+<span class="kw">haproxyctl</span> show info
+<span class="kw">haproxyctl</span> show stat</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-green">
+  <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Logging &amp; Debug</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Log-Konfiguration</div>
+      <code><span class="cm"># global:</span>
+log /dev/log local0 info
+log /dev/log local1 notice
+
+<span class="cm"># defaults:</span>
+option httplog
+option dontlognull
+log-format "%ci:%cp [%t] %ft %b/%s %Tq/%Tw/%Tc/%Tr/%Ta %ST %B %tsc %ac/%fc/%bc/%sc/%rc %{+Q}r"</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Logs anzeigen</div>
+      <code><span class="kw">journalctl</span> <span class="fl">-u</span> haproxy <span class="fl">-f</span>
+<span class="kw">tail</span> <span class="fl">-f</span> /var/log/haproxy.log</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Nützliche Optionen (defaults)</div>
+      <code>option forwardfor       <span class="cm"># X-Forwarded-For</span>
+option http-server-close <span class="cm"># Verbindung trennen</span>
+option redispatch       <span class="cm"># Bei Ausfall neuer Server</span>
+retries <span class="nu">3</span>
+errorfile <span class="nu">503</span> /etc/haproxy/errors/503.http</code>
+    </div>
+  </div>
+  <div class="tip g">💡 OpenStack: HAProxy vor Keystone, Nova-API, Neutron und Horizon</div>
+</div>
+
+</main>
+<footer><span>haproxy</span> — Reliable High-Performance TCP/HTTP Load Balancer &nbsp;·&nbsp; haproxy.org</footer>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitLab CI / GitHub Actions - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#fc6d26;--accent2:#ff9060;--blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#1a0800 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(252,109,38,0.09),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(252,109,38,0.12);border:1px solid rgba(252,109,38,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  .t-orange .section-header{background:rgba(252,109,38,0.08)}.t-orange .section-icon{background:rgba(252,109,38,0.15)}.t-orange .section-title{color:var(--accent)}
+  .t-green .section-header{background:rgba(63,185,80,0.08)}.t-green .section-icon{background:rgba(63,185,80,0.15)}.t-green .section-title{color:var(--green)}
+  .t-blue .section-header{background:rgba(61,139,205,0.08)}.t-blue .section-icon{background:rgba(61,139,205,0.15)}.t-blue .section-title{color:var(--blue)}
+  .t-purple .section-header{background:rgba(163,113,247,0.08)}.t-purple .section-icon{background:rgba(163,113,247,0.15)}.t-purple .section-title{color:var(--purple)}
+  .t-cyan .section-header{background:rgba(57,197,207,0.08)}.t-cyan .section-icon{background:rgba(57,197,207,0.15)}.t-cyan .section-title{color:var(--cyan)}
+  .t-yellow .section-header{background:rgba(240,160,48,0.08)}.t-yellow .section-icon{background:rgba(240,160,48,0.15)}.t-yellow .section-title{color:#f0a030}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:#fc6d26;font-weight:700}.fl{color:#3d8bcd}.val{color:#3fb950}.cm{color:#7d8590;font-style:italic}.var{color:#a371f7}.nu{color:#f47067}.cy{color:#39c5cf}
+  .tip{padding:8px 16px;background:rgba(252,109,38,0.05);border-top:1px dashed rgba(252,109,38,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(252,109,38,0.3);padding:4px 12px;border-radius:4px;background:rgba(252,109,38,0.08)}
+  .nav-link:hover{background:rgba(252,109,38,0.18)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+<link rel="icon" type="image/svg+xml" href="../assets/gitlab-ci.svg">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ CI/CD Pipelines</div>
+      <img src="../assets/gitlab-ci.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(55%) sepia(80%) saturate(700%) hue-rotate(340deg)">
+      <h1><span>GitLab CI</span> / GitHub Actions<br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ .gitlab-ci.yml / .github/workflows/*.yml</p>
+    </div>
+    <div class="meta"><strong>GitLab CI · GH Actions</strong><br>Stages · Jobs · Rules<br>Artifacts · Cache<br>Environments · Deploy</div>
+  </div>
+</header>
+<main>
+
+<div class="section t-orange">
+  <div class="section-header"><div class="section-icon">🚀</div><div class="section-title">GitLab CI — Grundstruktur</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">.gitlab-ci.yml — Minimal-Beispiel</div>
+      <code>stages:
+  - <span class="val">build</span>
+  - <span class="val">test</span>
+  - <span class="val">deploy</span>
+
+<span class="kw">variables:</span>
+  IMAGE: <span class="val">registry.example.com/myapp</span>
+  APP_ENV: <span class="val">staging</span>
+
+build-job:
+  stage: <span class="val">build</span>
+  image: <span class="val">docker:24</span>
+  script:
+    - docker build <span class="fl">-t</span> <span class="var">$IMAGE</span>:<span class="var">$CI_COMMIT_SHA</span> .
+    - docker push <span class="var">$IMAGE</span>:<span class="var">$CI_COMMIT_SHA</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Vordefinierte Variablen</div>
+      <code><span class="var">$CI_COMMIT_SHA</span>        <span class="cm"># Commit-Hash</span>
+<span class="var">$CI_COMMIT_SHORT_SHA</span>  <span class="cm"># 8-stellig</span>
+<span class="var">$CI_COMMIT_BRANCH</span>     <span class="cm"># Branch-Name</span>
+<span class="var">$CI_COMMIT_TAG</span>        <span class="cm"># Tag-Name</span>
+<span class="var">$CI_PIPELINE_ID</span>       <span class="cm"># Pipeline-ID</span>
+<span class="var">$CI_PROJECT_NAME</span>      <span class="cm"># Projekt-Name</span>
+<span class="var">$CI_REGISTRY</span>          <span class="cm"># Registry-URL</span>
+<span class="var">$CI_REGISTRY_USER</span>     <span class="cm"># Registry-User</span>
+<span class="var">$CI_REGISTRY_PASSWORD</span> <span class="cm"># Registry-Pass</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-blue">
+  <div class="section-header"><div class="section-icon">🎯</div><div class="section-title">Jobs — Optionen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Job-Konfiguration</div>
+      <code>deploy-prod:
+  stage: <span class="val">deploy</span>
+  image: <span class="val">alpine:3.18</span>
+  environment:
+    name: <span class="val">production</span>
+    url: https://myapp.example.com
+  only:
+    - <span class="val">main</span>
+  when: <span class="val">manual</span>
+  needs: [<span class="val">build-job</span>, <span class="val">test-job</span>]
+  tags:
+    - <span class="val">production-runner</span>
+  allow_failure: <span class="val">false</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">rules: (empfohlen statt only/except)</div>
+      <code>rules:
+  - if: <span class="val">'$CI_COMMIT_BRANCH == "main"'</span>
+    when: <span class="val">always</span>
+  - if: <span class="val">'$CI_COMMIT_TAG =~ /^v\d+/'</span>
+    when: <span class="val">always</span>
+  - when: <span class="val">never</span>   <span class="cm"># Default: nie</span>
+<span class="cm"># Nur wenn Datei geändert:</span>
+  - changes:
+      - <span class="val">src/**/*</span>
+      - <span class="val">Dockerfile</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-green">
+  <div class="section-header"><div class="section-icon">💾</div><div class="section-title">Artifacts &amp; Cache</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Artifacts</div>
+      <code>artifacts:
+  paths:
+    - <span class="val">dist/</span>
+    - <span class="val">reports/</span>
+  reports:
+    junit: <span class="val">test-results.xml</span>
+    coverage_report:
+      coverage_format: <span class="val">cobertura</span>
+      path: <span class="val">coverage.xml</span>
+  expire_in: <span class="val">1 week</span>
+  when: <span class="val">always</span>   <span class="cm"># auch bei Fehler</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Cache</div>
+      <code>cache:
+  key: <span class="val">"$CI_COMMIT_REF_SLUG"</span>
+  paths:
+    - <span class="val">.npm/</span>
+    - <span class="val">vendor/</span>
+  policy: <span class="val">pull-push</span>   <span class="cm"># pull / push</span>
+<span class="cm"># Per-Branch-Cache:</span>
+cache:
+  key:
+    files:
+      - <span class="val">package-lock.json</span>
+  paths:
+    - <span class="val">node_modules/</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-purple">
+  <div class="section-header"><div class="section-icon">🔁</div><div class="section-title">Templates &amp; Includes</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">include &amp; extends</div>
+      <code>include:
+  - local: <span class="val">'.ci/templates.yml'</span>
+  - project: <span class="val">'group/shared-ci'</span>
+    ref: <span class="val">main</span>
+    file: <span class="val">'/templates/docker.yml'</span>
+  - template: <span class="val">Security/SAST.gitlab-ci.yml</span>
+
+<span class="cm"># extends (Vererbung):</span>
+.base-deploy:
+  script:
+    - <span class="kw">echo</span> <span class="val">"deploying..."</span>
+
+deploy-dev:
+  extends: <span class="val">.base-deploy</span>
+  variables:
+    ENV: <span class="val">dev</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Parallel &amp; Matrix</div>
+      <code>test:
+  script: pytest
+  parallel:
+    matrix:
+      - PYTHON: [<span class="val">"3.10"</span>, <span class="val">"3.11"</span>, <span class="val">"3.12"</span>]
+        OS: [<span class="val">"ubuntu"</span>, <span class="val">"alpine"</span>]</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-cyan">
+  <div class="section-header"><div class="section-icon">🐙</div><div class="section-title">GitHub Actions</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">.github/workflows/ci.yml — Grundstruktur</div>
+      <code>name: <span class="val">CI</span>
+
+on:
+  push:
+    branches: [<span class="val">main</span>]
+  pull_request:
+    branches: [<span class="val">main</span>]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: <span class="val">ubuntu-latest</span>
+    steps:
+      - uses: <span class="val">actions/checkout@v4</span>
+      - name: <span class="val">Setup Node</span>
+        uses: <span class="val">actions/setup-node@v4</span>
+        with:
+          node-version: <span class="val">'20'</span>
+      - run: npm ci
+      - run: npm test</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">GitHub Actions — Umgebungen &amp; Secrets</div>
+      <code><span class="cm"># Secrets aus GitHub:</span>
+env:
+  TOKEN: <span class="var">${{ secrets.DEPLOY_TOKEN }}</span>
+  ENV: <span class="var">${{ vars.APP_ENV }}</span>
+
+<span class="cm"># Environment mit Approval:</span>
+jobs:
+  deploy:
+    environment:
+      name: <span class="val">production</span>
+      url: https://myapp.com
+    runs-on: <span class="val">ubuntu-latest</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Wichtige GitHub-Kontextvariablen</div>
+      <code><span class="var">${{ github.sha }}</span>          <span class="cm"># Commit-SHA</span>
+<span class="var">${{ github.ref_name }}</span>      <span class="cm"># Branch / Tag</span>
+<span class="var">${{ github.actor }}</span>         <span class="cm"># Auslöser-User</span>
+<span class="var">${{ github.repository }}</span>    <span class="cm"># org/repo</span>
+<span class="var">${{ github.run_id }}</span>        <span class="cm"># Run-ID</span>
+<span class="var">${{ runner.os }}</span>            <span class="cm"># Linux/macOS/Windows</span></code>
+    </div>
+  </div>
+  <div class="tip g">💡 GitLab: <strong>needs:</strong> ermöglicht DAG-Pipelines statt streng sequenzieller Stages</div>
+</div>
+
+</main>
+<footer><span>GitLab CI / GitHub Actions</span> — CI/CD Pipelines &nbsp;·&nbsp; docs.gitlab.com/ee/ci · docs.github.com/actions</footer>
+</body>
+</html>

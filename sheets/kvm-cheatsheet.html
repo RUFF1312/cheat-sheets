@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KVM / libvirt - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#c0392b;--accent2:#e74c3c;--blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--orange:#f0a030;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#110a0a 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(192,57,43,0.1),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  .legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600}
+  .chip.a{background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.3);color:var(--accent)}
+  .chip.b{background:rgba(61,139,205,0.12);border:1px solid rgba(61,139,205,0.3);color:var(--blue)}
+  .chip.c{background:rgba(63,185,80,0.12);border:1px solid rgba(63,185,80,0.3);color:var(--green)}
+  .chip.d{background:rgba(57,197,207,0.12);border:1px solid rgba(57,197,207,0.3);color:var(--cyan)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  .theme-accent .section-header{background:rgba(192,57,43,0.08)}.theme-accent .section-icon{background:rgba(192,57,43,0.15)}.theme-accent .section-title{color:var(--accent)}
+  .theme-blue .section-header{background:rgba(61,139,205,0.08)}.theme-blue .section-icon{background:rgba(61,139,205,0.15)}.theme-blue .section-title{color:var(--blue)}
+  .theme-green .section-header{background:rgba(63,185,80,0.08)}.theme-green .section-icon{background:rgba(63,185,80,0.15)}.theme-green .section-title{color:var(--green)}
+  .theme-purple .section-header{background:rgba(163,113,247,0.08)}.theme-purple .section-icon{background:rgba(163,113,247,0.15)}.theme-purple .section-title{color:var(--purple)}
+  .theme-yellow .section-header{background:rgba(240,160,48,0.08)}.theme-yellow .section-icon{background:rgba(240,160,48,0.15)}.theme-yellow .section-title{color:var(--orange)}
+  .theme-red .section-header{background:rgba(244,112,103,0.08)}.theme-red .section-icon{background:rgba(244,112,103,0.15)}.theme-red .section-title{color:var(--red)}
+  .theme-cyan .section-header{background:rgba(57,197,207,0.08)}.theme-cyan .section-icon{background:rgba(57,197,207,0.15)}.theme-cyan .section-title{color:var(--cyan)}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:var(--accent);font-weight:700}.fl{color:var(--blue)}.val{color:var(--green)}.cm{color:var(--muted);font-style:italic}.var{color:var(--purple)}.nu{color:var(--red)}.fn{color:var(--cyan);font-weight:600}.st{color:var(--green)}.bi{color:var(--blue);font-weight:600}.op{color:var(--orange)}
+  .tip{padding:8px 16px;background:rgba(192,57,43,0.05);border-top:1px dashed rgba(192,57,43,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  .tip.b{background:rgba(61,139,205,0.05);border-color:rgba(61,139,205,0.2);color:var(--blue)}
+  .tip.p{background:rgba(163,113,247,0.05);border-color:rgba(163,113,247,0.2);color:var(--purple)}
+  .tip.c{background:rgba(57,197,207,0.05);border-color:rgba(57,197,207,0.2);color:var(--cyan)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(192,57,43,0.3);padding:4px 12px;border-radius:4px;background:rgba(192,57,43,0.08)}
+  .nav-link:hover{background:rgba(192,57,43,0.15)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+<link rel="icon" type="image/svg+xml" href="../assets/kvm.svg">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Virtualization Reference</div>
+      <img src="../assets/kvm.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(22%) sepia(85%) saturate(600%) hue-rotate(326deg)">
+      <h1><span>KVM / libvirt</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ virsh / virt-install / qemu-img -- KVM hypervisor management</p>
+      <div class="legend">
+        <div class="chip a">🔴 virsh</div>
+        <div class="chip b">🔵 virt-install</div>
+        <div class="chip c">🟢 qemu-img</div>
+        <div class="chip d">🔷 Netzwerk & Storage</div>
+      </div>
+    </div>
+    <div class="meta"><strong>KVM / QEMU / libvirt</strong><br>virsh · virt-install<br>qemu-img · virt-clone<br>Nova Compute Backend</div>
+  </div>
+</header>
+<main>
+
+<div class="section theme-accent">
+  <div class="section-header"><div class="section-icon">🖥</div><div class="section-title">virsh — VMs auflisten & Status</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">VMs auflisten</div>
+<code><span class="kw">virsh</span> list                     <span class="cm"># laufende VMs</span>
+<span class="kw">virsh</span> list <span class="fl">--all</span>               <span class="cm"># alle VMs (auch gestoppte)</span>
+<span class="kw">virsh</span> list <span class="fl">--state-shutoff</span>
+<span class="kw">virsh</span> dominfo   <span class="var">myvm</span>           <span class="cm"># VM-Details</span>
+<span class="kw">virsh</span> domstate  <span class="var">myvm</span>
+<span class="kw">virsh</span> domstats  <span class="var">myvm</span>           <span class="cm"># CPU/Mem/I/O Statistiken</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">VM starten / stoppen</div>
+<code><span class="kw">virsh</span> start    <span class="var">myvm</span>           <span class="cm"># starten</span>
+<span class="kw">virsh</span> shutdown  <span class="var">myvm</span>           <span class="cm"># ACPI graceful shutdown</span>
+<span class="kw">virsh</span> destroy   <span class="var">myvm</span>           <span class="cm"># sofort stoppen (hard)</span>
+<span class="kw">virsh</span> reboot    <span class="var">myvm</span>
+<span class="kw">virsh</span> reset     <span class="var">myvm</span>           <span class="cm"># hard reset</span>
+<span class="kw">virsh</span> suspend   <span class="var">myvm</span>
+<span class="kw">virsh</span> resume    <span class="var">myvm</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Autostart & Löschen</div>
+<code><span class="kw">virsh</span> autostart <span class="var">myvm</span>          <span class="cm"># beim Host-Boot starten</span>
+<span class="kw">virsh</span> autostart <span class="fl">--disable</span> <span class="var">myvm</span>
+<span class="kw">virsh</span> undefine  <span class="var">myvm</span>           <span class="cm"># VM-Definition löschen</span>
+<span class="kw">virsh</span> undefine  <span class="var">myvm</span> <span class="fl">--remove-all-storage</span></code></div>
+  </div>
+</div>
+
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">virsh — Konfiguration & Konsole</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Konfiguration anzeigen & bearbeiten</div>
+<code><span class="kw">virsh</span> dumpxml  <span class="var">myvm</span>           <span class="cm"># XML-Konfig ausgeben</span>
+<span class="kw">virsh</span> edit     <span class="var">myvm</span>           <span class="cm"># XML-Editor öffnen</span>
+<span class="kw">virsh</span> define   <span class="val">myvm.xml</span>       <span class="cm"># VM aus XML definieren</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">CPU & RAM anpassen</div>
+<code><span class="kw">virsh</span> setvcpus  <span class="var">myvm</span> <span class="nu">4</span> <span class="fl">--live</span> <span class="fl">--config</span>
+<span class="kw">virsh</span> setmem    <span class="var">myvm</span> <span class="nu">4G</span> <span class="fl">--live</span> <span class="fl">--config</span>
+<span class="kw">virsh</span> vcpuinfo  <span class="var">myvm</span>
+<span class="kw">virsh</span> vcpupin   <span class="var">myvm</span> <span class="nu">0</span> <span class="nu">2</span>       <span class="cm"># vCPU 0 → pCPU 2 pinnen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Konsole & VNC</div>
+<code><span class="kw">virsh</span> console     <span class="var">myvm</span>        <span class="cm"># serielle Konsole (Ctrl+] zum Verlassen)</span>
+<span class="kw">virsh</span> vncdisplay  <span class="var">myvm</span>        <span class="cm"># VNC-Port anzeigen</span>
+<span class="kw">virsh</span> send-key    <span class="var">myvm</span> KEY_CTRL KEY_ALT KEY_DELETE</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Netzwerk-Interfaces der VM</div>
+<code><span class="kw">virsh</span> domiflist  <span class="var">myvm</span>         <span class="cm"># Netzwerk-Interfaces</span>
+<span class="kw">virsh</span> domifstat  <span class="var">myvm</span> vnet0   <span class="cm"># Interface-Statistiken</span>
+<span class="kw">virsh</span> domifaddr  <span class="var">myvm</span>         <span class="cm"># IP-Adressen (QEMU-Agent)</span></code></div>
+  </div>
+  <div class="tip b">💡 <strong>virsh --connect qemu+ssh://user@host/system list</strong> — remote libvirt</div>
+</div>
+
+<div class="section theme-green">
+  <div class="section-header"><div class="section-icon">📸</div><div class="section-title">virsh — Snapshots</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Snapshots verwalten</div>
+<code><span class="kw">virsh</span> snapshot-create-as <span class="var">myvm</span> <span class="val">snap1</span> \
+  <span class="fl">--description</span> <span class="st">"vor Update"</span> <span class="fl">--disk-only</span>
+<span class="kw">virsh</span> snapshot-list    <span class="var">myvm</span>
+<span class="kw">virsh</span> snapshot-info    <span class="var">myvm</span> <span class="val">snap1</span>
+<span class="kw">virsh</span> snapshot-revert  <span class="var">myvm</span> <span class="val">snap1</span>
+<span class="kw">virsh</span> snapshot-delete  <span class="var">myvm</span> <span class="val">snap1</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Checkpoint (für inkrementelles Backup)</div>
+<code><span class="kw">virsh</span> checkpoint-create-as <span class="var">myvm</span> <span class="val">chk1</span>
+<span class="kw">virsh</span> checkpoint-list  <span class="var">myvm</span>
+<span class="kw">virsh</span> backup-begin     <span class="var">myvm</span> <span class="fl">--checkpoint</span> <span class="val">chk1</span></code></div>
+  </div>
+</div>
+
+<div class="section theme-cyan">
+  <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">virsh — Netzwerk</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Netzwerke verwalten</div>
+<code><span class="kw">virsh</span> net-list <span class="fl">--all</span>
+<span class="kw">virsh</span> net-info   <span class="val">default</span>
+<span class="kw">virsh</span> net-start  <span class="val">default</span>
+<span class="kw">virsh</span> net-autostart <span class="val">default</span>
+<span class="kw">virsh</span> net-dumpxml    <span class="val">default</span>
+<span class="kw">virsh</span> net-destroy <span class="val">default</span>
+<span class="kw">virsh</span> net-undefine <span class="val">default</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Netzwerk definieren (XML)</div>
+<code><span class="cm"># /tmp/mynet.xml</span>
+&lt;network&gt;
+  &lt;name&gt;mynet&lt;/name&gt;
+  &lt;bridge name="virbr1"/&gt;
+  &lt;ip address="192.168.100.1" prefix="24"&gt;
+    &lt;dhcp&gt;&lt;range start="192.168.100.10" end="192.168.100.254"/&gt;&lt;/dhcp&gt;
+  &lt;/ip&gt;
+&lt;/network&gt;
+<span class="kw">virsh</span> net-define /tmp/mynet.xml</code></div>
+  </div>
+</div>
+
+<div class="section theme-purple">
+  <div class="section-header"><div class="section-icon">💾</div><div class="section-title">virsh — Storage Pool & Volumes</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Storage Pools</div>
+<code><span class="kw">virsh</span> pool-list <span class="fl">--all</span>
+<span class="kw">virsh</span> pool-info   <span class="val">default</span>
+<span class="kw">virsh</span> pool-start  <span class="val">default</span>
+<span class="kw">virsh</span> pool-refresh <span class="val">default</span>
+<span class="kw">virsh</span> pool-define-as <span class="val">mypool</span> dir <span class="fl">--target</span> <span class="val">/data/vms</span>
+<span class="kw">virsh</span> pool-build  <span class="val">mypool</span>
+<span class="kw">virsh</span> pool-autostart <span class="val">mypool</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Volumes verwalten</div>
+<code><span class="kw">virsh</span> vol-list   <span class="val">default</span>
+<span class="kw">virsh</span> vol-info   <span class="val">default</span> <span class="val">myvm.qcow2</span>
+<span class="kw">virsh</span> vol-create-as <span class="val">default</span> <span class="val">myvm.qcow2</span> <span class="nu">20G</span> \
+  <span class="fl">--format</span> <span class="val">qcow2</span>
+<span class="kw">virsh</span> vol-delete <span class="val">default</span> <span class="val">myvm.qcow2</span>
+<span class="kw">virsh</span> vol-resize <span class="var">/var/lib/libvirt/images/myvm.qcow2</span> <span class="nu">30G</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Disk anhängen / trennen</div>
+<code><span class="kw">virsh</span> attach-disk <span class="var">myvm</span> \
+  <span class="val">/var/lib/libvirt/images/data.qcow2</span> vdb \
+  <span class="fl">--persistent</span> <span class="fl">--driver</span> <span class="val">qemu</span> <span class="fl">--subdriver</span> <span class="val">qcow2</span>
+<span class="kw">virsh</span> detach-disk <span class="var">myvm</span> vdb <span class="fl">--persistent</span></code></div>
+  </div>
+</div>
+
+<div class="section theme-accent">
+  <div class="section-header"><div class="section-icon">🛠</div><div class="section-title">virt-install — VM erstellen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">VM aus ISO installieren</div>
+<code><span class="kw">virt-install</span> \
+  <span class="fl">--name</span>     <span class="val">myvm</span> \
+  <span class="fl">--memory</span>   <span class="nu">2048</span> \
+  <span class="fl">--vcpus</span>    <span class="nu">2</span> \
+  <span class="fl">--disk</span>     <span class="val">size=20,format=qcow2</span> \
+  <span class="fl">--cdrom</span>    <span class="val">/iso/debian-12.iso</span> \
+  <span class="fl">--network</span>  <span class="val">bridge=virbr0</span> \
+  <span class="fl">--os-variant</span> <span class="val">debian12</span> \
+  <span class="fl">--graphics</span> <span class="val">vnc</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">VM aus Cloud-Image (OpenStack-Stil)</div>
+<code><span class="kw">virt-install</span> \
+  <span class="fl">--name</span>       <span class="val">cloud-vm</span> \
+  <span class="fl">--memory</span>     <span class="nu">2048</span> \
+  <span class="fl">--vcpus</span>      <span class="nu">2</span> \
+  <span class="fl">--disk</span>       <span class="val">path=/var/lib/libvirt/images/ubuntu.qcow2</span> \
+  <span class="fl">--cloud-init</span> <span class="val">user-data=user-data.yaml</span> \
+  <span class="fl">--import</span> \
+  <span class="fl">--os-variant</span> <span class="val">ubuntu22.04</span> \
+  <span class="fl">--noautoconsole</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">OS-Varianten auflisten</div>
+<code><span class="kw">osinfo-query</span> os | <span class="kw">grep</span> <span class="val">ubuntu</span>
+<span class="kw">virt-install</span> <span class="fl">--os-variant</span> <span class="val">list</span></code></div>
+  </div>
+  <div class="tip">💡 <strong>--graphics none --console pty</strong> für reine CLI-VMs ohne VNC</div>
+</div>
+
+<div class="section theme-yellow">
+  <div class="section-header"><div class="section-icon">🖼</div><div class="section-title">qemu-img — Disk-Images</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Image erstellen & Info</div>
+<code><span class="kw">qemu-img</span> create <span class="fl">-f</span> <span class="val">qcow2</span> <span class="val">disk.qcow2</span> <span class="nu">20G</span>
+<span class="kw">qemu-img</span> create <span class="fl">-f</span> <span class="val">qcow2</span> <span class="fl">-b</span> <span class="val">base.qcow2</span> <span class="fl">-F</span> <span class="val">qcow2</span> \
+  <span class="val">overlay.qcow2</span>                <span class="cm"># Copy-on-Write Overlay</span>
+<span class="kw">qemu-img</span> info    <span class="val">disk.qcow2</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Konvertieren & Komprimieren</div>
+<code><span class="kw">qemu-img</span> convert <span class="fl">-f</span> <span class="val">vmdk</span> <span class="fl">-O</span> <span class="val">qcow2</span> <span class="val">vm.vmdk</span> <span class="val">vm.qcow2</span>
+<span class="kw">qemu-img</span> convert <span class="fl">-O</span> <span class="val">qcow2</span> <span class="fl">-c</span> <span class="val">raw.img</span> <span class="val">compressed.qcow2</span>
+<span class="kw">qemu-img</span> convert <span class="fl">-O</span> <span class="val">raw</span> <span class="val">disk.qcow2</span> <span class="val">disk.raw</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Größe ändern & prüfen</div>
+<code><span class="kw">qemu-img</span> resize  <span class="val">disk.qcow2</span> <span class="nu">+10G</span>
+<span class="kw">qemu-img</span> resize  <span class="val">disk.qcow2</span> <span class="nu">30G</span>   <span class="cm"># absolute Größe</span>
+<span class="kw">qemu-img</span> check   <span class="val">disk.qcow2</span>
+<span class="kw">qemu-img</span> snapshot <span class="fl">-l</span> <span class="val">disk.qcow2</span>  <span class="cm"># interne Snapshots</span></code></div>
+  </div>
+  <div class="tip g">💡 Nach qemu-img resize: Partition/Dateisystem im Gast ebenfalls vergrößern (growpart, resize2fs)</div>
+</div>
+
+<div class="section theme-blue">
+  <div class="section-header"><div class="section-icon">📋</div><div class="section-title">virt-clone & Migration</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">VM klonen</div>
+<code><span class="kw">virt-clone</span> \
+  <span class="fl">--original</span> <span class="var">myvm</span> \
+  <span class="fl">--name</span>     <span class="val">myvm-clone</span> \
+  <span class="fl">--auto-clone</span>
+
+<span class="kw">virt-clone</span> \
+  <span class="fl">--original</span> <span class="var">myvm</span> \
+  <span class="fl">--name</span>     <span class="val">myvm-clone</span> \
+  <span class="fl">--file</span>     <span class="val">/var/lib/libvirt/images/clone.qcow2</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">VM migrieren (live)</div>
+<code><span class="kw">virsh</span> migrate <span class="fl">--live</span> <span class="var">myvm</span> \
+  <span class="val">qemu+ssh://target-host/system</span>
+
+<span class="kw">virsh</span> migrate <span class="fl">--live</span> <span class="fl">--persistent</span> \
+  <span class="fl">--undefinesource</span> <span class="var">myvm</span> \
+  <span class="val">qemu+ssh://target/system</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">virt-sysprep (Image entpersonalisieren)</div>
+<code><span class="kw">virt-sysprep</span> <span class="fl">-d</span> <span class="var">myvm</span>
+<span class="kw">virt-sysprep</span> <span class="fl">-a</span> <span class="val">disk.qcow2</span> \
+  <span class="fl">--hostname</span> <span class="val">newhost</span> <span class="fl">--root-password</span> <span class="val">password:secret</span></code></div>
+  </div>
+</div>
+
+<div class="section theme-red">
+  <div class="section-header"><div class="section-icon">🚀</div><div class="section-title">Performance & CPU-Pinning</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">CPU-Topologie & Pinning (XML)</div>
+<code>&lt;vcpu placement='static'&gt;4&lt;/vcpu&gt;
+&lt;cputune&gt;
+  &lt;vcpupin vcpu='0' cpuset='2'/&gt;
+  &lt;vcpupin vcpu='1' cpuset='3'/&gt;
+  &lt;emulatorpin cpuset='0-1'/&gt;
+&lt;/cputune&gt;
+&lt;cpu mode='host-passthrough' migratable='off'/&gt;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Hugepages</div>
+<code><span class="cm"># Host vorbereiten</span>
+<span class="kw">echo</span> <span class="nu">1024</span> &gt; /proc/sys/vm/nr_hugepages
+
+<span class="cm"># VM XML</span>
+&lt;memoryBacking&gt;
+  &lt;hugepages/&gt;
+&lt;/memoryBacking&gt;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">virtio & CPU-Features</div>
+<code><span class="cm"># Netzwerk</span>
+<span class="kw">virsh</span> attach-interface <span class="var">myvm</span> bridge virbr0 \
+  <span class="fl">--model</span> <span class="val">virtio</span> <span class="fl">--persistent</span>
+
+<span class="cm"># Disk: virtio-scsi</span>
+&lt;controller type='scsi' model='virtio-scsi'/&gt;
+
+<span class="kw">virsh</span> nodeinfo              <span class="cm"># NUMA-Topologie</span>
+<span class="kw">virsh</span> capabilities         <span class="cm"># Host-Fähigkeiten</span></code></div>
+  </div>
+  <div class="tip p">💡 <strong>virt-top</strong> — htop-ähnliche Live-Ansicht aller VMs (CPU/RAM/IO)</div>
+</div>
+
+</main>
+<footer><span>virsh</span> · <span>virt-install</span> · <span>qemu-img</span> — TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</footer>
+</body>
+</html>

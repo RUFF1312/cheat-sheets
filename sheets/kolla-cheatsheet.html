@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kolla-Ansible - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#ed1944;--accent2:#ff5c7a;--blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#1e0008 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(237,25,68,0.1),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(237,25,68,0.12);border:1px solid rgba(237,25,68,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  .t-red .section-header{background:rgba(237,25,68,0.08)}.t-red .section-icon{background:rgba(237,25,68,0.15)}.t-red .section-title{color:var(--accent)}
+  .t-green .section-header{background:rgba(63,185,80,0.08)}.t-green .section-icon{background:rgba(63,185,80,0.15)}.t-green .section-title{color:var(--green)}
+  .t-blue .section-header{background:rgba(61,139,205,0.08)}.t-blue .section-icon{background:rgba(61,139,205,0.15)}.t-blue .section-title{color:var(--blue)}
+  .t-purple .section-header{background:rgba(163,113,247,0.08)}.t-purple .section-icon{background:rgba(163,113,247,0.15)}.t-purple .section-title{color:var(--purple)}
+  .t-cyan .section-header{background:rgba(57,197,207,0.08)}.t-cyan .section-icon{background:rgba(57,197,207,0.15)}.t-cyan .section-title{color:var(--cyan)}
+  .t-yellow .section-header{background:rgba(240,160,48,0.08)}.t-yellow .section-icon{background:rgba(240,160,48,0.15)}.t-yellow .section-title{color:#f0a030}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:#ed1944;font-weight:700}.fl{color:#3d8bcd}.val{color:#3fb950}.cm{color:#7d8590;font-style:italic}.var{color:#a371f7}.nu{color:#f47067}.cy{color:#39c5cf}.st{color:#3fb950}.op{color:#e8a24e}
+  .tip{padding:8px 16px;background:rgba(237,25,68,0.05);border-top:1px dashed rgba(237,25,68,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(237,25,68,0.3);padding:4px 12px;border-radius:4px;background:rgba(237,25,68,0.08)}
+  .nav-link:hover{background:rgba(237,25,68,0.18)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+<link rel="icon" type="image/svg+xml" href="../assets/kolla.svg">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ OpenStack Deployment Reference</div>
+      <img src="../assets/kolla.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(20%) sepia(90%) saturate(700%) hue-rotate(311deg)">
+      <h1><span>Kolla-Ansible</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ kolla-ansible deploy -- OpenStack in Containern</p>
+    </div>
+    <div class="meta"><strong>Kolla-Ansible 2024.x</strong><br>Bootstrap · Deploy · Reconfigure<br>Upgrade · globals.yml<br>Multinode · All-in-One</div>
+  </div>
+</header>
+<main>
+
+<div class="section t-red">
+  <div class="section-header"><div class="section-icon">📦</div><div class="section-title">Installation & Vorbereitung</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Kolla-Ansible installieren (Deployment-Node)</div>
+      <code><span class="kw">pip</span> install kolla-ansible
+<span class="cm"># oder aus Git für bleeding-edge:</span>
+<span class="kw">pip</span> install git+https://opendev.org/openstack/kolla-ansible
+
+<span class="cm"># Konfigurationsdateien anlegen:</span>
+<span class="kw">mkdir</span> <span class="fl">-p</span> /etc/kolla
+<span class="kw">cp</span> <span class="val">$(kolla-ansible --version-data 2>/dev/null | grep share | awk '{print $2}')/kolla-ansible/etc/kolla/</span>globals.yml /etc/kolla/
+<span class="cm"># Einfacher mit pip-Pfad:</span>
+<span class="kw">cp</span> /usr/local/share/kolla-ansible/etc_examples/kolla/globals.yml /etc/kolla/
+<span class="kw">cp</span> /usr/local/share/kolla-ansible/etc_examples/kolla/passwords.yml /etc/kolla/</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Passwörter generieren</div>
+      <code><span class="kw">kolla-genpwd</span>
+<span class="cm"># oder einzelnes Passwort lesen:</span>
+<span class="kw">grep</span> keystone_admin_password /etc/kolla/passwords.yml</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-blue">
+  <div class="section-header"><div class="section-icon">📋</div><div class="section-title">Inventory — Multinode</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Inventory-Template kopieren</div>
+      <code><span class="kw">cp</span> /usr/local/share/kolla-ansible/ansible/inventory/multinode ./inventory
+<span class="kw">cp</span> /usr/local/share/kolla-ansible/ansible/inventory/all-in-one ./inventory</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">multinode Inventory — Struktur</div>
+      <code><span class="kw">[control]</span>
+controller01  ansible_user=ubuntu ansible_become=true
+controller02
+controller03
+
+<span class="kw">[network]</span>
+controller01
+controller02
+
+<span class="kw">[compute]</span>
+compute01
+compute02
+
+<span class="kw">[storage]</span>
+storage01
+storage02
+
+<span class="kw">[monitoring]</span>
+controller01
+
+<span class="kw">[deployment]</span>
+localhost  ansible_connection=local</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-green">
+  <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">globals.yml — Schlüsseloptionen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Basis-Konfiguration</div>
+      <code><span class="cm"># /etc/kolla/globals.yml</span>
+<span class="var">kolla_base_distro</span>: <span class="st">"ubuntu"</span>          <span class="cm"># centos|ubuntu|debian</span>
+<span class="var">openstack_release</span>: <span class="st">"2024.1"</span>          <span class="cm"># Zed, 2023.x, 2024.x</span>
+<span class="var">kolla_internal_vip_address</span>: <span class="st">"10.0.0.100"</span>
+<span class="var">kolla_external_vip_address</span>: <span class="st">"192.168.1.100"</span>
+<span class="var">network_interface</span>: <span class="st">"eth0"</span>
+<span class="var">neutron_external_interface</span>: <span class="st">"eth1"</span>  <span class="cm"># kein IP!</span>
+<span class="var">kolla_enable_tls_internal</span>: <span class="st">"yes"</span>
+<span class="var">kolla_enable_tls_external</span>: <span class="st">"yes"</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Dienste aktivieren/deaktivieren</div>
+      <code><span class="var">enable_openstack_core</span>: <span class="st">"yes"</span>      <span class="cm"># Nova,Neutron,Glance,Cinder</span>
+<span class="var">enable_ceph</span>: <span class="st">"yes"</span>
+<span class="var">enable_heat</span>: <span class="st">"yes"</span>
+<span class="var">enable_octavia</span>: <span class="st">"yes"</span>
+<span class="var">enable_barbican</span>: <span class="st">"yes"</span>
+<span class="var">enable_designate</span>: <span class="st">"yes"</span>
+<span class="var">enable_prometheus</span>: <span class="st">"yes"</span>
+<span class="var">enable_grafana</span>: <span class="st">"yes"</span>
+<span class="var">enable_haproxy</span>: <span class="st">"yes"</span>              <span class="cm"># interner LB</span>
+<span class="var">nova_compute_virt_type</span>: <span class="st">"kvm"</span>     <span class="cm"># kvm|qemu</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Docker & Storage</div>
+      <code><span class="var">docker_registry</span>: <span class="st">"registry.example.com"</span>
+<span class="var">docker_registry_insecure</span>: <span class="st">"no"</span>
+<span class="var">ceph_nova_user</span>: <span class="st">"cinder"</span>
+<span class="var">cinder_backend_ceph</span>: <span class="st">"yes"</span>
+<span class="var">nova_backend_ceph</span>: <span class="st">"yes"</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-red">
+  <div class="section-header"><div class="section-icon">🚀</div><div class="section-title">Deploy-Workflow</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Vollständiger Deploy-Ablauf</div>
+      <code><span class="cm"># 1. Ansible-Verbindung testen</span>
+<span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory <span class="kw">ping</span>
+
+<span class="cm"># 2. SSH + Dependencies auf Nodes installieren</span>
+<span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory <span class="kw">bootstrap-servers</span>
+
+<span class="cm"># 3. Konfiguration vorab prüfen</span>
+<span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory <span class="kw">prechecks</span>
+
+<span class="cm"># 4. Container-Images pullen</span>
+<span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory <span class="kw">pull</span>
+
+<span class="cm"># 5. OpenStack deployen</span>
+<span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory <span class="kw">deploy</span>
+
+<span class="cm"># 6. Admin-Credentials generieren</span>
+<span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory <span class="kw">post-deploy</span>
+<span class="kw">source</span> /etc/kolla/admin-openrc.sh</code>
+    </div>
+  </div>
+  <div class="tip">💡 --tags nova,neutron — nur bestimmte Dienste deployen</div>
+</div>
+
+<div class="section t-purple">
+  <div class="section-header"><div class="section-icon">🔄</div><div class="section-title">Reconfigure, Upgrade & Destroy</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Konfiguration anwenden (ohne Re-Deploy)</div>
+      <code><span class="cm"># Konfigurationsänderung in globals.yml → anwenden:</span>
+<span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory <span class="kw">reconfigure</span>
+<span class="cm"># Nur bestimmte Dienste:</span>
+<span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory <span class="kw">reconfigure</span> <span class="fl">--tags</span> nova</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Upgrade auf neue OpenStack-Version</div>
+      <code><span class="cm"># globals.yml: openstack_release auf neue Version setzen</span>
+<span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory <span class="kw">pull</span>
+<span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory <span class="kw">prechecks</span>
+<span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory <span class="kw">upgrade</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Dienste neu starten & zerstören</div>
+      <code><span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory <span class="kw">stop</span>      <span class="cm"># Container stoppen</span>
+<span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory <span class="kw">deploy</span>     <span class="cm"># neu starten</span>
+<span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory <span class="kw">destroy</span> <span class="fl">--yes-i-really-really-mean-it</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-cyan">
+  <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">Konfiguration überschreiben</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Service-spezifische Overrides</div>
+      <code><span class="cm"># Eigene config-Snippets unter:</span>
+/etc/kolla/<span class="var">nova</span>/nova.conf
+/etc/kolla/<span class="var">neutron</span>/neutron.conf
+/etc/kolla/<span class="var">keystone</span>/keystone.conf
+
+<span class="cm"># Beispiel nova Override:</span>
+<span class="cm"># /etc/kolla/nova/nova.conf</span>
+<span class="kw">[DEFAULT]</span>
+<span class="var">cpu_allocation_ratio</span> = <span class="nu">4.0</span>
+<span class="var">ram_allocation_ratio</span> = <span class="nu">1.5</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Extra-Variablen übergeben</div>
+      <code><span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory deploy \
+  <span class="fl">-e</span> <span class="st">"nova_compute_virt_type=qemu"</span> \
+  <span class="fl">-e</span> <span class="st">"@/path/to/extra_vars.yml"</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-yellow">
+  <div class="section-header"><div class="section-icon">🐛</div><div class="section-title">Debugging & Troubleshooting</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Verbose & Check-Mode</div>
+      <code><span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory deploy <span class="fl">-v</span>    <span class="cm"># verbose</span>
+<span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory deploy <span class="fl">-vvv</span>  <span class="cm"># debug</span>
+<span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory deploy <span class="fl">--check</span> <span class="cm"># dry-run</span>
+<span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory deploy <span class="fl">--diff</span>  <span class="cm"># config diff</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Container-Logs & Status prüfen</div>
+      <code><span class="cm"># Auf einem Node:</span>
+<span class="kw">docker</span> ps <span class="fl">-a</span>                       <span class="cm"># alle Container</span>
+<span class="kw">docker</span> logs nova_compute <span class="fl">--tail</span> 50
+<span class="kw">docker</span> exec <span class="fl">-it</span> nova_compute bash
+<span class="kw">docker</span> inspect nova_compute | <span class="kw">jq</span> <span class="st">'.[0].State'</span>
+<span class="cm"># Kolla-Log-Verzeichnis:</span>
+<span class="kw">ls</span> /var/log/kolla/nova/</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Einzelnen Node targetieren</div>
+      <code><span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory deploy <span class="fl">--limit</span> compute01
+<span class="kw">kolla-ansible</span> <span class="fl">-i</span> ./inventory deploy <span class="fl">--limit</span> <span class="st">"compute01,compute02"</span></code>
+    </div>
+  </div>
+  <div class="tip g">💡 kolla-ansible certificates — TLS-Zertifikate für API-Endpunkte generieren</div>
+</div>
+
+</main>
+<footer>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide · Kolla-Ansible · OpenStack Deployment</footer>
+</body>
+</html>

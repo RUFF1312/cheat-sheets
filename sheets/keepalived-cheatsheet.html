@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keepalived - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#7e57c2;--accent2:#b39ddb;--blue:#3d8bcd;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0d1117 0%,#0e0820 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(126,87,194,0.1),transparent)}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(126,87,194,0.12);border:1px solid rgba(126,87,194,0.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+  h1 span{color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8}
+  .meta strong{color:var(--accent2)}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+  .t-purple .section-header{background:rgba(126,87,194,0.08)}.t-purple .section-icon{background:rgba(126,87,194,0.15)}.t-purple .section-title{color:var(--accent)}
+  .t-green .section-header{background:rgba(63,185,80,0.08)}.t-green .section-icon{background:rgba(63,185,80,0.15)}.t-green .section-title{color:var(--green)}
+  .t-blue .section-header{background:rgba(61,139,205,0.08)}.t-blue .section-icon{background:rgba(61,139,205,0.15)}.t-blue .section-title{color:var(--blue)}
+  .t-cyan .section-header{background:rgba(57,197,207,0.08)}.t-cyan .section-icon{background:rgba(57,197,207,0.15)}.t-cyan .section-title{color:var(--cyan)}
+  .t-yellow .section-header{background:rgba(240,160,48,0.08)}.t-yellow .section-icon{background:rgba(240,160,48,0.15)}.t-yellow .section-title{color:#f0a030}
+  .t-red .section-header{background:rgba(244,112,103,0.08)}.t-red .section-icon{background:rgba(244,112,103,0.15)}.t-red .section-title{color:var(--red)}
+  .command-list{padding:8px 0}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,0.5)}
+  .cmd-entry:last-child{border-bottom:none}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:0.3px;text-transform:uppercase}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+  .kw{color:#7e57c2;font-weight:700}.fl{color:#3d8bcd}.val{color:#3fb950}.cm{color:#7d8590;font-style:italic}.var{color:#a371f7}.nu{color:#f47067}.cy{color:#39c5cf}.st{color:#3fb950}.op{color:#e8a24e}
+  .tip{padding:8px 16px;background:rgba(126,87,194,0.05);border-top:1px dashed rgba(126,87,194,0.2);font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tip.g{background:rgba(63,185,80,0.05);border-color:rgba(63,185,80,0.2);color:var(--green)}
+  footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);max-width:1400px;margin:0 auto}
+  footer span{color:var(--accent)}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(126,87,194,0.3);padding:4px 12px;border-radius:4px;background:rgba(126,87,194,0.08)}
+  .nav-link:hover{background:rgba(126,87,194,0.18)}
+  @media(max-width:1100px){main{columns:2}}@media(max-width:700px){main{columns:1;padding:16px}header{padding:24px 16px}}
+</style>
+<link rel="icon" type="image/svg+xml" href="../assets/keepalived.svg">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ VRRP High Availability Reference</div>
+      <img src="../assets/keepalived.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(32%) sepia(70%) saturate(500%) hue-rotate(226deg)">
+      <h1><span>Keepalived</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ keepalived -f /etc/keepalived/keepalived.conf -- VRRP VIP HA</p>
+    </div>
+    <div class="meta"><strong>Keepalived 2.x</strong><br>VRRP · VIP · Failover<br>Health Checks · Unicast<br>HAProxy · OpenStack API HA</div>
+  </div>
+</header>
+<main>
+
+<div class="section t-purple">
+  <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">keepalived.conf — Grundstruktur</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">global_defs</div>
+      <code><span class="kw">global_defs</span> {
+  <span class="var">router_id</span>          LVS_NODE1
+  <span class="var">script_user</span>        root
+  <span class="var">enable_script_security</span>
+  <span class="var">notification_email</span> {
+    admin@example.com
+  }
+  <span class="var">notification_email_from</span> keepalived@node1
+  <span class="var">smtp_server</span>        127.0.0.1
+}</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">vrrp_instance — Minimalkonfiguration</div>
+      <code><span class="kw">vrrp_instance</span> VI_1 {
+  <span class="var">state</span>            MASTER          <span class="cm"># MASTER | BACKUP</span>
+  <span class="var">interface</span>        eth0
+  <span class="var">virtual_router_id</span> <span class="nu">51</span>             <span class="cm"># 1-255, unique!</span>
+  <span class="var">priority</span>         <span class="nu">100</span>            <span class="cm"># BACKUP: 99</span>
+  <span class="var">advert_int</span>       <span class="nu">1</span>              <span class="cm"># Hello-Interval Sek.</span>
+
+  <span class="var">virtual_ipaddress</span> {
+    <span class="nu">10.0.0.100</span>/24 dev eth0         <span class="cm"># VIP</span>
+  }
+}</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-blue">
+  <div class="section-header"><div class="section-icon">🔐</div><div class="section-title">VRRP — Authentication & Tracking</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Authentication</div>
+      <code><span class="kw">vrrp_instance</span> VI_1 {
+  <span class="cm">...
+  </span><span class="var">authentication</span> {
+    <span class="var">auth_type</span>  PASS          <span class="cm"># PASS | AH</span>
+    <span class="var">auth_pass</span>  secret123     <span class="cm"># max 8 Zeichen!</span>
+  }
+}</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">track_interface — Interface-Monitoring</div>
+      <code><span class="kw">vrrp_instance</span> VI_1 {
+  <span class="cm">...
+  </span><span class="var">track_interface</span> {
+    eth0          <span class="cm"># priority -= 10 wenn eth0 down</span>
+    eth1 weight <span class="fl">-20</span>
+  }
+}</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">track_script — Script-Monitoring</div>
+      <code><span class="kw">vrrp_script</span> chk_haproxy {
+  <span class="var">script</span>   <span class="st">"/usr/bin/killall -0 haproxy"</span>
+  <span class="var">interval</span> <span class="nu">2</span>    <span class="cm"># alle 2 Sekunden prüfen</span>
+  <span class="var">weight</span>   <span class="fl">-20</span>   <span class="cm"># priority -= 20 bei Fehler</span>
+  <span class="var">fall</span>     <span class="nu">3</span>    <span class="cm"># 3x Fehler → Failover</span>
+  <span class="var">rise</span>     <span class="nu">2</span>    <span class="cm"># 2x OK → wieder MASTER</span>
+}
+
+<span class="kw">vrrp_instance</span> VI_1 {
+  <span class="cm">...
+  </span><span class="var">track_script</span> {
+    chk_haproxy
+  }
+}</code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-green">
+  <div class="section-header"><div class="section-icon">📡</div><div class="section-title">Unicast — Kein Multicast-Netz</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Unicast-Konfiguration (kein IGMP nötig)</div>
+      <code><span class="kw">vrrp_instance</span> VI_1 {
+  <span class="var">state</span>        MASTER
+  <span class="var">interface</span>    eth0
+  <span class="var">virtual_router_id</span> <span class="nu">51</span>
+  <span class="var">priority</span>     <span class="nu">100</span>
+  <span class="var">advert_int</span>   <span class="nu">1</span>
+
+  <span class="var">unicast_src_ip</span>  <span class="nu">10.0.0.1</span>    <span class="cm"># eigene IP</span>
+  <span class="var">unicast_peer</span> {
+    <span class="nu">10.0.0.2</span>                  <span class="cm"># IP des anderen Nodes</span>
+    <span class="nu">10.0.0.3</span>
+  }
+
+  <span class="var">virtual_ipaddress</span> {
+    <span class="nu">10.0.0.100</span>/24
+  }
+}</code>
+    </div>
+  </div>
+  <div class="tip">💡 Unicast empfohlen für Cloud-Umgebungen (AWS, OpenStack) wo Multicast geblockt ist</div>
+</div>
+
+<div class="section t-cyan">
+  <div class="section-header"><div class="section-icon">📧</div><div class="section-title">Notify-Skripte & State-Callbacks</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">notify auf Statuswechsel reagieren</div>
+      <code><span class="kw">vrrp_instance</span> VI_1 {
+  <span class="cm">...
+  </span><span class="var">notify_master</span> <span class="st">"/etc/keepalived/notify.sh MASTER"</span>
+  <span class="var">notify_backup</span> <span class="st">"/etc/keepalived/notify.sh BACKUP"</span>
+  <span class="var">notify_fault</span>  <span class="st">"/etc/keepalived/notify.sh FAULT"</span>
+  <span class="var">notify</span>        <span class="st">"/etc/keepalived/notify.sh"</span>
+}</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">notify.sh Beispiel</div>
+      <code><span class="cm">#!/bin/bash</span>
+<span class="kw">TYPE</span>=<span class="var">$1</span>   <span class="cm"># INSTANCE | GROUP</span>
+<span class="kw">NAME</span>=<span class="var">$2</span>   <span class="cm"># Name der vrrp_instance</span>
+<span class="kw">STATE</span>=<span class="var">$3</span>  <span class="cm"># MASTER | BACKUP | FAULT</span>
+<span class="kw">logger</span> <span class="st">"Keepalived transition: $TYPE $NAME to $STATE"</span>
+<span class="kw">case</span> <span class="var">$STATE</span> <span class="kw">in</span>
+  MASTER) <span class="kw">systemctl</span> start haproxy ;;
+  BACKUP) <span class="kw">systemctl</span> stop haproxy ;;
+<span class="kw">esac</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-yellow">
+  <div class="section-header"><div class="section-icon">⚡</div><div class="section-title">HAProxy + Keepalived — HA-Kombi</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Komplette HA-Konfiguration (Node 1)</div>
+      <code><span class="kw">vrrp_script</span> chk_haproxy {
+  <span class="var">script</span>   <span class="st">"/bin/bash -c 'kill -0 $(cat /run/haproxy.pid)'"</span>
+  <span class="var">interval</span> <span class="nu">2</span>
+  <span class="var">weight</span>   <span class="fl">-20</span>
+  <span class="var">fall</span>     <span class="nu">2</span>
+  <span class="var">rise</span>     <span class="nu">2</span>
+}
+
+<span class="kw">vrrp_instance</span> VI_PUBLIC {
+  <span class="var">state</span>            MASTER
+  <span class="var">interface</span>        eth0
+  <span class="var">virtual_router_id</span> <span class="nu">51</span>
+  <span class="var">priority</span>         <span class="nu">101</span>
+  <span class="var">advert_int</span>       <span class="nu">1</span>
+  <span class="var">unicast_src_ip</span>   <span class="nu">10.0.0.1</span>
+  <span class="var">unicast_peer</span>     { <span class="nu">10.0.0.2</span> }
+  <span class="var">track_script</span>     { chk_haproxy }
+  <span class="var">virtual_ipaddress</span> {
+    <span class="nu">10.0.0.100</span>/24
+  }
+}</code>
+    </div>
+  </div>
+  <div class="tip g">💡 Node 2: state BACKUP, priority 100 — sonst identisch</div>
+</div>
+
+<div class="section t-red">
+  <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Betrieb & Debugging</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Systemctl & Konfiguration prüfen</div>
+      <code><span class="kw">systemctl</span> start keepalived
+<span class="kw">systemctl</span> enable keepalived
+<span class="kw">systemctl</span> status keepalived
+<span class="kw">keepalived</span> <span class="fl">--config-test</span> <span class="fl">-f</span> /etc/keepalived/keepalived.conf</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Debugging & Logs</div>
+      <code><span class="kw">journalctl</span> <span class="fl">-u</span> keepalived <span class="fl">-f</span>
+<span class="kw">journalctl</span> <span class="fl">-u</span> keepalived <span class="fl">--since</span> <span class="st">"5 min ago"</span>
+<span class="cm"># VIP prüfen (muss auf MASTER-Node erscheinen)</span>
+<span class="kw">ip</span> addr show eth0 | <span class="kw">grep</span> 10.0.0.100
+<span class="cm"># VRRP-Pakete beobachten</span>
+<span class="kw">tcpdump</span> <span class="fl">-i</span> eth0 <span class="fl">-n</span> <span class="st">'proto vrrp'</span>
+<span class="cm"># Debug-Modus starten</span>
+<span class="kw">keepalived</span> <span class="fl">--log-detail</span> <span class="fl">-l</span> <span class="fl">-n</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Manuelles Failover testen</div>
+      <code><span class="cm"># HAProxy stoppen → Script schlägt fehl → BACKUP übernimmt</span>
+<span class="kw">systemctl</span> stop haproxy
+<span class="cm"># oder: keepalived Priorität temporär senken:</span>
+<span class="kw">kill</span> <span class="fl">-SIGTERM</span> <span class="var">$(cat /run/keepalived.pid)</span>  <span class="cm"># auf MASTER</span></code>
+    </div>
+  </div>
+</div>
+
+<div class="section t-purple">
+  <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">OpenStack API Endpunkt HA</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">VIPs für OpenStack-Dienste</div>
+      <code><span class="cm"># Mehrere VIPs in einer vrrp_instance möglich:</span>
+<span class="kw">virtual_ipaddress</span> {
+  <span class="nu">10.0.0.100</span>/24  <span class="cm"># Public API VIP</span>
+  <span class="nu">10.0.1.100</span>/24  <span class="cm"># Internal API VIP</span>
+  <span class="nu">10.0.2.100</span>/24  <span class="cm"># Admin API VIP</span>
+}
+<span class="cm"># Oder separate vrrp_instances mit verschiedenen IDs:</span>
+<span class="cm"># VI_PUBLIC (id 51), VI_INTERNAL (id 52), VI_ADMIN (id 53)</span></code>
+    </div>
+  </div>
+  <div class="tip">💡 virtual_router_id muss im Subnetz eindeutig sein — nicht mit anderen Keepalived-Instanzen überschneiden</div>
+</div>
+
+</main>
+<footer>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide · Keepalived · VRRP · High Availability</footer>
+</body>
+</html>
