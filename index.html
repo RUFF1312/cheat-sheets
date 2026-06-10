@@ -138,6 +138,26 @@
   .c-performance{--ac:#9b59b6;--acs:rgba(155,89,182,0.15);--acb:rgba(155,89,182,0.25)}
   /* Grafana */
   .c-grafana{--ac:#f46800;--acs:rgba(244,104,0,0.15);--acb:rgba(244,104,0,0.25)}
+  /* C */
+  .c-c{--ac:#a8b9cc;--acs:rgba(168,185,204,0.15);--acb:rgba(168,185,204,0.25)}
+  /* Java */
+  .c-java{--ac:#ed8b00;--acs:rgba(237,139,0,0.15);--acb:rgba(237,139,0,0.25)}
+  /* C++ */
+  .c-cpp{--ac:#00599c;--acs:rgba(0,89,156,0.15);--acb:rgba(0,89,156,0.25)}
+  /* JavaScript */
+  .c-javascript{--ac:#f7df1e;--acs:rgba(247,223,30,0.15);--acb:rgba(247,223,30,0.25)}
+  /* Rust */
+  .c-rust{--ac:#ce422b;--acs:rgba(206,66,43,0.15);--acb:rgba(206,66,43,0.25)}
+  /* Go */
+  .c-go{--ac:#00add8;--acs:rgba(0,173,216,0.15);--acb:rgba(0,173,216,0.25)}
+  /* TypeScript */
+  .c-typescript{--ac:#3178c6;--acs:rgba(49,120,198,0.15);--acb:rgba(49,120,198,0.25)}
+  /* PHP */
+  .c-php{--ac:#8892be;--acs:rgba(136,146,190,0.15);--acb:rgba(136,146,190,0.25)}
+  /* Ruby */
+  .c-ruby{--ac:#cc342d;--acs:rgba(204,52,45,0.15);--acb:rgba(204,52,45,0.25)}
+  /* Kotlin */
+  .c-kotlin{--ac:#7f52ff;--acs:rgba(127,82,255,0.15);--acb:rgba(127,82,255,0.25)}
 
   .card .card-accent{background:var(--ac)}
   .card:hover{border-color:var(--ac)}
@@ -170,7 +190,7 @@
   <div class="header-eyebrow">Developer Reference Collection</div>
   <h1><span class="h1-accent">TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span></span><br>Guide</h1>
   <p class="header-sub">Alle Referenz-Sheets auf einen Blick — dark-themed, vollständig, offline-fähig.</p>
-  <div class="header-count"><span>45</span> Sheets · CLI · Scripting · DevOps · OpenStack</div>
+  <div class="header-count"><span>55</span> Sheets · CLI · Scripting · DevOps · OpenStack · Coding</div>
 </header>
 
 <main>
@@ -908,6 +928,156 @@
         <div class="card-tagline">$ grafana-cli -- Dashboards · Alerting · LogQL<br>Provisioning · Loki · PromQL · RBAC · REST API</div>
         <div class="card-tags">
           <span class="tag">Dashboards</span><span class="tag">Alerting</span><span class="tag">LogQL</span><span class="tag">Loki</span><span class="tag">Provisioning</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/c-cheatsheet.html" class="card c-c" data-title="C Language" data-group="Programmiersprachen">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/c.svg" alt="c.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">C Language</div>
+        </div>
+        <div class="card-tagline">$ gcc -Wall -O2 main.c -- Pointers · Memory<br>Structs · Preprocessor · File I/O</div>
+        <div class="card-tags">
+          <span class="tag">Pointers</span><span class="tag">Memory</span><span class="tag">Structs</span><span class="tag">gcc</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/java-cheatsheet.html" class="card c-java" data-title="Java" data-group="Programmiersprachen">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/java.svg" alt="java.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Java</div>
+        </div>
+        <div class="card-tagline">$ javac Main.java -- OOP · Collections<br>Streams · Generics · Concurrency</div>
+        <div class="card-tags">
+          <span class="tag">OOP</span><span class="tag">Streams</span><span class="tag">Collections</span><span class="tag">Java 17</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/cpp-cheatsheet.html" class="card c-cpp" data-title="C++" data-group="Programmiersprachen">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/cpp.svg" alt="cpp.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">C++</div>
+        </div>
+        <div class="card-tagline">$ g++ -std=c++20 -- RAII · Smart Pointers<br>STL · Templates · Ranges · Lambda</div>
+        <div class="card-tags">
+          <span class="tag">RAII</span><span class="tag">Smart Ptr</span><span class="tag">STL</span><span class="tag">C++20</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/javascript-cheatsheet.html" class="card c-javascript" data-title="JavaScript" data-group="Programmiersprachen">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/javascript.svg" alt="javascript.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">JavaScript</div>
+        </div>
+        <div class="card-tagline">$ node script.js -- Arrays · Async/Await<br>Classes · DOM · Modules · Fetch</div>
+        <div class="card-tags">
+          <span class="tag">Async</span><span class="tag">DOM</span><span class="tag">ES2022</span><span class="tag">Node.js</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/rust-cheatsheet.html" class="card c-rust" data-title="Rust" data-group="Programmiersprachen">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/rust.svg" alt="rust.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Rust</div>
+        </div>
+        <div class="card-tagline">$ cargo run -- Ownership · Borrowing<br>Traits · Enums · Error Handling</div>
+        <div class="card-tags">
+          <span class="tag">Ownership</span><span class="tag">Traits</span><span class="tag">cargo</span><span class="tag">Safety</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/go-cheatsheet.html" class="card c-go" data-title="Go" data-group="Programmiersprachen">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/go.svg" alt="go.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Go</div>
+        </div>
+        <div class="card-tagline">$ go run main.go -- Goroutines · Channels<br>Interfaces · defer · Error Values</div>
+        <div class="card-tags">
+          <span class="tag">Goroutines</span><span class="tag">Channels</span><span class="tag">Interfaces</span><span class="tag">Go 1.21</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/typescript-cheatsheet.html" class="card c-typescript" data-title="TypeScript" data-group="Programmiersprachen">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/typescript.svg" alt="typescript.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">TypeScript</div>
+        </div>
+        <div class="card-tagline">$ tsc --strict -- Types · Generics<br>Utility Types · Classes · Type Guards</div>
+        <div class="card-tags">
+          <span class="tag">Generics</span><span class="tag">Utility Types</span><span class="tag">Strict</span><span class="tag">TS 5</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/php-cheatsheet.html" class="card c-php" data-title="PHP" data-group="Programmiersprachen">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/php.svg" alt="php.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">PHP</div>
+        </div>
+        <div class="card-tagline">$ php script.php -- OOP · Arrays · PDO<br>Composer · Enums · Match · Fibers</div>
+        <div class="card-tags">
+          <span class="tag">OOP</span><span class="tag">PDO</span><span class="tag">PHP 8</span><span class="tag">Composer</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/ruby-cheatsheet.html" class="card c-ruby" data-title="Ruby" data-group="Programmiersprachen">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/ruby.svg" alt="ruby.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Ruby</div>
+        </div>
+        <div class="card-tagline">$ ruby script.rb -- Blocks · Enumerable<br>OOP · Modules · Gems · DSL</div>
+        <div class="card-tags">
+          <span class="tag">Blocks</span><span class="tag">Enumerable</span><span class="tag">Gems</span><span class="tag">Ruby 3</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/kotlin-cheatsheet.html" class="card c-kotlin" data-title="Kotlin" data-group="Programmiersprachen">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/kotlin.svg" alt="kotlin.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Kotlin</div>
+        </div>
+        <div class="card-tagline">$ kotlinc main.kt -- Data Classes · Coroutines<br>Null Safety · Extensions · Scope Functions</div>
+        <div class="card-tags">
+          <span class="tag">Coroutines</span><span class="tag">Data Classes</span><span class="tag">Null Safety</span><span class="tag">Kotlin 2</span>
         </div>
         <div class="card-arrow">→</div>
       </div>

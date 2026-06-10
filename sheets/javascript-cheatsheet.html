@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/javascript.svg">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#f7df1e;--accent2:#323330;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#0d1117 0%,#141200 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(247,223,30,.07),transparent);}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(247,223,30,.1);border:1px solid rgba(247,223,30,.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text);}
+  h1 span{color:var(--accent);}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .meta strong{color:var(--accent);}
+  .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
+  .ch-yl{background:rgba(247,223,30,.1);border:1px solid rgba(247,223,30,.3);color:var(--accent);}
+  .ch-gn{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);color:var(--green);}
+  .ch-cy{background:rgba(57,197,207,.1);border:1px solid rgba(57,197,207,.3);color:var(--cyan);}
+  .ch-pu{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.3);color:var(--purple);}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px;}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .th-yl .section-header{background:rgba(247,223,30,.05);} .th-yl .section-icon{background:rgba(247,223,30,.12);} .th-yl .section-title{color:var(--accent);}
+  .th-gn .section-header{background:rgba(63,185,80,.06);}  .th-gn .section-icon{background:rgba(63,185,80,.15);}  .th-gn .section-title{color:var(--green);}
+  .th-cy .section-header{background:rgba(57,197,207,.06);} .th-cy .section-icon{background:rgba(57,197,207,.15);} .th-cy .section-title{color:var(--cyan);}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--purple);}
+  .th-re .section-header{background:rgba(244,112,103,.06);} .th-re .section-icon{background:rgba(244,112,103,.15);} .th-re .section-title{color:var(--red);}
+  .command-list{padding:8px 0;}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
+  .cmd-entry:last-child{border-bottom:none;}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+  .kw{color:#f7df1e;font-weight:700;} .fn{color:#39c5cf;font-weight:600;} .st{color:#3fb950;}
+  .nu{color:#f47067;} .cm{color:#7d8590;font-style:italic;} .tp{color:#a371f7;font-weight:600;}
+  .tip{padding:8px 16px;background:rgba(247,223,30,.05);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip strong{color:var(--text);}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(247,223,30,.3);padding:4px 12px;border-radius:4px;background:rgba(247,223,30,.07);}
+  .nav-link:hover{background:rgba(247,223,30,.13);}
+  @media(max-width:1100px){main{columns:2;}}
+  @media(max-width:700px){main{columns:1;padding:16px;}header{padding:24px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Language Reference</div>
+      <img src="../assets/javascript.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(90%) sepia(40%) saturate(600%) hue-rotate(0deg)">
+      <h1><span>JavaScript</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ node script.js  /  browser console</p>
+      <div class="version-legend">
+        <div class="chip ch-yl">ES2022+</div>
+        <div class="chip ch-gn">Async/Await</div>
+        <div class="chip ch-cy">DOM</div>
+        <div class="chip ch-pu">Modules</div>
+      </div>
+    </div>
+    <div class="meta"><strong>Node.js / Browser</strong><br>Variables · Functions<br>Arrays · Objects<br>Async · DOM</div>
+  </div>
+</header>
+<main>
+
+<div class="section th-yl">
+  <div class="section-header"><div class="section-icon">📝</div><div class="section-title">Variablen & Typen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Deklaration</div><code><span class="kw">const</span> name = <span class="st">"Alice"</span>;    <span class="cm">// unveränderlich</span>
+<span class="kw">let</span>   count = <span class="nu">0</span>;         <span class="cm">// veränderlich</span>
+<span class="cm">// var vermeiden (function-scoped)</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Typen</div><code><span class="kw">typeof</span> <span class="st">"hello"</span>  <span class="cm">// "string"</span>
+<span class="kw">typeof</span> <span class="nu">42</span>       <span class="cm">// "number"</span>
+<span class="kw">typeof</span> <span class="kw">true</span>     <span class="cm">// "boolean"</span>
+<span class="kw">typeof</span> <span class="kw">null</span>     <span class="cm">// "object" (Bug!)</span>
+<span class="kw">typeof</span> <span class="kw">undefined</span> <span class="cm">// "undefined"</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Destructuring</div><code><span class="kw">const</span> [a, b, ...rest] = [<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>,<span class="nu">4</span>];
+<span class="kw">const</span> { x, y = <span class="nu">10</span> } = point;
+<span class="kw">const</span> { name: n } = person; <span class="cm">// rename</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Template Literals</div><code><span class="kw">const</span> msg = <span class="st">`Hallo ${name}, du bist ${age}!`</span>;
+<span class="kw">const</span> html = <span class="st">`
+  &lt;div&gt;${content}&lt;/div&gt;
+`</span>;</code></div>
+  </div>
+</div>
+
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">Funktionen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Arrow Functions</div><code><span class="kw">const</span> add = (a, b) => a + b;
+<span class="kw">const</span> greet = name => <span class="st">`Hi ${name}`</span>;
+<span class="kw">const</span> noop = () => {};</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Default & Rest Parameter</div><code><span class="kw">function</span> <span class="fn">greet</span>(name = <span class="st">"Welt"</span>) { ... }
+<span class="kw">function</span> <span class="fn">sum</span>(...nums) {
+    <span class="kw">return</span> nums.<span class="fn">reduce</span>((a,b) => a+b, <span class="nu">0</span>);
+}</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Spread</div><code><span class="kw">const</span> arr = [<span class="nu">1</span>, ...other, <span class="nu">2</span>];
+<span class="kw">const</span> obj = { ...base, x: <span class="nu">1</span> };
+<span class="fn">Math</span>.max(...nums);</code></div>
+  </div>
+</div>
+
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">📦</div><div class="section-title">Arrays</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Methoden</div><code>arr.<span class="fn">map</span>(x => x * <span class="nu">2</span>)
+arr.<span class="fn">filter</span>(x => x > <span class="nu">0</span>)
+arr.<span class="fn">reduce</span>((acc,x) => acc+x, <span class="nu">0</span>)
+arr.<span class="fn">find</span>(x => x.id === id)
+arr.<span class="fn">some</span>(x => x > <span class="nu">10</span>)
+arr.<span class="fn">every</span>(x => x > <span class="nu">0</span>)
+arr.<span class="fn">includes</span>(<span class="nu">42</span>)
+arr.<span class="fn">flat</span>()  arr.<span class="fn">flatMap</span>(fn)</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Sortieren & Suchen</div><code>arr.<span class="fn">sort</span>((a,b) => a - b);   <span class="cm">// numerisch</span>
+arr.<span class="fn">indexOf</span>(<span class="nu">42</span>)
+arr.<span class="fn">findIndex</span>(x => x.id===id)
+arr.<span class="fn">slice</span>(<span class="nu">1</span>, <span class="nu">3</span>)  <span class="cm">// kein Mutieren</span>
+arr.<span class="fn">splice</span>(<span class="nu">1</span>, <span class="nu">1</span>, <span class="st">"new"</span>)  <span class="cm">// Mutieren</span></code></div>
+  </div>
+</div>
+
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">🔑</div><div class="section-title">Objects & Classes</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Object Methoden</div><code><span class="tp">Object</span>.<span class="fn">keys</span>(obj)
+<span class="tp">Object</span>.<span class="fn">values</span>(obj)
+<span class="tp">Object</span>.<span class="fn">entries</span>(obj)
+<span class="tp">Object</span>.<span class="fn">assign</span>({}, defaults, opts)
+<span class="tp">Object</span>.<span class="fn">freeze</span>(obj)</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Klasse (ES6)</div><code><span class="kw">class</span> <span class="tp">Animal</span> {
+  <span class="fn">constructor</span>(name) { <span class="kw">this</span>.name = name; }
+  <span class="fn">speak</span>() { <span class="kw">return</span> <span class="st">`${this.name}!`</span>; }
+  <span class="kw">static</span> <span class="fn">create</span>(n) { <span class="kw">return new</span> <span class="tp">Animal</span>(n); }
+}
+<span class="kw">class</span> <span class="tp">Dog</span> <span class="kw">extends</span> <span class="tp">Animal</span> {
+  <span class="fn">speak</span>() { <span class="kw">return</span> <span class="st">`${super.speak()} Wuff`</span>; }
+}</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Optional Chaining & Nullish</div><code>user?.address?.city
+user?.getName?.()
+arr?.[<span class="nu">0</span>]
+val ?? <span class="st">"default"</span>  <span class="cm">// nur bei null/undefined</span></code></div>
+  </div>
+</div>
+
+<div class="section th-yl">
+  <div class="section-header"><div class="section-icon">⏳</div><div class="section-title">Async / Await & Promises</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">async/await</div><code><span class="kw">async function</span> <span class="fn">fetchUser</span>(id) {
+    <span class="kw">try</span> {
+        <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">`/api/${id}`</span>);
+        <span class="kw">return await</span> res.<span class="fn">json</span>();
+    } <span class="kw">catch</span> (err) {
+        console.<span class="fn">error</span>(err);
+    }
+}</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Promise kombinieren</div><code><span class="tp">Promise</span>.<span class="fn">all</span>([p1, p2, p3])
+<span class="tp">Promise</span>.<span class="fn">allSettled</span>([p1, p2])
+<span class="tp">Promise</span>.<span class="fn">race</span>([p1, p2])
+<span class="tp">Promise</span>.<span class="fn">any</span>([p1, p2])</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">fetch API</div><code><span class="kw">const</span> data = <span class="kw">await</span> <span class="fn">fetch</span>(url, {
+    method: <span class="st">"POST"</span>,
+    headers: { <span class="st">"Content-Type"</span>: <span class="st">"application/json"</span> },
+    body: <span class="tp">JSON</span>.<span class="fn">stringify</span>(payload)
+}).<span class="fn">then</span>(r => r.<span class="fn">json</span>());</code></div>
+  </div>
+</div>
+
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">DOM & Events</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Selektoren</div><code>document.<span class="fn">querySelector</span>(<span class="st">".class"</span>)
+document.<span class="fn">querySelectorAll</span>(<span class="st">"li"</span>)
+document.<span class="fn">getElementById</span>(<span class="st">"id"</span>)</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Manipulation</div><code>el.textContent = <span class="st">"text"</span>;
+el.innerHTML = <span class="st">"&lt;b&gt;html&lt;/b&gt;"</span>;
+el.classList.<span class="fn">add</span>(<span class="st">"active"</span>);
+el.classList.<span class="fn">toggle</span>(<span class="st">"open"</span>);
+el.setAttribute(<span class="st">"disabled"</span>, <span class="st">""</span>);</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Event Listener</div><code>btn.<span class="fn">addEventListener</span>(<span class="st">"click"</span>, e => {
+    e.<span class="fn">preventDefault</span>();
+    <span class="fn">handleClick</span>(e);
+});</code></div>
+  </div>
+</div>
+
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">📂</div><div class="section-title">Module & nützliche APIs</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">ES Modules</div><code><span class="kw">export const</span> PI = <span class="nu">3.14</span>;
+<span class="kw">export default function</span> <span class="fn">main</span>() {}
+
+<span class="kw">import</span> { PI } <span class="kw">from</span> <span class="st">"./math.js"</span>;
+<span class="kw">import</span> main <span class="kw">from</span> <span class="st">"./app.js"</span>;</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">localStorage / JSON</div><code>localStorage.<span class="fn">setItem</span>(<span class="st">"key"</span>, <span class="tp">JSON</span>.<span class="fn">stringify</span>(v));
+<span class="tp">JSON</span>.<span class="fn">parse</span>(localStorage.<span class="fn">getItem</span>(<span class="st">"key"</span>));</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Nützliche Einzeiler</div><code>[...<span class="kw">new</span> <span class="tp">Set</span>(arr)]       <span class="cm">// Duplikate entfernen</span>
+arr.<span class="fn">at</span>(-<span class="nu">1</span>)              <span class="cm">// letztes Element</span>
+??=  ||=  &amp;&amp;=            <span class="cm">// logical assignment</span>
+<span class="tp">Object</span>.<span class="fn">fromEntries</span>(entries)</code></div>
+    <div class="tip"><strong>Tipp:</strong> const + let konsequent nutzen — kein var. Strict mode: "use strict";</div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>
