@@ -118,6 +118,26 @@
   .c-chronyc{--ac:#2563eb;--acs:rgba(37,99,235,0.15);--acb:rgba(37,99,235,0.25)}
   /* Kickstart */
   .c-kickstart{--ac:#c42b2b;--acs:rgba(196,43,43,0.15);--acb:rgba(196,43,43,0.25)}
+  /* Package Manager */
+  .c-pkgmanager{--ac:#e88a2f;--acs:rgba(232,138,47,0.15);--acb:rgba(232,138,47,0.25)}
+  /* KVM */
+  .c-kvm{--ac:#c0392b;--acs:rgba(192,57,43,0.15);--acb:rgba(192,57,43,0.25)}
+  /* sed & awk */
+  .c-sedawk{--ac:#1aac8a;--acs:rgba(26,172,138,0.15);--acb:rgba(26,172,138,0.25)}
+  /* MariaDB */
+  .c-mariadb{--ac:#0074c1;--acs:rgba(0,116,193,0.15);--acb:rgba(0,116,193,0.25)}
+  /* RabbitMQ */
+  .c-rabbitmq{--ac:#f26122;--acs:rgba(242,97,34,0.15);--acb:rgba(242,97,34,0.25)}
+  /* Keepalived */
+  .c-keepalived{--ac:#7e57c2;--acs:rgba(126,87,194,0.15);--acb:rgba(126,87,194,0.25)}
+  /* Kolla-Ansible */
+  .c-kolla{--ac:#ed1944;--acs:rgba(237,25,68,0.15);--acb:rgba(237,25,68,0.25)}
+  /* nginx */
+  .c-nginx{--ac:#269539;--acs:rgba(38,149,57,0.15);--acb:rgba(38,149,57,0.25)}
+  /* Linux Performance */
+  .c-performance{--ac:#9b59b6;--acs:rgba(155,89,182,0.15);--acb:rgba(155,89,182,0.25)}
+  /* Grafana */
+  .c-grafana{--ac:#f46800;--acs:rgba(244,104,0,0.15);--acb:rgba(244,104,0,0.25)}
 
   .card .card-accent{background:var(--ac)}
   .card:hover{border-color:var(--ac)}
@@ -150,7 +170,7 @@
   <div class="header-eyebrow">Developer Reference Collection</div>
   <h1><span class="h1-accent">TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span></span><br>Guide</h1>
   <p class="header-sub">Alle Referenz-Sheets auf einen Blick — dark-themed, vollständig, offline-fähig.</p>
-  <div class="header-count"><span>35</span> Sheets · CLI · Scripting · DevOps · Kubernetes</div>
+  <div class="header-count"><span>45</span> Sheets · CLI · Scripting · DevOps · OpenStack</div>
 </header>
 
 <main>
@@ -728,6 +748,166 @@
         <div class="card-tagline">$ systemctl [command] [unit] -- System & Service Manager<br>journalctl · Unit Files · analyze · loginctl</div>
         <div class="card-tags">
           <span class="tag">Services</span><span class="tag">Journal</span><span class="tag">Units</span><span class="tag">Boot</span><span class="tag">Linger</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Package Manager -->
+    <a href="pkgmanager-cheatsheet.html" class="card c-pkgmanager" data-title="Package Manager" data-group="System & Netz">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon">📦</div>
+          <div class="card-name">Package Manager</div>
+        </div>
+        <div class="card-tagline">$ apt / dnf / zypper / pacman -- Linux Pakete<br>apt · dpkg · dnf · rpm · zypper · pacman · snap</div>
+        <div class="card-tags">
+          <span class="tag">apt/dpkg</span><span class="tag">dnf/rpm</span><span class="tag">zypper</span><span class="tag">pacman</span><span class="tag">snap</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- KVM / libvirt -->
+    <a href="kvm-cheatsheet.html" class="card c-kvm" data-title="KVM / libvirt" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon">🖥️</div>
+          <div class="card-name">KVM / libvirt</div>
+        </div>
+        <div class="card-tagline">$ virsh / virt-install / qemu-img -- Virtualisierung<br>virsh · virt-install · qemu-img · Snapshots · Migration</div>
+        <div class="card-tags">
+          <span class="tag">virsh</span><span class="tag">virt-install</span><span class="tag">qemu-img</span><span class="tag">Snapshots</span><span class="tag">CPU-Pinning</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- sed & awk -->
+    <a href="sedawk-cheatsheet.html" class="card c-sedawk" data-title="sed & awk" data-group="System & Netz">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon">✂️</div>
+          <div class="card-name">sed &amp; awk</div>
+        </div>
+        <div class="card-tagline">$ sed 's/old/new/g' | awk '{print $1}' -- Unix Text Tools<br>Substitution · Adressen · Felder · Arrays · One-Liner</div>
+        <div class="card-tags">
+          <span class="tag">sed</span><span class="tag">awk</span><span class="tag">Regex</span><span class="tag">Felder</span><span class="tag">One-Liner</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- MariaDB / MySQL -->
+    <a href="mariadb-cheatsheet.html" class="card c-mariadb" data-title="MariaDB / MySQL" data-group="Dev & Automation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon">🐬</div>
+          <div class="card-name">MariaDB / MySQL</div>
+        </div>
+        <div class="card-tagline">$ mysql -u root -p -- Relational Database<br>DDL · DML · Grants · mysqldump · Galera · EXPLAIN</div>
+        <div class="card-tags">
+          <span class="tag">DDL/DML</span><span class="tag">Grants</span><span class="tag">Backup</span><span class="tag">Galera</span><span class="tag">OpenStack</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- RabbitMQ -->
+    <a href="rabbitmq-cheatsheet.html" class="card c-rabbitmq" data-title="RabbitMQ" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon">🐰</div>
+          <div class="card-name">RabbitMQ</div>
+        </div>
+        <div class="card-tagline">$ rabbitmqctl -- AMQP Message Broker<br>vHosts · Queues · Clustering · Plugins · OpenStack Transport</div>
+        <div class="card-tags">
+          <span class="tag">AMQP</span><span class="tag">vHosts</span><span class="tag">Clustering</span><span class="tag">Plugins</span><span class="tag">OpenStack</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Keepalived -->
+    <a href="keepalived-cheatsheet.html" class="card c-keepalived" data-title="Keepalived" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon">🔄</div>
+          <div class="card-name">Keepalived</div>
+        </div>
+        <div class="card-tagline">$ keepalived -f keepalived.conf -- VRRP VIP HA<br>vrrp_instance · track_script · Unicast · HAProxy HA</div>
+        <div class="card-tags">
+          <span class="tag">VRRP</span><span class="tag">VIP</span><span class="tag">Failover</span><span class="tag">HAProxy</span><span class="tag">OpenStack HA</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Kolla-Ansible -->
+    <a href="kolla-cheatsheet.html" class="card c-kolla" data-title="Kolla-Ansible" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon">🚀</div>
+          <div class="card-name">Kolla-Ansible</div>
+        </div>
+        <div class="card-tagline">$ kolla-ansible deploy -- OpenStack in Containern<br>globals.yml · bootstrap · deploy · reconfigure · upgrade</div>
+        <div class="card-tags">
+          <span class="tag">Deploy</span><span class="tag">globals.yml</span><span class="tag">Multinode</span><span class="tag">Upgrade</span><span class="tag">Docker</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- nginx -->
+    <a href="nginx-cheatsheet.html" class="card c-nginx" data-title="nginx" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon">🌐</div>
+          <div class="card-name">nginx</div>
+        </div>
+        <div class="card-tagline">$ nginx -t &amp;&amp; nginx -s reload -- Web Server<br>Server · Location · SSL/TLS · Reverse Proxy · Rate Limit</div>
+        <div class="card-tags">
+          <span class="tag">VHost</span><span class="tag">SSL/TLS</span><span class="tag">Proxy</span><span class="tag">Upstream</span><span class="tag">Rate Limit</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Linux Performance -->
+    <a href="performance-cheatsheet.html" class="card c-performance" data-title="Linux Performance" data-group="System & Netz">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon">📈</div>
+          <div class="card-name">Linux Performance</div>
+        </div>
+        <div class="card-tagline">$ top / vmstat / iostat / perf -- Profiling<br>CPU · Memory · Disk I/O · strace · perf · /proc</div>
+        <div class="card-tags">
+          <span class="tag">top/htop</span><span class="tag">vmstat</span><span class="tag">iostat</span><span class="tag">perf</span><span class="tag">strace</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Grafana -->
+    <a href="grafana-cheatsheet.html" class="card c-grafana" data-title="Grafana" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon">📊</div>
+          <div class="card-name">Grafana</div>
+        </div>
+        <div class="card-tagline">$ grafana-cli -- Dashboards · Alerting · LogQL<br>Provisioning · Loki · PromQL · RBAC · REST API</div>
+        <div class="card-tags">
+          <span class="tag">Dashboards</span><span class="tag">Alerting</span><span class="tag">LogQL</span><span class="tag">Loki</span><span class="tag">Provisioning</span>
         </div>
         <div class="card-arrow">→</div>
       </div>
