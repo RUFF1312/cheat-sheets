@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>govc - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/govc.svg">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#5AC8FA;--accent2:#79d9ff;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#0d1117 0%,#001c25 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(90,200,250,.07),transparent);}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(90,200,250,.1);border:1px solid rgba(90,200,250,.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text);}
+  h1 span{color:var(--accent);}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .meta strong{color:var(--accent);}
+  .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
+  .ch-cy{background:rgba(90,200,250,.1);border:1px solid rgba(90,200,250,.3);color:var(--accent);}
+  .ch-gn{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);color:var(--green);}
+  .ch-pu{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.3);color:var(--purple);}
+  .ch-re{background:rgba(244,112,103,.1);border:1px solid rgba(244,112,103,.3);color:var(--red);}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px;}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .th-cy .section-header{background:rgba(90,200,250,.06);} .th-cy .section-icon{background:rgba(90,200,250,.15);} .th-cy .section-title{color:var(--accent);}
+  .th-gn .section-header{background:rgba(63,185,80,.06);} .th-gn .section-icon{background:rgba(63,185,80,.15);} .th-gn .section-title{color:var(--green);}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--purple);}
+  .th-re .section-header{background:rgba(244,112,103,.06);} .th-re .section-icon{background:rgba(244,112,103,.15);} .th-re .section-title{color:var(--red);}
+  .th-or .section-header{background:rgba(244,162,97,.06);} .th-or .section-icon{background:rgba(244,162,97,.15);} .th-or .section-title{color:#f4a261;}
+  .command-list{padding:8px 0;}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
+  .cmd-entry:last-child{border-bottom:none;}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+  .kw{color:#5AC8FA;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;}
+  .tip{padding:8px 16px;background:rgba(90,200,250,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip strong{color:var(--text);}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(90,200,250,.3);padding:4px 12px;border-radius:4px;background:rgba(90,200,250,.08);}
+  .nav-link:hover{background:rgba(90,200,250,.15);}
+  @media(max-width:1100px){main{columns:2;}}
+  @media(max-width:700px){main{columns:1;padding:16px;}header{padding:24px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Cloud & Infra Reference</div>
+      <img src="../assets/govc.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(65%) sepia(50%) saturate(500%) hue-rotate(175deg)">
+      <h1><span>govc</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ govc vm.info /dc/vm/myvm</p>
+      <div class="version-legend">
+        <div class="chip ch-cy">vSphere CLI</div>
+        <div class="chip ch-gn">VMs</div>
+        <div class="chip ch-pu">Datastores</div>
+        <div class="chip ch-re">OVF Import</div>
+      </div>
+    </div>
+    <div class="meta"><strong>govc (govmomi)</strong><br>vSphere · ESXi<br>VMs · Cluster<br>Snapshots · Import</div>
+  </div>
+</header>
+<main>
+
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">Setup & Auth</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Installation</div><code">brew install govc
+<span class="cm"># oder binary download:</span>
+curl -L https://github.com/vmware/govmomi/releases/latest/download/govc_Linux_x86_64.tar.gz | tar xz
+mv govc /usr/local/bin/</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Umgebungsvariablen</div><code">export GOVC_URL=https://vcenter.example.com
+export GOVC_USERNAME=administrator@vsphere.local
+export GOVC_PASSWORD=secret
+export GOVC_INSECURE=true        <span class="cm"># self-signed cert</span>
+export GOVC_DATACENTER=DC01
+export GOVC_DATASTORE=ds01
+export GOVC_NETWORK="VM Network"
+export GOVC_RESOURCE_POOL=/DC01/host/cluster01/Resources</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Verbindung testen</div><code">govc about
+govc about -u https://user:pass@vcenter/sdk</code></div>
+    <div class="tip"><strong>Tipp:</strong> GOVC_URL, USERNAME und PASSWORD in eine .env-Datei auslagern und mit `source .env` laden. Nie Passwörter in die Shell-History.</div>
+  </div>
+</div>
+
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Navigation & Suche</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Inventar durchsuchen</div><code">govc ls                          <span class="cm"># Datacenter-Ebene</span>
+govc ls /DC01/vm
+govc ls /DC01/vm/folder01
+govc ls /DC01/host
+govc ls /DC01/datastore
+govc ls /DC01/network</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Objekte finden</div><code">govc find / -type m              <span class="cm"># alle VMs</span>
+govc find / -type m -name myvm*
+govc find / -type h              <span class="cm"># Hosts</span>
+govc find / -type d              <span class="cm"># Datastores</span>
+govc find /DC01/vm -type m -runtime.powerState poweredOn
+govc find / -type m -guest.ipAddress 10.0.0.5</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Object-Typen</div><code">m  VirtualMachine
+h  HostSystem
+d  Datastore
+n  Network
+r  ResourcePool
+f  Folder
+c  ClusterComputeResource</code></div>
+  </div>
+</div>
+
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">🖥</div><div class="section-title">VMs verwalten</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Info & Status</div><code">govc vm.info /DC01/vm/myvm
+govc vm.info -json myvm | jq .
+govc vm.ip myvm</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Power-Operationen</div><code">govc vm.power -on myvm
+govc vm.power -off myvm
+govc vm.power -s myvm           <span class="cm"># graceful shutdown</span>
+govc vm.power -r myvm           <span class="cm"># reboot</span>
+govc vm.power -suspend myvm</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Klonen & Zerstören</div><code">govc vm.clone -vm template-vm -on=false newvm
+govc vm.clone -vm myvm \
+  -ds ds01 \
+  -pool /DC01/host/cluster01/Resources \
+  myvm-clone
+govc vm.destroy myvm</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Konfigurieren</div><code">govc vm.change -vm myvm -m 8192 -c 4
+govc vm.change -vm myvm -e disk.enableUUID=TRUE
+govc vm.disk.change -vm myvm -disk.label "Hard disk 1" -size 100G
+govc vm.network.add -vm myvm -net "PG-Prod"
+govc vm.migrate -host esx02 myvm</code></div>
+  </div>
+</div>
+
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">💾</div><div class="section-title">Datastores & Dateien</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Datastore-Inhalt</div><code">govc datastore.ls
+govc datastore.ls -ds ds01
+govc datastore.ls -ds ds01 myvm/
+govc datastore.info ds01</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Dateien transferieren</div><code">govc datastore.upload -ds ds01 local.iso /isos/ubuntu.iso
+govc datastore.download -ds ds01 /myvm/myvm.vmdk local.vmdk
+govc datastore.mkdir -ds ds01 newfolder
+govc datastore.rm -ds ds01 oldfile.iso</code></div>
+  </div>
+</div>
+
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">🔄</div><div class="section-title">Snapshots</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Snapshots verwalten</div><code">govc snapshot.tree -vm myvm
+govc snapshot.create -vm myvm pre-patch
+govc snapshot.revert -vm myvm pre-patch
+govc snapshot.remove -vm myvm pre-patch
+govc snapshot.remove -vm myvm -r ""   <span class="cm"># alle entfernen</span></code></div>
+  </div>
+</div>
+
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">📦</div><div class="section-title">Import & Export</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">OVA/OVF Import</div><code">govc import.ova ubuntu.ova
+govc import.ova \
+  -name myvm \
+  -ds ds01 \
+  -pool /DC01/host/cluster01/Resources \
+  ubuntu-22.04.ova
+
+<span class="cm"># OVF mit Spec-Datei:</span>
+govc import.spec ubuntu.ova > spec.json
+govc import.ova -options spec.json ubuntu.ova</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">OVF Export</div><code">govc export.ovf -vm myvm ./export-dir/</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Content Library</div><code">govc library.ls
+govc library.info mylib
+govc library.import mylib /path/to/file.ova
+govc library.deploy mylib/template-name myvm</code></div>
+  </div>
+</div>
+
+<div class="section th-or">
+  <div class="section-header"><div class="section-icon">🏗</div><div class="section-title">Host, Cluster & Tags</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Hosts & Cluster</div><code">govc host.info /DC01/host/cluster01/esx01.example.com
+govc host.storage.info -host esx01
+govc cluster.usage cluster01</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Tags (vSphere Tags API)</div><code">govc tags.category.ls
+govc tags.ls -c Environment
+govc tags.attach -c Environment -t Production /DC01/vm/myvm
+govc tags.info /DC01/vm/myvm</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Events & Tasks</div><code">govc events /DC01/vm/myvm
+govc tasks
+govc tasks -follow</code></div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>

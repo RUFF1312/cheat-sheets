@@ -183,6 +183,14 @@
   .c-alertmanager{--ac:#e67e22;--acs:rgba(204,75,0,0.15);--acb:rgba(204,75,0,0.25)}
   /* containerd */
   .c-containerd{--ac:#4a90d9;--acs:rgba(74,144,217,0.15);--acb:rgba(74,144,217,0.25)}
+  /* PowerCLI */
+  .c-powercli{--ac:#5ba8e0;--acs:rgba(0,125,193,0.15);--acb:rgba(0,125,193,0.25)}
+  /* esxcli */
+  .c-esxcli{--ac:#00C1D3;--acs:rgba(0,193,211,0.15);--acb:rgba(0,193,211,0.25)}
+  /* govc */
+  .c-govc{--ac:#5AC8FA;--acs:rgba(90,200,250,0.15);--acb:rgba(90,200,250,0.25)}
+  /* vSphere */
+  .c-vsphere{--ac:#79b8ff;--acs:rgba(21,101,192,0.15);--acb:rgba(21,101,192,0.25)}
 
   .card .card-accent{background:var(--ac)}
   .card:hover{border-color:var(--ac)}
@@ -202,6 +210,7 @@
   .pill[data-filter="System & Netz"].active{border-color:#3fb950;color:#3fb950;background:rgba(63,185,80,.08)}
   .pill[data-filter="Cloud & Infra"].active{border-color:#0db7ed;color:#0db7ed;background:rgba(13,183,237,.08)}
   .pill[data-filter="Datenbanken"].active{border-color:#f0c040;color:#f0c040;background:rgba(240,192,64,.08)}
+  .pill[data-filter="VMware"].active{border-color:#5ba8e0;color:#5ba8e0;background:rgba(0,125,193,.08)}
   .pill-count{opacity:.55;margin-left:5px}
   .toolbar-row2{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .search-input{background:var(--code-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:7px 12px;font-size:13px;font-family:'Syne',sans-serif;width:260px;outline:none;transition:border-color .2s}
@@ -231,18 +240,19 @@
   <div class="header-eyebrow">Developer Reference Collection</div>
   <h1><span class="h1-accent">TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span></span><br>Guide</h1>
   <p class="header-sub">Alle Referenz-Sheets auf einen Blick — dark-themed, vollständig, offline-fähig.</p>
-  <div class="header-count"><span>67</span> Sheets · CLI · Scripting · DevOps · Datenbanken · Coding</div>
+  <div class="header-count"><span>71</span> Sheets · CLI · Scripting · DevOps · VMware · Datenbanken · Coding</div>
 </header>
 
 <main>
   <div class="toolbar">
     <div class="toolbar-filters">
-      <button class="pill active" data-filter="all">Alle <span class="pill-count">67</span></button>
+      <button class="pill active" data-filter="all">Alle <span class="pill-count">71</span></button>
       <button class="pill" data-filter="Programmiersprachen">Sprachen <span class="pill-count">13</span></button>
       <button class="pill" data-filter="Dev & Automation">Dev &amp; Automation <span class="pill-count">9</span></button>
       <button class="pill" data-filter="System & Netz">System &amp; Netz <span class="pill-count">17</span></button>
       <button class="pill" data-filter="Datenbanken">Datenbanken <span class="pill-count">4</span></button>
       <button class="pill" data-filter="Cloud & Infra">Cloud &amp; Infra <span class="pill-count">24</span></button>
+      <button class="pill" data-filter="VMware">VMware <span class="pill-count">4</span></button>
     </div>
     <div class="toolbar-row2">
       <input type="text" id="searchInput" class="search-input" placeholder="Sheets, Commands, Tags durchsuchen…">
@@ -1305,6 +1315,67 @@
       </div>
     </a>
 
+    <!-- VMware -->
+    <a href="sheets/powercli-cheatsheet.html" class="card c-powercli" data-title="VMware PowerCLI" data-group="VMware">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/powercli.svg" alt="powercli.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">VMware PowerCLI</div>
+        </div>
+        <div class="card-tagline">PS> Connect-VIServer vc01 -- PowerShell vSphere<br>VMs · Hosts · Snapshots · vDS · Tags · OVF</div>
+        <div class="card-tags">
+          <span class="tag">PowerShell</span><span class="tag">vCenter</span><span class="tag">Snapshots</span><span class="tag">vDS</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/esxcli-cheatsheet.html" class="card c-esxcli" data-title="esxcli / vim-cmd" data-group="VMware">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/esxcli.svg" alt="esxcli.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">esxcli / vim-cmd</div>
+        </div>
+        <div class="card-tagline">esxcli network nic list -- ESXi Shell CLI<br>Netzwerk · Storage · VIBs · vim-cmd · esxtop</div>
+        <div class="card-tags">
+          <span class="tag">ESXi</span><span class="tag">Storage</span><span class="tag">VIBs</span><span class="tag">esxtop</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/govc-cheatsheet.html" class="card c-govc" data-title="govc" data-group="VMware">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/govc.svg" alt="govc.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">govc</div>
+        </div>
+        <div class="card-tagline">$ govc vm.info myvm -- Go vSphere CLI<br>VMs · Datastores · Snapshots · OVA Import</div>
+        <div class="card-tags">
+          <span class="tag">govmomi</span><span class="tag">VMs</span><span class="tag">OVA</span><span class="tag">CLI</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/vsphere-cheatsheet.html" class="card c-vsphere" data-title="vSphere / VCSA" data-group="VMware">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/vsphere.svg" alt="vsphere.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">vSphere / VCSA</div>
+        </div>
+        <div class="card-tagline">vmkfstools · service-control -- VCSA Admin<br>Zertifikate · REST API · HA/DRS · Troubleshoot</div>
+        <div class="card-tags">
+          <span class="tag">vmkfstools</span><span class="tag">VCSA</span><span class="tag">REST API</span><span class="tag">Certs</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
   </div>
 </main>
 
@@ -1321,13 +1392,14 @@
     cards.forEach((c, i) => c.dataset.order = i);
 
     // Group display order + color
-    const GROUP_ORDER = ['Programmiersprachen', 'Dev & Automation', 'System & Netz', 'Datenbanken', 'Cloud & Infra'];
+    const GROUP_ORDER = ['Programmiersprachen', 'Dev & Automation', 'System & Netz', 'Datenbanken', 'Cloud & Infra', 'VMware'];
     const GROUP_COLOR = {
       'Programmiersprachen': '#f7df1e',
       'Dev & Automation':    '#a371f7',
       'System & Netz':       '#3fb950',
       'Datenbanken':         '#f0c040',
-      'Cloud & Infra':       '#0db7ed'
+      'Cloud & Infra':       '#0db7ed',
+      'VMware':              '#5ba8e0'
     };
 
     let activeFilter = 'all';
@@ -1400,13 +1472,13 @@
       });
 
       // Result counter (only while searching)
-      resultCount.textContent = term ? `${visible.length} / 67` : '';
+      resultCount.textContent = term ? `${visible.length} / 71` : '';
 
       // Update pill counts dynamically
       document.querySelectorAll('.pill[data-filter]').forEach(pill => {
         const f = pill.dataset.filter;
         const n = f === 'all'
-          ? (term ? visible.length : 67)
+          ? (term ? visible.length : 71)
           : cards.filter(c => c.dataset.group === f && (!term || c.textContent.toLowerCase().includes(term))).length;
         const span = pill.querySelector('.pill-count');
         if (span) span.textContent = n;
