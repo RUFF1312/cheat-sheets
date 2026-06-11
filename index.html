@@ -39,7 +39,8 @@
   .card-body{padding:20px 22px 22px}
   .card-icon-row{display:flex;align-items:center;gap:14px;margin-bottom:14px}
   .card-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-  .card-icon img{filter:brightness(0);transition:filter 0.18s}
+  .card-icon img{filter:brightness(0) invert(1);opacity:.5;transition:filter .18s,opacity .18s}
+  .card:hover .card-icon img{filter:brightness(0) invert(1);opacity:1}
   .card-name{font-size:20px;font-weight:800;letter-spacing:-0.5px}
   .card-tagline{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.4}
   .card-tags{display:flex;flex-wrap:wrap;gap:6px}
@@ -166,15 +167,30 @@
   .card-arrow{color:var(--ac)}
   .tag{background:var(--acs);border:1px solid var(--acb);color:var(--ac)}
 
-  /* TOOLBAR & SEARCH */
-  .toolbar{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);margin-bottom:20px;padding-bottom:12px;gap:16px;flex-wrap:wrap}
-  .section-label{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin:0}
-  .search-input{background:var(--code-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:8px 12px;font-size:14px;font-family:'Syne',sans-serif;width:100%;max-width:300px;outline:none;transition:border-color 0.2s}
-  .search-input:focus{border-color:var(--text)}
-
-  .toolbar-controls{display:flex;gap:12px;align-items:center;flex:1;justify-content:flex-end}
-  .sort-select{background:var(--code-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:8px 12px;font-size:14px;font-family:'Syne',sans-serif;outline:none;cursor:pointer;transition:border-color 0.2s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%237d8590' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
-  .sort-select:focus{border-color:var(--text)}
+  /* TOOLBAR */
+  .toolbar{margin-bottom:28px}
+  .toolbar-filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .pill{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;user-select:none}
+  .pill:hover{border-color:rgba(255,255,255,.3);color:var(--text)}
+  .pill.active{border-color:rgba(255,255,255,.4);color:var(--text);background:rgba(255,255,255,.05)}
+  .pill[data-filter="Programmiersprachen"].active{border-color:#f7df1e;color:#f7df1e;background:rgba(247,223,30,.08)}
+  .pill[data-filter="Dev & Automation"].active{border-color:#a371f7;color:#a371f7;background:rgba(163,113,247,.08)}
+  .pill[data-filter="System & Netz"].active{border-color:#3fb950;color:#3fb950;background:rgba(63,185,80,.08)}
+  .pill[data-filter="Cloud & Infra"].active{border-color:#0db7ed;color:#0db7ed;background:rgba(13,183,237,.08)}
+  .pill-count{opacity:.55;margin-left:5px}
+  .toolbar-row2{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .search-input{background:var(--code-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:7px 12px;font-size:13px;font-family:'Syne',sans-serif;width:260px;outline:none;transition:border-color .2s}
+  .search-input:focus{border-color:rgba(255,255,255,.35)}
+  .result-count{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);min-width:60px}
+  .sort-btn{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.5px;padding:7px 14px;border-radius:6px;border:1px solid var(--border);background:var(--code-bg);color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap}
+  .sort-btn:hover{border-color:rgba(255,255,255,.3);color:var(--text)}
+  .sort-btn.on{border-color:rgba(255,255,255,.4);color:var(--text);background:rgba(255,255,255,.05)}
+  /* GROUP HEADERS */
+  .group-header{grid-column:1/-1;display:flex;align-items:center;gap:14px;margin:20px 0 4px}
+  .group-header:first-child{margin-top:4px}
+  .group-line{flex:1;height:1px;background:var(--border)}
+  .group-label{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;white-space:nowrap}
+  .group-label-count{opacity:.5;font-weight:400;margin-left:6px}
 
   /* FOOTER */
   footer{text-align:center;padding:24px 48px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)}
@@ -195,20 +211,17 @@
 
 <main>
   <div class="toolbar">
-    <div class="section-label">Alle Referenz-Sheets</div>
-    <div class="toolbar-controls">
-      <select id="groupSelect" class="sort-select">
-        <option value="all">Alle Themen</option>
-        <option value="Cloud & Infra">Cloud & Infra</option>
-        <option value="System & Netz">System & Netz</option>
-        <option value="Dev & Automation">Dev & Automation</option>
-      </select>
-      <select id="sortSelect" class="sort-select">
-        <option value="default">Standard-Sortierung</option>
-        <option value="asc">Name A-Z</option>
-        <option value="desc">Name Z-A</option>
-      </select>
-      <input type="text" id="searchInput" class="search-input" placeholder="Suche nach Sheets, Commands, Tags...">
+    <div class="toolbar-filters">
+      <button class="pill active" data-filter="all">Alle <span class="pill-count">55</span></button>
+      <button class="pill" data-filter="Programmiersprachen">Sprachen <span class="pill-count">10</span></button>
+      <button class="pill" data-filter="Dev & Automation">Dev &amp; Automation <span class="pill-count">11</span></button>
+      <button class="pill" data-filter="System & Netz">System &amp; Netz <span class="pill-count">15</span></button>
+      <button class="pill" data-filter="Cloud & Infra">Cloud &amp; Infra <span class="pill-count">19</span></button>
+    </div>
+    <div class="toolbar-row2">
+      <input type="text" id="searchInput" class="search-input" placeholder="Sheets, Commands, Tags durchsuchen…">
+      <span id="resultCount" class="result-count"></span>
+      <button id="sortToggle" class="sort-btn">A-Z</button>
     </div>
   </div>
   <div class="grid" id="cardGrid">
@@ -1090,47 +1103,107 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const searchInput = document.getElementById('searchInput');
-    const sortSelect = document.getElementById('sortSelect');
-    const groupSelect = document.getElementById('groupSelect');
-    const cardGrid = document.getElementById('cardGrid');
-    const cards = Array.from(document.querySelectorAll('.card'));
+    const searchInput  = document.getElementById('searchInput');
+    const sortToggle   = document.getElementById('sortToggle');
+    const resultCount  = document.getElementById('resultCount');
+    const cardGrid     = document.getElementById('cardGrid');
+    const cards        = Array.from(document.querySelectorAll('.card'));
 
-    // Originalreihenfolge speichern
-    cards.forEach((card, index) => card.dataset.order = index);
+    cards.forEach((c, i) => c.dataset.order = i);
 
-    const updateGrid = () => {
-      const term = searchInput.value.toLowerCase();
-      const sortBy = sortSelect.value;
-      const groupFilter = groupSelect.value;
-
-      // 1. Filtern (Suche & Gruppe)
-      cards.forEach(card => {
-        const text = card.textContent.toLowerCase();
-        const matchesSearch = text.includes(term);
-        const matchesGroup = groupFilter === 'all' || card.dataset.group === groupFilter;
-        
-        card.style.display = (matchesSearch && matchesGroup) ? 'block' : 'none';
-      });
-
-      // 2. Sortieren
-      const sortedCards = [...cards].filter(card => card.style.display !== 'none').sort((a, b) => {
-        if (sortBy === 'asc') {
-          return a.dataset.title.localeCompare(b.dataset.title);
-        } else if (sortBy === 'desc') {
-          return b.dataset.title.localeCompare(a.dataset.title);
-        } else {
-          return parseInt(a.dataset.order) - parseInt(b.dataset.order);
-        }
-      });
-
-      // 3. Neu anordnen im DOM (nur sichtbare werden ans Ende/in Reihenfolge angefügt)
-      sortedCards.forEach(card => cardGrid.appendChild(card));
+    // Group display order + color
+    const GROUP_ORDER = ['Programmiersprachen', 'Dev & Automation', 'System & Netz', 'Cloud & Infra'];
+    const GROUP_COLOR = {
+      'Programmiersprachen': '#f7df1e',
+      'Dev & Automation':    '#a371f7',
+      'System & Netz':       '#3fb950',
+      'Cloud & Infra':       '#0db7ed'
     };
 
-    searchInput.addEventListener('input', updateGrid);
-    sortSelect.addEventListener('change', updateGrid);
-    groupSelect.addEventListener('change', updateGrid);
+    let activeFilter = 'all';
+    let sortAZ = false;
+
+    // Pill clicks
+    document.querySelectorAll('.pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        activeFilter = pill.dataset.filter;
+        render();
+      });
+    });
+
+    // Sort toggle
+    sortToggle.addEventListener('click', () => {
+      sortAZ = !sortAZ;
+      sortToggle.classList.toggle('on', sortAZ);
+      sortToggle.textContent = sortAZ ? 'A-Z ✓' : 'A-Z';
+      render();
+    });
+
+    searchInput.addEventListener('input', render);
+
+    function render() {
+      const term = searchInput.value.toLowerCase().trim();
+
+      // 1. Which cards match?
+      const visible = cards.filter(c => {
+        const matchSearch = !term || c.textContent.toLowerCase().includes(term);
+        const matchGroup  = activeFilter === 'all' || c.dataset.group === activeFilter;
+        return matchSearch && matchGroup;
+      });
+
+      // 2. Sort
+      const sorted = [...visible].sort((a, b) => {
+        if (sortAZ) return a.dataset.title.localeCompare(b.dataset.title, 'de');
+        // Default: grouped, then stable original order
+        const ga = GROUP_ORDER.indexOf(a.dataset.group);
+        const gb = GROUP_ORDER.indexOf(b.dataset.group);
+        if (ga !== gb) return ga - gb;
+        return +a.dataset.order - +b.dataset.order;
+      });
+
+      // 3. Rebuild grid
+      cards.forEach(c => c.style.display = 'none');
+      cardGrid.querySelectorAll('.group-header').forEach(h => h.remove());
+
+      // Show group headers only in "Alle" view without A-Z sort and without active search
+      const showHeaders = activeFilter === 'all' && !sortAZ && !term;
+      let lastGroup = null;
+
+      sorted.forEach(card => {
+        if (showHeaders && card.dataset.group !== lastGroup) {
+          lastGroup = card.dataset.group;
+          const groupCards = sorted.filter(c => c.dataset.group === lastGroup);
+          const color = GROUP_COLOR[lastGroup] || 'var(--muted)';
+          const hdr = document.createElement('div');
+          hdr.className = 'group-header';
+          hdr.innerHTML =
+            `<div class="group-line"></div>` +
+            `<div class="group-label" style="color:${color}">${lastGroup}` +
+            `<span class="group-label-count">${groupCards.length}</span></div>` +
+            `<div class="group-line"></div>`;
+          cardGrid.appendChild(hdr);
+        }
+        card.style.display = 'block';
+        cardGrid.appendChild(card);
+      });
+
+      // Result counter (only while searching)
+      resultCount.textContent = term ? `${visible.length} / 55` : '';
+
+      // Update pill counts dynamically
+      document.querySelectorAll('.pill[data-filter]').forEach(pill => {
+        const f = pill.dataset.filter;
+        const n = f === 'all'
+          ? (term ? visible.length : 55)
+          : cards.filter(c => c.dataset.group === f && (!term || c.textContent.toLowerCase().includes(term))).length;
+        const span = pill.querySelector('.pill-count');
+        if (span) span.textContent = n;
+      });
+    }
+
+    render(); // initial draw
   });
 </script>
 </body>
