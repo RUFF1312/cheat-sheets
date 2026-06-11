@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Docker Compose - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/docker-compose.svg">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#2496ed;--accent2:#0db7ed;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#0d1117 0%,#001629 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(36,150,237,.09),transparent);}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(36,150,237,.1);border:1px solid rgba(36,150,237,.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text);}
+  h1 span{color:var(--accent);}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .meta strong{color:var(--accent2);}
+  .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
+  .ch-bl{background:rgba(36,150,237,.1);border:1px solid rgba(36,150,237,.3);color:var(--accent);}
+  .ch-gn{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);color:var(--green);}
+  .ch-cy{background:rgba(57,197,207,.1);border:1px solid rgba(57,197,207,.3);color:var(--cyan);}
+  .ch-pu{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.3);color:var(--purple);}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px;}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .th-bl .section-header{background:rgba(36,150,237,.06);} .th-bl .section-icon{background:rgba(36,150,237,.15);} .th-bl .section-title{color:var(--accent);}
+  .th-gn .section-header{background:rgba(63,185,80,.06);} .th-gn .section-icon{background:rgba(63,185,80,.15);} .th-gn .section-title{color:var(--green);}
+  .th-cy .section-header{background:rgba(57,197,207,.06);} .th-cy .section-icon{background:rgba(57,197,207,.15);} .th-cy .section-title{color:var(--cyan);}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--purple);}
+  .th-re .section-header{background:rgba(244,112,103,.06);} .th-re .section-icon{background:rgba(244,112,103,.15);} .th-re .section-title{color:var(--red);}
+  .command-list{padding:8px 0;}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
+  .cmd-entry:last-child{border-bottom:none;}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+  .kw{color:#2496ed;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;} .tp{color:#a371f7;}
+  .tip{padding:8px 16px;background:rgba(36,150,237,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip strong{color:var(--text);}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(36,150,237,.3);padding:4px 12px;border-radius:4px;background:rgba(36,150,237,.08);}
+  .nav-link:hover{background:rgba(36,150,237,.15);}
+  @media(max-width:1100px){main{columns:2;}}
+  @media(max-width:700px){main{columns:1;padding:16px;}header{padding:24px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Container Reference</div>
+      <img src="../assets/docker-compose.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(43%) sepia(80%) saturate(700%) hue-rotate(186deg)">
+      <h1><span>Docker</span> Compose<br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ docker compose up -d</p>
+      <div class="version-legend">
+        <div class="chip ch-bl">Compose v2</div>
+        <div class="chip ch-gn">Services</div>
+        <div class="chip ch-cy">Networks</div>
+        <div class="chip ch-pu">Volumes</div>
+      </div>
+    </div>
+    <div class="meta"><strong>docker compose</strong><br>YAML · Services<br>Networks · Volumes<br>Secrets · Healthchecks</div>
+  </div>
+</header>
+<main>
+
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">📋</div><div class="section-title">CLI Befehle</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Starten / Stoppen</div><code>docker compose up -d          <span class="cm"># detached</span>
+docker compose down            <span class="cm"># stoppen + entfernen</span>
+docker compose down -v         <span class="cm"># inkl. Volumes</span>
+docker compose stop            <span class="cm"># nur stoppen</span>
+docker compose start</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Build & Pull</div><code>docker compose build
+docker compose build --no-cache
+docker compose pull
+docker compose up -d --build   <span class="cm"># build + start</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Status & Logs</div><code>docker compose ps
+docker compose logs -f
+docker compose logs -f web     <span class="cm"># Service-spez.</span>
+docker compose top</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Skalierung & Exec</div><code>docker compose scale web=3
+docker compose exec web bash
+docker compose run --rm web pytest
+docker compose restart web</code></div>
+  </div>
+</div>
+
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">📝</div><div class="section-title">compose.yml Grundstruktur</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Minimales Beispiel</div><code><span class="kw">services</span>:
+  <span class="fn">web</span>:
+    <span class="kw">image</span>: nginx:alpine
+    <span class="kw">ports</span>:
+      - <span class="st">"8080:80"</span>
+    <span class="kw">volumes</span>:
+      - <span class="st">./html:/usr/share/nginx/html</span>
+    <span class="kw">restart</span>: unless-stopped</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Mit Build-Context</div><code><span class="fn">app</span>:
+  <span class="kw">build</span>:
+    <span class="kw">context</span>: <span class="st">./app</span>
+    <span class="kw">dockerfile</span>: <span class="st">Dockerfile.prod</span>
+    <span class="kw">args</span>:
+      NODE_ENV: production
+  <span class="kw">image</span>: myapp:latest</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Dateinamen</div><code>compose.yml          <span class="cm"># bevorzugt (v2)</span>
+docker-compose.yml   <span class="cm"># legacy, noch gültig</span>
+docker compose -f custom.yml up</code></div>
+  </div>
+</div>
+
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">Service-Konfiguration</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Environment</div><code><span class="fn">app</span>:
+  <span class="kw">environment</span>:
+    DATABASE_URL: postgres://db/mydb
+    DEBUG: <span class="st">"false"</span>
+  <span class="kw">env_file</span>:
+    - .env
+    - .env.local</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Ports & Expose</div><code><span class="kw">ports</span>:
+  - <span class="st">"127.0.0.1:8080:80"</span>  <span class="cm"># bind an localhost</span>
+  - <span class="st">"3000"</span>               <span class="cm"># random Host-Port</span>
+  - <span class="st">"5432:5432/tcp"</span>
+<span class="kw">expose</span>:             <span class="cm"># nur intern sichtbar</span>
+  - <span class="st">"5432"</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Abhängigkeiten</div><code><span class="kw">depends_on</span>:
+  <span class="fn">db</span>:
+    <span class="kw">condition</span>: service_healthy
+  <span class="fn">cache</span>:
+    <span class="kw">condition</span>: service_started</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Ressourcenlimits</div><code><span class="kw">deploy</span>:
+  <span class="kw">resources</span>:
+    <span class="kw">limits</span>:
+      cpus: <span class="st">"0.5"</span>
+      memory: 512M
+    <span class="kw">reservations</span>:
+      memory: 128M</code></div>
+  </div>
+</div>
+
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Netzwerke</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Custom Networks</div><code><span class="kw">services</span>:
+  <span class="fn">web</span>:
+    <span class="kw">networks</span>: [frontend, backend]
+  <span class="fn">api</span>:
+    <span class="kw">networks</span>: [backend]
+
+<span class="kw">networks</span>:
+  <span class="fn">frontend</span>:
+  <span class="fn">backend</span>:
+    <span class="kw">internal</span>: true        <span class="cm"># kein ext. Zugriff</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Externes Netzwerk</div><code><span class="kw">networks</span>:
+  <span class="fn">proxy</span>:
+    <span class="kw">external</span>: true
+    <span class="kw">name</span>: nginx-proxy</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Service-DNS</div><code><span class="cm"># Services sind intern über ihren Namen erreichbar</span>
+postgres://db:5432/mydb   <span class="cm"># "db" = service name</span>
+http://api:3000/health</code></div>
+  </div>
+</div>
+
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">💾</div><div class="section-title">Volumes</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Named Volumes</div><code><span class="kw">services</span>:
+  <span class="fn">db</span>:
+    <span class="kw">volumes</span>:
+      - db-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+<span class="kw">volumes</span>:
+  <span class="fn">db-data</span>:        <span class="cm"># Docker managed</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Bind Mounts (kurz & lang)</div><code><span class="cm"># Kurz:</span>
+- ./src:/app/src
+<span class="cm"># Lang:</span>
+- <span class="kw">type</span>: bind
+  <span class="kw">source</span>: ./src
+  <span class="kw">target</span>: /app/src
+  <span class="kw">read_only</span>: true</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Externes Volume</div><code><span class="kw">volumes</span>:
+  <span class="fn">nfs-data</span>:
+    <span class="kw">driver</span>: local
+    <span class="kw">driver_opts</span>:
+      type: nfs
+      o: addr=10.0.0.1,rw
+      device: ":/exports/data"</code></div>
+  </div>
+</div>
+
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">🏥</div><div class="section-title">Health Checks</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Service Health Check</div><code><span class="fn">db</span>:
+  <span class="kw">image</span>: postgres:16
+  <span class="kw">healthcheck</span>:
+    <span class="kw">test</span>: [<span class="st">"CMD-SHELL"</span>, <span class="st">"pg_isready -U postgres"</span>]
+    <span class="kw">interval</span>: 10s
+    <span class="kw">timeout</span>: 5s
+    <span class="kw">retries</span>: 5
+    <span class="kw">start_period</span>: 30s</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">HTTP Health Check</div><code><span class="kw">healthcheck</span>:
+  <span class="kw">test</span>: [<span class="st">"CMD"</span>, <span class="st">"curl"</span>, <span class="st">"-f"</span>, <span class="st">"http://localhost/health"</span>]
+  <span class="kw">interval</span>: 30s
+  <span class="kw">timeout</span>: 10s
+  <span class="kw">retries</span>: 3</code></div>
+  </div>
+</div>
+
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">🔒</div><div class="section-title">Secrets & Configs</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Secrets (Datei-basiert)</div><code><span class="kw">services</span>:
+  <span class="fn">app</span>:
+    <span class="kw">secrets</span>: [db_password]
+
+<span class="kw">secrets</span>:
+  <span class="fn">db_password</span>:
+    <span class="kw">file</span>: ./secrets/db_password.txt</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Configs</div><code><span class="kw">services</span>:
+  <span class="fn">nginx</span>:
+    <span class="kw">configs</span>:
+      - <span class="kw">source</span>: nginx_conf
+        <span class="kw">target</span>: /etc/nginx/nginx.conf
+
+<span class="kw">configs</span>:
+  <span class="fn">nginx_conf</span>:
+    <span class="kw">file</span>: ./nginx.conf</code></div>
+    <div class="tip"><strong>Tipp:</strong> Secrets werden in /run/secrets/NAME gemountet. Nie Passwörter in environment-Variablen — secrets verwenden!</div>
+  </div>
+</div>
+
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">🔄</div><div class="section-title">Profile & Overrides</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Profile (optionale Services)</div><code><span class="fn">debug</span>:
+  <span class="kw">image</span>: busybox
+  <span class="kw">profiles</span>: [debug]
+
+docker compose --profile debug up</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Override-Dateien</div><code><span class="cm"># compose.yml + compose.override.yml</span>
+<span class="cm"># werden automatisch gemerged</span>
+docker compose -f compose.yml \
+               -f compose.prod.yml up</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Nützliche Variablen</div><code>COMPOSE_PROJECT_NAME=myapp
+COMPOSE_FILE=compose.yml:compose.prod.yml
+DOCKER_BUILDKIT=1</code></div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redis - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/redis.svg">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#dc382d;--accent2:#ff6b6b;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#0d1117 0%,#140202 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(220,56,45,.08),transparent);}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(220,56,45,.1);border:1px solid rgba(220,56,45,.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text);}
+  h1 span{color:var(--accent);}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .meta strong{color:var(--accent2);}
+  .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
+  .ch-re{background:rgba(220,56,45,.1);border:1px solid rgba(220,56,45,.3);color:var(--accent);}
+  .ch-gn{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);color:var(--green);}
+  .ch-cy{background:rgba(57,197,207,.1);border:1px solid rgba(57,197,207,.3);color:var(--cyan);}
+  .ch-pu{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.3);color:var(--purple);}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px;}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .th-re .section-header{background:rgba(220,56,45,.06);} .th-re .section-icon{background:rgba(220,56,45,.15);} .th-re .section-title{color:var(--accent);}
+  .th-gn .section-header{background:rgba(63,185,80,.06);} .th-gn .section-icon{background:rgba(63,185,80,.15);} .th-gn .section-title{color:var(--green);}
+  .th-cy .section-header{background:rgba(57,197,207,.06);} .th-cy .section-icon{background:rgba(57,197,207,.15);} .th-cy .section-title{color:var(--cyan);}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--purple);}
+  .th-or .section-header{background:rgba(244,162,97,.06);} .th-or .section-icon{background:rgba(244,162,97,.15);} .th-or .section-title{color:#f4a261;}
+  .command-list{padding:8px 0;}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
+  .cmd-entry:last-child{border-bottom:none;}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+  .kw{color:#dc382d;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;} .tp{color:#a371f7;}
+  .tip{padding:8px 16px;background:rgba(220,56,45,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip strong{color:var(--text);}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(220,56,45,.3);padding:4px 12px;border-radius:4px;background:rgba(220,56,45,.08);}
+  .nav-link:hover{background:rgba(220,56,45,.15);}
+  @media(max-width:1100px){main{columns:2;}}
+  @media(max-width:700px){main{columns:1;padding:16px;}header{padding:24px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Datenbank Reference</div>
+      <img src="../assets/redis.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(22%) sepia(85%) saturate(700%) hue-rotate(335deg)">
+      <h1><span>Redis</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ redis-cli -h localhost -p 6379</p>
+      <div class="version-legend">
+        <div class="chip ch-re">Redis 7+</div>
+        <div class="chip ch-gn">Strings/Lists</div>
+        <div class="chip ch-cy">Pub/Sub</div>
+        <div class="chip ch-pu">Streams</div>
+      </div>
+    </div>
+    <div class="meta"><strong>redis-cli</strong><br>Strings · Hashes<br>Lists · Sets · ZSets<br>Pub/Sub · Streams</div>
+  </div>
+</header>
+<main>
+
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">Basics & Server</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">CLI verbinden</div><code>redis-cli
+redis-cli -h host -p 6379 -a password
+redis-cli -u redis://user:pass@host:6379
+redis-cli --tls -h host</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Server-Infos</div><code><span class="kw">PING</span>              <span class="cm">-- Verbindung testen → PONG</span>
+<span class="kw">INFO</span> server
+<span class="kw">INFO</span> memory
+<span class="kw">DBSIZE</span>            <span class="cm">-- Anzahl Keys</span>
+<span class="kw">CONFIG GET</span> maxmemory
+<span class="kw">CONFIG SET</span> maxmemory 512mb
+<span class="kw">FLUSHDB</span>           <span class="cm">-- aktuelle DB leeren</span>
+<span class="kw">BGSAVE</span>            <span class="cm">-- async Snapshot</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Keys allgemein</div><code><span class="kw">KEYS</span> user:*        <span class="cm">-- Pattern-Suche (prod: SCAN!)</span>
+<span class="kw">SCAN</span> <span class="nu">0</span> MATCH user:* COUNT <span class="nu">100</span>
+<span class="kw">TYPE</span> mykey         <span class="cm">-- Typ anzeigen</span>
+<span class="kw">TTL</span> mykey          <span class="cm">-- Restzeit in Sek</span>
+<span class="kw">EXPIRE</span> mykey <span class="nu">3600</span>  <span class="cm">-- TTL setzen</span>
+<span class="kw">PERSIST</span> mykey      <span class="cm">-- TTL entfernen</span>
+<span class="kw">DEL</span> key1 key2      <span class="cm">-- löschen</span>
+<span class="kw">EXISTS</span> mykey</code></div>
+  </div>
+</div>
+
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">📝</div><div class="section-title">Strings</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Set & Get</div><code><span class="kw">SET</span> name <span class="st">"Alice"</span>
+<span class="kw">GET</span> name
+<span class="kw">SET</span> key value <span class="kw">EX</span> <span class="nu">3600</span>   <span class="cm">-- mit TTL</span>
+<span class="kw">SET</span> key value <span class="kw">NX</span>        <span class="cm">-- nur wenn nicht existiert</span>
+<span class="kw">SET</span> key value <span class="kw">XX</span>        <span class="cm">-- nur wenn existiert</span>
+<span class="kw">GETSET</span> key newval      <span class="cm">-- alten Wert zurückgeben</span>
+<span class="kw">MSET</span> k1 v1 k2 v2
+<span class="kw">MGET</span> k1 k2</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Zähler & Append</div><code><span class="kw">INCR</span> counter
+<span class="kw">INCRBY</span> counter <span class="nu">10</span>
+<span class="kw">DECR</span> counter
+<span class="kw">APPEND</span> log <span class="st">"entry\n"</span>
+<span class="kw">STRLEN</span> name</code></div>
+  </div>
+</div>
+
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">🗂</div><div class="section-title">Hashes</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Hash-Operationen</div><code><span class="kw">HSET</span> user:1 name <span class="st">"Alice"</span> age <span class="nu">30</span>
+<span class="kw">HGET</span> user:1 name
+<span class="kw">HGETALL</span> user:1
+<span class="kw">HMGET</span> user:1 name age
+<span class="kw">HDEL</span> user:1 age
+<span class="kw">HEXISTS</span> user:1 name
+<span class="kw">HKEYS</span> user:1
+<span class="kw">HVALS</span> user:1
+<span class="kw">HLEN</span> user:1
+<span class="kw">HINCRBY</span> user:1 age <span class="nu">1</span></code></div>
+  </div>
+</div>
+
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">📋</div><div class="section-title">Lists</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">List-Operationen</div><code><span class="kw">LPUSH</span> queue job1 job2   <span class="cm">-- links hinzufügen</span>
+<span class="kw">RPUSH</span> queue job3       <span class="cm">-- rechts hinzufügen</span>
+<span class="kw">LPOP</span> queue             <span class="cm">-- links entfernen</span>
+<span class="kw">RPOP</span> queue             <span class="cm">-- rechts entfernen</span>
+<span class="kw">BLPOP</span> queue <span class="nu">5</span>          <span class="cm">-- blockierend, 5s timeout</span>
+<span class="kw">LRANGE</span> queue <span class="nu">0</span> -<span class="nu">1</span>      <span class="cm">-- alle Elemente</span>
+<span class="kw">LLEN</span> queue
+<span class="kw">LINDEX</span> queue <span class="nu">0</span>
+<span class="kw">LTRIM</span> queue <span class="nu">0</span> <span class="nu">99</span>       <span class="cm">-- auf 100 Elemente kürzen</span></code></div>
+  </div>
+</div>
+
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">🎯</div><div class="section-title">Sets & Sorted Sets</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Sets</div><code"><span class="kw">SADD</span> tags php python go
+<span class="kw">SMEMBERS</span> tags
+<span class="kw">SISMEMBER</span> tags php
+<span class="kw">SCARD</span> tags            <span class="cm">-- Anzahl</span>
+<span class="kw">SINTER</span> set1 set2      <span class="cm">-- Schnittmenge</span>
+<span class="kw">SUNION</span> set1 set2      <span class="cm">-- Vereinigung</span>
+<span class="kw">SDIFF</span>  set1 set2      <span class="cm">-- Differenz</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Sorted Sets (ZSet)</div><code"><span class="kw">ZADD</span> ranking <span class="nu">100</span> alice <span class="nu">200</span> bob
+<span class="kw">ZRANK</span> ranking alice   <span class="cm">-- Position (0-based)</span>
+<span class="kw">ZSCORE</span> ranking alice  <span class="cm">-- Score</span>
+<span class="kw">ZRANGE</span> ranking <span class="nu">0</span> -<span class="nu">1</span> WITHSCORES
+<span class="kw">ZREVRANGE</span> ranking <span class="nu">0</span> <span class="nu">9</span>  <span class="cm">-- Top 10</span>
+<span class="kw">ZINCRBY</span> ranking <span class="nu">10</span> alice
+<span class="kw">ZRANGEBYSCORE</span> ranking <span class="nu">50</span> 150</code></div>
+  </div>
+</div>
+
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">📡</div><div class="section-title">Pub/Sub & Streams</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Pub/Sub</div><code><span class="kw">SUBSCRIBE</span> channel1
+<span class="kw">PSUBSCRIBE</span> news.*      <span class="cm">-- Pattern</span>
+<span class="kw">PUBLISH</span> channel1 <span class="st">"hello"</span>
+<span class="kw">UNSUBSCRIBE</span> channel1</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Streams (Redis 5+)</div><code><span class="cm">-- Nachricht hinzufügen</span>
+<span class="kw">XADD</span> events * type <span class="st">"click"</span> user <span class="st">"alice"</span>
+<span class="cm">-- Lesen</span>
+<span class="kw">XREAD</span> COUNT <span class="nu">10</span> STREAMS events <span class="nu">0</span>
+<span class="cm">-- Consumer Group</span>
+<span class="kw">XGROUP CREATE</span> events grp1 $
+<span class="kw">XREADGROUP</span> GROUP grp1 consumer1 COUNT <span class="nu">1</span> STREAMS events ></code></div>
+  </div>
+</div>
+
+<div class="section th-or">
+  <div class="section-header"><div class="section-icon">🔒</div><div class="section-title">Transaktionen & Scripting</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Transaktionen</div><code><span class="kw">MULTI</span>
+<span class="kw">SET</span> balance <span class="nu">100</span>
+<span class="kw">INCRBY</span> balance <span class="nu">50</span>
+<span class="kw">EXEC</span>          <span class="cm">-- oder DISCARD</span>
+<span class="kw">WATCH</span> balance  <span class="cm">-- optimistic locking</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Lua Scripting</div><code><span class="kw">EVAL</span> <span class="st">"return redis.call('GET', KEYS[1])"</span> <span class="nu">1</span> mykey</code></div>
+    <div class="tip"><strong>Tipp:</strong> KEYS-Befehl in Produktion vermeiden — immer SCAN verwenden. Keyspace-Namespacing: user:123:profile</div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>

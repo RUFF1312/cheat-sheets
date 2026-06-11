@@ -159,6 +159,30 @@
   .c-ruby{--ac:#cc342d;--acs:rgba(204,52,45,0.15);--acb:rgba(204,52,45,0.25)}
   /* Kotlin */
   .c-kotlin{--ac:#7f52ff;--acs:rgba(127,82,255,0.15);--acb:rgba(127,82,255,0.25)}
+  /* C# */
+  .c-csharp{--ac:#c678dd;--acs:rgba(155,79,150,0.15);--acb:rgba(155,79,150,0.25)}
+  /* Swift */
+  .c-swift{--ac:#f05138;--acs:rgba(240,81,56,0.15);--acb:rgba(240,81,56,0.25)}
+  /* Lua */
+  .c-lua{--ac:#79a8ff;--acs:rgba(78,111,255,0.15);--acb:rgba(78,111,255,0.25)}
+  /* Docker Compose */
+  .c-docker-compose{--ac:#2496ed;--acs:rgba(36,150,237,0.15);--acb:rgba(36,150,237,0.25)}
+  /* PostgreSQL */
+  .c-postgresql{--ac:#6495ed;--acs:rgba(45,106,159,0.15);--acb:rgba(45,106,159,0.25)}
+  /* Redis */
+  .c-redis{--ac:#dc382d;--acs:rgba(220,56,45,0.15);--acb:rgba(220,56,45,0.25)}
+  /* rsync */
+  .c-rsync{--ac:#00b4a0;--acs:rgba(0,180,160,0.15);--acb:rgba(0,180,160,0.25)}
+  /* firewalld */
+  .c-firewalld{--ac:#e05a00;--acs:rgba(224,90,0,0.15);--acb:rgba(224,90,0,0.25)}
+  /* ArgoCD */
+  .c-argocd{--ac:#ef7b4d;--acs:rgba(239,123,77,0.15);--acb:rgba(239,123,77,0.25)}
+  /* Loki */
+  .c-loki{--ac:#f5a623;--acs:rgba(245,166,35,0.15);--acb:rgba(245,166,35,0.25)}
+  /* Alertmanager */
+  .c-alertmanager{--ac:#e67e22;--acs:rgba(204,75,0,0.15);--acb:rgba(204,75,0,0.25)}
+  /* containerd */
+  .c-containerd{--ac:#4a90d9;--acs:rgba(74,144,217,0.15);--acb:rgba(74,144,217,0.25)}
 
   .card .card-accent{background:var(--ac)}
   .card:hover{border-color:var(--ac)}
@@ -177,6 +201,7 @@
   .pill[data-filter="Dev & Automation"].active{border-color:#a371f7;color:#a371f7;background:rgba(163,113,247,.08)}
   .pill[data-filter="System & Netz"].active{border-color:#3fb950;color:#3fb950;background:rgba(63,185,80,.08)}
   .pill[data-filter="Cloud & Infra"].active{border-color:#0db7ed;color:#0db7ed;background:rgba(13,183,237,.08)}
+  .pill[data-filter="Datenbanken"].active{border-color:#f0c040;color:#f0c040;background:rgba(240,192,64,.08)}
   .pill-count{opacity:.55;margin-left:5px}
   .toolbar-row2{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .search-input{background:var(--code-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:7px 12px;font-size:13px;font-family:'Syne',sans-serif;width:260px;outline:none;transition:border-color .2s}
@@ -206,17 +231,18 @@
   <div class="header-eyebrow">Developer Reference Collection</div>
   <h1><span class="h1-accent">TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span></span><br>Guide</h1>
   <p class="header-sub">Alle Referenz-Sheets auf einen Blick — dark-themed, vollständig, offline-fähig.</p>
-  <div class="header-count"><span>55</span> Sheets · CLI · Scripting · DevOps · OpenStack · Coding</div>
+  <div class="header-count"><span>67</span> Sheets · CLI · Scripting · DevOps · Datenbanken · Coding</div>
 </header>
 
 <main>
   <div class="toolbar">
     <div class="toolbar-filters">
-      <button class="pill active" data-filter="all">Alle <span class="pill-count">55</span></button>
-      <button class="pill" data-filter="Programmiersprachen">Sprachen <span class="pill-count">10</span></button>
-      <button class="pill" data-filter="Dev & Automation">Dev &amp; Automation <span class="pill-count">11</span></button>
-      <button class="pill" data-filter="System & Netz">System &amp; Netz <span class="pill-count">15</span></button>
-      <button class="pill" data-filter="Cloud & Infra">Cloud &amp; Infra <span class="pill-count">19</span></button>
+      <button class="pill active" data-filter="all">Alle <span class="pill-count">67</span></button>
+      <button class="pill" data-filter="Programmiersprachen">Sprachen <span class="pill-count">13</span></button>
+      <button class="pill" data-filter="Dev & Automation">Dev &amp; Automation <span class="pill-count">9</span></button>
+      <button class="pill" data-filter="System & Netz">System &amp; Netz <span class="pill-count">17</span></button>
+      <button class="pill" data-filter="Datenbanken">Datenbanken <span class="pill-count">4</span></button>
+      <button class="pill" data-filter="Cloud & Infra">Cloud &amp; Infra <span class="pill-count">24</span></button>
     </div>
     <div class="toolbar-row2">
       <input type="text" id="searchInput" class="search-input" placeholder="Sheets, Commands, Tags durchsuchen…">
@@ -387,7 +413,7 @@
     </a>
 
     <!-- SQL -->
-    <a href="sheets/sql-cheatsheet.html" class="card c-sql" data-title="SQL" data-group="Dev & Automation">
+    <a href="sheets/sql-cheatsheet.html" class="card c-sql" data-title="SQL" data-group="Datenbanken">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -835,7 +861,7 @@
     </a>
 
     <!-- MariaDB / MySQL -->
-    <a href="sheets/mariadb-cheatsheet.html" class="card c-mariadb" data-title="MariaDB / MySQL" data-group="Dev & Automation">
+    <a href="sheets/mariadb-cheatsheet.html" class="card c-mariadb" data-title="MariaDB / MySQL" data-group="Datenbanken">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -1096,6 +1122,189 @@
       </div>
     </a>
 
+    <a href="sheets/csharp-cheatsheet.html" class="card c-csharp" data-title="C#" data-group="Programmiersprachen">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/csharp.svg" alt="csharp.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">C#</div>
+        </div>
+        <div class="card-tagline">$ dotnet run -- OOP · LINQ · Async/Await<br>Records · Pattern Matching · Generics</div>
+        <div class="card-tags">
+          <span class="tag">LINQ</span><span class="tag">Async</span><span class="tag">Records</span><span class="tag">C# 12</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/swift-cheatsheet.html" class="card c-swift" data-title="Swift" data-group="Programmiersprachen">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/swift.svg" alt="swift.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Swift</div>
+        </div>
+        <div class="card-tagline">$ swift run -- Optionals · Protocols · Actors<br>async/await · Generics · SwiftPM</div>
+        <div class="card-tags">
+          <span class="tag">Optionals</span><span class="tag">Actors</span><span class="tag">Protocols</span><span class="tag">Swift 5.9</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/lua-cheatsheet.html" class="card c-lua" data-title="Lua" data-group="Programmiersprachen">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/lua.svg" alt="lua.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Lua</div>
+        </div>
+        <div class="card-tagline">$ lua script.lua -- Tables · Metatables<br>Coroutines · OOP · Modules · C API</div>
+        <div class="card-tags">
+          <span class="tag">Tables</span><span class="tag">Metatables</span><span class="tag">Coroutines</span><span class="tag">Lua 5.4</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Datenbanken -->
+    <a href="sheets/postgresql-cheatsheet.html" class="card c-postgresql" data-title="PostgreSQL" data-group="Datenbanken">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/postgresql.svg" alt="postgresql.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">PostgreSQL</div>
+        </div>
+        <div class="card-tagline">$ psql -U postgres -d mydb -- RDBMS<br>DDL · DML · Joins · JSONB · CTEs · Indizes</div>
+        <div class="card-tags">
+          <span class="tag">psql</span><span class="tag">JSONB</span><span class="tag">Window Fns</span><span class="tag">PG 16</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/redis-cheatsheet.html" class="card c-redis" data-title="Redis" data-group="Datenbanken">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/redis.svg" alt="redis.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Redis</div>
+        </div>
+        <div class="card-tagline">$ redis-cli -- Strings · Hashes · Sets<br>Pub/Sub · Streams · Transactions · Lua</div>
+        <div class="card-tags">
+          <span class="tag">Strings</span><span class="tag">Pub/Sub</span><span class="tag">Streams</span><span class="tag">Redis 7</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- System & Netz (neue) -->
+    <a href="sheets/rsync-cheatsheet.html" class="card c-rsync" data-title="rsync" data-group="System & Netz">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/rsync.svg" alt="rsync.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">rsync</div>
+        </div>
+        <div class="card-tagline">$ rsync -avz src/ user@host:/dst/ -- Sync<br>SSH · Include/Exclude · Backup · Daemon</div>
+        <div class="card-tags">
+          <span class="tag">SSH</span><span class="tag">Backup</span><span class="tag">Exclude</span><span class="tag">Mirror</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/firewalld-cheatsheet.html" class="card c-firewalld" data-title="firewalld" data-group="System & Netz">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/firewalld.svg" alt="firewalld.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">firewalld</div>
+        </div>
+        <div class="card-tagline">$ firewall-cmd --list-all -- Zonen · Services<br>Rich Rules · NAT · Masquerade · Port Forward</div>
+        <div class="card-tags">
+          <span class="tag">Zonen</span><span class="tag">Rich Rules</span><span class="tag">NAT</span><span class="tag">nftables</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Cloud & Infra (neue) -->
+    <a href="sheets/docker-compose-cheatsheet.html" class="card c-docker-compose" data-title="Docker Compose" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/docker-compose.svg" alt="docker-compose.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Docker Compose</div>
+        </div>
+        <div class="card-tagline">$ docker compose up -d -- Multi-Container<br>Services · Volumes · Networks · Secrets</div>
+        <div class="card-tags">
+          <span class="tag">Services</span><span class="tag">Volumes</span><span class="tag">Health</span><span class="tag">Compose v2</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/argocd-cheatsheet.html" class="card c-argocd" data-title="ArgoCD" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/argocd.svg" alt="argocd.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">ArgoCD</div>
+        </div>
+        <div class="card-tagline">$ argocd app sync myapp -- GitOps CD<br>Apps · Sync · Rollback · Projects · RBAC</div>
+        <div class="card-tags">
+          <span class="tag">GitOps</span><span class="tag">Sync</span><span class="tag">Rollback</span><span class="tag">RBAC</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/loki-cheatsheet.html" class="card c-loki" data-title="Loki / LogQL" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/loki.svg" alt="loki.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Loki / LogQL</div>
+        </div>
+        <div class="card-tagline">$ logcli query '{app="nginx"}' -- Log Aggregation<br>LogQL · Streams · Metrics · Promtail</div>
+        <div class="card-tags">
+          <span class="tag">LogQL</span><span class="tag">Streams</span><span class="tag">Metrics</span><span class="tag">Promtail</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/alertmanager-cheatsheet.html" class="card c-alertmanager" data-title="Alertmanager" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/alertmanager.svg" alt="alertmanager.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">Alertmanager</div>
+        </div>
+        <div class="card-tagline">$ amtool alert query -- Routing · Silences<br>Receiver · Inhibition · Prometheus Rules</div>
+        <div class="card-tags">
+          <span class="tag">Routes</span><span class="tag">Silences</span><span class="tag">Slack</span><span class="tag">PagerDuty</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/containerd-cheatsheet.html" class="card c-containerd" data-title="containerd / crictl" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/containerd.svg" alt="containerd.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">containerd / crictl</div>
+        </div>
+        <div class="card-tagline">$ crictl ps -- CRI Container Runtime<br>crictl · nerdctl · ctr · Kubernetes Debugging</div>
+        <div class="card-tags">
+          <span class="tag">crictl</span><span class="tag">nerdctl</span><span class="tag">ctr</span><span class="tag">K8s CRI</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
   </div>
 </main>
 
@@ -1112,11 +1321,12 @@
     cards.forEach((c, i) => c.dataset.order = i);
 
     // Group display order + color
-    const GROUP_ORDER = ['Programmiersprachen', 'Dev & Automation', 'System & Netz', 'Cloud & Infra'];
+    const GROUP_ORDER = ['Programmiersprachen', 'Dev & Automation', 'System & Netz', 'Datenbanken', 'Cloud & Infra'];
     const GROUP_COLOR = {
       'Programmiersprachen': '#f7df1e',
       'Dev & Automation':    '#a371f7',
       'System & Netz':       '#3fb950',
+      'Datenbanken':         '#f0c040',
       'Cloud & Infra':       '#0db7ed'
     };
 
@@ -1190,13 +1400,13 @@
       });
 
       // Result counter (only while searching)
-      resultCount.textContent = term ? `${visible.length} / 55` : '';
+      resultCount.textContent = term ? `${visible.length} / 67` : '';
 
       // Update pill counts dynamically
       document.querySelectorAll('.pill[data-filter]').forEach(pill => {
         const f = pill.dataset.filter;
         const n = f === 'all'
-          ? (term ? visible.length : 55)
+          ? (term ? visible.length : 67)
           : cards.filter(c => c.dataset.group === f && (!term || c.textContent.toLowerCase().includes(term))).length;
         const span = pill.querySelector('.pill-count');
         if (span) span.textContent = n;
