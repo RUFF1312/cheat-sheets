@@ -55,7 +55,7 @@
   <a href="../index.html" class="nav-link">← Index</a>
   <div class="header-grid">
     <div>
-      <div class="badge">▸ Cloud & Infra Reference</div>
+      <div class="badge">▸ VMware PowerCLI</div>
       <img src="../assets/powercli.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(31%) sepia(80%) saturate(500%) hue-rotate(186deg)">
       <h1>VMware <span>PowerCLI</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
       <p class="subtitle">PS> Connect-VIServer -Server vcenter.example.com</p>
@@ -82,7 +82,7 @@
 <span class="kw">Connect-VIServer</span> -Server vc01 -User admin -Password secret
 <span class="kw">Connect-VIServer</span> -Server vc01 -Credential (Get-Credential)
 <span class="kw">Disconnect-VIServer</span> -Server * -Force -Confirm:$false</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Mehrere vCenter</div><code">$vc1 = <span class="kw">Connect-VIServer</span> vc01.example.com
+    <div class="cmd-entry"><div class="cmd-desc">Mehrere vCenter</div><code>$vc1 = <span class="kw">Connect-VIServer</span> vc01.example.com
 $vc2 = <span class="kw">Connect-VIServer</span> vc02.example.com
 <span class="kw">Get-VM</span> -Server $vc1</code></div>
   </div>
@@ -91,21 +91,21 @@ $vc2 = <span class="kw">Connect-VIServer</span> vc02.example.com
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🖥</div><div class="section-title">VMs verwalten</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Filtern</div><code"><span class="kw">Get-VM</span>
+    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Filtern</div><code><span class="kw">Get-VM</span>
 <span class="kw">Get-VM</span> -Name myvm*
 <span class="kw">Get-VM</span> | <span class="kw">Where-Object</span> { $_.PowerState -eq <span class="st">"PoweredOff"</span> }
 <span class="kw">Get-VM</span> | <span class="kw">Sort-Object</span> Name | <span class="kw">Select-Object</span> Name,NumCpu,MemoryGB</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Power-Operationen</div><code"><span class="kw">Start-VM</span> -VM myvm
+    <div class="cmd-entry"><div class="cmd-desc">Power-Operationen</div><code><span class="kw">Start-VM</span> -VM myvm
 <span class="kw">Stop-VM</span> -VM myvm -Confirm:$false
 <span class="kw">Restart-VM</span> -VM myvm
 <span class="kw">Suspend-VM</span> -VM myvm
 <span class="kw">Stop-VMGuest</span> -VM myvm           <span class="cm"># graceful shutdown</span>
 <span class="kw">Restart-VMGuest</span> -VM myvm</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">VM erstellen & löschen</div><code"><span class="kw">New-VM</span> -Name newvm -VMHost esx01 -Datastore ds01 `
+    <div class="cmd-entry"><div class="cmd-desc">VM erstellen & löschen</div><code><span class="kw">New-VM</span> -Name newvm -VMHost esx01 -Datastore ds01 `
   -DiskGB 50 -MemoryGB 4 -NumCpu 2 `
   -GuestId rhel8_64Guest
 <span class="kw">Remove-VM</span> -VM oldvm -DeletePermanently -Confirm:$false</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">VM konfigurieren</div><code"><span class="kw">Set-VM</span> -VM myvm -NumCpu 4 -MemoryGB 8 -Confirm:$false
+    <div class="cmd-entry"><div class="cmd-desc">VM konfigurieren</div><code><span class="kw">Set-VM</span> -VM myvm -NumCpu 4 -MemoryGB 8 -Confirm:$false
 <span class="kw">Set-VM</span> -VM myvm -Name newname
 <span class="kw">Move-VM</span> -VM myvm -Destination cluster02
 <span class="kw">Get-VMQuestion</span> -VM myvm | <span class="kw">Set-VMQuestion</span> -DefaultOption</code></div>
@@ -115,7 +115,7 @@ $vc2 = <span class="kw">Connect-VIServer</span> vc02.example.com
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">🔄</div><div class="section-title">Snapshots</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Snapshots verwalten</div><code"><span class="kw">Get-Snapshot</span> -VM myvm
+    <div class="cmd-entry"><div class="cmd-desc">Snapshots verwalten</div><code><span class="kw">Get-Snapshot</span> -VM myvm
 <span class="kw">New-Snapshot</span> -VM myvm -Name <span class="st">"before-update"</span> -Description <span class="st">"pre-patch"</span>
 <span class="kw">New-Snapshot</span> -VM myvm -Name snap1 -Memory -Quiesce
 <span class="kw">Set-VM</span> -VM myvm -Snapshot (Get-Snapshot -VM myvm -Name snap1)
@@ -128,16 +128,16 @@ $vc2 = <span class="kw">Connect-VIServer</span> vc02.example.com
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🏗</div><div class="section-title">Hosts & Cluster</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Infrastruktur</div><code"><span class="kw">Get-Datacenter</span>
+    <div class="cmd-entry"><div class="cmd-desc">Infrastruktur</div><code><span class="kw">Get-Datacenter</span>
 <span class="kw">Get-Cluster</span>
 <span class="kw">Get-VMHost</span>
 <span class="kw">Get-VMHost</span> -Location cluster01
 <span class="kw">Get-VMHost</span> | <span class="kw">Select-Object</span> Name,ConnectionState,PowerState</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Host-Status</div><code"><span class="kw">Get-VMHost</span> esx01 | <span class="kw">Get-Stat</span> -Stat cpu.usage.average -Realtime
+    <div class="cmd-entry"><div class="cmd-desc">Host-Status</div><code><span class="kw">Get-VMHost</span> esx01 | <span class="kw">Get-Stat</span> -Stat cpu.usage.average -Realtime
 <span class="kw">Get-VMHostStorage</span> -VMHost esx01
 <span class="kw">Get-VMHostNetworkAdapter</span> -VMHost esx01
 <span class="kw">Get-VMHostService</span> -VMHost esx01</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Maintenance Mode</div><code"><span class="kw">Set-VMHost</span> -VMHost esx01 -State Maintenance
+    <div class="cmd-entry"><div class="cmd-desc">Maintenance Mode</div><code><span class="kw">Set-VMHost</span> -VMHost esx01 -State Maintenance
 <span class="kw">Set-VMHost</span> -VMHost esx01 -State Connected
 <span class="kw">Get-VMHost</span> | <span class="kw">Where-Object</span> { $_.ConnectionState -eq <span class="st">"Maintenance"</span> }</code></div>
   </div>
@@ -146,17 +146,17 @@ $vc2 = <span class="kw">Connect-VIServer</span> vc02.example.com
 <div class="section th-bl">
   <div class="section-header"><div class="section-icon">💾</div><div class="section-title">Storage & Festplatten</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Datastores</div><code"><span class="kw">Get-Datastore</span>
+    <div class="cmd-entry"><div class="cmd-desc">Datastores</div><code><span class="kw">Get-Datastore</span>
 <span class="kw">Get-Datastore</span> -Name ds01 | <span class="kw">Select-Object</span> Name,FreeSpaceGB,CapacityGB
 <span class="kw">Get-DatastoreCluster</span>
 <span class="kw">New-Datastore</span> -VMHost esx01 -Name nfs01 -Nfs `
   -NfsHost 10.0.0.10 -Path /exports/nfs01</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Festplatten</div><code"><span class="kw">Get-HardDisk</span> -VM myvm
+    <div class="cmd-entry"><div class="cmd-desc">Festplatten</div><code><span class="kw">Get-HardDisk</span> -VM myvm
 <span class="kw">New-HardDisk</span> -VM myvm -CapacityGB 100 -Datastore ds01
 <span class="kw">Set-HardDisk</span> -HardDisk (Get-HardDisk -VM myvm | <span class="kw">Select-Object</span> -First 1) `
   -CapacityGB 200 -Confirm:$false
 <span class="kw">Remove-HardDisk</span> -HardDisk $disk -DeletePermanently -Confirm:$false</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Datastore-Dateien</div><code"><span class="kw">Get-ChildItem</span> -Path "vmstore:\dc01\ds01\myvm\"
+    <div class="cmd-entry"><div class="cmd-desc">Datastore-Dateien</div><code><span class="kw">Get-ChildItem</span> -Path "vmstore:\dc01\ds01\myvm\"
 <span class="kw">Copy-DatastoreItem</span> -Item "vmstore:\dc01\ds01\vm1\" -Destination "vmstore:\dc01\ds02\"</code></div>
   </div>
 </div>
@@ -164,14 +164,14 @@ $vc2 = <span class="kw">Connect-VIServer</span> vc02.example.com
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Netzwerk</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Standard vSwitch</div><code"><span class="kw">Get-VirtualSwitch</span> -VMHost esx01
+    <div class="cmd-entry"><div class="cmd-desc">Standard vSwitch</div><code><span class="kw">Get-VirtualSwitch</span> -VMHost esx01
 <span class="kw">Get-VirtualPortGroup</span> -VMHost esx01
 <span class="kw">New-VirtualSwitch</span> -VMHost esx01 -Name vSwitch1
 <span class="kw">New-VirtualPortGroup</span> -VirtualSwitch vSwitch1 -Name VLAN100 -VLanId 100</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Distributed vSwitch</div><code"><span class="kw">Get-VDSwitch</span>
+    <div class="cmd-entry"><div class="cmd-desc">Distributed vSwitch</div><code><span class="kw">Get-VDSwitch</span>
 <span class="kw">Get-VDPortgroup</span>
 <span class="kw">Get-VDPortgroup</span> | <span class="kw">Select-Object</span> Name,VlanConfiguration,NumPorts</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">VM Netzwerkadapter</div><code"><span class="kw">Get-NetworkAdapter</span> -VM myvm
+    <div class="cmd-entry"><div class="cmd-desc">VM Netzwerkadapter</div><code><span class="kw">Get-NetworkAdapter</span> -VM myvm
 <span class="kw">Set-NetworkAdapter</span> -NetworkAdapter (Get-NetworkAdapter -VM myvm) `
   -PortGroup (Get-VDPortgroup -Name PG-Prod) -Confirm:$false</code></div>
   </div>
@@ -180,13 +180,13 @@ $vc2 = <span class="kw">Connect-VIServer</span> vc02.example.com
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">Guest OS & Skripte</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Invoke-VMScript</div><code"><span class="kw">Invoke-VMScript</span> -VM myvm `
+    <div class="cmd-entry"><div class="cmd-desc">Invoke-VMScript</div><code><span class="kw">Invoke-VMScript</span> -VM myvm `
   -ScriptText <span class="st">"systemctl restart nginx"</span> `
   -GuestUser root -GuestPassword secret
 <span class="kw">Invoke-VMScript</span> -VM myvm `
   -ScriptType Bash `
   -ScriptText <span class="st">"df -h"</span> -GuestCredential (Get-Credential)</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">VMware Tools</div><code"><span class="kw">Get-VMGuest</span> -VM myvm
+    <div class="cmd-entry"><div class="cmd-desc">VMware Tools</div><code><span class="kw">Get-VMGuest</span> -VM myvm
 <span class="kw">Get-VMGuest</span> -VM myvm | <span class="kw">Select-Object</span> IPAddress,OSFullName,ToolsVersion
 <span class="kw">Update-Tools</span> -VM myvm</code></div>
   </div>
@@ -195,13 +195,13 @@ $vc2 = <span class="kw">Connect-VIServer</span> vc02.example.com
 <div class="section th-re">
   <div class="section-header"><div class="section-icon">🏷</div><div class="section-title">Tags & Reports</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Tags</div><code"><span class="kw">Get-TagCategory</span>
+    <div class="cmd-entry"><div class="cmd-desc">Tags</div><code><span class="kw">Get-TagCategory</span>
 <span class="kw">New-TagCategory</span> -Name <span class="st">"Environment"</span> -Cardinality Single
 <span class="kw">New-Tag</span> -Name <span class="st">"Production"</span> -Category <span class="st">"Environment"</span>
 <span class="kw">New-TagAssignment</span> -Tag <span class="st">"Production"</span> -Entity (Get-VM myvm)
 <span class="kw">Get-TagAssignment</span> -Category <span class="st">"Environment"</span>
 <span class="kw">Get-VM</span> | <span class="kw">Where-Object</span> { (Get-TagAssignment -Entity $_).Tag.Name -eq <span class="st">"Production"</span> }</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Reports / Export</div><code"><span class="kw">Get-VM</span> | <span class="kw">Select-Object</span> Name,NumCpu,MemoryGB,PowerState `
+    <div class="cmd-entry"><div class="cmd-desc">Reports / Export</div><code><span class="kw">Get-VM</span> | <span class="kw">Select-Object</span> Name,NumCpu,MemoryGB,PowerState `
   | <span class="kw">Export-Csv</span> vms.csv -NoTypeInformation
 <span class="kw">Get-VIEvent</span> -MaxSamples 100 -Types Error | <span class="kw">Select-Object</span> CreatedTime,UserName,FullFormattedMessage</code></div>
     <div class="tip"><strong>OVF Export:</strong> Export-VApp -Source (Get-VM myvm) -Destination C:\backup\ -Format OVF</div>

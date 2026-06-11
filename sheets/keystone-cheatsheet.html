@@ -74,11 +74,11 @@
 <div class="section th-yl">
   <div class="section-header"><div class="section-icon">👤</div><div class="section-title">Users</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code">openstack user list
+    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code>openstack user list
 openstack user list --domain Default
 openstack user show alice
 openstack user show --domain mydomain alice</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">User erstellen & ändern</div><code">openstack user create \
+    <div class="cmd-entry"><div class="cmd-desc">User erstellen & ändern</div><code>openstack user create \
   --domain Default \
   --password mysecret \
   --email alice@example.com \
@@ -88,7 +88,7 @@ openstack user set --password newsecret alice
 openstack user set --disable alice
 openstack user set --enable alice
 openstack user delete alice</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Passwort ändern (self)</div><code">openstack user password set \
+    <div class="cmd-entry"><div class="cmd-desc">Passwort ändern (self)</div><code>openstack user password set \
   --password newsecret \
   --original-password oldsecret</code></div>
   </div>
@@ -97,7 +97,7 @@ openstack user delete alice</code></div>
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">📁</div><div class="section-title">Projects (Tenants)</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Projekte</div><code">openstack project list
+    <div class="cmd-entry"><div class="cmd-desc">Projekte</div><code>openstack project list
 openstack project list --domain Default
 openstack project show myproject
 openstack project create \
@@ -107,7 +107,7 @@ openstack project create \
   myproject
 openstack project set --disable myproject
 openstack project delete myproject</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Project-Tags</div><code">openstack project set --tag production myproject
+    <div class="cmd-entry"><div class="cmd-desc">Project-Tags</div><code>openstack project set --tag production myproject
 openstack project unset --tag production myproject</code></div>
   </div>
 </div>
@@ -115,11 +115,11 @@ openstack project unset --tag production myproject</code></div>
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">🎭</div><div class="section-title">Roles & Role-Assignments</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Rollen verwalten</div><code">openstack role list
+    <div class="cmd-entry"><div class="cmd-desc">Rollen verwalten</div><code>openstack role list
 openstack role show member
 openstack role create myrole
 openstack role delete myrole</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Rolle zuweisen</div><code"><span class="cm"># User + Projekt:</span>
+    <div class="cmd-entry"><div class="cmd-desc">Rolle zuweisen</div><code><span class="cm"># User + Projekt:</span>
 openstack role add \
   --user alice \
   --project myproject \
@@ -134,7 +134,7 @@ openstack role add \
   --group mygroup \
   --project myproject \
   reader</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Zuweisungen anzeigen</div><code">openstack role assignment list
+    <div class="cmd-entry"><div class="cmd-desc">Zuweisungen anzeigen</div><code>openstack role assignment list
 openstack role assignment list --user alice
 openstack role assignment list --project myproject
 openstack role assignment list \
@@ -147,13 +147,13 @@ openstack role remove \
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">👥</div><div class="section-title">Groups & Domains</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Groups</div><code">openstack group list
+    <div class="cmd-entry"><div class="cmd-desc">Groups</div><code>openstack group list
 openstack group create mygroup --domain Default
 openstack group add user mygroup alice
 openstack group remove user mygroup alice
 openstack group contains user mygroup alice
 openstack group delete mygroup</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Domains</div><code">openstack domain list
+    <div class="cmd-entry"><div class="cmd-desc">Domains</div><code>openstack domain list
 openstack domain show Default
 openstack domain create mydomain \
   --description "My Domain"
@@ -166,7 +166,7 @@ openstack domain delete mydomain</code></div>
 <div class="section th-yl">
   <div class="section-header"><div class="section-icon">🎫</div><div class="section-title">Tokens</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Token erzeugen & prüfen</div><code">openstack token issue
+    <div class="cmd-entry"><div class="cmd-desc">Token erzeugen & prüfen</div><code>openstack token issue
 openstack token issue -f value -c id   <span class="cm"># nur ID</span>
 openstack token revoke <TOKEN-ID>
 
@@ -176,7 +176,7 @@ openstack token issue \
 openstack token issue \
   --os-project-domain-name Default \
   --os-project-name myproject</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">credentials.sh / openrc</div><code">export OS_AUTH_URL=https://keystone:5000/v3
+    <div class="cmd-entry"><div class="cmd-desc">credentials.sh / openrc</div><code>export OS_AUTH_URL=https://keystone:5000/v3
 export OS_PROJECT_NAME=myproject
 export OS_PROJECT_DOMAIN_NAME=Default
 export OS_USERNAME=alice
@@ -190,14 +190,14 @@ export OS_REGION_NAME=RegionOne</code></div>
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🔑</div><div class="section-title">Application Credentials</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">App Credentials</div><code">openstack application credential list
+    <div class="cmd-entry"><div class="cmd-desc">App Credentials</div><code>openstack application credential list
 openstack application credential create \
   --role member \
   --expiration "2027-01-01T00:00:00" \
   myapp-cred
 openstack application credential show myapp-cred
 openstack application credential delete myapp-cred</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">App Cred unrestricted</div><code"><span class="cm"># Kann neue Credentials anlegen (Vorsicht!):</span>
+    <div class="cmd-entry"><div class="cmd-desc">App Cred unrestricted</div><code><span class="cm"># Kann neue Credentials anlegen (Vorsicht!):</span>
 openstack application credential create \
   --unrestricted \
   admin-cred</code></div>
@@ -208,12 +208,12 @@ openstack application credential create \
 <div class="section th-re">
   <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Endpoints & Services</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Service Catalog</div><code">openstack catalog list
+    <div class="cmd-entry"><div class="cmd-desc">Service Catalog</div><code>openstack catalog list
 openstack catalog show nova
 openstack endpoint list
 openstack endpoint list --service nova
 openstack endpoint show <ENDPOINT-ID></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Endpoints verwalten</div><code">openstack service create \
+    <div class="cmd-entry"><div class="cmd-desc">Endpoints verwalten</div><code>openstack service create \
   --name nova \
   --description "Compute" \
   compute

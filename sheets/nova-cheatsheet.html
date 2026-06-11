@@ -74,13 +74,13 @@
 <div class="section th-re">
   <div class="section-header"><div class="section-icon">📋</div><div class="section-title">Server auflisten & anzeigen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code">openstack server list
+    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code>openstack server list
 openstack server list --all-projects
 openstack server list --status ERROR
 openstack server list --host esx01.example.com
 openstack server list -c ID -c Name -c Status -c Networks
 openstack server show myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Filter & Suche</div><code">openstack server list --name myapp*
+    <div class="cmd-entry"><div class="cmd-desc">Filter & Suche</div><code>openstack server list --name myapp*
 openstack server list --image ubuntu-22.04
 openstack server list --flavor m1.large
 openstack server list --project myproject
@@ -91,13 +91,13 @@ openstack server list --user alice</code></div>
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🚀</div><div class="section-title">Server erstellen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Minimal</div><code">openstack server create \
+    <div class="cmd-entry"><div class="cmd-desc">Minimal</div><code>openstack server create \
   --flavor m1.small \
   --image ubuntu-22.04 \
   --network private \
   --key-name mykey \
   myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Vollständig</div><code">openstack server create \
+    <div class="cmd-entry"><div class="cmd-desc">Vollständig</div><code>openstack server create \
   --flavor m1.large \
   --image ubuntu-22.04 \
   --network private \
@@ -108,14 +108,14 @@ openstack server list --user alice</code></div>
   --property env=prod \
   --wait \
   myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Boot from Volume</div><code">openstack server create \
+    <div class="cmd-entry"><div class="cmd-desc">Boot from Volume</div><code>openstack server create \
   --flavor m1.small \
   --block-device source_type=image,uuid=<IMAGE-ID>,\
 dest_type=volume,volume_size=50,\
 boot_index=0,delete_on_termination=true \
   --network private \
   myserver-bfv</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Aus existierendem Volume</div><code">openstack server create \
+    <div class="cmd-entry"><div class="cmd-desc">Aus existierendem Volume</div><code>openstack server create \
   --flavor m1.small \
   --volume mybootvol \
   --network private \
@@ -126,18 +126,18 @@ boot_index=0,delete_on_termination=true \
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">⚡</div><div class="section-title">Power-Operationen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Start / Stop / Reboot</div><code">openstack server start myserver
+    <div class="cmd-entry"><div class="cmd-desc">Start / Stop / Reboot</div><code>openstack server start myserver
 openstack server stop myserver
 openstack server reboot myserver
 openstack server reboot --hard myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Pause / Suspend / Shelve</div><code">openstack server pause myserver      <span class="cm"># RAM eingefroren, CPU gestoppt</span>
+    <div class="cmd-entry"><div class="cmd-desc">Pause / Suspend / Shelve</div><code>openstack server pause myserver      <span class="cm"># RAM eingefroren, CPU gestoppt</span>
 openstack server unpause myserver
 openstack server suspend myserver    <span class="cm"># auf Disk gespeichert</span>
 openstack server resume myserver
 openstack server shelve myserver     <span class="cm"># snapshot + Hypervisor frei</span>
 openstack server unshelve myserver
 openstack server shelve-offload myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Löschen</div><code">openstack server delete myserver
+    <div class="cmd-entry"><div class="cmd-desc">Löschen</div><code>openstack server delete myserver
 openstack server delete --wait myserver
 openstack server delete server1 server2 server3</code></div>
   </div>
@@ -146,11 +146,11 @@ openstack server delete server1 server2 server3</code></div>
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🖥</div><div class="section-title">Console & Logs</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Console-URL</div><code">openstack console url show myserver
+    <div class="cmd-entry"><div class="cmd-desc">Console-URL</div><code>openstack console url show myserver
 openstack console url show --novnc myserver
 openstack console url show --spice myserver
 openstack console url show --serial myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Logs</div><code">openstack console log show myserver
+    <div class="cmd-entry"><div class="cmd-desc">Logs</div><code>openstack console log show myserver
 openstack console log show --lines 50 myserver</code></div>
   </div>
 </div>
@@ -158,15 +158,15 @@ openstack console log show --lines 50 myserver</code></div>
 <div class="section th-re">
   <div class="section-header"><div class="section-icon">📐</div><div class="section-title">Resize & Migration</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Resize (kalt)</div><code">openstack server resize --flavor m1.large myserver
+    <div class="cmd-entry"><div class="cmd-desc">Resize (kalt)</div><code>openstack server resize --flavor m1.large myserver
 openstack server resize confirm myserver    <span class="cm"># bestätigen</span>
 openstack server resize revert myserver     <span class="cm"># zurücksetzen</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Migration</div><code">openstack server migrate myserver              <span class="cm"># kalt (VM stoppt)</span>
+    <div class="cmd-entry"><div class="cmd-desc">Migration</div><code>openstack server migrate myserver              <span class="cm"># kalt (VM stoppt)</span>
 openstack server migrate --live-migration \
   --block-migration myserver                  <span class="cm"># live (kein Stopp)</span>
 openstack server migrate --live-migration \
   --host esx02.example.com myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Rebuild (neues Image)</div><code">openstack server rebuild --image ubuntu-22.04 myserver
+    <div class="cmd-entry"><div class="cmd-desc">Rebuild (neues Image)</div><code>openstack server rebuild --image ubuntu-22.04 myserver
 openstack server rebuild --wait myserver</code></div>
   </div>
 </div>
@@ -174,11 +174,11 @@ openstack server rebuild --wait myserver</code></div>
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🎛</div><div class="section-title">Flavors</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code">openstack flavor list
+    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code>openstack flavor list
 openstack flavor list --public
 openstack flavor list --all
 openstack flavor show m1.large</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Erstellen</div><code">openstack flavor create \
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen</div><code>openstack flavor create \
   --vcpus 4 --ram 8192 --disk 80 \
   --public \
   m1.xlarge
@@ -186,7 +186,7 @@ openstack flavor set \
   --property hw:cpu_policy=dedicated \
   --property hw:mem_page_size=large \
   m1.xlarge</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Löschen / Privater Zugriff</div><code">openstack flavor delete m1.oldflav
+    <div class="cmd-entry"><div class="cmd-desc">Löschen / Privater Zugriff</div><code>openstack flavor delete m1.oldflav
 openstack flavor set --private m1.secret
 openstack flavor access add --project myproject m1.secret</code></div>
   </div>
@@ -195,12 +195,12 @@ openstack flavor access add --project myproject m1.secret</code></div>
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">🔑</div><div class="section-title">Keypairs & Metadaten</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Keypairs</div><code">openstack keypair list
+    <div class="cmd-entry"><div class="cmd-desc">Keypairs</div><code>openstack keypair list
 openstack keypair create mykey             <span class="cm"># neues Key-Paar erzeugen</span>
 openstack keypair create --public-key ~/.ssh/id_rsa.pub mykey
 openstack keypair show mykey
 openstack keypair delete mykey</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Server-Metadaten</div><code">openstack server set --property env=prod myserver
+    <div class="cmd-entry"><div class="cmd-desc">Server-Metadaten</div><code>openstack server set --property env=prod myserver
 openstack server set --property team=ops myserver
 openstack server unset --property env myserver
 openstack server show -c properties myserver</code></div>
@@ -210,13 +210,13 @@ openstack server show -c properties myserver</code></div>
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">🗺</div><div class="section-title">AZs, Aggregates & Quotas</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Availability Zones</div><code">openstack availability zone list
+    <div class="cmd-entry"><div class="cmd-desc">Availability Zones</div><code>openstack availability zone list
 openstack availability zone list --compute</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Aggregates</div><code">openstack aggregate list
+    <div class="cmd-entry"><div class="cmd-desc">Aggregates</div><code>openstack aggregate list
 openstack aggregate create az1-agg --zone az1
 openstack aggregate add host az1-agg esx01.example.com
 openstack aggregate set --property ssd=true ssd-agg</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Quotas</div><code">openstack quota show
+    <div class="cmd-entry"><div class="cmd-desc">Quotas</div><code>openstack quota show
 openstack quota show --project myproject
 openstack quota set --instances 50 --cores 200 --ram 512000 myproject</code></div>
     <div class="tip"><strong>Tipp:</strong> openstack limits show --absolute zeigt aktuelle Nutzung vs. Quota in einem Überblick.</div>

@@ -74,20 +74,20 @@
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">📋</div><div class="section-title">Stack auflisten & anzeigen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code">openstack stack list
+    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code>openstack stack list
 openstack stack list --all-projects
 openstack stack list --status FAILED
 openstack stack show mystack
 openstack stack output list mystack
 openstack stack output show mystack server_ip</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Template anzeigen</div><code">openstack stack template show mystack</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Template anzeigen</div><code>openstack stack template show mystack</code></div>
   </div>
 </div>
 
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🚀</div><div class="section-title">Stack erstellen & aktualisieren</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Stack erstellen</div><code">openstack stack create \
+    <div class="cmd-entry"><div class="cmd-desc">Stack erstellen</div><code>openstack stack create \
   --template mystack.yaml \
   mystack
 <span class="cm"># Mit Parametern:</span>
@@ -103,7 +103,7 @@ openstack stack create \
   --environment env.yaml \
   --wait \
   mystack</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Stack aktualisieren</div><code">openstack stack update \
+    <div class="cmd-entry"><div class="cmd-desc">Stack aktualisieren</div><code>openstack stack update \
   --template mystack.yaml \
   --parameter flavor=m1.large \
   mystack
@@ -112,7 +112,7 @@ openstack stack update \
   --template mystack.yaml \
   --dry-run \
   mystack</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Stack löschen</div><code">openstack stack delete mystack
+    <div class="cmd-entry"><div class="cmd-desc">Stack löschen</div><code>openstack stack delete mystack
 openstack stack delete --wait mystack
 openstack stack delete --yes mystack</code></div>
   </div>
@@ -121,13 +121,13 @@ openstack stack delete --yes mystack</code></div>
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">📊</div><div class="section-title">Events & Resources</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Events verfolgen</div><code">openstack stack event list mystack
+    <div class="cmd-entry"><div class="cmd-desc">Events verfolgen</div><code>openstack stack event list mystack
 openstack stack event list \
   --nested-depth 3 \
   mystack
 openstack stack event show mystack \
   myserver-resource <EVENT-ID></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Ressourcen</div><code">openstack stack resource list mystack
+    <div class="cmd-entry"><div class="cmd-desc">Ressourcen</div><code>openstack stack resource list mystack
 openstack stack resource list --nested-depth 2 mystack
 openstack stack resource show mystack myserver
 openstack stack resource mark unhealthy \
@@ -140,11 +140,11 @@ openstack stack resource signal mystack myserver</code></div>
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">⏸</div><div class="section-title">Suspend, Resume & Abandon</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Lifecycle</div><code">openstack stack suspend mystack    <span class="cm"># VMs pausieren</span>
+    <div class="cmd-entry"><div class="cmd-desc">Lifecycle</div><code>openstack stack suspend mystack    <span class="cm"># VMs pausieren</span>
 openstack stack resume mystack     <span class="cm"># VMs fortsetzen</span>
 openstack stack check mystack      <span class="cm"># Status prüfen</span>
 openstack stack cancel mystack     <span class="cm"># laufenden Update abbrechen</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Abandon (ohne delete)</div><code"><span class="cm"># Stack löschen, Ressourcen behalten:</span>
+    <div class="cmd-entry"><div class="cmd-desc">Abandon (ohne delete)</div><code><span class="cm"># Stack löschen, Ressourcen behalten:</span>
 openstack stack abandon mystack
 <span class="cm"># Aus existierenden Ressourcen Stack erstellen:</span>
 openstack stack adopt \
@@ -157,7 +157,7 @@ openstack stack adopt \
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">✅</div><div class="section-title">Template validieren</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Validierung</div><code">openstack orchestration template validate \
+    <div class="cmd-entry"><div class="cmd-desc">Validierung</div><code>openstack orchestration template validate \
   --template mystack.yaml
 openstack orchestration template validate \
   --template mystack.yaml \
@@ -166,7 +166,7 @@ openstack orchestration template validate \
 openstack orchestration template validate \
   --template mystack.yaml \
   --show-nested</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Resource-Typen</div><code">openstack orchestration resource type list
+    <div class="cmd-entry"><div class="cmd-desc">Resource-Typen</div><code>openstack orchestration resource type list
 openstack orchestration resource type list \
   --filter type=OS::Nova::*
 openstack orchestration resource type show \
@@ -177,7 +177,7 @@ openstack orchestration resource type show \
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">📄</div><div class="section-title">HOT Template Struktur</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Minimales HOT-Template</div><code">heat_template_version: 2021-04-06
+    <div class="cmd-entry"><div class="cmd-desc">Minimales HOT-Template</div><code>heat_template_version: 2021-04-06
 
 description: Simple server stack
 
@@ -217,7 +217,7 @@ outputs:
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">HOT Intrinsic Functions</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Gängige Funktionen</div><code"><span class="cm"># Parameter-Wert:</span>
+    <div class="cmd-entry"><div class="cmd-desc">Gängige Funktionen</div><code><span class="cm"># Parameter-Wert:</span>
 { get_param: image_name }
 <span class="cm"># Resource-Attribut:</span>
 { get_attr: [myserver, first_address] }

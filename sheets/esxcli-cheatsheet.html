@@ -55,7 +55,7 @@
   <a href="../index.html" class="nav-link">← Index</a>
   <div class="header-grid">
     <div>
-      <div class="badge">▸ Cloud & Infra Reference</div>
+      <div class="badge">▸ VMware ESXi Shell</div>
       <img src="../assets/esxcli.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(55%) sepia(80%) saturate(500%) hue-rotate(155deg)">
       <h1><span>esxcli</span> / vim-cmd<br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
       <p class="subtitle">[root@esx01:~] esxcli network nic list</p>
@@ -74,13 +74,13 @@
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">Nutzung & Remote</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Remote-Zugriff (ohne SSH auf Host)</div><code">esxcli -s esx01.example.com -u root -p 'pass' system info get
+    <div class="cmd-entry"><div class="cmd-desc">Remote-Zugriff (ohne SSH auf Host)</div><code>esxcli -s esx01.example.com -u root -p 'pass' system info get
 esxcli -s esx01 --thumbprint AA:BB:CC:.. network nic list</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Hilfe & Navigation</div><code">esxcli <span class="cm"># Namespace-Übersicht</span>
+    <div class="cmd-entry"><div class="cmd-desc">Hilfe & Navigation</div><code>esxcli <span class="cm"># Namespace-Übersicht</span>
 esxcli network          <span class="cm"># Sub-Namespaces</span>
 esxcli network nic      <span class="cm"># Kommandos</span>
 esxcli network nic list --help</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">System-Info</div><code">esxcli system info get
+    <div class="cmd-entry"><div class="cmd-desc">System-Info</div><code>esxcli system info get
 esxcli system version get
 esxcli hardware cpu get
 esxcli hardware memory get
@@ -92,24 +92,24 @@ esxcli system maintenanceMode set --enable true</code></div>
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Netzwerk</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">NICs & VMkernel</div><code">esxcli network nic list
+    <div class="cmd-entry"><div class="cmd-desc">NICs & VMkernel</div><code>esxcli network nic list
 esxcli network nic get -n vmnic0
 esxcli network ip interface list
 esxcli network ip interface ipv4 get
 esxcli network ip interface ipv4 set -i vmk0 \
   -t static -I 10.0.0.1 -N 255.255.255.0 -g 10.0.0.254</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">vSwitch & Portgroups</div><code">esxcli network vswitch standard list
+    <div class="cmd-entry"><div class="cmd-desc">vSwitch & Portgroups</div><code>esxcli network vswitch standard list
 esxcli network vswitch standard add -v vSwitch1
 esxcli network vswitch standard portgroup list
 esxcli network vswitch standard portgroup add \
   -v vSwitch1 -p "VLAN100"
 esxcli network vswitch standard portgroup set \
   -p "VLAN100" -v 100</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Routing & DNS</div><code">esxcli network ip route ipv4 list
+    <div class="cmd-entry"><div class="cmd-desc">Routing & DNS</div><code>esxcli network ip route ipv4 list
 esxcli network ip dns server list
 esxcli network ip dns search list
 esxcli network ip neighbor list       <span class="cm"># ARP-Tabelle</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Firewall</div><code">esxcli network firewall get
+    <div class="cmd-entry"><div class="cmd-desc">Firewall</div><code>esxcli network firewall get
 esxcli network firewall ruleset list
 esxcli network firewall ruleset set --enabled true -r sshServer
 esxcli network firewall ruleset allowedip add -r sshServer -i 10.0.0.0/24</code></div>
@@ -119,18 +119,18 @@ esxcli network firewall ruleset allowedip add -r sshServer -i 10.0.0.0/24</code>
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">💾</div><div class="section-title">Storage</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Datastores & VMFS</div><code">esxcli storage vmfs extent list
+    <div class="cmd-entry"><div class="cmd-desc">Datastores & VMFS</div><code>esxcli storage vmfs extent list
 esxcli storage filesystem list
 esxcli storage core device list
 esxcli storage core device list | grep -i naa</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Adapter & Pfade</div><code">esxcli storage core adapter list
+    <div class="cmd-entry"><div class="cmd-desc">Adapter & Pfade</div><code>esxcli storage core adapter list
 esxcli storage core path list
 esxcli storage core path list -d naa.XXXXXX
 esxcli storage nmp device list</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">NFS</div><code">esxcli storage nfs list
+    <div class="cmd-entry"><div class="cmd-desc">NFS</div><code>esxcli storage nfs list
 esxcli storage nfs add -H 10.0.0.10 -s /exports/ds01 -v nfs01
 esxcli storage nfs remove -v nfs01</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">iSCSI</div><code">esxcli iscsi adapter list
+    <div class="cmd-entry"><div class="cmd-desc">iSCSI</div><code>esxcli iscsi adapter list
 esxcli iscsi adapter target portal list -A vmhba64
 esxcli iscsi session list</code></div>
   </div>
@@ -139,7 +139,7 @@ esxcli iscsi session list</code></div>
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">🖥</div><div class="section-title">VM Prozesse</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">VM-Liste & Kill</div><code">esxcli vm process list
+    <div class="cmd-entry"><div class="cmd-desc">VM-Liste & Kill</div><code>esxcli vm process list
 esxcli vm process list | grep -i myvm
 esxcli vm process kill --type soft  --world-id 12345
 esxcli vm process kill --type hard  --world-id 12345
@@ -151,13 +151,13 @@ esxcli vm process kill --type force --world-id 12345</code></div>
 <div class="section th-re">
   <div class="section-header"><div class="section-icon">📦</div><div class="section-title">Software / VIBs</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">VIB-Verwaltung</div><code">esxcli software vib list
+    <div class="cmd-entry"><div class="cmd-desc">VIB-Verwaltung</div><code>esxcli software vib list
 esxcli software vib list | grep -i vmware
 esxcli software vib install -v /tmp/driver.vib
 esxcli software vib install -d /tmp/offline-bundle.zip
 esxcli software vib remove -n vib-name
 esxcli software vib update -v /tmp/updated.vib</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Profile & Update</div><code">esxcli software profile get
+    <div class="cmd-entry"><div class="cmd-desc">Profile & Update</div><code>esxcli software profile get
 esxcli software profile install \
   -d /tmp/VMware-ESXi-8.0u2.zip \
   -p ESXi-8.0U2-standard --dry-run</code></div>
@@ -167,18 +167,18 @@ esxcli software profile install \
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">vim-cmd</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">VM-Operationen</div><code">vim-cmd vmsvc/getallvms              <span class="cm"># alle VMs mit VMID</span>
+    <div class="cmd-entry"><div class="cmd-desc">VM-Operationen</div><code>vim-cmd vmsvc/getallvms              <span class="cm"># alle VMs mit VMID</span>
 vim-cmd vmsvc/power.getstate 42
 vim-cmd vmsvc/power.on 42
 vim-cmd vmsvc/power.off 42
 vim-cmd vmsvc/power.shutdown 42
 vim-cmd vmsvc/power.reboot 42
 vim-cmd vmsvc/destroy 42</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">VM-Details</div><code">vim-cmd vmsvc/get.summary 42
+    <div class="cmd-entry"><div class="cmd-desc">VM-Details</div><code>vim-cmd vmsvc/get.summary 42
 vim-cmd vmsvc/get.config 42
 vim-cmd vmsvc/get.guest 42
 vim-cmd vmsvc/get.networks 42</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Snapshots & Register</div><code">vim-cmd vmsvc/snapshot.create 42 "pre-patch"
+    <div class="cmd-entry"><div class="cmd-desc">Snapshots & Register</div><code>vim-cmd vmsvc/snapshot.create 42 "pre-patch"
 vim-cmd vmsvc/snapshot.get 42
 vim-cmd vmsvc/snapshot.revert 42
 vim-cmd vmsvc/snapshot.removeall 42
@@ -190,17 +190,17 @@ vim-cmd solo/registervm /vmfs/volumes/ds01/myvm/myvm.vmx</code></div>
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Diagnose & Logs</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">esxtop</div><code">esxtop                     <span class="cm"># interaktiv (wie top)</span>
+    <div class="cmd-entry"><div class="cmd-desc">esxtop</div><code>esxtop                     <span class="cm"># interaktiv (wie top)</span>
 esxtop -b -n 5 > /tmp/esxtop.csv  <span class="cm"># batch mode, 5 Iterationen</span>
 <span class="cm"># Shortcuts in esxtop:</span>
 <span class="cm"># n=Netzwerk c=CPU m=Memory d=Disk i=Interrupt</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Wichtige Log-Pfade</div><code">/var/log/vmkernel.log      <span class="cm"># Kernel-Events</span>
+    <div class="cmd-entry"><div class="cmd-desc">Wichtige Log-Pfade</div><code>/var/log/vmkernel.log      <span class="cm"># Kernel-Events</span>
 /var/log/hostd.log         <span class="cm"># Host-Daemon</span>
 /var/log/vpxa.log          <span class="cm"># vCenter-Agent</span>
 /var/log/vobd.log          <span class="cm"># Hardware-Events</span>
 /var/log/shell.log         <span class="cm"># Shell-Aktivität</span>
 /scratch/log/              <span class="cm"># persistent logs</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Nützliche Shell-Befehle</div><code">vsish -e get /world/*/name   <span class="cm"># vmkernel worlds</span>
+    <div class="cmd-entry"><div class="cmd-desc">Nützliche Shell-Befehle</div><code>vsish -e get /world/*/name   <span class="cm"># vmkernel worlds</span>
 memstats -r comp-stats       <span class="cm"># Memory-Statistiken</span>
 vdq -q                       <span class="cm"># Datastore-Queues</span>
 vmkping -I vmk1 10.0.0.1    <span class="cm"># vmkernel ping</span>

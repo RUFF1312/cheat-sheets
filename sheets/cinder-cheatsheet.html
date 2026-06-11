@@ -74,11 +74,11 @@
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">💾</div><div class="section-title">Volumes</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code">openstack volume list
+    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code>openstack volume list
 openstack volume list --all-projects
 openstack volume list --status error
 openstack volume show myvol</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Volume erstellen</div><code">openstack volume create --size 100 myvol
+    <div class="cmd-entry"><div class="cmd-desc">Volume erstellen</div><code>openstack volume create --size 100 myvol
 <span class="cm"># Aus Image (bootbar):</span>
 openstack volume create \
   --image ubuntu-22.04 \
@@ -96,7 +96,7 @@ openstack volume create \
   --source myvol \
   --size 100 \
   vol-clone</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Ändern & Löschen</div><code">openstack volume set --name newname myvol
+    <div class="cmd-entry"><div class="cmd-desc">Ändern & Löschen</div><code>openstack volume set --name newname myvol
 openstack volume set --size 200 myvol       <span class="cm"># nur vergrößern!</span>
 openstack volume set --bootable myvol
 openstack volume set --read-only myvol
@@ -108,13 +108,13 @@ openstack volume delete --purge myvol       <span class="cm"># inkl. Snapshots</
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🔗</div><div class="section-title">Attach & Detach</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Volume an Server</div><code">openstack server add volume myserver myvol
+    <div class="cmd-entry"><div class="cmd-desc">Volume an Server</div><code>openstack server add volume myserver myvol
 openstack server add volume \
   --device /dev/vdb \
   myserver myvol
 openstack server volume list myserver
 openstack server remove volume myserver myvol</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Attachment (Microversion)</div><code">openstack volume attachment create \
+    <div class="cmd-entry"><div class="cmd-desc">Attachment (Microversion)</div><code>openstack volume attachment create \
   --connect \
   --initiator iqn.1994-05.com.redhat:... \
   myvol myserver
@@ -127,7 +127,7 @@ openstack volume attachment delete <ID></code></div>
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">📸</div><div class="section-title">Snapshots</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Snapshots verwalten</div><code">openstack volume snapshot list
+    <div class="cmd-entry"><div class="cmd-desc">Snapshots verwalten</div><code>openstack volume snapshot list
 openstack volume snapshot create \
   --volume myvol \
   --force \
@@ -135,7 +135,7 @@ openstack volume snapshot create \
 openstack volume snapshot show mysnap
 openstack volume snapshot set --name newname mysnap
 openstack volume snapshot delete mysnap</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Aus Snapshot erstellen</div><code">openstack volume create \
+    <div class="cmd-entry"><div class="cmd-desc">Aus Snapshot erstellen</div><code>openstack volume create \
   --snapshot mysnap \
   --size 100 \
   vol-from-snap
@@ -150,13 +150,13 @@ openstack image create \
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🔒</div><div class="section-title">Backups</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Backup erstellen</div><code">openstack volume backup create \
+    <div class="cmd-entry"><div class="cmd-desc">Backup erstellen</div><code>openstack volume backup create \
   --name mybak \
   --incremental \
   myvol
 openstack volume backup list
 openstack volume backup show mybak</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Restore</div><code">openstack volume backup restore mybak restoredvol
+    <div class="cmd-entry"><div class="cmd-desc">Restore</div><code>openstack volume backup restore mybak restoredvol
 openstack volume backup restore \
   --volume myvol \
   mybak
@@ -167,7 +167,7 @@ openstack volume backup delete mybak</code></div>
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">🏷</div><div class="section-title">Volume Types & QoS</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Volume Types</div><code">openstack volume type list
+    <div class="cmd-entry"><div class="cmd-desc">Volume Types</div><code>openstack volume type list
 openstack volume type show ssd
 openstack volume type create ssd
 openstack volume type set \
@@ -178,7 +178,7 @@ openstack volume type set \
   --encryption-cipher aes-xts-plain64 \
   --encryption-key-size 256 \
   encrypted</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">QoS Specs</div><code">openstack volume qos create \
+    <div class="cmd-entry"><div class="cmd-desc">QoS Specs</div><code>openstack volume qos create \
   --consumer back-end \
   --property total_iops_sec=5000 \
   5k-iops
@@ -190,7 +190,7 @@ openstack volume qos list</code></div>
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🔄</div><div class="section-title">Transfers & Quotas</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Volume Transfer</div><code"><span class="cm"># Volume an anderen Projekt übergeben:</span>
+    <div class="cmd-entry"><div class="cmd-desc">Volume Transfer</div><code><span class="cm"># Volume an anderen Projekt übergeben:</span>
 openstack volume transfer request create myvol
 <span class="cm"># Gibt transfer-id und auth-key aus</span>
 
@@ -198,7 +198,7 @@ openstack volume transfer request create myvol
 openstack volume transfer request accept \
   --auth-key XXXX \
   <TRANSFER-ID></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Quotas</div><code">openstack quota show --project myproject
+    <div class="cmd-entry"><div class="cmd-desc">Quotas</div><code>openstack quota show --project myproject
 openstack quota set \
   --volumes 100 \
   --gigabytes 10000 \
@@ -206,7 +206,7 @@ openstack quota set \
   --backups 50 \
   --backup-gigabytes 5000 \
   myproject</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Admin: Manage/Unmanage</div><code"><span class="cm"># Externes Volume importieren:</span>
+    <div class="cmd-entry"><div class="cmd-desc">Admin: Manage/Unmanage</div><code><span class="cm"># Externes Volume importieren:</span>
 openstack volume manage \
   --host cinder@lvm \
   --name myvol \

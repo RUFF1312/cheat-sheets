@@ -74,7 +74,7 @@
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🖼</div><div class="section-title">Images auflisten & anzeigen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code">openstack image list
+    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code>openstack image list
 openstack image list --public
 openstack image list --private
 openstack image list --shared
@@ -82,7 +82,7 @@ openstack image list --community
 openstack image list --status active
 openstack image list --tag ubuntu
 openstack image show ubuntu-22.04</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Filter</div><code">openstack image list --name ubuntu*
+    <div class="cmd-entry"><div class="cmd-desc">Filter</div><code>openstack image list --name ubuntu*
 openstack image list --format value -c ID -c Name -c Status
 openstack image list --property os_type=linux
 openstack image list --sort name:asc</code></div>
@@ -92,13 +92,13 @@ openstack image list --sort name:asc</code></div>
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">⬆</div><div class="section-title">Images hochladen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Upload (lokal)</div><code">openstack image create \
+    <div class="cmd-entry"><div class="cmd-desc">Upload (lokal)</div><code>openstack image create \
   --file ubuntu-22.04.qcow2 \
   --disk-format qcow2 \
   --container-format bare \
   --public \
   ubuntu-22.04</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Mit Eigenschaften</div><code">openstack image create \
+    <div class="cmd-entry"><div class="cmd-desc">Mit Eigenschaften</div><code>openstack image create \
   --file ubuntu-22.04.qcow2 \
   --disk-format qcow2 \
   --container-format bare \
@@ -110,7 +110,7 @@ openstack image list --sort name:asc</code></div>
   --tag ubuntu \
   --tag lts \
   ubuntu-22.04</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Disk-Formate</div><code"><span class="cm"># Gültige Formate:</span>
+    <div class="cmd-entry"><div class="cmd-desc">Disk-Formate</div><code><span class="cm"># Gültige Formate:</span>
 <span class="cm"># qcow2  — QEMU/KVM (gängigste Wahl)</span>
 <span class="cm"># raw    — uncomprimiertes Rohformat</span>
 <span class="cm"># vmdk   — VMware Disk</span>
@@ -118,7 +118,7 @@ openstack image list --sort name:asc</code></div>
 <span class="cm"># vhdx   — Hyper-V VHDX</span>
 <span class="cm"># iso    — ISO-Image (bootbar)</span>
 <span class="cm"># aki/ari/ami — Amazon-Kernel/Ramdisk/Image</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Deactivate / Reactivate</div><code">openstack image set --deactivate ubuntu-22.04
+    <div class="cmd-entry"><div class="cmd-desc">Deactivate / Reactivate</div><code>openstack image set --deactivate ubuntu-22.04
 openstack image set --activate ubuntu-22.04</code></div>
   </div>
 </div>
@@ -126,12 +126,12 @@ openstack image set --activate ubuntu-22.04</code></div>
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">⬇</div><div class="section-title">Images herunterladen & löschen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Download</div><code">openstack image save \
+    <div class="cmd-entry"><div class="cmd-desc">Download</div><code>openstack image save \
   --file ubuntu-22.04-downloaded.qcow2 \
   ubuntu-22.04</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Löschen</div><code">openstack image delete ubuntu-22.04
+    <div class="cmd-entry"><div class="cmd-desc">Löschen</div><code>openstack image delete ubuntu-22.04
 openstack image delete img1 img2 img3</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Import-Methoden (v2)</div><code"><span class="cm"># Web-Download (Glance lädt direkt):</span>
+    <div class="cmd-entry"><div class="cmd-desc">Import-Methoden (v2)</div><code><span class="cm"># Web-Download (Glance lädt direkt):</span>
 openstack image create \
   --import-method web-download \
   --uri https://example.com/image.qcow2 \
@@ -148,19 +148,19 @@ openstack image import --import-method glance-direct myimage</code></div>
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">🏷</div><div class="section-title">Properties & Tags</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Properties setzen</div><code">openstack image set \
+    <div class="cmd-entry"><div class="cmd-desc">Properties setzen</div><code>openstack image set \
   --property hw_disk_bus=virtio \
   --property hw_vif_model=virtio \
   --property hw_scsi_model=virtio-scsi \
   ubuntu-22.04
 openstack image unset --property hw_disk_bus ubuntu-22.04</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Nützliche Properties</div><code"><span class="cm">hw_disk_bus=virtio      # Disk-Bus</span>
+    <div class="cmd-entry"><div class="cmd-desc">Nützliche Properties</div><code><span class="cm">hw_disk_bus=virtio      # Disk-Bus</span>
 <span class="cm">hw_vif_model=virtio     # NIC-Treiber</span>
 <span class="cm">hw_qemu_guest_agent=yes # QEMU GA</span>
 <span class="cm">os_require_quiesce=yes  # Quiesce für Snapshots</span>
 <span class="cm">img_config_drive=mandatory  # Config-Drive</span>
 <span class="cm">hypervisor_type=qemu    # Hypervisor-Typ</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Tags verwalten</div><code">openstack image set --tag lts --tag ubuntu ubuntu-22.04
+    <div class="cmd-entry"><div class="cmd-desc">Tags verwalten</div><code>openstack image set --tag lts --tag ubuntu ubuntu-22.04
 openstack image unset --tag lts ubuntu-22.04</code></div>
   </div>
 </div>
@@ -168,12 +168,12 @@ openstack image unset --tag lts ubuntu-22.04</code></div>
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🤝</div><div class="section-title">Sichtbarkeit & Sharing</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Sichtbarkeit ändern</div><code"><span class="cm"># Werte: public | private | shared | community</span>
+    <div class="cmd-entry"><div class="cmd-desc">Sichtbarkeit ändern</div><code><span class="cm"># Werte: public | private | shared | community</span>
 openstack image set --public ubuntu-22.04
 openstack image set --private myimage
 openstack image set --shared myimage
 openstack image set --community myimage</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Image teilen</div><code"><span class="cm"># Image mit Projekt teilen:</span>
+    <div class="cmd-entry"><div class="cmd-desc">Image teilen</div><code><span class="cm"># Image mit Projekt teilen:</span>
 openstack image add project myimage otherproject
 <span class="cm"># Im Ziel-Projekt akzeptieren:</span>
 openstack image set --accept myimage
@@ -187,16 +187,16 @@ openstack image remove project myimage otherproject</code></div>
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">📊</div><div class="section-title">Admin: Stores & Quotas</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Image Stores</div><code">openstack image store list
+    <div class="cmd-entry"><div class="cmd-desc">Image Stores</div><code>openstack image store list
 openstack image import \
   --stores store1,store2 \
   --import-method glance-direct \
   myimage</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Cache & Tasks</div><code">openstack image cache list
+    <div class="cmd-entry"><div class="cmd-desc">Cache & Tasks</div><code>openstack image cache list
 openstack image cache delete <IMAGE-ID>
 openstack image task list
 openstack image task show <TASK-ID></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Metadaten-Definitionen</div><code">openstack metadef namespace list
+    <div class="cmd-entry"><div class="cmd-desc">Metadaten-Definitionen</div><code>openstack metadef namespace list
 openstack metadef namespace show OS::Compute::VirtCPUTopology
 openstack metadef object list OS::Compute</code></div>
   </div>

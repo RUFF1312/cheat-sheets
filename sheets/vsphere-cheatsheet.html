@@ -55,7 +55,7 @@
   <a href="../index.html" class="nav-link">← Index</a>
   <div class="header-grid">
     <div>
-      <div class="badge">▸ Cloud & Infra Reference</div>
+      <div class="badge">▸ VMware vSphere / VCSA</div>
       <img src="../assets/vsphere.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(22%) sepia(90%) saturate(500%) hue-rotate(200deg)">
       <h1>VMware <span>vSphere</span> / VCSA<br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
       <p class="subtitle">Command(s)> vmkfstools -i source.vmdk dest.vmdk</p>
@@ -74,16 +74,16 @@
 <div class="section th-bl">
   <div class="section-header"><div class="section-icon">💽</div><div class="section-title">vmkfstools — VMDK & Storage</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">VMDK erstellen & klonen</div><code">vmkfstools -c 100G /vmfs/volumes/ds01/myvm/myvm.vmdk
+    <div class="cmd-entry"><div class="cmd-desc">VMDK erstellen & klonen</div><code>vmkfstools -c 100G /vmfs/volumes/ds01/myvm/myvm.vmdk
 vmkfstools -i source.vmdk dest.vmdk        <span class="cm"># klonen</span>
 vmkfstools -i source.vmdk -d thin dest.vmdk <span class="cm"># thin clone</span>
 vmkfstools -i source.vmdk -d zeroedthick dest.vmdk</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">VMDK-Operationen</div><code">vmkfstools -X 200G myvm.vmdk               <span class="cm"># vergrößern</span>
+    <div class="cmd-entry"><div class="cmd-desc">VMDK-Operationen</div><code>vmkfstools -X 200G myvm.vmdk               <span class="cm"># vergrößern</span>
 vmkfstools -K myvm.vmdk                    <span class="cm"># defragmentieren / shrink</span>
 vmkfstools -e myvm.vmdk                    <span class="cm"># Extents auflisten</span>
 vmkfstools -P /vmfs/volumes/ds01/          <span class="cm"># VMFS-Info</span>
 vmkfstools -v 10 -C vmfs6 /vmfs/devices/disks/naa.XXX:1  <span class="cm"># VMFS formatieren</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">RDM (Raw Device Mapping)</div><code">vmkfstools -r /vmfs/devices/disks/naa.XXX rdm.vmdk    <span class="cm"># physical RDM</span>
+    <div class="cmd-entry"><div class="cmd-desc">RDM (Raw Device Mapping)</div><code>vmkfstools -r /vmfs/devices/disks/naa.XXX rdm.vmdk    <span class="cm"># physical RDM</span>
 vmkfstools -z /vmfs/devices/disks/naa.XXX rdm.vmdk    <span class="cm"># virtual RDM</span></code></div>
   </div>
 </div>
@@ -91,24 +91,24 @@ vmkfstools -z /vmfs/devices/disks/naa.XXX rdm.vmdk    <span class="cm"># virtual
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🏢</div><div class="section-title">VCSA — Appliance Shell</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">VAMI & Shell-Zugang</div><code"><span class="cm"># SSH auf VCSA → Appliance Shell</span>
+    <div class="cmd-entry"><div class="cmd-desc">VAMI & Shell-Zugang</div><code><span class="cm"># SSH auf VCSA → Appliance Shell</span>
 Command(s)>
 <span class="cm"># Bash-Shell aktivieren:</span>
 Command(s)> shell.set --enabled True
 Command(s)> shell
 <span class="cm"># oder direkt: shell</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Services verwalten</div><code">service-control --list
+    <div class="cmd-entry"><div class="cmd-desc">Services verwalten</div><code>service-control --list
 service-control --status vmware-vpxd
 service-control --start vmware-vpxd
 service-control --stop  vmware-vpxd
 service-control --restart vmware-vpxd
 service-control --start --all
 service-control --status --all</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Health & Info</div><code">vcsa-support-bundle -c /tmp/bundle.tgz
+    <div class="cmd-entry"><div class="cmd-desc">Health & Info</div><code>vcsa-support-bundle -c /tmp/bundle.tgz
 vmon-cli --list-services
 vmon-cli --status vmware-vpxd
 vmafd-cli get-ls-location --server-name localhost</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Wichtige Log-Pfade</div><code">/var/log/vmware/vpxd/vpxd.log       <span class="cm"># vCenter Hauptlog</span>
+    <div class="cmd-entry"><div class="cmd-desc">Wichtige Log-Pfade</div><code>/var/log/vmware/vpxd/vpxd.log       <span class="cm"># vCenter Hauptlog</span>
 /var/log/vmware/vpxd/vpxd-alert.log
 /var/log/vmware/vpostgres/postgresql.log
 /var/log/vmware/sso/vmware-sts-idmd.log</code></div>
@@ -118,13 +118,13 @@ vmafd-cli get-ls-location --server-name localhost</code></div>
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">🔑</div><div class="section-title">Zertifikate</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Cert-Manager</div><code">cd /usr/lib/vmware-vmafd/bin/
+    <div class="cmd-entry"><div class="cmd-desc">Cert-Manager</div><code>cd /usr/lib/vmware-vmafd/bin/
 ./vecs-cli store list
 ./vecs-cli entry list --store MACHINE_SSL_CERT
 ./vecs-cli entry getcert --store MACHINE_SSL_CERT \
   --alias __MACHINE_CERT --output /tmp/vc.crt
 openssl x509 -in /tmp/vc.crt -noout -dates</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Certificate Manager Tool</div><code">/usr/lib/vmware-vmca/bin/certificate-manager
+    <div class="cmd-entry"><div class="cmd-desc">Certificate Manager Tool</div><code>/usr/lib/vmware-vmca/bin/certificate-manager
 <span class="cm"># Option 3: Replace Machine SSL Certificate with Custom Certificate</span>
 <span class="cm"># Option 6: Replace Machine SSL Certificate with VMCA Certificate</span>
 <span class="cm"># Option 8: Reset all certificates</span></code></div>
@@ -135,12 +135,12 @@ openssl x509 -in /tmp/vc.crt -noout -dates</code></div>
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">REST API</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Session-Token</div><code">curl -ks -X POST \
+    <div class="cmd-entry"><div class="cmd-desc">Session-Token</div><code>curl -ks -X POST \
   "https://vc01/api/session" \
   -H "Authorization: Basic $(echo -n 'admin:pass' | base64)" \
   -H "Content-Type: application/json"
 <span class="cm"># Response: "token-string" → für alle weiteren Requests</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">VMs per REST API</div><code">TOKEN="xxxx"
+    <div class="cmd-entry"><div class="cmd-desc">VMs per REST API</div><code>TOKEN="xxxx"
 <span class="cm"># Alle VMs:</span>
 curl -ks "https://vc01/api/vcenter/vm" \
   -H "vmware-api-session-id: $TOKEN" | jq .
@@ -150,7 +150,7 @@ curl -ks "https://vc01/api/vcenter/vm/vm-123" \
 <span class="cm"># VM einschalten:</span>
 curl -ks -X POST "https://vc01/api/vcenter/vm/vm-123/power?action=start" \
   -H "vmware-api-session-id: $TOKEN"</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">DCLI (Datacenter CLI)</div><code">dcli +server vcenter.example.com \
+    <div class="cmd-entry"><div class="cmd-desc">DCLI (Datacenter CLI)</div><code>dcli +server vcenter.example.com \
      +username admin@vsphere.local \
      +password secret \
      com vmware vcenter vm list</code></div>
@@ -160,10 +160,10 @@ curl -ks -X POST "https://vc01/api/vcenter/vm/vm-123/power?action=start" \
 <div class="section th-bl">
   <div class="section-header"><div class="section-icon">🔄</div><div class="section-title">vSphere HA & DRS</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">HA-Status (PowerCLI)</div><code">Get-Cluster | Select-Object Name,HAEnabled,DrsEnabled
+    <div class="cmd-entry"><div class="cmd-desc">HA-Status (PowerCLI)</div><code>Get-Cluster | Select-Object Name,HAEnabled,DrsEnabled
 (Get-Cluster cluster01).HAAdmissionControlEnabled
 Get-VMHost | Get-VMHostHardware | Select-Object VMHost,HasBMC</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">DRS-Regeln</div><code">Get-DrsRule -Cluster cluster01
+    <div class="cmd-entry"><div class="cmd-desc">DRS-Regeln</div><code>Get-DrsRule -Cluster cluster01
 New-DrsVMHostRule -Cluster cluster01 -Name "keep-on-esx01" `
   -VMGroup myVMGroup -VMHostGroup esx01Group `
   -Type MustRunOn
@@ -175,7 +175,7 @@ Get-DrsVMHostGroup -Cluster cluster01</code></div>
 <div class="section th-re">
   <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Troubleshooting</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">ESXi-Probleme</div><code"><span class="cm"># Purple Screen / PSOD — vmkernel Core Dump:</span>
+    <div class="cmd-entry"><div class="cmd-desc">ESXi-Probleme</div><code><span class="cm"># Purple Screen / PSOD — vmkernel Core Dump:</span>
 esxcli system coredump file list
 <span class="cm"># Locked VMDK finden:</span>
 vmkfstools -D myvm.vmdk              <span class="cm"># Besitzer der VMDK anzeigen</span>
@@ -183,14 +183,14 @@ esxcli vm process list               <span class="cm"># laufende VMs</span>
 <span class="cm"># Ghost NFS Session aufräumen:</span>
 esxcli storage nfs list
 esxcli storage nfs remove -v nfs01</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">vCenter-Probleme</div><code"><span class="cm"># SSO/Login-Probleme:</span>
+    <div class="cmd-entry"><div class="cmd-desc">vCenter-Probleme</div><code><span class="cm"># SSO/Login-Probleme:</span>
 /usr/lib/vmware-vmafd/bin/vmafd-cli get-domain-state --server-name localhost
 <span class="cm"># DB-Verbindung prüfen:</span>
 /opt/vmware/vpostgres/current/bin/psql \
   -U vc -d VCDB -c "SELECT count(*) FROM vpx_event;"
 <span class="cm"># Inventar neu indizieren:</span>
 vpxd_servicecfg db rebuildindexes</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Nützliche KB-Pfade</div><code"><span class="cm"># ESXI shell öffnen (Direktkonsole → F2 → Troubleshoot)</span>
+    <div class="cmd-entry"><div class="cmd-desc">Nützliche KB-Pfade</div><code><span class="cm"># ESXI shell öffnen (Direktkonsole → F2 → Troubleshoot)</span>
 <span class="cm"># VCSA 443 reagiert nicht:</span>
 service-control --restart vsphere-ui
 service-control --restart vmware-vpxd

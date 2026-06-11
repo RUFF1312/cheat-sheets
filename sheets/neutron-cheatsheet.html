@@ -74,7 +74,7 @@
 <div class="section th-bl">
   <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Netzwerke & Subnetze</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Netzwerke</div><code">openstack network list
+    <div class="cmd-entry"><div class="cmd-desc">Netzwerke</div><code>openstack network list
 openstack network show private
 openstack network create private \
   --provider-network-type vxlan
@@ -83,7 +83,7 @@ openstack network create external \
   --provider-network-type flat \
   --provider-physical-network physnet1
 openstack network delete private</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Subnetze</div><code">openstack subnet list
+    <div class="cmd-entry"><div class="cmd-desc">Subnetze</div><code>openstack subnet list
 openstack subnet show mysubnet
 openstack subnet create \
   --network private \
@@ -94,7 +94,7 @@ openstack subnet create \
   --allocation-pool start=10.0.0.100,end=10.0.0.200 \
   mysubnet
 openstack subnet delete mysubnet</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">DHCP & IPv6</div><code">openstack subnet set --no-dhcp mysubnet
+    <div class="cmd-entry"><div class="cmd-desc">DHCP & IPv6</div><code>openstack subnet set --no-dhcp mysubnet
 openstack subnet create \
   --network private \
   --subnet-range fd00::/64 \
@@ -108,7 +108,7 @@ openstack subnet create \
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🔀</div><div class="section-title">Router</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Router verwalten</div><code">openstack router list
+    <div class="cmd-entry"><div class="cmd-desc">Router verwalten</div><code>openstack router list
 openstack router show myrouter
 openstack router create myrouter
 openstack router set \
@@ -117,7 +117,7 @@ openstack router set \
 openstack router add subnet myrouter mysubnet
 openstack router remove subnet myrouter mysubnet
 openstack router delete myrouter</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Router Ports & Routen</div><code">openstack router show -c interfaces_info myrouter
+    <div class="cmd-entry"><div class="cmd-desc">Router Ports & Routen</div><code>openstack router show -c interfaces_info myrouter
 openstack router add route \
   --route destination=192.168.0.0/24,gateway=10.0.0.254 \
   myrouter
@@ -131,7 +131,7 @@ openstack router remove route \
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">🔌</div><div class="section-title">Ports</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Port-Operationen</div><code">openstack port list
+    <div class="cmd-entry"><div class="cmd-desc">Port-Operationen</div><code>openstack port list
 openstack port list --network private
 openstack port show myport
 openstack port create \
@@ -143,7 +143,7 @@ openstack port create \
   --mac-address aa:bb:cc:dd:ee:ff \
   myport
 openstack port delete myport</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Port konfigurieren</div><code">openstack port set \
+    <div class="cmd-entry"><div class="cmd-desc">Port konfigurieren</div><code>openstack port set \
   --security-group mysg \
   myport
 openstack port unset --security-group mysg myport
@@ -158,11 +158,11 @@ openstack server add port myserver myport</code></div>
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🌍</div><div class="section-title">Floating IPs</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">FIP verwalten</div><code">openstack floating ip list
+    <div class="cmd-entry"><div class="cmd-desc">FIP verwalten</div><code>openstack floating ip list
 openstack floating ip create external
 openstack floating ip show 203.0.113.10
 openstack floating ip delete 203.0.113.10</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">FIP zuweisen</div><code">openstack server add floating ip myserver 203.0.113.10
+    <div class="cmd-entry"><div class="cmd-desc">FIP zuweisen</div><code>openstack server add floating ip myserver 203.0.113.10
 openstack server remove floating ip myserver 203.0.113.10
 <span class="cm"># An spezifischen Port binden:</span>
 openstack floating ip set \
@@ -174,11 +174,11 @@ openstack floating ip set \
 <div class="section th-re">
   <div class="section-header"><div class="section-icon">🛡</div><div class="section-title">Security Groups</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Security Groups</div><code">openstack security group list
+    <div class="cmd-entry"><div class="cmd-desc">Security Groups</div><code>openstack security group list
 openstack security group create websg \
   --description "Web Server Security Group"
 openstack security group delete websg</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Regeln hinzufügen</div><code">openstack security group rule list websg
+    <div class="cmd-entry"><div class="cmd-desc">Regeln hinzufügen</div><code>openstack security group rule list websg
 <span class="cm"># SSH eingehend:</span>
 openstack security group rule create \
   --proto tcp --dst-port 22 \
@@ -194,7 +194,7 @@ openstack security group rule create \
 <span class="cm"># Ausgehend alles:</span>
 openstack security group rule create \
   --proto any --egress websg</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">SG entfernen</div><code">openstack security group rule delete <RULE-ID>
+    <div class="cmd-entry"><div class="cmd-desc">SG entfernen</div><code>openstack security group rule delete <RULE-ID>
 openstack server remove security group myserver websg</code></div>
   </div>
 </div>
@@ -202,7 +202,7 @@ openstack server remove security group myserver websg</code></div>
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">📊</div><div class="section-title">QoS & RBAC</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">QoS Policy</div><code">openstack network qos policy list
+    <div class="cmd-entry"><div class="cmd-desc">QoS Policy</div><code>openstack network qos policy list
 openstack network qos policy create 1gbit-policy
 openstack network qos rule create \
   --type bandwidth-limit \
@@ -210,13 +210,13 @@ openstack network qos rule create \
   --max-burst-kbits 10000000 \
   1gbit-policy
 openstack port set --qos-policy 1gbit-policy myport</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">RBAC (Netzwerke teilen)</div><code">openstack network rbac list
+    <div class="cmd-entry"><div class="cmd-desc">RBAC (Netzwerke teilen)</div><code>openstack network rbac list
 openstack network rbac create \
   --type network \
   --action access_as_shared \
   --target-project otherproject \
   private</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Quotas</div><code">openstack quota show --project myproject
+    <div class="cmd-entry"><div class="cmd-desc">Quotas</div><code>openstack quota show --project myproject
 openstack quota set \
   --networks 20 \
   --subnets 40 \

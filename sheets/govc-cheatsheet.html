@@ -55,7 +55,7 @@
   <a href="../index.html" class="nav-link">← Index</a>
   <div class="header-grid">
     <div>
-      <div class="badge">▸ Cloud & Infra Reference</div>
+      <div class="badge">▸ VMware vSphere CLI</div>
       <img src="../assets/govc.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(65%) sepia(50%) saturate(500%) hue-rotate(175deg)">
       <h1><span>govc</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
       <p class="subtitle">$ govc vm.info /dc/vm/myvm</p>
@@ -74,11 +74,11 @@
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">Setup & Auth</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Installation</div><code">brew install govc
+    <div class="cmd-entry"><div class="cmd-desc">Installation</div><code>brew install govc
 <span class="cm"># oder binary download:</span>
 curl -L https://github.com/vmware/govmomi/releases/latest/download/govc_Linux_x86_64.tar.gz | tar xz
 mv govc /usr/local/bin/</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Umgebungsvariablen</div><code">export GOVC_URL=https://vcenter.example.com
+    <div class="cmd-entry"><div class="cmd-desc">Umgebungsvariablen</div><code>export GOVC_URL=https://vcenter.example.com
 export GOVC_USERNAME=administrator@vsphere.local
 export GOVC_PASSWORD=secret
 export GOVC_INSECURE=true        <span class="cm"># self-signed cert</span>
@@ -86,7 +86,7 @@ export GOVC_DATACENTER=DC01
 export GOVC_DATASTORE=ds01
 export GOVC_NETWORK="VM Network"
 export GOVC_RESOURCE_POOL=/DC01/host/cluster01/Resources</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Verbindung testen</div><code">govc about
+    <div class="cmd-entry"><div class="cmd-desc">Verbindung testen</div><code>govc about
 govc about -u https://user:pass@vcenter/sdk</code></div>
     <div class="tip"><strong>Tipp:</strong> GOVC_URL, USERNAME und PASSWORD in eine .env-Datei auslagern und mit `source .env` laden. Nie Passwörter in die Shell-History.</div>
   </div>
@@ -95,19 +95,19 @@ govc about -u https://user:pass@vcenter/sdk</code></div>
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Navigation & Suche</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Inventar durchsuchen</div><code">govc ls                          <span class="cm"># Datacenter-Ebene</span>
+    <div class="cmd-entry"><div class="cmd-desc">Inventar durchsuchen</div><code>govc ls                          <span class="cm"># Datacenter-Ebene</span>
 govc ls /DC01/vm
 govc ls /DC01/vm/folder01
 govc ls /DC01/host
 govc ls /DC01/datastore
 govc ls /DC01/network</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Objekte finden</div><code">govc find / -type m              <span class="cm"># alle VMs</span>
+    <div class="cmd-entry"><div class="cmd-desc">Objekte finden</div><code>govc find / -type m              <span class="cm"># alle VMs</span>
 govc find / -type m -name myvm*
 govc find / -type h              <span class="cm"># Hosts</span>
 govc find / -type d              <span class="cm"># Datastores</span>
 govc find /DC01/vm -type m -runtime.powerState poweredOn
 govc find / -type m -guest.ipAddress 10.0.0.5</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Object-Typen</div><code">m  VirtualMachine
+    <div class="cmd-entry"><div class="cmd-desc">Object-Typen</div><code>m  VirtualMachine
 h  HostSystem
 d  Datastore
 n  Network
@@ -120,21 +120,21 @@ c  ClusterComputeResource</code></div>
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🖥</div><div class="section-title">VMs verwalten</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Info & Status</div><code">govc vm.info /DC01/vm/myvm
+    <div class="cmd-entry"><div class="cmd-desc">Info & Status</div><code>govc vm.info /DC01/vm/myvm
 govc vm.info -json myvm | jq .
 govc vm.ip myvm</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Power-Operationen</div><code">govc vm.power -on myvm
+    <div class="cmd-entry"><div class="cmd-desc">Power-Operationen</div><code>govc vm.power -on myvm
 govc vm.power -off myvm
 govc vm.power -s myvm           <span class="cm"># graceful shutdown</span>
 govc vm.power -r myvm           <span class="cm"># reboot</span>
 govc vm.power -suspend myvm</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Klonen & Zerstören</div><code">govc vm.clone -vm template-vm -on=false newvm
+    <div class="cmd-entry"><div class="cmd-desc">Klonen & Zerstören</div><code>govc vm.clone -vm template-vm -on=false newvm
 govc vm.clone -vm myvm \
   -ds ds01 \
   -pool /DC01/host/cluster01/Resources \
   myvm-clone
 govc vm.destroy myvm</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Konfigurieren</div><code">govc vm.change -vm myvm -m 8192 -c 4
+    <div class="cmd-entry"><div class="cmd-desc">Konfigurieren</div><code>govc vm.change -vm myvm -m 8192 -c 4
 govc vm.change -vm myvm -e disk.enableUUID=TRUE
 govc vm.disk.change -vm myvm -disk.label "Hard disk 1" -size 100G
 govc vm.network.add -vm myvm -net "PG-Prod"
@@ -145,11 +145,11 @@ govc vm.migrate -host esx02 myvm</code></div>
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">💾</div><div class="section-title">Datastores & Dateien</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Datastore-Inhalt</div><code">govc datastore.ls
+    <div class="cmd-entry"><div class="cmd-desc">Datastore-Inhalt</div><code>govc datastore.ls
 govc datastore.ls -ds ds01
 govc datastore.ls -ds ds01 myvm/
 govc datastore.info ds01</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Dateien transferieren</div><code">govc datastore.upload -ds ds01 local.iso /isos/ubuntu.iso
+    <div class="cmd-entry"><div class="cmd-desc">Dateien transferieren</div><code>govc datastore.upload -ds ds01 local.iso /isos/ubuntu.iso
 govc datastore.download -ds ds01 /myvm/myvm.vmdk local.vmdk
 govc datastore.mkdir -ds ds01 newfolder
 govc datastore.rm -ds ds01 oldfile.iso</code></div>
@@ -159,7 +159,7 @@ govc datastore.rm -ds ds01 oldfile.iso</code></div>
 <div class="section th-re">
   <div class="section-header"><div class="section-icon">🔄</div><div class="section-title">Snapshots</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Snapshots verwalten</div><code">govc snapshot.tree -vm myvm
+    <div class="cmd-entry"><div class="cmd-desc">Snapshots verwalten</div><code>govc snapshot.tree -vm myvm
 govc snapshot.create -vm myvm pre-patch
 govc snapshot.revert -vm myvm pre-patch
 govc snapshot.remove -vm myvm pre-patch
@@ -170,7 +170,7 @@ govc snapshot.remove -vm myvm -r ""   <span class="cm"># alle entfernen</span></
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">📦</div><div class="section-title">Import & Export</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">OVA/OVF Import</div><code">govc import.ova ubuntu.ova
+    <div class="cmd-entry"><div class="cmd-desc">OVA/OVF Import</div><code>govc import.ova ubuntu.ova
 govc import.ova \
   -name myvm \
   -ds ds01 \
@@ -180,8 +180,8 @@ govc import.ova \
 <span class="cm"># OVF mit Spec-Datei:</span>
 govc import.spec ubuntu.ova > spec.json
 govc import.ova -options spec.json ubuntu.ova</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">OVF Export</div><code">govc export.ovf -vm myvm ./export-dir/</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Content Library</div><code">govc library.ls
+    <div class="cmd-entry"><div class="cmd-desc">OVF Export</div><code>govc export.ovf -vm myvm ./export-dir/</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Content Library</div><code>govc library.ls
 govc library.info mylib
 govc library.import mylib /path/to/file.ova
 govc library.deploy mylib/template-name myvm</code></div>
@@ -191,14 +191,14 @@ govc library.deploy mylib/template-name myvm</code></div>
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">🏗</div><div class="section-title">Host, Cluster & Tags</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Hosts & Cluster</div><code">govc host.info /DC01/host/cluster01/esx01.example.com
+    <div class="cmd-entry"><div class="cmd-desc">Hosts & Cluster</div><code>govc host.info /DC01/host/cluster01/esx01.example.com
 govc host.storage.info -host esx01
 govc cluster.usage cluster01</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Tags (vSphere Tags API)</div><code">govc tags.category.ls
+    <div class="cmd-entry"><div class="cmd-desc">Tags (vSphere Tags API)</div><code>govc tags.category.ls
 govc tags.ls -c Environment
 govc tags.attach -c Environment -t Production /DC01/vm/myvm
 govc tags.info /DC01/vm/myvm</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Events & Tasks</div><code">govc events /DC01/vm/myvm
+    <div class="cmd-entry"><div class="cmd-desc">Events & Tasks</div><code>govc events /DC01/vm/myvm
 govc tasks
 govc tasks -follow</code></div>
   </div>
