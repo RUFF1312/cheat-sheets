@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenStack Neutron (Network) - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/neutron.svg">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#1a85c9;--accent2:#5ba8e0;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#0d1117 0%,#011223 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(26,133,201,.08),transparent);}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent2);background:rgba(26,133,201,.1);border:1px solid rgba(26,133,201,.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;}
+  h1 span{color:var(--accent2);}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .meta strong{color:var(--accent2);}
+  .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
+  .ch-bl{background:rgba(26,133,201,.1);border:1px solid rgba(26,133,201,.3);color:var(--accent2);}
+  .ch-gn{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);color:var(--green);}
+  .ch-cy{background:rgba(57,197,207,.1);border:1px solid rgba(57,197,207,.3);color:var(--cyan);}
+  .ch-pu{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.3);color:var(--purple);}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px;}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .th-bl .section-header{background:rgba(26,133,201,.06);} .th-bl .section-icon{background:rgba(26,133,201,.15);} .th-bl .section-title{color:var(--accent2);}
+  .th-gn .section-header{background:rgba(63,185,80,.06);} .th-gn .section-icon{background:rgba(63,185,80,.15);} .th-gn .section-title{color:var(--green);}
+  .th-cy .section-header{background:rgba(57,197,207,.06);} .th-cy .section-icon{background:rgba(57,197,207,.15);} .th-cy .section-title{color:var(--cyan);}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--purple);}
+  .th-re .section-header{background:rgba(244,112,103,.06);} .th-re .section-icon{background:rgba(244,112,103,.15);} .th-re .section-title{color:var(--red);}
+  .command-list{padding:8px 0;}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
+  .cmd-entry:last-child{border-bottom:none;}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+  .kw{color:#5ba8e0;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;}
+  .tip{padding:8px 16px;background:rgba(26,133,201,.06);border-left:3px solid var(--accent2);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip strong{color:var(--text);}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent2);text-decoration:none;border:1px solid rgba(26,133,201,.3);padding:4px 12px;border-radius:4px;background:rgba(26,133,201,.08);}
+  .nav-link:hover{background:rgba(26,133,201,.15);}
+  @media(max-width:1100px){main{columns:2;}}
+  @media(max-width:700px){main{columns:1;padding:16px;}header{padding:24px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ OpenStack Networking</div>
+      <img src="../assets/neutron.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(32%) sepia(80%) saturate(500%) hue-rotate(195deg)">
+      <h1>OpenStack <span>Neutron</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ openstack network list</p>
+      <div class="version-legend">
+        <div class="chip ch-bl">Networking</div>
+        <div class="chip ch-gn">Router/Subnets</div>
+        <div class="chip ch-cy">Floating IPs</div>
+        <div class="chip ch-pu">Security Groups</div>
+      </div>
+    </div>
+    <div class="meta"><strong>openstack network</strong><br>Networks · Subnets<br>Routers · Ports<br>FIPs · SecGroups</div>
+  </div>
+</header>
+<main>
+
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Netzwerke & Subnetze</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Netzwerke</div><code">openstack network list
+openstack network show private
+openstack network create private \
+  --provider-network-type vxlan
+openstack network create external \
+  --external \
+  --provider-network-type flat \
+  --provider-physical-network physnet1
+openstack network delete private</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Subnetze</div><code">openstack subnet list
+openstack subnet show mysubnet
+openstack subnet create \
+  --network private \
+  --subnet-range 10.0.0.0/24 \
+  --gateway 10.0.0.1 \
+  --dns-nameserver 8.8.8.8 \
+  --dns-nameserver 8.8.4.4 \
+  --allocation-pool start=10.0.0.100,end=10.0.0.200 \
+  mysubnet
+openstack subnet delete mysubnet</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">DHCP & IPv6</div><code">openstack subnet set --no-dhcp mysubnet
+openstack subnet create \
+  --network private \
+  --subnet-range fd00::/64 \
+  --ip-version 6 \
+  --ipv6-ra-mode slaac \
+  --ipv6-address-mode slaac \
+  mysubnet-v6</code></div>
+  </div>
+</div>
+
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🔀</div><div class="section-title">Router</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Router verwalten</div><code">openstack router list
+openstack router show myrouter
+openstack router create myrouter
+openstack router set \
+  --external-gateway external \
+  myrouter
+openstack router add subnet myrouter mysubnet
+openstack router remove subnet myrouter mysubnet
+openstack router delete myrouter</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Router Ports & Routen</div><code">openstack router show -c interfaces_info myrouter
+openstack router add route \
+  --route destination=192.168.0.0/24,gateway=10.0.0.254 \
+  myrouter
+openstack router remove route \
+  --route destination=192.168.0.0/24,gateway=10.0.0.254 \
+  myrouter</code></div>
+    <div class="tip"><strong>HA Router:</strong> openstack router create --ha myrouter (bei Neutron mit L3HA) erzeugt einen hochverfügbaren Router via VRRP.</div>
+  </div>
+</div>
+
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">🔌</div><div class="section-title">Ports</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Port-Operationen</div><code">openstack port list
+openstack port list --network private
+openstack port show myport
+openstack port create \
+  --network private \
+  --fixed-ip ip-address=10.0.0.50 \
+  myport
+openstack port create \
+  --network private \
+  --mac-address aa:bb:cc:dd:ee:ff \
+  myport
+openstack port delete myport</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Port konfigurieren</div><code">openstack port set \
+  --security-group mysg \
+  myport
+openstack port unset --security-group mysg myport
+openstack port set --no-security-group myport
+openstack port set \
+  --allowed-address ip-address=10.0.0.0/24 \
+  myport
+openstack server add port myserver myport</code></div>
+  </div>
+</div>
+
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">🌍</div><div class="section-title">Floating IPs</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">FIP verwalten</div><code">openstack floating ip list
+openstack floating ip create external
+openstack floating ip show 203.0.113.10
+openstack floating ip delete 203.0.113.10</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">FIP zuweisen</div><code">openstack server add floating ip myserver 203.0.113.10
+openstack server remove floating ip myserver 203.0.113.10
+<span class="cm"># An spezifischen Port binden:</span>
+openstack floating ip set \
+  --port myport \
+  203.0.113.10</code></div>
+  </div>
+</div>
+
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">🛡</div><div class="section-title">Security Groups</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Security Groups</div><code">openstack security group list
+openstack security group create websg \
+  --description "Web Server Security Group"
+openstack security group delete websg</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Regeln hinzufügen</div><code">openstack security group rule list websg
+<span class="cm"># SSH eingehend:</span>
+openstack security group rule create \
+  --proto tcp --dst-port 22 \
+  --remote-ip 10.0.0.0/8 websg
+<span class="cm"># HTTP/HTTPS:</span>
+openstack security group rule create \
+  --proto tcp --dst-port 80 websg
+openstack security group rule create \
+  --proto tcp --dst-port 443 websg
+<span class="cm"># ICMP (ping):</span>
+openstack security group rule create \
+  --proto icmp websg
+<span class="cm"># Ausgehend alles:</span>
+openstack security group rule create \
+  --proto any --egress websg</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">SG entfernen</div><code">openstack security group rule delete <RULE-ID>
+openstack server remove security group myserver websg</code></div>
+  </div>
+</div>
+
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">📊</div><div class="section-title">QoS & RBAC</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">QoS Policy</div><code">openstack network qos policy list
+openstack network qos policy create 1gbit-policy
+openstack network qos rule create \
+  --type bandwidth-limit \
+  --max-kbps 1000000 \
+  --max-burst-kbits 10000000 \
+  1gbit-policy
+openstack port set --qos-policy 1gbit-policy myport</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">RBAC (Netzwerke teilen)</div><code">openstack network rbac list
+openstack network rbac create \
+  --type network \
+  --action access_as_shared \
+  --target-project otherproject \
+  private</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Quotas</div><code">openstack quota show --project myproject
+openstack quota set \
+  --networks 20 \
+  --subnets 40 \
+  --routers 10 \
+  --floating-ips 50 \
+  myproject</code></div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>

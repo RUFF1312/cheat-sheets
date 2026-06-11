@@ -191,6 +191,13 @@
   .c-govc{--ac:#5AC8FA;--acs:rgba(90,200,250,0.15);--acb:rgba(90,200,250,0.25)}
   /* vSphere */
   .c-vsphere{--ac:#79b8ff;--acs:rgba(21,101,192,0.15);--acb:rgba(21,101,192,0.25)}
+  /* OpenStack */
+  .c-nova{--ac:#e84040;--acs:rgba(232,64,64,0.15);--acb:rgba(232,64,64,0.25)}
+  .c-neutron{--ac:#1a85c9;--acs:rgba(26,133,201,0.15);--acb:rgba(26,133,201,0.25)}
+  .c-cinder{--ac:#e07b39;--acs:rgba(224,123,57,0.15);--acb:rgba(224,123,57,0.25)}
+  .c-glance{--ac:#9c5cc7;--acs:rgba(156,92,199,0.15);--acb:rgba(156,92,199,0.25)}
+  .c-keystone{--ac:#d4a017;--acs:rgba(212,160,23,0.15);--acb:rgba(212,160,23,0.25)}
+  .c-heat{--ac:#e0652a;--acs:rgba(224,101,42,0.15);--acb:rgba(224,101,42,0.25)}
 
   .card .card-accent{background:var(--ac)}
   .card:hover{border-color:var(--ac)}
@@ -240,18 +247,18 @@
   <div class="header-eyebrow">Developer Reference Collection</div>
   <h1><span class="h1-accent">TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span></span><br>Guide</h1>
   <p class="header-sub">Alle Referenz-Sheets auf einen Blick — dark-themed, vollständig, offline-fähig.</p>
-  <div class="header-count"><span>71</span> Sheets · CLI · Scripting · DevOps · VMware · Datenbanken · Coding</div>
+  <div class="header-count"><span>77</span> Sheets · CLI · Scripting · DevOps · OpenStack · VMware · Coding</div>
 </header>
 
 <main>
   <div class="toolbar">
     <div class="toolbar-filters">
-      <button class="pill active" data-filter="all">Alle <span class="pill-count">71</span></button>
+      <button class="pill active" data-filter="all">Alle <span class="pill-count">77</span></button>
       <button class="pill" data-filter="Programmiersprachen">Sprachen <span class="pill-count">13</span></button>
       <button class="pill" data-filter="Dev & Automation">Dev &amp; Automation <span class="pill-count">9</span></button>
       <button class="pill" data-filter="System & Netz">System &amp; Netz <span class="pill-count">17</span></button>
       <button class="pill" data-filter="Datenbanken">Datenbanken <span class="pill-count">4</span></button>
-      <button class="pill" data-filter="Cloud & Infra">Cloud &amp; Infra <span class="pill-count">24</span></button>
+      <button class="pill" data-filter="Cloud & Infra">Cloud &amp; Infra <span class="pill-count">30</span></button>
       <button class="pill" data-filter="VMware">VMware <span class="pill-count">4</span></button>
     </div>
     <div class="toolbar-row2">
@@ -1315,6 +1322,97 @@
       </div>
     </a>
 
+    <!-- OpenStack -->
+    <a href="sheets/nova-cheatsheet.html" class="card c-nova" data-title="OpenStack Nova" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/nova.svg" alt="nova.svg" style="width:24px;height:24px;filter:invert(28%) sepia(85%) saturate(700%) hue-rotate(325deg)"></div>
+          <div class="card-name">OpenStack Nova</div>
+        </div>
+        <div class="card-tagline">$ openstack server list -- Compute<br>Server · Flavors · Keypairs · Migration</div>
+        <div class="card-tags">
+          <span class="tag">Compute</span><span class="tag">Server</span><span class="tag">Flavors</span><span class="tag">Migration</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/neutron-cheatsheet.html" class="card c-neutron" data-title="OpenStack Neutron" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/neutron.svg" alt="neutron.svg" style="width:24px;height:24px;filter:invert(32%) sepia(80%) saturate(500%) hue-rotate(195deg)"></div>
+          <div class="card-name">OpenStack Neutron</div>
+        </div>
+        <div class="card-tagline">$ openstack network list -- Networking<br>Networks · Routers · FIPs · Security Groups</div>
+        <div class="card-tags">
+          <span class="tag">Networking</span><span class="tag">Router</span><span class="tag">SecGroups</span><span class="tag">QoS</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/cinder-cheatsheet.html" class="card c-cinder" data-title="OpenStack Cinder" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/cinder.svg" alt="cinder.svg" style="width:24px;height:24px;filter:invert(55%) sepia(80%) saturate(600%) hue-rotate(345deg)"></div>
+          <div class="card-name">OpenStack Cinder</div>
+        </div>
+        <div class="card-tagline">$ openstack volume list -- Block Storage<br>Volumes · Snapshots · Backups · Types</div>
+        <div class="card-tags">
+          <span class="tag">Block Storage</span><span class="tag">Snapshots</span><span class="tag">Backups</span><span class="tag">QoS</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/glance-cheatsheet.html" class="card c-glance" data-title="OpenStack Glance" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/glance.svg" alt="glance.svg" style="width:24px;height:24px;filter:invert(50%) sepia(70%) saturate(600%) hue-rotate(255deg)"></div>
+          <div class="card-name">OpenStack Glance</div>
+        </div>
+        <div class="card-tagline">$ openstack image list -- Images<br>Upload · Download · Properties · Sharing</div>
+        <div class="card-tags">
+          <span class="tag">Images</span><span class="tag">Upload</span><span class="tag">Properties</span><span class="tag">Sharing</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/keystone-cheatsheet.html" class="card c-keystone" data-title="OpenStack Keystone" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/keystone.svg" alt="keystone.svg" style="width:24px;height:24px;filter:invert(70%) sepia(80%) saturate(600%) hue-rotate(10deg)"></div>
+          <div class="card-name">OpenStack Keystone</div>
+        </div>
+        <div class="card-tagline">$ openstack token issue -- Identity<br>Users · Projects · Roles · Tokens</div>
+        <div class="card-tags">
+          <span class="tag">Identity</span><span class="tag">Users</span><span class="tag">Roles</span><span class="tag">Tokens</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/heat-cheatsheet.html" class="card c-heat" data-title="OpenStack Heat" data-group="Cloud & Infra">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/heat.svg" alt="heat.svg" style="width:24px;height:24px;filter:invert(55%) sepia(80%) saturate(700%) hue-rotate(350deg)"></div>
+          <div class="card-name">OpenStack Heat</div>
+        </div>
+        <div class="card-tagline">$ openstack stack list -- Orchestration<br>Stacks · HOT Templates · Resources · Events</div>
+        <div class="card-tags">
+          <span class="tag">Orchestration</span><span class="tag">HOT</span><span class="tag">Stacks</span><span class="tag">IaC</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
     <!-- VMware -->
     <a href="sheets/powercli-cheatsheet.html" class="card c-powercli" data-title="VMware PowerCLI" data-group="VMware">
       <div class="card-accent"></div>
@@ -1472,13 +1570,13 @@
       });
 
       // Result counter (only while searching)
-      resultCount.textContent = term ? `${visible.length} / 71` : '';
+      resultCount.textContent = term ? `${visible.length} / 77` : '';
 
       // Update pill counts dynamically
       document.querySelectorAll('.pill[data-filter]').forEach(pill => {
         const f = pill.dataset.filter;
         const n = f === 'all'
-          ? (term ? visible.length : 71)
+          ? (term ? visible.length : 77)
           : cards.filter(c => c.dataset.group === f && (!term || c.textContent.toLowerCase().includes(term))).length;
         const span = pill.querySelector('.pill-count');
         if (span) span.textContent = n;

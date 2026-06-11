@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenStack Nova (Compute) - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/nova.svg">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#e84040;--accent2:#ff7070;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#0d1117 0%,#180303 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(232,64,64,.08),transparent);}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent2);background:rgba(232,64,64,.1);border:1px solid rgba(232,64,64,.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;}
+  h1 span{color:var(--accent2);}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .meta strong{color:var(--accent2);}
+  .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
+  .ch-re{background:rgba(232,64,64,.1);border:1px solid rgba(232,64,64,.3);color:var(--accent2);}
+  .ch-gn{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);color:var(--green);}
+  .ch-cy{background:rgba(57,197,207,.1);border:1px solid rgba(57,197,207,.3);color:var(--cyan);}
+  .ch-pu{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.3);color:var(--purple);}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px;}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .th-re .section-header{background:rgba(232,64,64,.06);} .th-re .section-icon{background:rgba(232,64,64,.15);} .th-re .section-title{color:var(--accent2);}
+  .th-gn .section-header{background:rgba(63,185,80,.06);} .th-gn .section-icon{background:rgba(63,185,80,.15);} .th-gn .section-title{color:var(--green);}
+  .th-cy .section-header{background:rgba(57,197,207,.06);} .th-cy .section-icon{background:rgba(57,197,207,.15);} .th-cy .section-title{color:var(--cyan);}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--purple);}
+  .th-or .section-header{background:rgba(244,162,97,.06);} .th-or .section-icon{background:rgba(244,162,97,.15);} .th-or .section-title{color:#f4a261;}
+  .command-list{padding:8px 0;}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
+  .cmd-entry:last-child{border-bottom:none;}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+  .kw{color:#ff7070;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;} .fl{color:#f4a261;}
+  .tip{padding:8px 16px;background:rgba(232,64,64,.06);border-left:3px solid var(--accent2);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip strong{color:var(--text);}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent2);text-decoration:none;border:1px solid rgba(232,64,64,.3);padding:4px 12px;border-radius:4px;background:rgba(232,64,64,.08);}
+  .nav-link:hover{background:rgba(232,64,64,.15);}
+  @media(max-width:1100px){main{columns:2;}}
+  @media(max-width:700px){main{columns:1;padding:16px;}header{padding:24px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ OpenStack Compute</div>
+      <img src="../assets/nova.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(28%) sepia(85%) saturate(700%) hue-rotate(325deg)">
+      <h1>OpenStack <span>Nova</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ openstack server list</p>
+      <div class="version-legend">
+        <div class="chip ch-re">Compute</div>
+        <div class="chip ch-gn">Server Lifecycle</div>
+        <div class="chip ch-cy">Migration</div>
+        <div class="chip ch-pu">Flavors</div>
+      </div>
+    </div>
+    <div class="meta"><strong>openstack server</strong><br>Create · Power · Console<br>Resize · Migrate<br>Flavors · Keypairs</div>
+  </div>
+</header>
+<main>
+
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">📋</div><div class="section-title">Server auflisten & anzeigen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code">openstack server list
+openstack server list --all-projects
+openstack server list --status ERROR
+openstack server list --host esx01.example.com
+openstack server list -c ID -c Name -c Status -c Networks
+openstack server show myserver</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Filter & Suche</div><code">openstack server list --name myapp*
+openstack server list --image ubuntu-22.04
+openstack server list --flavor m1.large
+openstack server list --project myproject
+openstack server list --user alice</code></div>
+  </div>
+</div>
+
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🚀</div><div class="section-title">Server erstellen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Minimal</div><code">openstack server create \
+  --flavor m1.small \
+  --image ubuntu-22.04 \
+  --network private \
+  --key-name mykey \
+  myserver</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Vollständig</div><code">openstack server create \
+  --flavor m1.large \
+  --image ubuntu-22.04 \
+  --network private \
+  --security-group default \
+  --key-name mykey \
+  --availability-zone az1 \
+  --user-data ./cloud-init.yml \
+  --property env=prod \
+  --wait \
+  myserver</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Boot from Volume</div><code">openstack server create \
+  --flavor m1.small \
+  --block-device source_type=image,uuid=<IMAGE-ID>,\
+dest_type=volume,volume_size=50,\
+boot_index=0,delete_on_termination=true \
+  --network private \
+  myserver-bfv</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Aus existierendem Volume</div><code">openstack server create \
+  --flavor m1.small \
+  --volume mybootvol \
+  --network private \
+  myserver-vol</code></div>
+  </div>
+</div>
+
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">⚡</div><div class="section-title">Power-Operationen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Start / Stop / Reboot</div><code">openstack server start myserver
+openstack server stop myserver
+openstack server reboot myserver
+openstack server reboot --hard myserver</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Pause / Suspend / Shelve</div><code">openstack server pause myserver      <span class="cm"># RAM eingefroren, CPU gestoppt</span>
+openstack server unpause myserver
+openstack server suspend myserver    <span class="cm"># auf Disk gespeichert</span>
+openstack server resume myserver
+openstack server shelve myserver     <span class="cm"># snapshot + Hypervisor frei</span>
+openstack server unshelve myserver
+openstack server shelve-offload myserver</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Löschen</div><code">openstack server delete myserver
+openstack server delete --wait myserver
+openstack server delete server1 server2 server3</code></div>
+  </div>
+</div>
+
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">🖥</div><div class="section-title">Console & Logs</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Console-URL</div><code">openstack console url show myserver
+openstack console url show --novnc myserver
+openstack console url show --spice myserver
+openstack console url show --serial myserver</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Logs</div><code">openstack console log show myserver
+openstack console log show --lines 50 myserver</code></div>
+  </div>
+</div>
+
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">📐</div><div class="section-title">Resize & Migration</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Resize (kalt)</div><code">openstack server resize --flavor m1.large myserver
+openstack server resize confirm myserver    <span class="cm"># bestätigen</span>
+openstack server resize revert myserver     <span class="cm"># zurücksetzen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Migration</div><code">openstack server migrate myserver              <span class="cm"># kalt (VM stoppt)</span>
+openstack server migrate --live-migration \
+  --block-migration myserver                  <span class="cm"># live (kein Stopp)</span>
+openstack server migrate --live-migration \
+  --host esx02.example.com myserver</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Rebuild (neues Image)</div><code">openstack server rebuild --image ubuntu-22.04 myserver
+openstack server rebuild --wait myserver</code></div>
+  </div>
+</div>
+
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🎛</div><div class="section-title">Flavors</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code">openstack flavor list
+openstack flavor list --public
+openstack flavor list --all
+openstack flavor show m1.large</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen</div><code">openstack flavor create \
+  --vcpus 4 --ram 8192 --disk 80 \
+  --public \
+  m1.xlarge
+openstack flavor set \
+  --property hw:cpu_policy=dedicated \
+  --property hw:mem_page_size=large \
+  m1.xlarge</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Löschen / Privater Zugriff</div><code">openstack flavor delete m1.oldflav
+openstack flavor set --private m1.secret
+openstack flavor access add --project myproject m1.secret</code></div>
+  </div>
+</div>
+
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">🔑</div><div class="section-title">Keypairs & Metadaten</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Keypairs</div><code">openstack keypair list
+openstack keypair create mykey             <span class="cm"># neues Key-Paar erzeugen</span>
+openstack keypair create --public-key ~/.ssh/id_rsa.pub mykey
+openstack keypair show mykey
+openstack keypair delete mykey</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Server-Metadaten</div><code">openstack server set --property env=prod myserver
+openstack server set --property team=ops myserver
+openstack server unset --property env myserver
+openstack server show -c properties myserver</code></div>
+  </div>
+</div>
+
+<div class="section th-or">
+  <div class="section-header"><div class="section-icon">🗺</div><div class="section-title">AZs, Aggregates & Quotas</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Availability Zones</div><code">openstack availability zone list
+openstack availability zone list --compute</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Aggregates</div><code">openstack aggregate list
+openstack aggregate create az1-agg --zone az1
+openstack aggregate add host az1-agg esx01.example.com
+openstack aggregate set --property ssd=true ssd-agg</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Quotas</div><code">openstack quota show
+openstack quota show --project myproject
+openstack quota set --instances 50 --cores 200 --ram 512000 myproject</code></div>
+    <div class="tip"><strong>Tipp:</strong> openstack limits show --absolute zeigt aktuelle Nutzung vs. Quota in einem Überblick.</div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>

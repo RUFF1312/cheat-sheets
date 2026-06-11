@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenStack Cinder (Block Storage) - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/cinder.svg">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#e07b39;--accent2:#f4a261;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#0d1117 0%,#160900 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(224,123,57,.08),transparent);}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent2);background:rgba(224,123,57,.1);border:1px solid rgba(224,123,57,.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;}
+  h1 span{color:var(--accent2);}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .meta strong{color:var(--accent2);}
+  .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
+  .ch-or{background:rgba(224,123,57,.1);border:1px solid rgba(224,123,57,.3);color:var(--accent2);}
+  .ch-gn{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);color:var(--green);}
+  .ch-cy{background:rgba(57,197,207,.1);border:1px solid rgba(57,197,207,.3);color:var(--cyan);}
+  .ch-pu{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.3);color:var(--purple);}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px;}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .th-or .section-header{background:rgba(224,123,57,.06);} .th-or .section-icon{background:rgba(224,123,57,.15);} .th-or .section-title{color:var(--accent2);}
+  .th-gn .section-header{background:rgba(63,185,80,.06);} .th-gn .section-icon{background:rgba(63,185,80,.15);} .th-gn .section-title{color:var(--green);}
+  .th-cy .section-header{background:rgba(57,197,207,.06);} .th-cy .section-icon{background:rgba(57,197,207,.15);} .th-cy .section-title{color:var(--cyan);}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--purple);}
+  .th-re .section-header{background:rgba(244,112,103,.06);} .th-re .section-icon{background:rgba(244,112,103,.15);} .th-re .section-title{color:var(--red);}
+  .command-list{padding:8px 0;}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
+  .cmd-entry:last-child{border-bottom:none;}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+  .kw{color:#f4a261;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;}
+  .tip{padding:8px 16px;background:rgba(224,123,57,.06);border-left:3px solid var(--accent2);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip strong{color:var(--text);}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent2);text-decoration:none;border:1px solid rgba(224,123,57,.3);padding:4px 12px;border-radius:4px;background:rgba(224,123,57,.08);}
+  .nav-link:hover{background:rgba(224,123,57,.15);}
+  @media(max-width:1100px){main{columns:2;}}
+  @media(max-width:700px){main{columns:1;padding:16px;}header{padding:24px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ OpenStack Block Storage</div>
+      <img src="../assets/cinder.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(55%) sepia(80%) saturate(600%) hue-rotate(345deg)">
+      <h1>OpenStack <span>Cinder</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ openstack volume list</p>
+      <div class="version-legend">
+        <div class="chip ch-or">Block Storage</div>
+        <div class="chip ch-gn">Snapshots</div>
+        <div class="chip ch-cy">Backups</div>
+        <div class="chip ch-pu">Types</div>
+      </div>
+    </div>
+    <div class="meta"><strong>openstack volume</strong><br>Create · Attach · Detach<br>Snapshots · Backups<br>Types · Transfers</div>
+  </div>
+</header>
+<main>
+
+<div class="section th-or">
+  <div class="section-header"><div class="section-icon">💾</div><div class="section-title">Volumes</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code">openstack volume list
+openstack volume list --all-projects
+openstack volume list --status error
+openstack volume show myvol</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Volume erstellen</div><code">openstack volume create --size 100 myvol
+<span class="cm"># Aus Image (bootbar):</span>
+openstack volume create \
+  --image ubuntu-22.04 \
+  --size 30 \
+  --type ssd \
+  --bootable \
+  bootvol
+<span class="cm"># Aus Snapshot:</span>
+openstack volume create \
+  --snapshot mysnap \
+  --size 100 \
+  vol-from-snap
+<span class="cm"># Aus bestehendem Volume:</span>
+openstack volume create \
+  --source myvol \
+  --size 100 \
+  vol-clone</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Ändern & Löschen</div><code">openstack volume set --name newname myvol
+openstack volume set --size 200 myvol       <span class="cm"># nur vergrößern!</span>
+openstack volume set --bootable myvol
+openstack volume set --read-only myvol
+openstack volume delete myvol
+openstack volume delete --purge myvol       <span class="cm"># inkl. Snapshots</span></code></div>
+  </div>
+</div>
+
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🔗</div><div class="section-title">Attach & Detach</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Volume an Server</div><code">openstack server add volume myserver myvol
+openstack server add volume \
+  --device /dev/vdb \
+  myserver myvol
+openstack server volume list myserver
+openstack server remove volume myserver myvol</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Attachment (Microversion)</div><code">openstack volume attachment create \
+  --connect \
+  --initiator iqn.1994-05.com.redhat:... \
+  myvol myserver
+openstack volume attachment list
+openstack volume attachment delete <ID></code></div>
+    <div class="tip"><strong>Multiattach:</strong> openstack volume create --multi-attach --size 100 shared-vol erlaubt Attach an mehrere Server gleichzeitig (Volume-Typ muss multiattach unterstützen).</div>
+  </div>
+</div>
+
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">📸</div><div class="section-title">Snapshots</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Snapshots verwalten</div><code">openstack volume snapshot list
+openstack volume snapshot create \
+  --volume myvol \
+  --force \
+  mysnap
+openstack volume snapshot show mysnap
+openstack volume snapshot set --name newname mysnap
+openstack volume snapshot delete mysnap</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Aus Snapshot erstellen</div><code">openstack volume create \
+  --snapshot mysnap \
+  --size 100 \
+  vol-from-snap
+<span class="cm"># Snapshot zu Image konvertieren:</span>
+openstack image create \
+  --volume myvol \
+  --force \
+  myimage</code></div>
+  </div>
+</div>
+
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">🔒</div><div class="section-title">Backups</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Backup erstellen</div><code">openstack volume backup create \
+  --name mybak \
+  --incremental \
+  myvol
+openstack volume backup list
+openstack volume backup show mybak</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Restore</div><code">openstack volume backup restore mybak restoredvol
+openstack volume backup restore \
+  --volume myvol \
+  mybak
+openstack volume backup delete mybak</code></div>
+  </div>
+</div>
+
+<div class="section th-or">
+  <div class="section-header"><div class="section-icon">🏷</div><div class="section-title">Volume Types & QoS</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Volume Types</div><code">openstack volume type list
+openstack volume type show ssd
+openstack volume type create ssd
+openstack volume type set \
+  --property volume_backend_name=ceph \
+  ssd
+openstack volume type set \
+  --encryption-provider nova.volume.encryptors.cryptsetup \
+  --encryption-cipher aes-xts-plain64 \
+  --encryption-key-size 256 \
+  encrypted</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">QoS Specs</div><code">openstack volume qos create \
+  --consumer back-end \
+  --property total_iops_sec=5000 \
+  5k-iops
+openstack volume qos associate 5k-iops ssd
+openstack volume qos list</code></div>
+  </div>
+</div>
+
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🔄</div><div class="section-title">Transfers & Quotas</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Volume Transfer</div><code"><span class="cm"># Volume an anderen Projekt übergeben:</span>
+openstack volume transfer request create myvol
+<span class="cm"># Gibt transfer-id und auth-key aus</span>
+
+<span class="cm"># Im Ziel-Projekt annehmen:</span>
+openstack volume transfer request accept \
+  --auth-key XXXX \
+  <TRANSFER-ID></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Quotas</div><code">openstack quota show --project myproject
+openstack quota set \
+  --volumes 100 \
+  --gigabytes 10000 \
+  --snapshots 200 \
+  --backups 50 \
+  --backup-gigabytes 5000 \
+  myproject</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Admin: Manage/Unmanage</div><code"><span class="cm"># Externes Volume importieren:</span>
+openstack volume manage \
+  --host cinder@lvm \
+  --name myvol \
+  <VOLUME-REF>
+<span class="cm"># Cinder-Verwaltung entfernen (ohne löschen):</span>
+openstack volume unmanage myvol</code></div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>
