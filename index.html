@@ -219,6 +219,12 @@
   .pill[data-filter="Datenbanken"].active{border-color:#f0c040;color:#f0c040;background:rgba(240,192,64,.08)}
   .pill[data-filter="VMware"].active{border-color:#5ba8e0;color:#5ba8e0;background:rgba(0,125,193,.08)}
   .pill-count{opacity:.55;margin-left:5px}
+  /* SUBGROUP PILLS */
+  .toolbar-subgroups{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .subgroup-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.5px;padding:0 4px;white-space:nowrap}
+  .pill.pill-sub{font-size:10px;padding:4px 11px;border-style:dashed}
+  .pill[data-subgroup="OpenStack"].active{border-color:#e84040;color:#e84040;background:rgba(232,64,64,.08);border-style:solid}
+  .pill[data-subgroup="VMware"].active{border-color:#5ba8e0;color:#5ba8e0;background:rgba(91,168,224,.08);border-style:solid}
   .toolbar-row2{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .search-input{background:var(--code-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:7px 12px;font-size:13px;font-family:'Syne',sans-serif;width:260px;outline:none;transition:border-color .2s}
   .search-input:focus{border-color:rgba(255,255,255,.35)}
@@ -260,6 +266,11 @@
       <button class="pill" data-filter="Datenbanken">Datenbanken <span class="pill-count">4</span></button>
       <button class="pill" data-filter="Cloud & Infra">Cloud &amp; Infra <span class="pill-count">30</span></button>
       <button class="pill" data-filter="VMware">VMware <span class="pill-count">4</span></button>
+    </div>
+    <div class="toolbar-subgroups">
+      <span class="subgroup-label">↳ Subgruppe:</span>
+      <button class="pill pill-sub" data-subgroup="OpenStack">OpenStack <span class="pill-count">6</span></button>
+      <button class="pill pill-sub" data-subgroup="VMware">VMware <span class="pill-count">4</span></button>
     </div>
     <div class="toolbar-row2">
       <input type="text" id="searchInput" class="search-input" placeholder="Sheets, Commands, Tags durchsuchen…">
@@ -1323,7 +1334,7 @@
     </a>
 
     <!-- OpenStack -->
-    <a href="sheets/nova-cheatsheet.html" class="card c-nova" data-title="OpenStack Nova" data-group="Cloud & Infra">
+    <a href="sheets/nova-cheatsheet.html" class="card c-nova" data-title="OpenStack Nova" data-group="Cloud & Infra" data-subgroup="OpenStack">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -1338,7 +1349,7 @@
       </div>
     </a>
 
-    <a href="sheets/neutron-cheatsheet.html" class="card c-neutron" data-title="OpenStack Neutron" data-group="Cloud & Infra">
+    <a href="sheets/neutron-cheatsheet.html" class="card c-neutron" data-title="OpenStack Neutron" data-group="Cloud & Infra" data-subgroup="OpenStack">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -1353,7 +1364,7 @@
       </div>
     </a>
 
-    <a href="sheets/cinder-cheatsheet.html" class="card c-cinder" data-title="OpenStack Cinder" data-group="Cloud & Infra">
+    <a href="sheets/cinder-cheatsheet.html" class="card c-cinder" data-title="OpenStack Cinder" data-group="Cloud & Infra" data-subgroup="OpenStack">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -1368,7 +1379,7 @@
       </div>
     </a>
 
-    <a href="sheets/glance-cheatsheet.html" class="card c-glance" data-title="OpenStack Glance" data-group="Cloud & Infra">
+    <a href="sheets/glance-cheatsheet.html" class="card c-glance" data-title="OpenStack Glance" data-group="Cloud & Infra" data-subgroup="OpenStack">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -1383,7 +1394,7 @@
       </div>
     </a>
 
-    <a href="sheets/keystone-cheatsheet.html" class="card c-keystone" data-title="OpenStack Keystone" data-group="Cloud & Infra">
+    <a href="sheets/keystone-cheatsheet.html" class="card c-keystone" data-title="OpenStack Keystone" data-group="Cloud & Infra" data-subgroup="OpenStack">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -1398,7 +1409,7 @@
       </div>
     </a>
 
-    <a href="sheets/heat-cheatsheet.html" class="card c-heat" data-title="OpenStack Heat" data-group="Cloud & Infra">
+    <a href="sheets/heat-cheatsheet.html" class="card c-heat" data-title="OpenStack Heat" data-group="Cloud & Infra" data-subgroup="OpenStack">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -1414,7 +1425,7 @@
     </a>
 
     <!-- VMware -->
-    <a href="sheets/powercli-cheatsheet.html" class="card c-powercli" data-title="VMware PowerCLI" data-group="VMware">
+    <a href="sheets/powercli-cheatsheet.html" class="card c-powercli" data-title="VMware PowerCLI" data-group="VMware" data-subgroup="VMware">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -1429,7 +1440,7 @@
       </div>
     </a>
 
-    <a href="sheets/esxcli-cheatsheet.html" class="card c-esxcli" data-title="esxcli / vim-cmd" data-group="VMware">
+    <a href="sheets/esxcli-cheatsheet.html" class="card c-esxcli" data-title="esxcli / vim-cmd" data-group="VMware" data-subgroup="VMware">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -1444,7 +1455,7 @@
       </div>
     </a>
 
-    <a href="sheets/govc-cheatsheet.html" class="card c-govc" data-title="govc" data-group="VMware">
+    <a href="sheets/govc-cheatsheet.html" class="card c-govc" data-title="govc" data-group="VMware" data-subgroup="VMware">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -1459,7 +1470,7 @@
       </div>
     </a>
 
-    <a href="sheets/vsphere-cheatsheet.html" class="card c-vsphere" data-title="vSphere / VCSA" data-group="VMware">
+    <a href="sheets/vsphere-cheatsheet.html" class="card c-vsphere" data-title="vSphere / VCSA" data-group="VMware" data-subgroup="VMware">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -1501,14 +1512,36 @@
     };
 
     let activeFilter = 'all';
+    let activeSubgroup = null;
     let sortAZ = false;
 
-    // Pill clicks
-    document.querySelectorAll('.pill').forEach(pill => {
+    // Main group pill clicks
+    document.querySelectorAll('.pill[data-filter]').forEach(pill => {
       pill.addEventListener('click', () => {
         document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
         pill.classList.add('active');
         activeFilter = pill.dataset.filter;
+        activeSubgroup = null;
+        render();
+      });
+    });
+
+    // Subgroup pill clicks
+    document.querySelectorAll('.pill[data-subgroup]').forEach(pill => {
+      pill.addEventListener('click', () => {
+        const sg = pill.dataset.subgroup;
+        const toggle = activeSubgroup === sg;
+        document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+        if (toggle) {
+          // second click: reset to Alle
+          activeSubgroup = null;
+          activeFilter = 'all';
+          document.querySelector('.pill[data-filter="all"]').classList.add('active');
+        } else {
+          pill.classList.add('active');
+          activeSubgroup = sg;
+          activeFilter = 'all';
+        }
         render();
       });
     });
@@ -1528,9 +1561,10 @@
 
       // 1. Which cards match?
       const visible = cards.filter(c => {
-        const matchSearch = !term || c.textContent.toLowerCase().includes(term);
-        const matchGroup  = activeFilter === 'all' || c.dataset.group === activeFilter;
-        return matchSearch && matchGroup;
+        const matchSearch   = !term || c.textContent.toLowerCase().includes(term);
+        const matchGroup    = activeFilter === 'all' || c.dataset.group === activeFilter;
+        const matchSubgroup = !activeSubgroup || c.dataset.subgroup === activeSubgroup;
+        return matchSearch && matchGroup && matchSubgroup;
       });
 
       // 2. Sort
@@ -1547,8 +1581,8 @@
       cards.forEach(c => c.style.display = 'none');
       cardGrid.querySelectorAll('.group-header').forEach(h => h.remove());
 
-      // Show group headers only in "Alle" view without A-Z sort and without active search
-      const showHeaders = activeFilter === 'all' && !sortAZ && !term;
+      // Show group headers only in "Alle" ungrouped view
+      const showHeaders = activeFilter === 'all' && !activeSubgroup && !sortAZ && !term;
       let lastGroup = null;
 
       sorted.forEach(card => {
@@ -1578,6 +1612,12 @@
         const n = f === 'all'
           ? (term ? visible.length : 77)
           : cards.filter(c => c.dataset.group === f && (!term || c.textContent.toLowerCase().includes(term))).length;
+        const span = pill.querySelector('.pill-count');
+        if (span) span.textContent = n;
+      });
+      document.querySelectorAll('.pill[data-subgroup]').forEach(pill => {
+        const sg = pill.dataset.subgroup;
+        const n = cards.filter(c => c.dataset.subgroup === sg && (!term || c.textContent.toLowerCase().includes(term))).length;
         const span = pill.querySelector('.pill-count');
         if (span) span.textContent = n;
       });
