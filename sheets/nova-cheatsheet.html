@@ -40,7 +40,7 @@
   .cmd-entry:last-child{border-bottom:none;}
   .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
   code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
-  .kw{color:#ff7070;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .kw{color:#e84040;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
   .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;} .fl{color:#f4a261;}
   .tip{padding:8px 16px;background:rgba(232,64,64,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
   .tip strong{color:var(--text);}
@@ -74,60 +74,60 @@
 <div class="section th-re">
   <div class="section-header"><div class="section-icon">📋</div><div class="section-title">Server auflisten & anzeigen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code>nova list
-nova list --all-tenants
-nova list --status ERROR
-nova list --host compute01.example.com
-nova list --name "myapp*"
-nova show myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Filter</div><code>nova list --image IMAGE-UUID
-nova list --flavor m1.large
-nova list --tenant PROJECT-UUID
-nova list --user USER-UUID
-nova list --fields name,status,networks</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Admin: Hypervisors</div><code>nova hypervisor-list
-nova hypervisor-show compute01.example.com
-nova hypervisor-stats
-nova host-list
-nova host-describe compute01.example.com</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code><span class="kw">nova</span> <span class="fn">list</span>
+<span class="kw">nova</span> <span class="fn">list</span> <span class="fl">--all-tenants</span>
+<span class="kw">nova</span> <span class="fn">list</span> <span class="fl">--status</span> ERROR
+<span class="kw">nova</span> <span class="fn">list</span> <span class="fl">--host</span> compute01.example.com
+<span class="kw">nova</span> <span class="fn">list</span> <span class="fl">--name</span> "myapp*"
+<span class="kw">nova</span> <span class="fn">show</span> myserver</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Filter</div><code><span class="kw">nova</span> <span class="fn">list</span> <span class="fl">--image</span> IMAGE-UUID
+<span class="kw">nova</span> <span class="fn">list</span> <span class="fl">--flavor</span> m1.large
+<span class="kw">nova</span> <span class="fn">list</span> <span class="fl">--tenant</span> PROJECT-UUID
+<span class="kw">nova</span> <span class="fn">list</span> <span class="fl">--user</span> USER-UUID
+<span class="kw">nova</span> <span class="fn">list</span> <span class="fl">--fields</span> name,status,networks</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Admin: Hypervisors</div><code><span class="kw">nova</span> <span class="fn">hypervisor-list</span>
+<span class="kw">nova</span> <span class="fn">hypervisor-show</span> compute01.example.com
+<span class="kw">nova</span> <span class="fn">hypervisor-stats</span>
+<span class="kw">nova</span> <span class="fn">host-list</span>
+<span class="kw">nova</span> <span class="fn">host-describe</span> compute01.example.com</code></div>
   </div>
 </div>
 
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🚀</div><div class="section-title">Server booten (nova boot)</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Minimal</div><code>nova boot \
-  --flavor m1.small \
-  --image ubuntu-22.04 \
-  --nic net-id=NET-UUID \
-  --key-name mykey \
+    <div class="cmd-entry"><div class="cmd-desc">Minimal</div><code><span class="kw">nova</span> <span class="fn">boot</span> \
+  <span class="fl">--flavor</span> m1.small \
+  <span class="fl">--image</span> ubuntu-22.04 \
+  <span class="fl">--nic</span> net-id=NET-UUID \
+  <span class="fl">--key-name</span> mykey \
   myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Vollständig</div><code>nova boot \
-  --flavor m1.large \
-  --image ubuntu-22.04 \
-  --nic net-id=NET-UUID \
-  --security-groups default,websg \
-  --key-name mykey \
-  --availability-zone az1 \
-  --user-data ./cloud-init.yml \
-  --meta env=prod \
-  --meta team=ops \
-  --poll \
+    <div class="cmd-entry"><div class="cmd-desc">Vollständig</div><code><span class="kw">nova</span> <span class="fn">boot</span> \
+  <span class="fl">--flavor</span> m1.large \
+  <span class="fl">--image</span> ubuntu-22.04 \
+  <span class="fl">--nic</span> net-id=NET-UUID \
+  <span class="fl">--security-groups</span> default,websg \
+  <span class="fl">--key-name</span> mykey \
+  <span class="fl">--availability-zone</span> az1 \
+  <span class="fl">--user-data</span> ./cloud-init.yml \
+  <span class="fl">--meta</span> env=prod \
+  <span class="fl">--meta</span> team=ops \
+  <span class="fl">--poll</span> \
   myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Boot from Volume</div><code>nova boot \
-  --flavor m1.small \
-  --block-device \
+    <div class="cmd-entry"><div class="cmd-desc">Boot from Volume</div><code><span class="kw">nova</span> <span class="fn">boot</span> \
+  <span class="fl">--flavor</span> m1.small \
+  <span class="fl">--block-device</span> \
     source=image,id=IMAGE-UUID,\
 dest=volume,size=50,\
 shutdown=remove,bootindex=0 \
-  --nic net-id=NET-UUID \
+  <span class="fl">--nic</span> net-id=NET-UUID \
   myserver-bfv</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Aus bestehendem Volume</div><code>nova boot \
-  --flavor m1.small \
-  --block-device \
+    <div class="cmd-entry"><div class="cmd-desc">Aus bestehendem Volume</div><code><span class="kw">nova</span> <span class="fn">boot</span> \
+  <span class="fl">--flavor</span> m1.small \
+  <span class="fl">--block-device</span> \
     source=volume,id=VOL-UUID,\
 dest=volume,bootindex=0 \
-  --nic net-id=NET-UUID \
+  <span class="fl">--nic</span> net-id=NET-UUID \
   myserver-vol</code></div>
   </div>
 </div>
@@ -135,35 +135,35 @@ dest=volume,bootindex=0 \
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">⚡</div><div class="section-title">Power-Operationen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Start / Stop / Reboot</div><code>nova start myserver
-nova stop myserver
-nova reboot myserver              <span class="cm"># soft reboot</span>
-nova reboot --hard myserver       <span class="cm"># hard reset</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Pause / Suspend / Shelve</div><code>nova pause myserver         <span class="cm"># RAM eingefroren, CPU gestoppt</span>
-nova unpause myserver
-nova suspend myserver       <span class="cm"># Zustand auf Disk gespeichert</span>
-nova resume myserver
-nova shelve myserver        <span class="cm"># Snapshot + Hypervisor freigeben</span>
-nova unshelve myserver
-nova shelve-offload myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Löschen</div><code>nova delete myserver
-nova force-delete myserver        <span class="cm"># erzwungen, kein ACTIVE-Check</span>
-nova delete server1 server2 server3</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Rebuild & Rename</div><code>nova rebuild myserver ubuntu-22.04
-nova rebuild --poll myserver IMAGE-UUID
-nova rename myserver newname</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Start / Stop / Reboot</div><code><span class="kw">nova</span> <span class="fn">start</span> myserver
+<span class="kw">nova</span> <span class="fn">stop</span> myserver
+<span class="kw">nova</span> <span class="fn">reboot</span> myserver              <span class="cm"># soft reboot</span>
+<span class="kw">nova</span> <span class="fn">reboot</span> <span class="fl">--hard</span> myserver       <span class="cm"># hard reset</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Pause / Suspend / Shelve</div><code><span class="kw">nova</span> <span class="fn">pause</span> myserver         <span class="cm"># RAM eingefroren, CPU gestoppt</span>
+<span class="kw">nova</span> <span class="fn">unpause</span> myserver
+<span class="kw">nova</span> <span class="fn">suspend</span> myserver       <span class="cm"># Zustand auf Disk gespeichert</span>
+<span class="kw">nova</span> <span class="fn">resume</span> myserver
+<span class="kw">nova</span> <span class="fn">shelve</span> myserver        <span class="cm"># Snapshot + Hypervisor freigeben</span>
+<span class="kw">nova</span> <span class="fn">unshelve</span> myserver
+<span class="kw">nova</span> <span class="fn">shelve-offload</span> myserver</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Löschen</div><code><span class="kw">nova</span> <span class="fn">delete</span> myserver
+<span class="kw">nova</span> <span class="fn">force-delete</span> myserver        <span class="cm"># erzwungen, kein ACTIVE-Check</span>
+<span class="kw">nova</span> <span class="fn">delete</span> server1 server2 server3</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Rebuild & Rename</div><code><span class="kw">nova</span> <span class="fn">rebuild</span> myserver ubuntu-22.04
+<span class="kw">nova</span> <span class="fn">rebuild</span> <span class="fl">--poll</span> myserver IMAGE-UUID
+<span class="kw">nova</span> <span class="fn">rename</span> myserver newname</code></div>
   </div>
 </div>
 
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🖥</div><div class="section-title">Console & Logs</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">VNC / SPICE / Serial</div><code>nova get-vnc-console myserver novnc
-nova get-vnc-console myserver xvpvnc
-nova get-spice-console myserver spice-html5
-nova get-serial-console myserver serial</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Console-Log</div><code>nova console-log myserver
-nova console-log --length 50 myserver</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">VNC / SPICE / Serial</div><code><span class="kw">nova</span> <span class="fn">get-vnc-console</span> myserver novnc
+<span class="kw">nova</span> <span class="fn">get-vnc-console</span> myserver xvpvnc
+<span class="kw">nova</span> <span class="fn">get-spice-console</span> myserver spice-html5
+<span class="kw">nova</span> <span class="fn">get-serial-console</span> myserver serial</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Console-Log</div><code><span class="kw">nova</span> <span class="fn">console-log</span> myserver
+<span class="kw">nova</span> <span class="fn">console-log</span> <span class="fl">--length</span> 50 myserver</code></div>
     <div class="tip"><strong>Tipp:</strong> nova get-vnc-console gibt eine URL zurück, die im Browser geöffnet werden kann. novnc ist für HTML5-Browser, xvpvnc für Java-Clients.</div>
   </div>
 </div>
@@ -171,75 +171,75 @@ nova console-log --length 50 myserver</code></div>
 <div class="section th-re">
   <div class="section-header"><div class="section-icon">📐</div><div class="section-title">Resize & Migration</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Resize (kalt)</div><code>nova resize myserver m1.large --poll
-nova resize-confirm myserver     <span class="cm"># nach erfolgreichem Resize</span>
-nova resize-revert myserver      <span class="cm"># Resize rückgängig machen</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Cold Migration</div><code>nova migrate myserver
-nova migrate --host compute02.example.com myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Live Migration</div><code>nova live-migration myserver
-nova live-migration myserver compute02.example.com
-nova live-migration --block-migrate myserver  <span class="cm"># ohne Shared Storage</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Evacuate (Host ausgefallen)</div><code>nova evacuate myserver
-nova evacuate --on-shared-storage myserver
-nova evacuate myserver compute03.example.com</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Resize (kalt)</div><code><span class="kw">nova</span> <span class="fn">resize</span> myserver m1.large <span class="fl">--poll</span>
+<span class="kw">nova</span> <span class="fn">resize-confirm</span> myserver     <span class="cm"># nach erfolgreichem Resize</span>
+<span class="kw">nova</span> <span class="fn">resize-revert</span> myserver      <span class="cm"># Resize rückgängig machen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Cold Migration</div><code><span class="kw">nova</span> <span class="fn">migrate</span> myserver
+<span class="kw">nova</span> <span class="fn">migrate</span> <span class="fl">--host</span> compute02.example.com myserver</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Live Migration</div><code><span class="kw">nova</span> <span class="fn">live-migration</span> myserver
+<span class="kw">nova</span> <span class="fn">live-migration</span> myserver compute02.example.com
+<span class="kw">nova</span> <span class="fn">live-migration</span> <span class="fl">--block-migrate</span> myserver  <span class="cm"># ohne Shared Storage</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Evacuate (Host ausgefallen)</div><code><span class="kw">nova</span> <span class="fn">evacuate</span> myserver
+<span class="kw">nova</span> <span class="fn">evacuate</span> <span class="fl">--on-shared-storage</span> myserver
+<span class="kw">nova</span> <span class="fn">evacuate</span> myserver compute03.example.com</code></div>
   </div>
 </div>
 
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🎛</div><div class="section-title">Flavors</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code>nova flavor-list
-nova flavor-list --all          <span class="cm"># inkl. privater Flavors</span>
-nova flavor-show m1.large</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code><span class="kw">nova</span> <span class="fn">flavor-list</span>
+<span class="kw">nova</span> <span class="fn">flavor-list</span> <span class="fl">--all</span>          <span class="cm"># inkl. privater Flavors</span>
+<span class="kw">nova</span> <span class="fn">flavor-show</span> m1.large</code></div>
     <div class="cmd-entry"><div class="cmd-desc">Erstellen</div><code><span class="cm"># nova flavor-create NAME ID RAM_MB DISK_GB VCPUS</span>
-nova flavor-create m1.xlarge auto 8192 80 4
-nova flavor-create \
-  --ephemeral 20 --swap 1024 \
-  --is-public true \
+<span class="kw">nova</span> <span class="fn">flavor-create</span> m1.xlarge auto 8192 80 4
+<span class="kw">nova</span> <span class="fn">flavor-create</span> \
+  <span class="fl">--ephemeral</span> 20 <span class="fl">--swap</span> 1024 \
+  <span class="fl">--is-public</span> true \
   m1.xlarge auto 8192 80 4</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Extra-Specs / Zugriff</div><code>nova flavor-key m1.xlarge set hw:cpu_policy=dedicated
-nova flavor-key m1.xlarge set hw:mem_page_size=large
-nova flavor-key m1.xlarge unset hw:cpu_policy
-nova flavor-access-add m1.secret PROJECT-UUID
-nova flavor-access-remove m1.secret PROJECT-UUID
-nova flavor-access-list m1.secret</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Löschen</div><code>nova flavor-delete m1.oldflav</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Extra-Specs / Zugriff</div><code><span class="kw">nova</span> <span class="fn">flavor-key</span> m1.xlarge set hw:cpu_policy=dedicated
+<span class="kw">nova</span> <span class="fn">flavor-key</span> m1.xlarge set hw:mem_page_size=large
+<span class="kw">nova</span> <span class="fn">flavor-key</span> m1.xlarge unset hw:cpu_policy
+<span class="kw">nova</span> <span class="fn">flavor-access-add</span> m1.secret PROJECT-UUID
+<span class="kw">nova</span> <span class="fn">flavor-access-remove</span> m1.secret PROJECT-UUID
+<span class="kw">nova</span> <span class="fn">flavor-access-list</span> m1.secret</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Löschen</div><code><span class="kw">nova</span> <span class="fn">flavor-delete</span> m1.oldflav</code></div>
   </div>
 </div>
 
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">🔑</div><div class="section-title">Keypairs & Metadaten</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Keypairs</div><code>nova keypair-list
-nova keypair-add mykey                              <span class="cm"># neues Paar erzeugen</span>
-nova keypair-add --pub-key ~/.ssh/id_rsa.pub mykey  <span class="cm"># existierenden Key importieren</span>
-nova keypair-show mykey
-nova keypair-delete mykey</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Server-Metadaten</div><code>nova meta myserver set env=prod team=ops
-nova meta myserver delete env
-nova show myserver | grep metadata</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Keypairs</div><code><span class="kw">nova</span> <span class="fn">keypair-list</span>
+<span class="kw">nova</span> <span class="fn">keypair-add</span> mykey                              <span class="cm"># neues Paar erzeugen</span>
+<span class="kw">nova</span> <span class="fn">keypair-add</span> <span class="fl">--pub-key</span> ~/.ssh/id_rsa.pub mykey  <span class="cm"># existierenden Key importieren</span>
+<span class="kw">nova</span> <span class="fn">keypair-show</span> mykey
+<span class="kw">nova</span> <span class="fn">keypair-delete</span> mykey</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Server-Metadaten</div><code><span class="kw">nova</span> <span class="fn">meta</span> myserver set env=prod team=ops
+<span class="kw">nova</span> <span class="fn">meta</span> myserver delete env
+<span class="kw">nova</span> <span class="fn">show</span> myserver | grep metadata</code></div>
   </div>
 </div>
 
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">🗺</div><div class="section-title">AZs, Aggregates & Quotas</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Availability Zones</div><code>nova availability-zone-list
-nova availability-zone-list --long</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Host Aggregates</div><code>nova aggregate-list
-nova aggregate-details az1-agg
-nova aggregate-create az1-agg az1
-nova aggregate-add-host az1-agg compute01.example.com
-nova aggregate-remove-host az1-agg compute01.example.com
-nova aggregate-set-metadata az1-agg ssd=true
-nova aggregate-delete az1-agg</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Quotas & Limits</div><code>nova quota-show
-nova quota-show --tenant PROJECT-UUID
-nova quota-update --instances 50 --cores 200 \
-  --ram 524288 PROJECT-UUID
-nova quota-defaults
-nova limits
-nova limits --tenant PROJECT-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Availability Zones</div><code><span class="kw">nova</span> <span class="fn">availability-zone-list</span>
+<span class="kw">nova</span> <span class="fn">availability-zone-list</span> <span class="fl">--long</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Host Aggregates</div><code><span class="kw">nova</span> <span class="fn">aggregate-list</span>
+<span class="kw">nova</span> <span class="fn">aggregate-details</span> az1-agg
+<span class="kw">nova</span> <span class="fn">aggregate-create</span> az1-agg az1
+<span class="kw">nova</span> <span class="fn">aggregate-add-host</span> az1-agg compute01.example.com
+<span class="kw">nova</span> <span class="fn">aggregate-remove-host</span> az1-agg compute01.example.com
+<span class="kw">nova</span> <span class="fn">aggregate-set-metadata</span> az1-agg ssd=true
+<span class="kw">nova</span> <span class="fn">aggregate-delete</span> az1-agg</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Quotas & Limits</div><code><span class="kw">nova</span> <span class="fn">quota-show</span>
+<span class="kw">nova</span> <span class="fn">quota-show</span> <span class="fl">--tenant</span> PROJECT-UUID
+<span class="kw">nova</span> <span class="fn">quota-update</span> <span class="fl">--instances</span> 50 <span class="fl">--cores</span> 200 \
+  <span class="fl">--ram</span> 524288 PROJECT-UUID
+<span class="kw">nova</span> <span class="fn">quota-defaults</span>
+<span class="kw">nova</span> <span class="fn">limits</span>
+<span class="kw">nova</span> <span class="fn">limits</span> <span class="fl">--tenant</span> PROJECT-UUID</code></div>
     <div class="tip"><strong>Tipp:</strong> nova limits zeigt aktuelle Nutzung vs. Quota — hilfreich vor der Provisionierung.</div>
   </div>
 </div>

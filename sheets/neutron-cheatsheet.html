@@ -40,8 +40,8 @@
   .cmd-entry:last-child{border-bottom:none;}
   .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
   code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
-  .kw{color:#5ba8e0;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
-  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;}
+  .kw{color:#1a85c9;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;} .fl{color:#5ba8e0;}
   .tip{padding:8px 16px;background:rgba(26,133,201,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
   .tip strong{color:var(--text);}
   .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(26,133,201,.3);padding:4px 12px;border-radius:4px;background:rgba(26,133,201,.08);}
@@ -74,70 +74,70 @@
 <div class="section th-bl">
   <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Netzwerke</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code>neutron net-list
-neutron net-show private
-neutron net-list --shared
-neutron net-list --router:external=True</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Erstellen</div><code>neutron net-create private
-neutron net-create --shared shared-net
-neutron net-create \
-  --router:external \
-  --provider:network_type flat \
-  --provider:physical_network physnet1 \
+    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code><span class="kw">neutron</span> <span class="fn">net-list</span>
+<span class="kw">neutron</span> <span class="fn">net-show</span> private
+<span class="kw">neutron</span> <span class="fn">net-list</span> <span class="fl">--shared</span>
+<span class="kw">neutron</span> <span class="fn">net-list</span> <span class="fl">--router</span>:external=True</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen</div><code><span class="kw">neutron</span> <span class="fn">net-create</span> private
+<span class="kw">neutron</span> <span class="fn">net-create</span> <span class="fl">--shared</span> shared-net
+<span class="kw">neutron</span> <span class="fn">net-create</span> \
+  <span class="fl">--router</span>:external \
+  <span class="fl">--provider</span>:network_type flat \
+  <span class="fl">--provider</span>:physical_network physnet1 \
   external</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Provider-Netzwerke</div><code>neutron net-create \
-  --provider:network_type vlan \
-  --provider:physical_network physnet1 \
-  --provider:segmentation_id 100 \
+    <div class="cmd-entry"><div class="cmd-desc">Provider-Netzwerke</div><code><span class="kw">neutron</span> <span class="fn">net-create</span> \
+  <span class="fl">--provider</span>:network_type vlan \
+  <span class="fl">--provider</span>:physical_network physnet1 \
+  <span class="fl">--provider</span>:segmentation_id 100 \
   vlan100
-neutron net-create \
-  --provider:network_type vxlan \
-  --provider:segmentation_id 200 \
+<span class="kw">neutron</span> <span class="fn">net-create</span> \
+  <span class="fl">--provider</span>:network_type vxlan \
+  <span class="fl">--provider</span>:segmentation_id 200 \
   vxlan200
-neutron net-update private --name internal
-neutron net-delete private</code></div>
+<span class="kw">neutron</span> <span class="fn">net-update</span> private <span class="fl">--name</span> internal
+<span class="kw">neutron</span> <span class="fn">net-delete</span> private</code></div>
   </div>
 </div>
 
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">📡</div><div class="section-title">Subnetze</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Erstellen IPv4</div><code>neutron subnet-create private 10.0.0.0/24 \
-  --name mysubnet \
-  --gateway 10.0.0.1 \
-  --dns-nameserver 8.8.8.8 \
-  --dns-nameserver 8.8.4.4 \
-  --allocation-pool \
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen IPv4</div><code><span class="kw">neutron</span> <span class="fn">subnet-create</span> private 10.0.0.0/24 \
+  <span class="fl">--name</span> mysubnet \
+  <span class="fl">--gateway</span> 10.0.0.1 \
+  <span class="fl">--dns-nameserver</span> 8.8.8.8 \
+  <span class="fl">--dns-nameserver</span> 8.8.4.4 \
+  <span class="fl">--allocation-pool</span> \
     start=10.0.0.100,end=10.0.0.200</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Erstellen IPv6</div><code>neutron subnet-create private fd00::/64 \
-  --name mysubnet-v6 \
-  --ip-version 6 \
-  --ipv6-ra-mode slaac \
-  --ipv6-address-mode slaac</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Verwalten</div><code>neutron subnet-list
-neutron subnet-show mysubnet
-neutron subnet-update mysubnet --no-dhcp
-neutron subnet-update mysubnet --enable-dhcp
-neutron subnet-delete mysubnet</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen IPv6</div><code><span class="kw">neutron</span> <span class="fn">subnet-create</span> private fd00::/64 \
+  <span class="fl">--name</span> mysubnet-v6 \
+  <span class="fl">--ip-version</span> 6 \
+  <span class="fl">--ipv6-ra-mode</span> slaac \
+  <span class="fl">--ipv6-address-mode</span> slaac</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Verwalten</div><code><span class="kw">neutron</span> <span class="fn">subnet-list</span>
+<span class="kw">neutron</span> <span class="fn">subnet-show</span> mysubnet
+<span class="kw">neutron</span> <span class="fn">subnet-update</span> mysubnet <span class="fl">--no-dhcp</span>
+<span class="kw">neutron</span> <span class="fn">subnet-update</span> mysubnet <span class="fl">--enable-dhcp</span>
+<span class="kw">neutron</span> <span class="fn">subnet-delete</span> mysubnet</code></div>
   </div>
 </div>
 
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">🔀</div><div class="section-title">Router</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Gateway</div><code>neutron router-create myrouter
-neutron router-create --ha myrouter    <span class="cm"># HA via VRRP</span>
-neutron router-gateway-set myrouter external
-neutron router-gateway-clear myrouter</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Interfaces</div><code>neutron router-interface-add myrouter mysubnet
-neutron router-interface-delete myrouter mysubnet
-neutron router-port-list myrouter</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Statische Routen</div><code>neutron router-update myrouter \
-  --routes type=dict,list=true \
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Gateway</div><code><span class="kw">neutron</span> <span class="fn">router-create</span> myrouter
+<span class="kw">neutron</span> <span class="fn">router-create</span> <span class="fl">--ha</span> myrouter    <span class="cm"># HA via VRRP</span>
+<span class="kw">neutron</span> <span class="fn">router-gateway-set</span> myrouter external
+<span class="kw">neutron</span> <span class="fn">router-gateway-clear</span> myrouter</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Interfaces</div><code><span class="kw">neutron</span> <span class="fn">router-interface-add</span> myrouter mysubnet
+<span class="kw">neutron</span> <span class="fn">router-interface-delete</span> myrouter mysubnet
+<span class="kw">neutron</span> <span class="fn">router-port-list</span> myrouter</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Statische Routen</div><code><span class="kw">neutron</span> <span class="fn">router-update</span> myrouter \
+  <span class="fl">--routes</span> type=dict,list=true \
   destination=192.168.0.0/24,nexthop=10.0.0.254</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Verwalten</div><code>neutron router-list
-neutron router-show myrouter
-neutron router-delete myrouter</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Verwalten</div><code><span class="kw">neutron</span> <span class="fn">router-list</span>
+<span class="kw">neutron</span> <span class="fn">router-show</span> myrouter
+<span class="kw">neutron</span> <span class="fn">router-delete</span> myrouter</code></div>
     <div class="tip"><strong>HA Router:</strong> --ha erzeugt einen Router mit VRRP-Failover. Erfordert Neutron L3HA-Konfiguration.</div>
   </div>
 </div>
@@ -145,91 +145,91 @@ neutron router-delete myrouter</code></div>
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🔌</div><div class="section-title">Ports</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Konfigurieren</div><code>neutron port-create private --name myport
-neutron port-create private \
-  --fixed-ip ip_address=10.0.0.50 \
-  --mac-address aa:bb:cc:dd:ee:ff \
-  --name myport
-neutron port-update myport \
-  --security-group websg</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Allowed Address Pairs</div><code>neutron port-update myport \
-  --allowed-address-pairs \
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Konfigurieren</div><code><span class="kw">neutron</span> <span class="fn">port-create</span> private <span class="fl">--name</span> myport
+<span class="kw">neutron</span> <span class="fn">port-create</span> private \
+  <span class="fl">--fixed-ip</span> ip_address=10.0.0.50 \
+  <span class="fl">--mac-address</span> aa:bb:cc:dd:ee:ff \
+  <span class="fl">--name</span> myport
+<span class="kw">neutron</span> <span class="fn">port-update</span> myport \
+  <span class="fl">--security-group</span> websg</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Allowed Address Pairs</div><code><span class="kw">neutron</span> <span class="fn">port-update</span> myport \
+  <span class="fl">--allowed-address-pairs</span> \
   type=dict,list=true \
   ip_address=10.0.0.0/24
-neutron port-update myport \
-  --no-security-groups          <span class="cm"># alle SGs entfernen</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Verwalten</div><code>neutron port-list
-neutron port-list --network private
-neutron port-show myport
-neutron port-delete myport</code></div>
+<span class="kw">neutron</span> <span class="fn">port-update</span> myport \
+  <span class="fl">--no-security-groups</span>          <span class="cm"># alle SGs entfernen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Verwalten</div><code><span class="kw">neutron</span> <span class="fn">port-list</span>
+<span class="kw">neutron</span> <span class="fn">port-list</span> <span class="fl">--network</span> private
+<span class="kw">neutron</span> <span class="fn">port-show</span> myport
+<span class="kw">neutron</span> <span class="fn">port-delete</span> myport</code></div>
   </div>
 </div>
 
 <div class="section th-re">
   <div class="section-header"><div class="section-icon">🌍</div><div class="section-title">Floating IPs</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Zuweisen</div><code>neutron floatingip-create external
-neutron floatingip-associate FIP-UUID PORT-UUID
-neutron floatingip-disassociate FIP-UUID</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Verwalten</div><code>neutron floatingip-list
-neutron floatingip-show FIP-UUID
-neutron floatingip-delete FIP-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Zuweisen</div><code><span class="kw">neutron</span> <span class="fn">floatingip-create</span> external
+<span class="kw">neutron</span> <span class="fn">floatingip-associate</span> FIP-UUID PORT-UUID
+<span class="kw">neutron</span> <span class="fn">floatingip-disassociate</span> FIP-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Verwalten</div><code><span class="kw">neutron</span> <span class="fn">floatingip-list</span>
+<span class="kw">neutron</span> <span class="fn">floatingip-show</span> FIP-UUID
+<span class="kw">neutron</span> <span class="fn">floatingip-delete</span> FIP-UUID</code></div>
   </div>
 </div>
 
 <div class="section th-bl">
   <div class="section-header"><div class="section-icon">🛡</div><div class="section-title">Security Groups</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Erstellen</div><code>neutron security-group-list
-neutron security-group-create websg \
-  --description "Web Server SG"
-neutron security-group-delete websg</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen</div><code><span class="kw">neutron</span> <span class="fn">security-group-list</span>
+<span class="kw">neutron</span> <span class="fn">security-group-create</span> websg \
+  <span class="fl">--description</span> "Web Server SG"
+<span class="kw">neutron</span> <span class="fn">security-group-delete</span> websg</code></div>
     <div class="cmd-entry"><div class="cmd-desc">Regeln hinzufügen</div><code><span class="cm"># SSH eingehend:</span>
-neutron security-group-rule-create \
-  --protocol tcp \
-  --port-range-min 22 --port-range-max 22 \
-  --remote-ip-prefix 10.0.0.0/8 websg
+<span class="kw">neutron</span> <span class="fn">security-group-rule-create</span> \
+  <span class="fl">--protocol</span> tcp \
+  <span class="fl">--port-range-min</span> 22 <span class="fl">--port-range-max</span> 22 \
+  <span class="fl">--remote-ip-prefix</span> 10.0.0.0/8 websg
 <span class="cm"># HTTP/HTTPS:</span>
-neutron security-group-rule-create \
-  --protocol tcp \
-  --port-range-min 80 --port-range-max 80 websg
-neutron security-group-rule-create \
-  --protocol tcp \
-  --port-range-min 443 --port-range-max 443 websg
+<span class="kw">neutron</span> <span class="fn">security-group-rule-create</span> \
+  <span class="fl">--protocol</span> tcp \
+  <span class="fl">--port-range-min</span> 80 <span class="fl">--port-range-max</span> 80 websg
+<span class="kw">neutron</span> <span class="fn">security-group-rule-create</span> \
+  <span class="fl">--protocol</span> tcp \
+  <span class="fl">--port-range-min</span> 443 <span class="fl">--port-range-max</span> 443 websg
 <span class="cm"># ICMP (ping):</span>
-neutron security-group-rule-create \
-  --protocol icmp websg
+<span class="kw">neutron</span> <span class="fn">security-group-rule-create</span> \
+  <span class="fl">--protocol</span> icmp websg
 <span class="cm"># Egress alles:</span>
-neutron security-group-rule-create \
-  --direction egress websg</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Regel löschen</div><code>neutron security-group-rule-list websg
-neutron security-group-rule-delete RULE-UUID</code></div>
+<span class="kw">neutron</span> <span class="fn">security-group-rule-create</span> \
+  <span class="fl">--direction</span> egress websg</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Regel löschen</div><code><span class="kw">neutron</span> <span class="fn">security-group-rule-list</span> websg
+<span class="kw">neutron</span> <span class="fn">security-group-rule-delete</span> RULE-UUID</code></div>
   </div>
 </div>
 
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">📊</div><div class="section-title">QoS & RBAC</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">QoS Policy</div><code>neutron qos-policy-list
-neutron qos-policy-create 1gbit-policy
-neutron qos-bandwidth-limit-rule-create \
-  --max-kbps 1000000 \
-  --max-burst-kbits 10000000 \
+    <div class="cmd-entry"><div class="cmd-desc">QoS Policy</div><code><span class="kw">neutron</span> <span class="fn">qos-policy-list</span>
+<span class="kw">neutron</span> <span class="fn">qos-policy-create</span> 1gbit-policy
+<span class="kw">neutron</span> <span class="fn">qos-bandwidth-limit-rule-create</span> \
+  <span class="fl">--max-kbps</span> 1000000 \
+  <span class="fl">--max-burst-kbits</span> 10000000 \
   1gbit-policy
-neutron port-update myport \
-  --qos-policy 1gbit-policy</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">RBAC (Netz teilen)</div><code>neutron rbac-list
-neutron rbac-create \
-  --type network \
-  --action access_as_shared \
-  --target-tenant PROJECT-UUID \
+<span class="kw">neutron</span> <span class="fn">port-update</span> myport \
+  <span class="fl">--qos-policy</span> 1gbit-policy</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">RBAC (Netz teilen)</div><code><span class="kw">neutron</span> <span class="fn">rbac-list</span>
+<span class="kw">neutron</span> <span class="fn">rbac-create</span> \
+  <span class="fl">--type</span> network \
+  <span class="fl">--action</span> access_as_shared \
+  <span class="fl">--target-tenant</span> PROJECT-UUID \
   NET-UUID
-neutron rbac-delete RBAC-UUID</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Quotas</div><code>neutron quota-show --tenant-id PROJECT-UUID
-neutron quota-update \
-  --network 20 --subnet 40 \
-  --router 10 --floatingip 50 \
-  --tenant-id PROJECT-UUID</code></div>
+<span class="kw">neutron</span> <span class="fn">rbac-delete</span> RBAC-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Quotas</div><code><span class="kw">neutron</span> <span class="fn">quota-show</span> <span class="fl">--tenant-id</span> PROJECT-UUID
+<span class="kw">neutron</span> <span class="fn">quota-update</span> \
+  <span class="fl">--network</span> 20 <span class="fl">--subnet</span> 40 \
+  <span class="fl">--router</span> 10 <span class="fl">--floatingip</span> 50 \
+  <span class="fl">--tenant-id</span> PROJECT-UUID</code></div>
   </div>
 </div>
 

@@ -40,8 +40,8 @@
   .cmd-entry:last-child{border-bottom:none;}
   .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
   code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
-  .kw{color:#fbbf24;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
-  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;}
+  .kw{color:#d4a017;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;} .fl{color:#fbbf24;}
   .tip{padding:8px 16px;background:rgba(212,160,23,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
   .tip strong{color:var(--text);}
   .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(212,160,23,.3);padding:4px 12px;border-radius:4px;background:rgba(212,160,23,.08);}
@@ -74,22 +74,22 @@
 <div class="section th-yl">
   <div class="section-header"><div class="section-icon">👤</div><div class="section-title">Users</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code>keystone user-list
-keystone user-show alice
-keystone user-show --tenant myproject alice</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Ändern</div><code>keystone user-create \
-  --name alice \
-  --pass mysecret \
-  --email alice@example.com \
-  --enabled true
-keystone user-update \
-  --pass newsecret \
-  --email new@example.com alice
-keystone user-update --enabled false alice
-keystone user-update --enabled true alice
-keystone user-delete alice</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Passwort ändern</div><code>keystone user-password-update \
-  --pass newsecret alice</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code><span class="kw">keystone</span> <span class="fn">user-list</span>
+<span class="kw">keystone</span> <span class="fn">user-show</span> alice
+<span class="kw">keystone</span> <span class="fn">user-show</span> <span class="fl">--tenant</span> myproject alice</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Ändern</div><code><span class="kw">keystone</span> <span class="fn">user-create</span> \
+  <span class="fl">--name</span> alice \
+  <span class="fl">--pass</span> mysecret \
+  <span class="fl">--email</span> alice@example.com \
+  <span class="fl">--enabled</span> true
+<span class="kw">keystone</span> <span class="fn">user-update</span> \
+  <span class="fl">--pass</span> newsecret \
+  <span class="fl">--email</span> new@example.com alice
+<span class="kw">keystone</span> <span class="fn">user-update</span> <span class="fl">--enabled</span> false alice
+<span class="kw">keystone</span> <span class="fn">user-update</span> <span class="fl">--enabled</span> true alice
+<span class="kw">keystone</span> <span class="fn">user-delete</span> alice</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Passwort ändern</div><code><span class="kw">keystone</span> <span class="fn">user-password-update</span> \
+  <span class="fl">--pass</span> newsecret alice</code></div>
     <div class="tip"><strong>Hinweis:</strong> keystone CLI ist seit OpenStack Ocata deprecated. Für neue Installationen wird openstack CLI (python-openstackclient) empfohlen.</div>
   </div>
 </div>
@@ -97,46 +97,46 @@ keystone user-delete alice</code></div>
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">📁</div><div class="section-title">Tenants (Projects)</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code>keystone tenant-list
-keystone tenant-show myproject</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Ändern</div><code>keystone tenant-create \
-  --name myproject \
-  --description "My Project" \
-  --enabled true
-keystone tenant-update \
-  --description "Updated" myproject
-keystone tenant-update --enabled false myproject
-keystone tenant-delete myproject</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code><span class="kw">keystone</span> <span class="fn">tenant-list</span>
+<span class="kw">keystone</span> <span class="fn">tenant-show</span> myproject</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Ändern</div><code><span class="kw">keystone</span> <span class="fn">tenant-create</span> \
+  <span class="fl">--name</span> myproject \
+  <span class="fl">--description</span> "My Project" \
+  <span class="fl">--enabled</span> true
+<span class="kw">keystone</span> <span class="fn">tenant-update</span> \
+  <span class="fl">--description</span> "Updated" myproject
+<span class="kw">keystone</span> <span class="fn">tenant-update</span> <span class="fl">--enabled</span> false myproject
+<span class="kw">keystone</span> <span class="fn">tenant-delete</span> myproject</code></div>
   </div>
 </div>
 
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">🎭</div><div class="section-title">Roles & Assignments</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Rollen verwalten</div><code>keystone role-list
-keystone role-show member
-keystone role-create myrole
-keystone role-delete myrole</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Rolle zuweisen</div><code>keystone user-role-add \
-  --user alice \
-  --role member \
-  --tenant myproject
+    <div class="cmd-entry"><div class="cmd-desc">Rollen verwalten</div><code><span class="kw">keystone</span> <span class="fn">role-list</span>
+<span class="kw">keystone</span> <span class="fn">role-show</span> member
+<span class="kw">keystone</span> <span class="fn">role-create</span> myrole
+<span class="kw">keystone</span> <span class="fn">role-delete</span> myrole</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Rolle zuweisen</div><code><span class="kw">keystone</span> <span class="fn">user-role-add</span> \
+  <span class="fl">--user</span> alice \
+  <span class="fl">--role</span> member \
+  <span class="fl">--tenant</span> myproject
 
-keystone user-role-remove \
-  --user alice \
-  --role member \
-  --tenant myproject</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Zuweisungen anzeigen</div><code>keystone user-role-list
-keystone user-role-list \
-  --user alice \
-  --tenant myproject</code></div>
+<span class="kw">keystone</span> <span class="fn">user-role-remove</span> \
+  <span class="fl">--user</span> alice \
+  <span class="fl">--role</span> member \
+  <span class="fl">--tenant</span> myproject</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Zuweisungen anzeigen</div><code><span class="kw">keystone</span> <span class="fn">user-role-list</span>
+<span class="kw">keystone</span> <span class="fn">user-role-list</span> \
+  <span class="fl">--user</span> alice \
+  <span class="fl">--tenant</span> myproject</code></div>
   </div>
 </div>
 
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🎫</div><div class="section-title">Token & Catalog</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Token</div><code>keystone token-get
+    <div class="cmd-entry"><div class="cmd-desc">Token</div><code><span class="kw">keystone</span> <span class="fn">token-get</span>
 <span class="cm"># Gibt Token-ID, Tenant, User, Expires aus</span>
 
 <span class="cm"># credentials.sh / openrc (v2):</span>
@@ -144,44 +144,44 @@ export OS_AUTH_URL=http://keystone:5000/v2.0
 export OS_TENANT_NAME=myproject
 export OS_USERNAME=alice
 export OS_PASSWORD=mysecret</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Service Catalog</div><code>keystone catalog
-keystone catalog --service compute
-keystone service-list</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Service Catalog</div><code><span class="kw">keystone</span> <span class="fn">catalog</span>
+<span class="kw">keystone</span> <span class="fn">catalog</span> <span class="fl">--service</span> compute
+<span class="kw">keystone</span> <span class="fn">service-list</span></code></div>
   </div>
 </div>
 
 <div class="section th-yl">
   <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Endpoints & Services</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Endpoints</div><code>keystone endpoint-list
-keystone endpoint-get --service compute
-keystone endpoint-create \
-  --service compute \
-  --region RegionOne \
-  --publicurl http://nova:8774/v2/%(tenant_id)s \
-  --internalurl http://nova-int:8774/v2/%(tenant_id)s \
-  --adminurl http://nova-admin:8774/v2/%(tenant_id)s
-keystone endpoint-delete ENDPOINT-UUID</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Services</div><code>keystone service-list
-keystone service-show compute
-keystone service-create \
-  --name nova \
-  --type compute \
-  --description "Nova Compute"
-keystone service-delete SERVICE-UUID</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">EC2 Credentials</div><code>keystone ec2-credentials-create \
-  --tenant myproject
-keystone ec2-credentials-list
-keystone ec2-credentials-delete \
-  --access ACCESS-KEY</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Endpoints</div><code><span class="kw">keystone</span> <span class="fn">endpoint-list</span>
+<span class="kw">keystone</span> <span class="fn">endpoint-get</span> <span class="fl">--service</span> compute
+<span class="kw">keystone</span> <span class="fn">endpoint-create</span> \
+  <span class="fl">--service</span> compute \
+  <span class="fl">--region</span> RegionOne \
+  <span class="fl">--publicurl</span> http://nova:8774/v2/%(tenant_id)s \
+  <span class="fl">--internalurl</span> http://nova-int:8774/v2/%(tenant_id)s \
+  <span class="fl">--adminurl</span> http://nova-admin:8774/v2/%(tenant_id)s
+<span class="kw">keystone</span> <span class="fn">endpoint-delete</span> ENDPOINT-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Services</div><code><span class="kw">keystone</span> <span class="fn">service-list</span>
+<span class="kw">keystone</span> <span class="fn">service-show</span> compute
+<span class="kw">keystone</span> <span class="fn">service-create</span> \
+  <span class="fl">--name</span> nova \
+  <span class="fl">--type</span> compute \
+  <span class="fl">--description</span> "Nova Compute"
+<span class="kw">keystone</span> <span class="fn">service-delete</span> SERVICE-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">EC2 Credentials</div><code><span class="kw">keystone</span> <span class="fn">ec2-credentials-create</span> \
+  <span class="fl">--tenant</span> myproject
+<span class="kw">keystone</span> <span class="fn">ec2-credentials-list</span>
+<span class="kw">keystone</span> <span class="fn">ec2-credentials-delete</span> \
+  <span class="fl">--access</span> ACCESS-KEY</code></div>
   </div>
 </div>
 
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Discovery & Debug</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Versionen & Discovery</div><code>keystone discover
-keystone endpoint-list --long</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Versionen & Discovery</div><code><span class="kw">keystone</span> <span class="fn">discover</span>
+<span class="kw">keystone</span> <span class="fn">endpoint-list</span> <span class="fl">--long</span></code></div>
     <div class="cmd-entry"><div class="cmd-desc">Bash-Integration</div><code><span class="cm"># Token für API-Calls:</span>
 TOKEN=$(keystone token-get \
   | awk '/id/ { print $4; exit }')

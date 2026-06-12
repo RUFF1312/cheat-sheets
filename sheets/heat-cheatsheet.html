@@ -40,8 +40,8 @@
   .cmd-entry:last-child{border-bottom:none;}
   .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
   code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
-  .kw{color:#fb923c;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
-  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;}
+  .kw{color:#e0652a;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;} .fl{color:#fb923c;}
   .tip{padding:8px 16px;background:rgba(224,101,42,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
   .tip strong{color:var(--text);}
   .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(224,101,42,.3);padding:4px 12px;border-radius:4px;background:rgba(224,101,42,.08);}
@@ -74,59 +74,59 @@
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">📋</div><div class="section-title">Stack auflisten & anzeigen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code>heat stack-list
-heat stack-list --show-deleted
-heat stack-list --show-hidden
-heat stack-list -f status=FAILED
-heat stack-show mystack</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Template & Outputs</div><code>heat template-show mystack
-heat output-list mystack
-heat output-show mystack server_ip</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code><span class="kw">heat</span> <span class="fn">stack-list</span>
+<span class="kw">heat</span> <span class="fn">stack-list</span> <span class="fl">--show-deleted</span>
+<span class="kw">heat</span> <span class="fn">stack-list</span> <span class="fl">--show-hidden</span>
+<span class="kw">heat</span> <span class="fn">stack-list</span> -f status=FAILED
+<span class="kw">heat</span> <span class="fn">stack-show</span> mystack</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Template & Outputs</div><code><span class="kw">heat</span> <span class="fn">template-show</span> mystack
+<span class="kw">heat</span> <span class="fn">output-list</span> mystack
+<span class="kw">heat</span> <span class="fn">output-show</span> mystack server_ip</code></div>
   </div>
 </div>
 
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🚀</div><div class="section-title">Stack erstellen & aktualisieren</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Stack erstellen</div><code>heat stack-create \
+    <div class="cmd-entry"><div class="cmd-desc">Stack erstellen</div><code><span class="kw">heat</span> <span class="fn">stack-create</span> \
   -f mystack.yaml \
   mystack
 <span class="cm"># Mit Parametern:</span>
-heat stack-create \
+<span class="kw">heat</span> <span class="fn">stack-create</span> \
   -f mystack.yaml \
   -P "image=ubuntu-22.04;flavor=m1.small;network=private" \
   mystack
 <span class="cm"># Mit Umgebungsdatei:</span>
-heat stack-create \
+<span class="kw">heat</span> <span class="fn">stack-create</span> \
   -f mystack.yaml \
   -e env.yaml \
-  --poll \
+  <span class="fl">--poll</span> \
   mystack</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Stack aktualisieren</div><code>heat stack-update \
+    <div class="cmd-entry"><div class="cmd-desc">Stack aktualisieren</div><code><span class="kw">heat</span> <span class="fn">stack-update</span> \
   -f mystack.yaml \
   -P "flavor=m1.large" \
   mystack
 <span class="cm"># Vorschau (dry-run):</span>
-heat stack-preview \
+<span class="kw">heat</span> <span class="fn">stack-preview</span> \
   -f mystack.yaml \
   mystack</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Stack löschen</div><code>heat stack-delete mystack
-heat stack-delete --yes mystack</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Stack löschen</div><code><span class="kw">heat</span> <span class="fn">stack-delete</span> mystack
+<span class="kw">heat</span> <span class="fn">stack-delete</span> <span class="fl">--yes</span> mystack</code></div>
   </div>
 </div>
 
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">📊</div><div class="section-title">Events & Resources</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Events verfolgen</div><code>heat event-list mystack
-heat event-list -n 3 mystack    <span class="cm"># nested bis Tiefe 3</span>
-heat event-show mystack \
+    <div class="cmd-entry"><div class="cmd-desc">Events verfolgen</div><code><span class="kw">heat</span> <span class="fn">event-list</span> mystack
+<span class="kw">heat</span> <span class="fn">event-list</span> -n 3 mystack    <span class="cm"># nested bis Tiefe 3</span>
+<span class="kw">heat</span> <span class="fn">event-show</span> mystack \
   myserver-resource EVENT-UUID</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Ressourcen</div><code>heat resource-list mystack
-heat resource-list -n 2 mystack  <span class="cm"># nested</span>
-heat resource-show mystack myserver
-heat resource-signal mystack myserver
-heat resource-mark-unhealthy \
+    <div class="cmd-entry"><div class="cmd-desc">Ressourcen</div><code><span class="kw">heat</span> <span class="fn">resource-list</span> mystack
+<span class="kw">heat</span> <span class="fn">resource-list</span> -n 2 mystack  <span class="cm"># nested</span>
+<span class="kw">heat</span> <span class="fn">resource-show</span> mystack myserver
+<span class="kw">heat</span> <span class="fn">resource-signal</span> mystack myserver
+<span class="kw">heat</span> <span class="fn">resource-mark-unhealthy</span> \
   mystack myserver "hardware failure"</code></div>
     <div class="tip"><strong>Tipp:</strong> heat stack-show mystack | grep stack_status_reason zeigt den Fehlergrund direkt nach einem fehlgeschlagenen Stack-Deployment.</div>
   </div>
@@ -135,16 +135,16 @@ heat resource-mark-unhealthy \
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">⏸</div><div class="section-title">Suspend, Resume & Abandon</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Lifecycle</div><code>heat action-suspend mystack   <span class="cm"># VMs pausieren</span>
-heat action-resume mystack    <span class="cm"># VMs fortsetzen</span>
-heat action-check mystack     <span class="cm"># Status prüfen</span>
-heat stack-cancel-update mystack  <span class="cm"># Update abbrechen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Lifecycle</div><code><span class="kw">heat</span> <span class="fn">action-suspend</span> mystack   <span class="cm"># VMs pausieren</span>
+<span class="kw">heat</span> <span class="fn">action-resume</span> mystack    <span class="cm"># VMs fortsetzen</span>
+<span class="kw">heat</span> <span class="fn">action-check</span> mystack     <span class="cm"># Status prüfen</span>
+<span class="kw">heat</span> <span class="fn">stack-cancel-update</span> mystack  <span class="cm"># Update abbrechen</span></code></div>
     <div class="cmd-entry"><div class="cmd-desc">Abandon & Adopt</div><code><span class="cm"># Stack entfernen, Ressourcen behalten:</span>
-heat stack-abandon mystack
+<span class="kw">heat</span> <span class="fn">stack-abandon</span> mystack
 <span class="cm"># Aus bestehenden Ressourcen adoptieren:</span>
-heat stack-adopt \
+<span class="kw">heat</span> <span class="fn">stack-adopt</span> \
   -f mystack.yaml \
-  --adopt-file abandon_data.json \
+  <span class="fl">--adopt-file</span> abandon_data.json \
   mystack</code></div>
   </div>
 </div>
@@ -152,14 +152,14 @@ heat stack-adopt \
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">✅</div><div class="section-title">Template validieren</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Validierung</div><code>heat template-validate -f mystack.yaml
-heat template-validate \
+    <div class="cmd-entry"><div class="cmd-desc">Validierung</div><code><span class="kw">heat</span> <span class="fn">template-validate</span> -f mystack.yaml
+<span class="kw">heat</span> <span class="fn">template-validate</span> \
   -f mystack.yaml \
   -e env.yaml</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Resource-Typen</div><code>heat resource-type-list
-heat resource-type-list \
+    <div class="cmd-entry"><div class="cmd-desc">Resource-Typen</div><code><span class="kw">heat</span> <span class="fn">resource-type-list</span>
+<span class="kw">heat</span> <span class="fn">resource-type-list</span> \
   | grep OS::Nova
-heat resource-type-show \
+<span class="kw">heat</span> <span class="fn">resource-type-show</span> \
   OS::Nova::Server</code></div>
   </div>
 </div>

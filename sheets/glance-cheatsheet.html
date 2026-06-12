@@ -40,8 +40,8 @@
   .cmd-entry:last-child{border-bottom:none;}
   .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
   code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
-  .kw{color:#c084fc;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
-  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;}
+  .kw{color:#9c5cc7;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;} .fl{color:#c084fc;}
   .tip{padding:8px 16px;background:rgba(156,92,199,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
   .tip strong{color:var(--text);}
   .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(156,92,199,.3);padding:4px 12px;border-radius:4px;background:rgba(156,92,199,.08);}
@@ -74,42 +74,42 @@
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🖼</div><div class="section-title">Images auflisten & anzeigen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code>glance image-list
-glance image-list --visibility public
-glance image-list --visibility private
-glance image-list --visibility shared
-glance image-list --status active
-glance image-show IMAGE-UUID</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Filter</div><code>glance image-list --name ubuntu*
-glance image-list \
-  --property os_distro=ubuntu
-glance image-list \
-  --sort-key name --sort-dir asc
-glance image-list --limit 20 --page-size 20</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code><span class="kw">glance</span> <span class="fn">image-list</span>
+<span class="kw">glance</span> <span class="fn">image-list</span> <span class="fl">--visibility</span> public
+<span class="kw">glance</span> <span class="fn">image-list</span> <span class="fl">--visibility</span> private
+<span class="kw">glance</span> <span class="fn">image-list</span> <span class="fl">--visibility</span> shared
+<span class="kw">glance</span> <span class="fn">image-list</span> <span class="fl">--status</span> active
+<span class="kw">glance</span> <span class="fn">image-show</span> IMAGE-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Filter</div><code><span class="kw">glance</span> <span class="fn">image-list</span> <span class="fl">--name</span> ubuntu*
+<span class="kw">glance</span> <span class="fn">image-list</span> \
+  <span class="fl">--property</span> os_distro=ubuntu
+<span class="kw">glance</span> <span class="fn">image-list</span> \
+  <span class="fl">--sort-key</span> name <span class="fl">--sort-dir</span> asc
+<span class="kw">glance</span> <span class="fn">image-list</span> <span class="fl">--limit</span> 20 <span class="fl">--page-size</span> 20</code></div>
   </div>
 </div>
 
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">⬆</div><div class="section-title">Images hochladen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Upload (v1 API)</div><code>glance image-create \
-  --name ubuntu-22.04 \
-  --disk-format qcow2 \
-  --container-format bare \
-  --visibility public \
-  --file ubuntu-22.04.qcow2</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Upload (v1 API)</div><code><span class="kw">glance</span> <span class="fn">image-create</span> \
+  <span class="fl">--name</span> ubuntu-22.04 \
+  <span class="fl">--disk-format</span> qcow2 \
+  <span class="fl">--container-format</span> bare \
+  <span class="fl">--visibility</span> public \
+  <span class="fl">--file</span> ubuntu-22.04.qcow2</code></div>
     <div class="cmd-entry"><div class="cmd-desc">Zweistufig (v2 API)</div><code><span class="cm"># 1. Image-Objekt anlegen:</span>
-glance image-create \
-  --name ubuntu-22.04 \
-  --disk-format qcow2 \
-  --container-format bare \
-  --min-disk 8 --min-ram 512 \
-  --property os_type=linux \
-  --property os_distro=ubuntu \
-  --property os_version=22.04
+<span class="kw">glance</span> <span class="fn">image-create</span> \
+  <span class="fl">--name</span> ubuntu-22.04 \
+  <span class="fl">--disk-format</span> qcow2 \
+  <span class="fl">--container-format</span> bare \
+  <span class="fl">--min-disk</span> 8 <span class="fl">--min-ram</span> 512 \
+  <span class="fl">--property</span> os_type=linux \
+  <span class="fl">--property</span> os_distro=ubuntu \
+  <span class="fl">--property</span> os_version=22.04
 <span class="cm"># 2. Datei hochladen:</span>
-glance image-upload \
-  --file ubuntu-22.04.qcow2 \
+<span class="kw">glance</span> <span class="fn">image-upload</span> \
+  <span class="fl">--file</span> ubuntu-22.04.qcow2 \
   IMAGE-UUID</code></div>
     <div class="cmd-entry"><div class="cmd-desc">Disk-Formate</div><code><span class="cm"># qcow2  — QEMU/KVM (Standard)</span>
 <span class="cm"># raw    — uncomprimiertes Rohformat</span>
@@ -118,22 +118,22 @@ glance image-upload \
 <span class="cm"># vhdx   — Hyper-V VHDX</span>
 <span class="cm"># iso    — bootbares ISO-Image</span>
 <span class="cm"># aki/ari/ami — Amazon-kompatibel</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Deactivate / Reactivate</div><code>glance image-deactivate IMAGE-UUID
-glance image-reactivate IMAGE-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Deactivate / Reactivate</div><code><span class="kw">glance</span> <span class="fn">image-deactivate</span> IMAGE-UUID
+<span class="kw">glance</span> <span class="fn">image-reactivate</span> IMAGE-UUID</code></div>
   </div>
 </div>
 
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">⬇</div><div class="section-title">Download & Löschen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Download</div><code>glance image-download \
-  --file ubuntu-22.04-dl.qcow2 \
+    <div class="cmd-entry"><div class="cmd-desc">Download</div><code><span class="kw">glance</span> <span class="fn">image-download</span> \
+  <span class="fl">--file</span> ubuntu-22.04-dl.qcow2 \
   IMAGE-UUID</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Löschen</div><code>glance image-delete IMAGE-UUID
-glance image-delete UUID1 UUID2 UUID3</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Update</div><code>glance image-update \
-  --name new-name \
-  --visibility shared \
+    <div class="cmd-entry"><div class="cmd-desc">Löschen</div><code><span class="kw">glance</span> <span class="fn">image-delete</span> IMAGE-UUID
+<span class="kw">glance</span> <span class="fn">image-delete</span> UUID1 UUID2 UUID3</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Update</div><code><span class="kw">glance</span> <span class="fn">image-update</span> \
+  <span class="fl">--name</span> new-name \
+  <span class="fl">--visibility</span> shared \
   IMAGE-UUID</code></div>
   </div>
 </div>
@@ -141,11 +141,11 @@ glance image-delete UUID1 UUID2 UUID3</code></div>
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">🏷</div><div class="section-title">Properties & Tags</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Properties setzen</div><code>glance image-update \
-  --property hw_disk_bus=virtio \
-  --property hw_vif_model=virtio \
-  --property hw_scsi_model=virtio-scsi \
-  --property hw_qemu_guest_agent=yes \
+    <div class="cmd-entry"><div class="cmd-desc">Properties setzen</div><code><span class="kw">glance</span> <span class="fn">image-update</span> \
+  <span class="fl">--property</span> hw_disk_bus=virtio \
+  <span class="fl">--property</span> hw_vif_model=virtio \
+  <span class="fl">--property</span> hw_scsi_model=virtio-scsi \
+  <span class="fl">--property</span> hw_qemu_guest_agent=yes \
   IMAGE-UUID</code></div>
     <div class="cmd-entry"><div class="cmd-desc">Nützliche Properties</div><code><span class="cm">hw_disk_bus=virtio       # Disk-Bus</span>
 <span class="cm">hw_vif_model=virtio      # NIC-Treiber</span>
@@ -153,9 +153,9 @@ glance image-delete UUID1 UUID2 UUID3</code></div>
 <span class="cm">os_require_quiesce=yes   # Quiesce f. Snaps</span>
 <span class="cm">img_config_drive=mandatory # Config-Drive</span>
 <span class="cm">hypervisor_type=qemu     # Hypervisor</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Tags verwalten</div><code>glance image-tag-update IMAGE-UUID ubuntu
-glance image-tag-update IMAGE-UUID lts
-glance image-tag-delete IMAGE-UUID ubuntu</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Tags verwalten</div><code><span class="kw">glance</span> <span class="fn">image-tag-update</span> IMAGE-UUID ubuntu
+<span class="kw">glance</span> <span class="fn">image-tag-update</span> IMAGE-UUID lts
+<span class="kw">glance</span> <span class="fn">image-tag-delete</span> IMAGE-UUID ubuntu</code></div>
   </div>
 </div>
 
@@ -163,18 +163,18 @@ glance image-tag-delete IMAGE-UUID ubuntu</code></div>
   <div class="section-header"><div class="section-icon">🤝</div><div class="section-title">Sichtbarkeit & Sharing</div></div>
   <div class="command-list">
     <div class="cmd-entry"><div class="cmd-desc">Sichtbarkeit ändern</div><code><span class="cm"># public | private | shared | community</span>
-glance image-update \
-  --visibility public IMAGE-UUID
-glance image-update \
-  --visibility shared IMAGE-UUID</code></div>
+<span class="kw">glance</span> <span class="fn">image-update</span> \
+  <span class="fl">--visibility</span> public IMAGE-UUID
+<span class="kw">glance</span> <span class="fn">image-update</span> \
+  <span class="fl">--visibility</span> shared IMAGE-UUID</code></div>
     <div class="cmd-entry"><div class="cmd-desc">Image teilen (Member)</div><code><span class="cm"># Image mit Projekt teilen:</span>
-glance member-create IMAGE-UUID PROJECT-UUID
+<span class="kw">glance</span> <span class="fn">member-create</span> IMAGE-UUID PROJECT-UUID
 <span class="cm"># Im Ziel-Projekt akzeptieren:</span>
-glance member-update \
+<span class="kw">glance</span> <span class="fn">member-update</span> \
   IMAGE-UUID PROJECT-UUID accepted
 <span class="cm"># Übersicht:</span>
-glance member-list IMAGE-UUID
-glance member-delete IMAGE-UUID PROJECT-UUID</code></div>
+<span class="kw">glance</span> <span class="fn">member-list</span> IMAGE-UUID
+<span class="kw">glance</span> <span class="fn">member-delete</span> IMAGE-UUID PROJECT-UUID</code></div>
     <div class="tip"><strong>community:</strong> Jeder kann ein Community-Image nutzen ohne explizite Freigabe. Gut für Team-weite Basis-Images.</div>
   </div>
 </div>
@@ -182,15 +182,15 @@ glance member-delete IMAGE-UUID PROJECT-UUID</code></div>
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">📊</div><div class="section-title">Cache & Tasks</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Image Cache</div><code>glance cache-list
-glance cache-delete IMAGE-UUID
-glance cache-clear</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Tasks</div><code>glance task-list
-glance task-show TASK-UUID</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Metadaten-Definitionen</div><code>glance md-namespace-list
-glance md-namespace-show \
+    <div class="cmd-entry"><div class="cmd-desc">Image Cache</div><code><span class="kw">glance</span> <span class="fn">cache-list</span>
+<span class="kw">glance</span> <span class="fn">cache-delete</span> IMAGE-UUID
+<span class="kw">glance</span> <span class="fn">cache-clear</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Tasks</div><code><span class="kw">glance</span> <span class="fn">task-list</span>
+<span class="kw">glance</span> <span class="fn">task-show</span> TASK-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Metadaten-Definitionen</div><code><span class="kw">glance</span> <span class="fn">md-namespace-list</span>
+<span class="kw">glance</span> <span class="fn">md-namespace-show</span> \
   OS::Compute::VirtCPUTopology
-glance md-object-list OS::Compute</code></div>
+<span class="kw">glance</span> <span class="fn">md-object-list</span> OS::Compute</code></div>
   </div>
 </div>
 

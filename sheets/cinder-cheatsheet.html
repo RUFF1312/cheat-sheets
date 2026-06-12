@@ -40,8 +40,8 @@
   .cmd-entry:last-child{border-bottom:none;}
   .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
   code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
-  .kw{color:#f4a261;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
-  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;}
+  .kw{color:#e07b39;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;} .fl{color:#f4a261;}
   .tip{padding:8px 16px;background:rgba(224,123,57,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
   .tip strong{color:var(--text);}
   .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(224,123,57,.3);padding:4px 12px;border-radius:4px;background:rgba(224,123,57,.08);}
@@ -74,43 +74,43 @@
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">💾</div><div class="section-title">Volumes</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code>cinder list
-cinder list --all-tenants
-cinder list --status error
-cinder show myvol</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Erstellen</div><code>cinder create --display-name myvol 100
+    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code><span class="kw">cinder</span> <span class="fn">list</span>
+<span class="kw">cinder</span> <span class="fn">list</span> <span class="fl">--all-tenants</span>
+<span class="kw">cinder</span> <span class="fn">list</span> <span class="fl">--status</span> error
+<span class="kw">cinder</span> <span class="fn">show</span> myvol</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen</div><code><span class="kw">cinder</span> <span class="fn">create</span> <span class="fl">--display-name</span> myvol 100
 <span class="cm"># Aus Image (bootbar):</span>
-cinder create \
-  --image-id IMAGE-UUID \
-  --volume-type ssd \
-  --display-name bootvol 30
+<span class="kw">cinder</span> <span class="fn">create</span> \
+  <span class="fl">--image-id</span> IMAGE-UUID \
+  <span class="fl">--volume-type</span> ssd \
+  <span class="fl">--display-name</span> bootvol 30
 <span class="cm"># Aus Snapshot:</span>
-cinder create \
-  --snapshot-id SNAP-UUID \
-  --display-name vol-from-snap 100
+<span class="kw">cinder</span> <span class="fn">create</span> \
+  <span class="fl">--snapshot-id</span> SNAP-UUID \
+  <span class="fl">--display-name</span> vol-from-snap 100
 <span class="cm"># Aus bestehendem Volume (Clone):</span>
-cinder create \
-  --source-volid VOL-UUID \
-  --display-name vol-clone 100</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Ändern & Löschen</div><code>cinder rename myvol newname
-cinder extend myvol 200          <span class="cm"># nur vergrößern!</span>
-cinder set-bootable myvol true
-cinder metadata myvol set key=value
-cinder delete myvol
-cinder force-delete myvol</code></div>
+<span class="kw">cinder</span> <span class="fn">create</span> \
+  <span class="fl">--source-volid</span> VOL-UUID \
+  <span class="fl">--display-name</span> vol-clone 100</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Ändern & Löschen</div><code><span class="kw">cinder</span> <span class="fn">rename</span> myvol newname
+<span class="kw">cinder</span> <span class="fn">extend</span> myvol 200          <span class="cm"># nur vergrößern!</span>
+<span class="kw">cinder</span> <span class="fn">set-bootable</span> myvol true
+<span class="kw">cinder</span> <span class="fn">metadata</span> myvol set key=value
+<span class="kw">cinder</span> <span class="fn">delete</span> myvol
+<span class="kw">cinder</span> <span class="fn">force-delete</span> myvol</code></div>
   </div>
 </div>
 
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🔗</div><div class="section-title">Attach & Detach</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Attach an Server</div><code>cinder attach myvol SERVER-UUID /dev/vdb</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Detach</div><code>cinder detach myvol
-cinder detach --attachment-uuid ATT-UUID myvol</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Attachment-API (v3)</div><code>cinder attachment-list
-cinder attachment-create VOL-UUID SERVER-UUID
-cinder attachment-complete ATT-UUID
-cinder attachment-delete ATT-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Attach an Server</div><code><span class="kw">cinder</span> <span class="fn">attach</span> myvol SERVER-UUID /dev/vdb</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Detach</div><code><span class="kw">cinder</span> <span class="fn">detach</span> myvol
+<span class="kw">cinder</span> <span class="fn">detach</span> <span class="fl">--attachment-uuid</span> ATT-UUID myvol</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Attachment-API (v3)</div><code><span class="kw">cinder</span> <span class="fn">attachment-list</span>
+<span class="kw">cinder</span> <span class="fn">attachment-create</span> VOL-UUID SERVER-UUID
+<span class="kw">cinder</span> <span class="fn">attachment-complete</span> ATT-UUID
+<span class="kw">cinder</span> <span class="fn">attachment-delete</span> ATT-UUID</code></div>
     <div class="tip"><strong>Multiattach:</strong> cinder create --allow-multiattach --display-name shared-vol SIZE — erfordert einen Volume-Typ mit multiattach=true.</div>
   </div>
 </div>
@@ -118,57 +118,57 @@ cinder attachment-delete ATT-UUID</code></div>
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">📸</div><div class="section-title">Snapshots</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Verwalten</div><code>cinder snapshot-list
-cinder snapshot-create --display-name mysnap myvol
-cinder snapshot-create --force --display-name mysnap myvol
-cinder snapshot-show mysnap
-cinder snapshot-rename mysnap newname
-cinder snapshot-delete mysnap</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Aus Snapshot erstellen</div><code>cinder create \
-  --snapshot-id SNAP-UUID \
-  --display-name vol-from-snap 100</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Verwalten</div><code><span class="kw">cinder</span> <span class="fn">snapshot-list</span>
+<span class="kw">cinder</span> <span class="fn">snapshot-create</span> <span class="fl">--display-name</span> mysnap myvol
+<span class="kw">cinder</span> <span class="fn">snapshot-create</span> <span class="fl">--force</span> <span class="fl">--display-name</span> mysnap myvol
+<span class="kw">cinder</span> <span class="fn">snapshot-show</span> mysnap
+<span class="kw">cinder</span> <span class="fn">snapshot-rename</span> mysnap newname
+<span class="kw">cinder</span> <span class="fn">snapshot-delete</span> mysnap</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Aus Snapshot erstellen</div><code><span class="kw">cinder</span> <span class="fn">create</span> \
+  <span class="fl">--snapshot-id</span> SNAP-UUID \
+  <span class="fl">--display-name</span> vol-from-snap 100</code></div>
   </div>
 </div>
 
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🔒</div><div class="section-title">Backups</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Erstellen</div><code>cinder backup-create --name mybak myvol
-cinder backup-create \
-  --name mybak-inc \
-  --incremental myvol</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Restore & Verwalten</div><code>cinder backup-list
-cinder backup-show mybak
-cinder backup-restore mybak
-cinder backup-restore \
-  --volume-id VOL-UUID mybak
-cinder backup-delete mybak</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen</div><code><span class="kw">cinder</span> <span class="fn">backup-create</span> <span class="fl">--name</span> mybak myvol
+<span class="kw">cinder</span> <span class="fn">backup-create</span> \
+  <span class="fl">--name</span> mybak-inc \
+  <span class="fl">--incremental</span> myvol</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Restore & Verwalten</div><code><span class="kw">cinder</span> <span class="fn">backup-list</span>
+<span class="kw">cinder</span> <span class="fn">backup-show</span> mybak
+<span class="kw">cinder</span> <span class="fn">backup-restore</span> mybak
+<span class="kw">cinder</span> <span class="fn">backup-restore</span> \
+  <span class="fl">--volume-id</span> VOL-UUID mybak
+<span class="kw">cinder</span> <span class="fn">backup-delete</span> mybak</code></div>
   </div>
 </div>
 
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">🏷</div><div class="section-title">Volume Types & QoS</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Volume Types</div><code>cinder type-list
-cinder type-show ssd
-cinder type-create ssd
-cinder type-key ssd set \
+    <div class="cmd-entry"><div class="cmd-desc">Volume Types</div><code><span class="kw">cinder</span> <span class="fn">type-list</span>
+<span class="kw">cinder</span> <span class="fn">type-show</span> ssd
+<span class="kw">cinder</span> <span class="fn">type-create</span> ssd
+<span class="kw">cinder</span> <span class="fn">type-key</span> ssd set \
   volume_backend_name=ceph-ssd
-cinder type-key ssd set \
+<span class="kw">cinder</span> <span class="fn">type-key</span> ssd set \
   multiattach="<is> True"
-cinder type-delete ssd</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Encryption</div><code>cinder encryption-type-create \
-  --cipher aes-xts-plain64 \
-  --key-size 256 \
-  --control-location front-end \
+<span class="kw">cinder</span> <span class="fn">type-delete</span> ssd</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Encryption</div><code><span class="kw">cinder</span> <span class="fn">encryption-type-create</span> \
+  <span class="fl">--cipher</span> aes-xts-plain64 \
+  <span class="fl">--key-size</span> 256 \
+  <span class="fl">--control-location</span> front-end \
   encrypted \
   nova.volume.encryptors.cryptsetup.CryptsetupEncryptor</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">QoS Specs</div><code>cinder qos-create 5k-iops \
+    <div class="cmd-entry"><div class="cmd-desc">QoS Specs</div><code><span class="kw">cinder</span> <span class="fn">qos-create</span> 5k-iops \
   consumer=back-end \
   total_iops_sec=5000
-cinder qos-associate 5k-iops TYPE-UUID
-cinder qos-list
-cinder qos-show 5k-iops</code></div>
+<span class="kw">cinder</span> <span class="fn">qos-associate</span> 5k-iops TYPE-UUID
+<span class="kw">cinder</span> <span class="fn">qos-list</span>
+<span class="kw">cinder</span> <span class="fn">qos-show</span> 5k-iops</code></div>
   </div>
 </div>
 
@@ -176,25 +176,25 @@ cinder qos-show 5k-iops</code></div>
   <div class="section-header"><div class="section-icon">🔄</div><div class="section-title">Transfers & Quotas</div></div>
   <div class="command-list">
     <div class="cmd-entry"><div class="cmd-desc">Volume Transfer</div><code><span class="cm"># Volume an anderes Projekt übergeben:</span>
-cinder transfer-create myvol
+<span class="kw">cinder</span> <span class="fn">transfer-create</span> myvol
 <span class="cm"># Gibt transfer-id + auth-key aus</span>
 
 <span class="cm"># Im Ziel-Projekt annehmen:</span>
-cinder transfer-accept \
+<span class="kw">cinder</span> <span class="fn">transfer-accept</span> \
   TRANSFER-UUID AUTH-KEY</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Quotas</div><code>cinder quota-show PROJECT-UUID
-cinder quota-update \
-  --volumes 100 \
-  --gigabytes 10000 \
-  --snapshots 200 \
+    <div class="cmd-entry"><div class="cmd-desc">Quotas</div><code><span class="kw">cinder</span> <span class="fn">quota-show</span> PROJECT-UUID
+<span class="kw">cinder</span> <span class="fn">quota-update</span> \
+  <span class="fl">--volumes</span> 100 \
+  <span class="fl">--gigabytes</span> 10000 \
+  <span class="fl">--snapshots</span> 200 \
   PROJECT-UUID</code></div>
     <div class="cmd-entry"><div class="cmd-desc">Admin: Manage / Unmanage</div><code><span class="cm"># Externes Volume importieren:</span>
-cinder manage \
-  --name myvol \
+<span class="kw">cinder</span> <span class="fn">manage</span> \
+  <span class="fl">--name</span> myvol \
   cinder@lvm#LVM \
   VOLUME-REF
 <span class="cm"># Cinder-Verwaltung entfernen:</span>
-cinder unmanage myvol</code></div>
+<span class="kw">cinder</span> <span class="fn">unmanage</span> myvol</code></div>
   </div>
 </div>
 
