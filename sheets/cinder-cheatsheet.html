@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenStack Cinder (Block Storage) - TheLayer0Guide</title>
+<title>OpenStack Cinder CLI - TheLayer0Guide</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="../assets/cinder.svg">
 <style>
@@ -55,10 +55,10 @@
   <a href="../index.html" class="nav-link">← Index</a>
   <div class="header-grid">
     <div>
-      <div class="badge">▸ OpenStack Block Storage</div>
+      <div class="badge">▸ Cinder Block Storage CLI</div>
       <img src="../assets/cinder.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(55%) sepia(80%) saturate(600%) hue-rotate(345deg)">
-      <h1>OpenStack <span>Cinder</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
-      <p class="subtitle">$ openstack volume list</p>
+      <h1>Cinder <span>CLI</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ cinder list</p>
       <div class="version-legend">
         <div class="chip ch-or">Block Storage</div>
         <div class="chip ch-gn">Snapshots</div>
@@ -66,7 +66,7 @@
         <div class="chip ch-pu">Types</div>
       </div>
     </div>
-    <div class="meta"><strong>openstack volume</strong><br>Create · Attach · Detach<br>Snapshots · Backups<br>Types · Transfers</div>
+    <div class="meta"><strong>cinder</strong><br>create · attach · detach<br>snapshot · backup<br>type · transfer</div>
   </div>
 </header>
 <main>
@@ -74,145 +74,127 @@
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">💾</div><div class="section-title">Volumes</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code>openstack volume list
-openstack volume list --all-projects
-openstack volume list --status error
-openstack volume show myvol</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Volume erstellen</div><code>openstack volume create --size 100 myvol
+    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code>cinder list
+cinder list --all-tenants
+cinder list --status error
+cinder show myvol</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen</div><code>cinder create --display-name myvol 100
 <span class="cm"># Aus Image (bootbar):</span>
-openstack volume create \
-  --image ubuntu-22.04 \
-  --size 30 \
-  --type ssd \
-  --bootable \
-  bootvol
+cinder create \
+  --image-id IMAGE-UUID \
+  --volume-type ssd \
+  --display-name bootvol 30
 <span class="cm"># Aus Snapshot:</span>
-openstack volume create \
-  --snapshot mysnap \
-  --size 100 \
-  vol-from-snap
-<span class="cm"># Aus bestehendem Volume:</span>
-openstack volume create \
-  --source myvol \
-  --size 100 \
-  vol-clone</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Ändern & Löschen</div><code>openstack volume set --name newname myvol
-openstack volume set --size 200 myvol       <span class="cm"># nur vergrößern!</span>
-openstack volume set --bootable myvol
-openstack volume set --read-only myvol
-openstack volume delete myvol
-openstack volume delete --purge myvol       <span class="cm"># inkl. Snapshots</span></code></div>
+cinder create \
+  --snapshot-id SNAP-UUID \
+  --display-name vol-from-snap 100
+<span class="cm"># Aus bestehendem Volume (Clone):</span>
+cinder create \
+  --source-volid VOL-UUID \
+  --display-name vol-clone 100</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Ändern & Löschen</div><code>cinder rename myvol newname
+cinder extend myvol 200          <span class="cm"># nur vergrößern!</span>
+cinder set-bootable myvol true
+cinder metadata myvol set key=value
+cinder delete myvol
+cinder force-delete myvol</code></div>
   </div>
 </div>
 
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🔗</div><div class="section-title">Attach & Detach</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Volume an Server</div><code>openstack server add volume myserver myvol
-openstack server add volume \
-  --device /dev/vdb \
-  myserver myvol
-openstack server volume list myserver
-openstack server remove volume myserver myvol</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Attachment (Microversion)</div><code>openstack volume attachment create \
-  --connect \
-  --initiator iqn.1994-05.com.redhat:... \
-  myvol myserver
-openstack volume attachment list
-openstack volume attachment delete <ID></code></div>
-    <div class="tip"><strong>Multiattach:</strong> openstack volume create --multi-attach --size 100 shared-vol erlaubt Attach an mehrere Server gleichzeitig (Volume-Typ muss multiattach unterstützen).</div>
+    <div class="cmd-entry"><div class="cmd-desc">Attach an Server</div><code>cinder attach myvol SERVER-UUID /dev/vdb</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Detach</div><code>cinder detach myvol
+cinder detach --attachment-uuid ATT-UUID myvol</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Attachment-API (v3)</div><code>cinder attachment-list
+cinder attachment-create VOL-UUID SERVER-UUID
+cinder attachment-complete ATT-UUID
+cinder attachment-delete ATT-UUID</code></div>
+    <div class="tip"><strong>Multiattach:</strong> cinder create --allow-multiattach --display-name shared-vol SIZE — erfordert einen Volume-Typ mit multiattach=true.</div>
   </div>
 </div>
 
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">📸</div><div class="section-title">Snapshots</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Snapshots verwalten</div><code>openstack volume snapshot list
-openstack volume snapshot create \
-  --volume myvol \
-  --force \
-  mysnap
-openstack volume snapshot show mysnap
-openstack volume snapshot set --name newname mysnap
-openstack volume snapshot delete mysnap</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Aus Snapshot erstellen</div><code>openstack volume create \
-  --snapshot mysnap \
-  --size 100 \
-  vol-from-snap
-<span class="cm"># Snapshot zu Image konvertieren:</span>
-openstack image create \
-  --volume myvol \
-  --force \
-  myimage</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Verwalten</div><code>cinder snapshot-list
+cinder snapshot-create --display-name mysnap myvol
+cinder snapshot-create --force --display-name mysnap myvol
+cinder snapshot-show mysnap
+cinder snapshot-rename mysnap newname
+cinder snapshot-delete mysnap</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Aus Snapshot erstellen</div><code>cinder create \
+  --snapshot-id SNAP-UUID \
+  --display-name vol-from-snap 100</code></div>
   </div>
 </div>
 
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🔒</div><div class="section-title">Backups</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Backup erstellen</div><code>openstack volume backup create \
-  --name mybak \
-  --incremental \
-  myvol
-openstack volume backup list
-openstack volume backup show mybak</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Restore</div><code>openstack volume backup restore mybak restoredvol
-openstack volume backup restore \
-  --volume myvol \
-  mybak
-openstack volume backup delete mybak</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen</div><code>cinder backup-create --name mybak myvol
+cinder backup-create \
+  --name mybak-inc \
+  --incremental myvol</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Restore & Verwalten</div><code>cinder backup-list
+cinder backup-show mybak
+cinder backup-restore mybak
+cinder backup-restore \
+  --volume-id VOL-UUID mybak
+cinder backup-delete mybak</code></div>
   </div>
 </div>
 
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">🏷</div><div class="section-title">Volume Types & QoS</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Volume Types</div><code>openstack volume type list
-openstack volume type show ssd
-openstack volume type create ssd
-openstack volume type set \
-  --property volume_backend_name=ceph \
-  ssd
-openstack volume type set \
-  --encryption-provider nova.volume.encryptors.cryptsetup \
-  --encryption-cipher aes-xts-plain64 \
-  --encryption-key-size 256 \
-  encrypted</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">QoS Specs</div><code>openstack volume qos create \
-  --consumer back-end \
-  --property total_iops_sec=5000 \
-  5k-iops
-openstack volume qos associate 5k-iops ssd
-openstack volume qos list</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Volume Types</div><code>cinder type-list
+cinder type-show ssd
+cinder type-create ssd
+cinder type-key ssd set \
+  volume_backend_name=ceph-ssd
+cinder type-key ssd set \
+  multiattach="<is> True"
+cinder type-delete ssd</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Encryption</div><code>cinder encryption-type-create \
+  --cipher aes-xts-plain64 \
+  --key-size 256 \
+  --control-location front-end \
+  encrypted \
+  nova.volume.encryptors.cryptsetup.CryptsetupEncryptor</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">QoS Specs</div><code>cinder qos-create 5k-iops \
+  consumer=back-end \
+  total_iops_sec=5000
+cinder qos-associate 5k-iops TYPE-UUID
+cinder qos-list
+cinder qos-show 5k-iops</code></div>
   </div>
 </div>
 
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🔄</div><div class="section-title">Transfers & Quotas</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Volume Transfer</div><code><span class="cm"># Volume an anderen Projekt übergeben:</span>
-openstack volume transfer request create myvol
-<span class="cm"># Gibt transfer-id und auth-key aus</span>
+    <div class="cmd-entry"><div class="cmd-desc">Volume Transfer</div><code><span class="cm"># Volume an anderes Projekt übergeben:</span>
+cinder transfer-create myvol
+<span class="cm"># Gibt transfer-id + auth-key aus</span>
 
 <span class="cm"># Im Ziel-Projekt annehmen:</span>
-openstack volume transfer request accept \
-  --auth-key XXXX \
-  <TRANSFER-ID></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Quotas</div><code>openstack quota show --project myproject
-openstack quota set \
+cinder transfer-accept \
+  TRANSFER-UUID AUTH-KEY</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Quotas</div><code>cinder quota-show PROJECT-UUID
+cinder quota-update \
   --volumes 100 \
   --gigabytes 10000 \
   --snapshots 200 \
-  --backups 50 \
-  --backup-gigabytes 5000 \
-  myproject</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Admin: Manage/Unmanage</div><code><span class="cm"># Externes Volume importieren:</span>
-openstack volume manage \
-  --host cinder@lvm \
+  PROJECT-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Admin: Manage / Unmanage</div><code><span class="cm"># Externes Volume importieren:</span>
+cinder manage \
   --name myvol \
-  <VOLUME-REF>
-<span class="cm"># Cinder-Verwaltung entfernen (ohne löschen):</span>
-openstack volume unmanage myvol</code></div>
+  cinder@lvm#LVM \
+  VOLUME-REF
+<span class="cm"># Cinder-Verwaltung entfernen:</span>
+cinder unmanage myvol</code></div>
   </div>
 </div>
 

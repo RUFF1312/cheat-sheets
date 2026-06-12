@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenStack Heat (Orchestration) - TheLayer0Guide</title>
+<title>OpenStack Heat CLI - TheLayer0Guide</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="../assets/heat.svg">
 <style>
@@ -55,10 +55,10 @@
   <a href="../index.html" class="nav-link">← Index</a>
   <div class="header-grid">
     <div>
-      <div class="badge">▸ OpenStack Orchestration</div>
+      <div class="badge">▸ Heat Orchestration CLI</div>
       <img src="../assets/heat.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(55%) sepia(80%) saturate(700%) hue-rotate(350deg)">
-      <h1>OpenStack <span>Heat</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
-      <p class="subtitle">$ openstack stack list</p>
+      <h1>Heat <span>CLI</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ heat stack-list</p>
       <div class="version-legend">
         <div class="chip ch-or">Orchestration</div>
         <div class="chip ch-gn">Stacks</div>
@@ -66,7 +66,7 @@
         <div class="chip ch-pu">Resources</div>
       </div>
     </div>
-    <div class="meta"><strong>openstack stack</strong><br>Create · Update · Delete<br>Events · Resources<br>Template Validation</div>
+    <div class="meta"><strong>heat</strong><br>stack-create · stack-update<br>stack-delete · event-list<br>resource-list · template-validate</div>
   </div>
 </header>
 <main>
@@ -74,81 +74,76 @@
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">📋</div><div class="section-title">Stack auflisten & anzeigen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code>openstack stack list
-openstack stack list --all-projects
-openstack stack list --status FAILED
-openstack stack show mystack
-openstack stack output list mystack
-openstack stack output show mystack server_ip</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Template anzeigen</div><code>openstack stack template show mystack</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code>heat stack-list
+heat stack-list --show-deleted
+heat stack-list --show-hidden
+heat stack-list -f status=FAILED
+heat stack-show mystack</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Template & Outputs</div><code>heat template-show mystack
+heat output-list mystack
+heat output-show mystack server_ip</code></div>
   </div>
 </div>
 
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🚀</div><div class="section-title">Stack erstellen & aktualisieren</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Stack erstellen</div><code>openstack stack create \
-  --template mystack.yaml \
+    <div class="cmd-entry"><div class="cmd-desc">Stack erstellen</div><code>heat stack-create \
+  -f mystack.yaml \
   mystack
 <span class="cm"># Mit Parametern:</span>
-openstack stack create \
-  --template mystack.yaml \
-  --parameter image=ubuntu-22.04 \
-  --parameter flavor=m1.small \
-  --parameter network=private \
+heat stack-create \
+  -f mystack.yaml \
+  -P "image=ubuntu-22.04;flavor=m1.small;network=private" \
   mystack
 <span class="cm"># Mit Umgebungsdatei:</span>
-openstack stack create \
-  --template mystack.yaml \
-  --environment env.yaml \
-  --wait \
+heat stack-create \
+  -f mystack.yaml \
+  -e env.yaml \
+  --poll \
   mystack</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Stack aktualisieren</div><code>openstack stack update \
-  --template mystack.yaml \
-  --parameter flavor=m1.large \
+    <div class="cmd-entry"><div class="cmd-desc">Stack aktualisieren</div><code>heat stack-update \
+  -f mystack.yaml \
+  -P "flavor=m1.large" \
   mystack
-<span class="cm"># Vorschau (Preview):</span>
-openstack stack update \
-  --template mystack.yaml \
-  --dry-run \
+<span class="cm"># Vorschau (dry-run):</span>
+heat stack-preview \
+  -f mystack.yaml \
   mystack</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Stack löschen</div><code>openstack stack delete mystack
-openstack stack delete --wait mystack
-openstack stack delete --yes mystack</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Stack löschen</div><code>heat stack-delete mystack
+heat stack-delete --yes mystack</code></div>
   </div>
 </div>
 
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">📊</div><div class="section-title">Events & Resources</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Events verfolgen</div><code>openstack stack event list mystack
-openstack stack event list \
-  --nested-depth 3 \
-  mystack
-openstack stack event show mystack \
-  myserver-resource <EVENT-ID></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Ressourcen</div><code>openstack stack resource list mystack
-openstack stack resource list --nested-depth 2 mystack
-openstack stack resource show mystack myserver
-openstack stack resource mark unhealthy \
-  mystack myserver "hardware failure"
-openstack stack resource signal mystack myserver</code></div>
-    <div class="tip"><strong>Tipp:</strong> openstack stack failures list mystack zeigt im Fehlerfall direkt die fehlgeschlagenen Ressourcen mit Fehlermeldung.</div>
+    <div class="cmd-entry"><div class="cmd-desc">Events verfolgen</div><code>heat event-list mystack
+heat event-list -n 3 mystack    <span class="cm"># nested bis Tiefe 3</span>
+heat event-show mystack \
+  myserver-resource EVENT-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Ressourcen</div><code>heat resource-list mystack
+heat resource-list -n 2 mystack  <span class="cm"># nested</span>
+heat resource-show mystack myserver
+heat resource-signal mystack myserver
+heat resource-mark-unhealthy \
+  mystack myserver "hardware failure"</code></div>
+    <div class="tip"><strong>Tipp:</strong> heat stack-show mystack | grep stack_status_reason zeigt den Fehlergrund direkt nach einem fehlgeschlagenen Stack-Deployment.</div>
   </div>
 </div>
 
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">⏸</div><div class="section-title">Suspend, Resume & Abandon</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Lifecycle</div><code>openstack stack suspend mystack    <span class="cm"># VMs pausieren</span>
-openstack stack resume mystack     <span class="cm"># VMs fortsetzen</span>
-openstack stack check mystack      <span class="cm"># Status prüfen</span>
-openstack stack cancel mystack     <span class="cm"># laufenden Update abbrechen</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Abandon (ohne delete)</div><code><span class="cm"># Stack löschen, Ressourcen behalten:</span>
-openstack stack abandon mystack
-<span class="cm"># Aus existierenden Ressourcen Stack erstellen:</span>
-openstack stack adopt \
-  --template mystack.yaml \
+    <div class="cmd-entry"><div class="cmd-desc">Lifecycle</div><code>heat action-suspend mystack   <span class="cm"># VMs pausieren</span>
+heat action-resume mystack    <span class="cm"># VMs fortsetzen</span>
+heat action-check mystack     <span class="cm"># Status prüfen</span>
+heat stack-cancel-update mystack  <span class="cm"># Update abbrechen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Abandon & Adopt</div><code><span class="cm"># Stack entfernen, Ressourcen behalten:</span>
+heat stack-abandon mystack
+<span class="cm"># Aus bestehenden Ressourcen adoptieren:</span>
+heat stack-adopt \
+  -f mystack.yaml \
   --adopt-file abandon_data.json \
   mystack</code></div>
   </div>
@@ -157,19 +152,14 @@ openstack stack adopt \
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">✅</div><div class="section-title">Template validieren</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Validierung</div><code>openstack orchestration template validate \
-  --template mystack.yaml
-openstack orchestration template validate \
-  --template mystack.yaml \
-  --environment env.yaml
-<span class="cm"># Parameter auflisten:</span>
-openstack orchestration template validate \
-  --template mystack.yaml \
-  --show-nested</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Resource-Typen</div><code>openstack orchestration resource type list
-openstack orchestration resource type list \
-  --filter type=OS::Nova::*
-openstack orchestration resource type show \
+    <div class="cmd-entry"><div class="cmd-desc">Validierung</div><code>heat template-validate -f mystack.yaml
+heat template-validate \
+  -f mystack.yaml \
+  -e env.yaml</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Resource-Typen</div><code>heat resource-type-list
+heat resource-type-list \
+  | grep OS::Nova
+heat resource-type-show \
   OS::Nova::Server</code></div>
   </div>
 </div>
@@ -201,14 +191,10 @@ resources:
       networks:
         - network: { get_param: network }
       key_name: mykey
-      user_data_format: RAW
-      user_data: |
-        #!/bin/bash
-        apt-get update && apt-get install -y nginx
 
 outputs:
   server_ip:
-    description: IP-Adresse des Servers
+    description: IP-Adresse
     value:
       get_attr: [myserver, first_address]</code></div>
   </div>
@@ -223,17 +209,15 @@ outputs:
 { get_attr: [myserver, first_address] }
 <span class="cm"># Resource-ID:</span>
 { get_resource: myserver }
-<span class="cm"># Umgebungsvariable:</span>
-{ get_environment: tenant_id }
-<span class="cm"># Strings zusammenführen:</span>
+<span class="cm"># String zusammenführen:</span>
 { str_replace:
     template: "Hello $name"
     params:
       $name: { get_param: name } }
-<span class="cm"># Bedingte Ressource:</span>
+<span class="cm"># Bedingungen:</span>
 conditions:
   is_prod: { equals: [{get_param: env}, prod] }
-<span class="cm"># Depends-on:</span>
+<span class="cm"># Abhängigkeit:</span>
 depends_on: mynetwork</code></div>
     <div class="tip"><strong>ResourceGroup:</strong> OS::Heat::ResourceGroup erzeugt N identische Ressourcen per count-Parameter — ideal für Auto-Scaling-Gruppen.</div>
   </div>

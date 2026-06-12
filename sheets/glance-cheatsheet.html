@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenStack Glance (Images) - TheLayer0Guide</title>
+<title>OpenStack Glance CLI - TheLayer0Guide</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="../assets/glance.svg">
 <style>
@@ -55,18 +55,18 @@
   <a href="../index.html" class="nav-link">← Index</a>
   <div class="header-grid">
     <div>
-      <div class="badge">▸ OpenStack Image Service</div>
+      <div class="badge">▸ Glance Image CLI</div>
       <img src="../assets/glance.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(50%) sepia(70%) saturate(600%) hue-rotate(255deg)">
-      <h1>OpenStack <span>Glance</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
-      <p class="subtitle">$ openstack image list</p>
+      <h1>Glance <span>CLI</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ glance image-list</p>
       <div class="version-legend">
         <div class="chip ch-pu">Images</div>
-        <div class="chip ch-gn">Upload/Download</div>
+        <div class="chip ch-gn">Upload</div>
         <div class="chip ch-cy">Sharing</div>
         <div class="chip ch-or">Properties</div>
       </div>
     </div>
-    <div class="meta"><strong>openstack image</strong><br>List · Upload · Download<br>Properties · Tags<br>Sharing · Formats</div>
+    <div class="meta"><strong>glance</strong><br>image-list · image-create<br>image-upload · image-download<br>member · tag</div>
   </div>
 </header>
 <main>
@@ -74,131 +74,123 @@
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🖼</div><div class="section-title">Images auflisten & anzeigen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code>openstack image list
-openstack image list --public
-openstack image list --private
-openstack image list --shared
-openstack image list --community
-openstack image list --status active
-openstack image list --tag ubuntu
-openstack image show ubuntu-22.04</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Filter</div><code>openstack image list --name ubuntu*
-openstack image list --format value -c ID -c Name -c Status
-openstack image list --property os_type=linux
-openstack image list --sort name:asc</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code>glance image-list
+glance image-list --visibility public
+glance image-list --visibility private
+glance image-list --visibility shared
+glance image-list --status active
+glance image-show IMAGE-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Filter</div><code>glance image-list --name ubuntu*
+glance image-list \
+  --property os_distro=ubuntu
+glance image-list \
+  --sort-key name --sort-dir asc
+glance image-list --limit 20 --page-size 20</code></div>
   </div>
 </div>
 
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">⬆</div><div class="section-title">Images hochladen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Upload (lokal)</div><code>openstack image create \
-  --file ubuntu-22.04.qcow2 \
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Upload (v1 API)</div><code>glance image-create \
+  --name ubuntu-22.04 \
   --disk-format qcow2 \
   --container-format bare \
-  --public \
-  ubuntu-22.04</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Mit Eigenschaften</div><code>openstack image create \
-  --file ubuntu-22.04.qcow2 \
+  --visibility public \
+  --file ubuntu-22.04.qcow2</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Zweistufig (v2 API)</div><code><span class="cm"># 1. Image-Objekt anlegen:</span>
+glance image-create \
+  --name ubuntu-22.04 \
   --disk-format qcow2 \
   --container-format bare \
-  --min-disk 8 \
-  --min-ram 512 \
+  --min-disk 8 --min-ram 512 \
   --property os_type=linux \
   --property os_distro=ubuntu \
-  --property os_version=22.04 \
-  --tag ubuntu \
-  --tag lts \
-  ubuntu-22.04</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Disk-Formate</div><code><span class="cm"># Gültige Formate:</span>
-<span class="cm"># qcow2  — QEMU/KVM (gängigste Wahl)</span>
+  --property os_version=22.04
+<span class="cm"># 2. Datei hochladen:</span>
+glance image-upload \
+  --file ubuntu-22.04.qcow2 \
+  IMAGE-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Disk-Formate</div><code><span class="cm"># qcow2  — QEMU/KVM (Standard)</span>
 <span class="cm"># raw    — uncomprimiertes Rohformat</span>
 <span class="cm"># vmdk   — VMware Disk</span>
 <span class="cm"># vhd    — Hyper-V VHD</span>
 <span class="cm"># vhdx   — Hyper-V VHDX</span>
-<span class="cm"># iso    — ISO-Image (bootbar)</span>
-<span class="cm"># aki/ari/ami — Amazon-Kernel/Ramdisk/Image</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Deactivate / Reactivate</div><code>openstack image set --deactivate ubuntu-22.04
-openstack image set --activate ubuntu-22.04</code></div>
+<span class="cm"># iso    — bootbares ISO-Image</span>
+<span class="cm"># aki/ari/ami — Amazon-kompatibel</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Deactivate / Reactivate</div><code>glance image-deactivate IMAGE-UUID
+glance image-reactivate IMAGE-UUID</code></div>
   </div>
 </div>
 
 <div class="section th-cy">
-  <div class="section-header"><div class="section-icon">⬇</div><div class="section-title">Images herunterladen & löschen</div></div>
+  <div class="section-header"><div class="section-icon">⬇</div><div class="section-title">Download & Löschen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Download</div><code>openstack image save \
-  --file ubuntu-22.04-downloaded.qcow2 \
-  ubuntu-22.04</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Löschen</div><code>openstack image delete ubuntu-22.04
-openstack image delete img1 img2 img3</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Import-Methoden (v2)</div><code><span class="cm"># Web-Download (Glance lädt direkt):</span>
-openstack image create \
-  --import-method web-download \
-  --uri https://example.com/image.qcow2 \
-  --disk-format qcow2 \
-  --container-format bare \
-  myimage
-
-<span class="cm"># Glance-direct (via staging):</span>
-openstack image stage myimage < image.qcow2
-openstack image import --import-method glance-direct myimage</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Download</div><code>glance image-download \
+  --file ubuntu-22.04-dl.qcow2 \
+  IMAGE-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Löschen</div><code>glance image-delete IMAGE-UUID
+glance image-delete UUID1 UUID2 UUID3</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Update</div><code>glance image-update \
+  --name new-name \
+  --visibility shared \
+  IMAGE-UUID</code></div>
   </div>
 </div>
 
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">🏷</div><div class="section-title">Properties & Tags</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Properties setzen</div><code>openstack image set \
+    <div class="cmd-entry"><div class="cmd-desc">Properties setzen</div><code>glance image-update \
   --property hw_disk_bus=virtio \
   --property hw_vif_model=virtio \
   --property hw_scsi_model=virtio-scsi \
-  ubuntu-22.04
-openstack image unset --property hw_disk_bus ubuntu-22.04</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Nützliche Properties</div><code><span class="cm">hw_disk_bus=virtio      # Disk-Bus</span>
-<span class="cm">hw_vif_model=virtio     # NIC-Treiber</span>
-<span class="cm">hw_qemu_guest_agent=yes # QEMU GA</span>
-<span class="cm">os_require_quiesce=yes  # Quiesce für Snapshots</span>
-<span class="cm">img_config_drive=mandatory  # Config-Drive</span>
-<span class="cm">hypervisor_type=qemu    # Hypervisor-Typ</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Tags verwalten</div><code>openstack image set --tag lts --tag ubuntu ubuntu-22.04
-openstack image unset --tag lts ubuntu-22.04</code></div>
+  --property hw_qemu_guest_agent=yes \
+  IMAGE-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Nützliche Properties</div><code><span class="cm">hw_disk_bus=virtio       # Disk-Bus</span>
+<span class="cm">hw_vif_model=virtio      # NIC-Treiber</span>
+<span class="cm">hw_qemu_guest_agent=yes  # QEMU GA</span>
+<span class="cm">os_require_quiesce=yes   # Quiesce f. Snaps</span>
+<span class="cm">img_config_drive=mandatory # Config-Drive</span>
+<span class="cm">hypervisor_type=qemu     # Hypervisor</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Tags verwalten</div><code>glance image-tag-update IMAGE-UUID ubuntu
+glance image-tag-update IMAGE-UUID lts
+glance image-tag-delete IMAGE-UUID ubuntu</code></div>
   </div>
 </div>
 
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🤝</div><div class="section-title">Sichtbarkeit & Sharing</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Sichtbarkeit ändern</div><code><span class="cm"># Werte: public | private | shared | community</span>
-openstack image set --public ubuntu-22.04
-openstack image set --private myimage
-openstack image set --shared myimage
-openstack image set --community myimage</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Image teilen</div><code><span class="cm"># Image mit Projekt teilen:</span>
-openstack image add project myimage otherproject
+    <div class="cmd-entry"><div class="cmd-desc">Sichtbarkeit ändern</div><code><span class="cm"># public | private | shared | community</span>
+glance image-update \
+  --visibility public IMAGE-UUID
+glance image-update \
+  --visibility shared IMAGE-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Image teilen (Member)</div><code><span class="cm"># Image mit Projekt teilen:</span>
+glance member-create IMAGE-UUID PROJECT-UUID
 <span class="cm"># Im Ziel-Projekt akzeptieren:</span>
-openstack image set --accept myimage
-<span class="cm"># Übersicht der Member:</span>
-openstack image list --shared
-openstack image remove project myimage otherproject</code></div>
-    <div class="tip"><strong>community:</strong> Jeder kann ein Community-Image nutzen, ohne explizite Freigabe. Gut für Team-weite Basis-Images.</div>
+glance member-update \
+  IMAGE-UUID PROJECT-UUID accepted
+<span class="cm"># Übersicht:</span>
+glance member-list IMAGE-UUID
+glance member-delete IMAGE-UUID PROJECT-UUID</code></div>
+    <div class="tip"><strong>community:</strong> Jeder kann ein Community-Image nutzen ohne explizite Freigabe. Gut für Team-weite Basis-Images.</div>
   </div>
 </div>
 
 <div class="section th-gn">
-  <div class="section-header"><div class="section-icon">📊</div><div class="section-title">Admin: Stores & Quotas</div></div>
+  <div class="section-header"><div class="section-icon">📊</div><div class="section-title">Cache & Tasks</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Image Stores</div><code>openstack image store list
-openstack image import \
-  --stores store1,store2 \
-  --import-method glance-direct \
-  myimage</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Cache & Tasks</div><code>openstack image cache list
-openstack image cache delete <IMAGE-ID>
-openstack image task list
-openstack image task show <TASK-ID></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Metadaten-Definitionen</div><code>openstack metadef namespace list
-openstack metadef namespace show OS::Compute::VirtCPUTopology
-openstack metadef object list OS::Compute</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Image Cache</div><code>glance cache-list
+glance cache-delete IMAGE-UUID
+glance cache-clear</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Tasks</div><code>glance task-list
+glance task-show TASK-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Metadaten-Definitionen</div><code>glance md-namespace-list
+glance md-namespace-show \
+  OS::Compute::VirtCPUTopology
+glance md-object-list OS::Compute</code></div>
   </div>
 </div>
 

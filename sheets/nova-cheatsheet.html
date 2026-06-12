@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenStack Nova (Compute) - TheLayer0Guide</title>
+<title>OpenStack Nova CLI - TheLayer0Guide</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="../assets/nova.svg">
 <style>
@@ -55,18 +55,18 @@
   <a href="../index.html" class="nav-link">← Index</a>
   <div class="header-grid">
     <div>
-      <div class="badge">▸ OpenStack Compute</div>
+      <div class="badge">▸ Nova Compute CLI</div>
       <img src="../assets/nova.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(28%) sepia(85%) saturate(700%) hue-rotate(325deg)">
-      <h1>OpenStack <span>Nova</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
-      <p class="subtitle">$ openstack server list</p>
+      <h1>Nova <span>CLI</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ nova list</p>
       <div class="version-legend">
         <div class="chip ch-re">Compute</div>
-        <div class="chip ch-gn">Server Lifecycle</div>
+        <div class="chip ch-gn">nova boot</div>
         <div class="chip ch-cy">Migration</div>
         <div class="chip ch-pu">Flavors</div>
       </div>
     </div>
-    <div class="meta"><strong>openstack server</strong><br>Create · Power · Console<br>Resize · Migrate<br>Flavors · Keypairs</div>
+    <div class="meta"><strong>nova</strong><br>boot · delete · show<br>resize · migrate<br>flavor · keypair</div>
   </div>
 </header>
 <main>
@@ -74,51 +74,60 @@
 <div class="section th-re">
   <div class="section-header"><div class="section-icon">📋</div><div class="section-title">Server auflisten & anzeigen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code>openstack server list
-openstack server list --all-projects
-openstack server list --status ERROR
-openstack server list --host esx01.example.com
-openstack server list -c ID -c Name -c Status -c Networks
-openstack server show myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Filter & Suche</div><code>openstack server list --name myapp*
-openstack server list --image ubuntu-22.04
-openstack server list --flavor m1.large
-openstack server list --project myproject
-openstack server list --user alice</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code>nova list
+nova list --all-tenants
+nova list --status ERROR
+nova list --host compute01.example.com
+nova list --name "myapp*"
+nova show myserver</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Filter</div><code>nova list --image IMAGE-UUID
+nova list --flavor m1.large
+nova list --tenant PROJECT-UUID
+nova list --user USER-UUID
+nova list --fields name,status,networks</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Admin: Hypervisors</div><code>nova hypervisor-list
+nova hypervisor-show compute01.example.com
+nova hypervisor-stats
+nova host-list
+nova host-describe compute01.example.com</code></div>
   </div>
 </div>
 
 <div class="section th-gn">
-  <div class="section-header"><div class="section-icon">🚀</div><div class="section-title">Server erstellen</div></div>
+  <div class="section-header"><div class="section-icon">🚀</div><div class="section-title">Server booten (nova boot)</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Minimal</div><code>openstack server create \
+    <div class="cmd-entry"><div class="cmd-desc">Minimal</div><code>nova boot \
   --flavor m1.small \
   --image ubuntu-22.04 \
-  --network private \
+  --nic net-id=NET-UUID \
   --key-name mykey \
   myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Vollständig</div><code>openstack server create \
+    <div class="cmd-entry"><div class="cmd-desc">Vollständig</div><code>nova boot \
   --flavor m1.large \
   --image ubuntu-22.04 \
-  --network private \
-  --security-group default \
+  --nic net-id=NET-UUID \
+  --security-groups default,websg \
   --key-name mykey \
   --availability-zone az1 \
   --user-data ./cloud-init.yml \
-  --property env=prod \
-  --wait \
+  --meta env=prod \
+  --meta team=ops \
+  --poll \
   myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Boot from Volume</div><code>openstack server create \
+    <div class="cmd-entry"><div class="cmd-desc">Boot from Volume</div><code>nova boot \
   --flavor m1.small \
-  --block-device source_type=image,uuid=<IMAGE-ID>,\
-dest_type=volume,volume_size=50,\
-boot_index=0,delete_on_termination=true \
-  --network private \
+  --block-device \
+    source=image,id=IMAGE-UUID,\
+dest=volume,size=50,\
+shutdown=remove,bootindex=0 \
+  --nic net-id=NET-UUID \
   myserver-bfv</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Aus existierendem Volume</div><code>openstack server create \
+    <div class="cmd-entry"><div class="cmd-desc">Aus bestehendem Volume</div><code>nova boot \
   --flavor m1.small \
-  --volume mybootvol \
-  --network private \
+  --block-device \
+    source=volume,id=VOL-UUID,\
+dest=volume,bootindex=0 \
+  --nic net-id=NET-UUID \
   myserver-vol</code></div>
   </div>
 </div>
@@ -126,100 +135,112 @@ boot_index=0,delete_on_termination=true \
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">⚡</div><div class="section-title">Power-Operationen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Start / Stop / Reboot</div><code>openstack server start myserver
-openstack server stop myserver
-openstack server reboot myserver
-openstack server reboot --hard myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Pause / Suspend / Shelve</div><code>openstack server pause myserver      <span class="cm"># RAM eingefroren, CPU gestoppt</span>
-openstack server unpause myserver
-openstack server suspend myserver    <span class="cm"># auf Disk gespeichert</span>
-openstack server resume myserver
-openstack server shelve myserver     <span class="cm"># snapshot + Hypervisor frei</span>
-openstack server unshelve myserver
-openstack server shelve-offload myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Löschen</div><code>openstack server delete myserver
-openstack server delete --wait myserver
-openstack server delete server1 server2 server3</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Start / Stop / Reboot</div><code>nova start myserver
+nova stop myserver
+nova reboot myserver              <span class="cm"># soft reboot</span>
+nova reboot --hard myserver       <span class="cm"># hard reset</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Pause / Suspend / Shelve</div><code>nova pause myserver         <span class="cm"># RAM eingefroren, CPU gestoppt</span>
+nova unpause myserver
+nova suspend myserver       <span class="cm"># Zustand auf Disk gespeichert</span>
+nova resume myserver
+nova shelve myserver        <span class="cm"># Snapshot + Hypervisor freigeben</span>
+nova unshelve myserver
+nova shelve-offload myserver</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Löschen</div><code>nova delete myserver
+nova force-delete myserver        <span class="cm"># erzwungen, kein ACTIVE-Check</span>
+nova delete server1 server2 server3</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Rebuild & Rename</div><code>nova rebuild myserver ubuntu-22.04
+nova rebuild --poll myserver IMAGE-UUID
+nova rename myserver newname</code></div>
   </div>
 </div>
 
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🖥</div><div class="section-title">Console & Logs</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Console-URL</div><code>openstack console url show myserver
-openstack console url show --novnc myserver
-openstack console url show --spice myserver
-openstack console url show --serial myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Logs</div><code>openstack console log show myserver
-openstack console log show --lines 50 myserver</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">VNC / SPICE / Serial</div><code>nova get-vnc-console myserver novnc
+nova get-vnc-console myserver xvpvnc
+nova get-spice-console myserver spice-html5
+nova get-serial-console myserver serial</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Console-Log</div><code>nova console-log myserver
+nova console-log --length 50 myserver</code></div>
+    <div class="tip"><strong>Tipp:</strong> nova get-vnc-console gibt eine URL zurück, die im Browser geöffnet werden kann. novnc ist für HTML5-Browser, xvpvnc für Java-Clients.</div>
   </div>
 </div>
 
 <div class="section th-re">
   <div class="section-header"><div class="section-icon">📐</div><div class="section-title">Resize & Migration</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Resize (kalt)</div><code>openstack server resize --flavor m1.large myserver
-openstack server resize confirm myserver    <span class="cm"># bestätigen</span>
-openstack server resize revert myserver     <span class="cm"># zurücksetzen</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Migration</div><code>openstack server migrate myserver              <span class="cm"># kalt (VM stoppt)</span>
-openstack server migrate --live-migration \
-  --block-migration myserver                  <span class="cm"># live (kein Stopp)</span>
-openstack server migrate --live-migration \
-  --host esx02.example.com myserver</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Rebuild (neues Image)</div><code>openstack server rebuild --image ubuntu-22.04 myserver
-openstack server rebuild --wait myserver</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Resize (kalt)</div><code>nova resize myserver m1.large --poll
+nova resize-confirm myserver     <span class="cm"># nach erfolgreichem Resize</span>
+nova resize-revert myserver      <span class="cm"># Resize rückgängig machen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Cold Migration</div><code>nova migrate myserver
+nova migrate --host compute02.example.com myserver</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Live Migration</div><code>nova live-migration myserver
+nova live-migration myserver compute02.example.com
+nova live-migration --block-migrate myserver  <span class="cm"># ohne Shared Storage</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Evacuate (Host ausgefallen)</div><code>nova evacuate myserver
+nova evacuate --on-shared-storage myserver
+nova evacuate myserver compute03.example.com</code></div>
   </div>
 </div>
 
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🎛</div><div class="section-title">Flavors</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code>openstack flavor list
-openstack flavor list --public
-openstack flavor list --all
-openstack flavor show m1.large</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Erstellen</div><code>openstack flavor create \
-  --vcpus 4 --ram 8192 --disk 80 \
-  --public \
-  m1.xlarge
-openstack flavor set \
-  --property hw:cpu_policy=dedicated \
-  --property hw:mem_page_size=large \
-  m1.xlarge</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Löschen / Privater Zugriff</div><code>openstack flavor delete m1.oldflav
-openstack flavor set --private m1.secret
-openstack flavor access add --project myproject m1.secret</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code>nova flavor-list
+nova flavor-list --all          <span class="cm"># inkl. privater Flavors</span>
+nova flavor-show m1.large</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen</div><code><span class="cm"># nova flavor-create NAME ID RAM_MB DISK_GB VCPUS</span>
+nova flavor-create m1.xlarge auto 8192 80 4
+nova flavor-create \
+  --ephemeral 20 --swap 1024 \
+  --is-public true \
+  m1.xlarge auto 8192 80 4</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Extra-Specs / Zugriff</div><code>nova flavor-key m1.xlarge set hw:cpu_policy=dedicated
+nova flavor-key m1.xlarge set hw:mem_page_size=large
+nova flavor-key m1.xlarge unset hw:cpu_policy
+nova flavor-access-add m1.secret PROJECT-UUID
+nova flavor-access-remove m1.secret PROJECT-UUID
+nova flavor-access-list m1.secret</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Löschen</div><code>nova flavor-delete m1.oldflav</code></div>
   </div>
 </div>
 
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">🔑</div><div class="section-title">Keypairs & Metadaten</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Keypairs</div><code>openstack keypair list
-openstack keypair create mykey             <span class="cm"># neues Key-Paar erzeugen</span>
-openstack keypair create --public-key ~/.ssh/id_rsa.pub mykey
-openstack keypair show mykey
-openstack keypair delete mykey</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Server-Metadaten</div><code>openstack server set --property env=prod myserver
-openstack server set --property team=ops myserver
-openstack server unset --property env myserver
-openstack server show -c properties myserver</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Keypairs</div><code>nova keypair-list
+nova keypair-add mykey                              <span class="cm"># neues Paar erzeugen</span>
+nova keypair-add --pub-key ~/.ssh/id_rsa.pub mykey  <span class="cm"># existierenden Key importieren</span>
+nova keypair-show mykey
+nova keypair-delete mykey</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Server-Metadaten</div><code>nova meta myserver set env=prod team=ops
+nova meta myserver delete env
+nova show myserver | grep metadata</code></div>
   </div>
 </div>
 
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">🗺</div><div class="section-title">AZs, Aggregates & Quotas</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Availability Zones</div><code>openstack availability zone list
-openstack availability zone list --compute</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Aggregates</div><code>openstack aggregate list
-openstack aggregate create az1-agg --zone az1
-openstack aggregate add host az1-agg esx01.example.com
-openstack aggregate set --property ssd=true ssd-agg</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Quotas</div><code>openstack quota show
-openstack quota show --project myproject
-openstack quota set --instances 50 --cores 200 --ram 512000 myproject</code></div>
-    <div class="tip"><strong>Tipp:</strong> openstack limits show --absolute zeigt aktuelle Nutzung vs. Quota in einem Überblick.</div>
+    <div class="cmd-entry"><div class="cmd-desc">Availability Zones</div><code>nova availability-zone-list
+nova availability-zone-list --long</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Host Aggregates</div><code>nova aggregate-list
+nova aggregate-details az1-agg
+nova aggregate-create az1-agg az1
+nova aggregate-add-host az1-agg compute01.example.com
+nova aggregate-remove-host az1-agg compute01.example.com
+nova aggregate-set-metadata az1-agg ssd=true
+nova aggregate-delete az1-agg</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Quotas & Limits</div><code>nova quota-show
+nova quota-show --tenant PROJECT-UUID
+nova quota-update --instances 50 --cores 200 \
+  --ram 524288 PROJECT-UUID
+nova quota-defaults
+nova limits
+nova limits --tenant PROJECT-UUID</code></div>
+    <div class="tip"><strong>Tipp:</strong> nova limits zeigt aktuelle Nutzung vs. Quota — hilfreich vor der Provisionierung.</div>
   </div>
 </div>
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenStack Keystone (Identity) - TheLayer0Guide</title>
+<title>OpenStack Keystone CLI - TheLayer0Guide</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="../assets/keystone.svg">
 <style>
@@ -55,18 +55,18 @@
   <a href="../index.html" class="nav-link">← Index</a>
   <div class="header-grid">
     <div>
-      <div class="badge">▸ OpenStack Identity</div>
+      <div class="badge">▸ Keystone Identity CLI</div>
       <img src="../assets/keystone.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(70%) sepia(80%) saturate(600%) hue-rotate(10deg)">
-      <h1>OpenStack <span>Keystone</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
-      <p class="subtitle">$ openstack token issue</p>
+      <h1>Keystone <span>CLI</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ keystone user-list</p>
       <div class="version-legend">
         <div class="chip ch-yl">Identity</div>
-        <div class="chip ch-gn">Users & Roles</div>
-        <div class="chip ch-cy">Tokens</div>
-        <div class="chip ch-pu">App Credentials</div>
+        <div class="chip ch-gn">Users &amp; Tenants</div>
+        <div class="chip ch-cy">Roles</div>
+        <div class="chip ch-pu">Tokens</div>
       </div>
     </div>
-    <div class="meta"><strong>openstack user/project</strong><br>Users · Projects<br>Roles · Groups<br>Domains · Tokens</div>
+    <div class="meta"><strong>keystone</strong><br>user · tenant · role<br>token · endpoint<br>service · catalog</div>
   </div>
 </header>
 <main>
@@ -74,156 +74,120 @@
 <div class="section th-yl">
   <div class="section-header"><div class="section-icon">👤</div><div class="section-title">Users</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Übersicht</div><code>openstack user list
-openstack user list --domain Default
-openstack user show alice
-openstack user show --domain mydomain alice</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">User erstellen & ändern</div><code>openstack user create \
-  --domain Default \
-  --password mysecret \
+    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code>keystone user-list
+keystone user-show alice
+keystone user-show --tenant myproject alice</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Ändern</div><code>keystone user-create \
+  --name alice \
+  --pass mysecret \
   --email alice@example.com \
-  --enable \
-  alice
-openstack user set --password newsecret alice
-openstack user set --disable alice
-openstack user set --enable alice
-openstack user delete alice</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Passwort ändern (self)</div><code>openstack user password set \
-  --password newsecret \
-  --original-password oldsecret</code></div>
+  --enabled true
+keystone user-update \
+  --pass newsecret \
+  --email new@example.com alice
+keystone user-update --enabled false alice
+keystone user-update --enabled true alice
+keystone user-delete alice</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Passwort ändern</div><code>keystone user-password-update \
+  --pass newsecret alice</code></div>
+    <div class="tip"><strong>Hinweis:</strong> keystone CLI ist seit OpenStack Ocata deprecated. Für neue Installationen wird openstack CLI (python-openstackclient) empfohlen.</div>
   </div>
 </div>
 
 <div class="section th-gn">
-  <div class="section-header"><div class="section-icon">📁</div><div class="section-title">Projects (Tenants)</div></div>
+  <div class="section-header"><div class="section-icon">📁</div><div class="section-title">Tenants (Projects)</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Projekte</div><code>openstack project list
-openstack project list --domain Default
-openstack project show myproject
-openstack project create \
-  --domain Default \
+    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code>keystone tenant-list
+keystone tenant-show myproject</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Ändern</div><code>keystone tenant-create \
+  --name myproject \
   --description "My Project" \
-  --enable \
-  myproject
-openstack project set --disable myproject
-openstack project delete myproject</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Project-Tags</div><code>openstack project set --tag production myproject
-openstack project unset --tag production myproject</code></div>
+  --enabled true
+keystone tenant-update \
+  --description "Updated" myproject
+keystone tenant-update --enabled false myproject
+keystone tenant-delete myproject</code></div>
   </div>
 </div>
 
 <div class="section th-cy">
-  <div class="section-header"><div class="section-icon">🎭</div><div class="section-title">Roles & Role-Assignments</div></div>
+  <div class="section-header"><div class="section-icon">🎭</div><div class="section-title">Roles & Assignments</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Rollen verwalten</div><code>openstack role list
-openstack role show member
-openstack role create myrole
-openstack role delete myrole</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Rolle zuweisen</div><code><span class="cm"># User + Projekt:</span>
-openstack role add \
+    <div class="cmd-entry"><div class="cmd-desc">Rollen verwalten</div><code>keystone role-list
+keystone role-show member
+keystone role-create myrole
+keystone role-delete myrole</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Rolle zuweisen</div><code>keystone user-role-add \
   --user alice \
-  --project myproject \
-  member
-<span class="cm"># User + Domain:</span>
-openstack role add \
+  --role member \
+  --tenant myproject
+
+keystone user-role-remove \
   --user alice \
-  --domain mydomain \
-  admin
-<span class="cm"># Gruppe + Projekt:</span>
-openstack role add \
-  --group mygroup \
-  --project myproject \
-  reader</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Zuweisungen anzeigen</div><code>openstack role assignment list
-openstack role assignment list --user alice
-openstack role assignment list --project myproject
-openstack role assignment list \
-  --user alice --project myproject
-openstack role remove \
-  --user alice --project myproject member</code></div>
+  --role member \
+  --tenant myproject</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Zuweisungen anzeigen</div><code>keystone user-role-list
+keystone user-role-list \
+  --user alice \
+  --tenant myproject</code></div>
   </div>
 </div>
 
 <div class="section th-pu">
-  <div class="section-header"><div class="section-icon">👥</div><div class="section-title">Groups & Domains</div></div>
+  <div class="section-header"><div class="section-icon">🎫</div><div class="section-title">Token & Catalog</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Groups</div><code>openstack group list
-openstack group create mygroup --domain Default
-openstack group add user mygroup alice
-openstack group remove user mygroup alice
-openstack group contains user mygroup alice
-openstack group delete mygroup</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Domains</div><code>openstack domain list
-openstack domain show Default
-openstack domain create mydomain \
-  --description "My Domain"
-openstack domain set --disable mydomain
-openstack domain delete mydomain</code></div>
-    <div class="tip"><strong>Implied Roles:</strong> openstack implied role create --implies reader member — member-Zuweisungen erben automatisch reader-Rechte.</div>
+    <div class="cmd-entry"><div class="cmd-desc">Token</div><code>keystone token-get
+<span class="cm"># Gibt Token-ID, Tenant, User, Expires aus</span>
+
+<span class="cm"># credentials.sh / openrc (v2):</span>
+export OS_AUTH_URL=http://keystone:5000/v2.0
+export OS_TENANT_NAME=myproject
+export OS_USERNAME=alice
+export OS_PASSWORD=mysecret</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Service Catalog</div><code>keystone catalog
+keystone catalog --service compute
+keystone service-list</code></div>
   </div>
 </div>
 
 <div class="section th-yl">
-  <div class="section-header"><div class="section-icon">🎫</div><div class="section-title">Tokens</div></div>
+  <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Endpoints & Services</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Token erzeugen & prüfen</div><code>openstack token issue
-openstack token issue -f value -c id   <span class="cm"># nur ID</span>
-openstack token revoke <TOKEN-ID>
-
-<span class="cm"># Scope wechseln (projekt-scoped):</span>
-openstack token issue \
-  --os-project-name myproject
-openstack token issue \
-  --os-project-domain-name Default \
-  --os-project-name myproject</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">credentials.sh / openrc</div><code>export OS_AUTH_URL=https://keystone:5000/v3
-export OS_PROJECT_NAME=myproject
-export OS_PROJECT_DOMAIN_NAME=Default
-export OS_USERNAME=alice
-export OS_USER_DOMAIN_NAME=Default
-export OS_PASSWORD=mysecret
-export OS_IDENTITY_API_VERSION=3
-export OS_REGION_NAME=RegionOne</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Endpoints</div><code>keystone endpoint-list
+keystone endpoint-get --service compute
+keystone endpoint-create \
+  --service compute \
+  --region RegionOne \
+  --publicurl http://nova:8774/v2/%(tenant_id)s \
+  --internalurl http://nova-int:8774/v2/%(tenant_id)s \
+  --adminurl http://nova-admin:8774/v2/%(tenant_id)s
+keystone endpoint-delete ENDPOINT-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Services</div><code>keystone service-list
+keystone service-show compute
+keystone service-create \
+  --name nova \
+  --type compute \
+  --description "Nova Compute"
+keystone service-delete SERVICE-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">EC2 Credentials</div><code>keystone ec2-credentials-create \
+  --tenant myproject
+keystone ec2-credentials-list
+keystone ec2-credentials-delete \
+  --access ACCESS-KEY</code></div>
   </div>
 </div>
 
 <div class="section th-gn">
-  <div class="section-header"><div class="section-icon">🔑</div><div class="section-title">Application Credentials</div></div>
+  <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Discovery & Debug</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">App Credentials</div><code>openstack application credential list
-openstack application credential create \
-  --role member \
-  --expiration "2027-01-01T00:00:00" \
-  myapp-cred
-openstack application credential show myapp-cred
-openstack application credential delete myapp-cred</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">App Cred unrestricted</div><code><span class="cm"># Kann neue Credentials anlegen (Vorsicht!):</span>
-openstack application credential create \
-  --unrestricted \
-  admin-cred</code></div>
-    <div class="tip"><strong>Verwendung:</strong> export OS_AUTH_TYPE=v3applicationcredential; export OS_APPLICATION_CREDENTIAL_ID=...; export OS_APPLICATION_CREDENTIAL_SECRET=...</div>
-  </div>
-</div>
-
-<div class="section th-re">
-  <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Endpoints & Services</div></div>
-  <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Service Catalog</div><code>openstack catalog list
-openstack catalog show nova
-openstack endpoint list
-openstack endpoint list --service nova
-openstack endpoint show <ENDPOINT-ID></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Endpoints verwalten</div><code>openstack service create \
-  --name nova \
-  --description "Compute" \
-  compute
-openstack endpoint create \
-  --region RegionOne \
-  nova public https://nova:8774/v2.1
-openstack endpoint create \
-  --region RegionOne \
-  nova internal https://nova-internal:8774/v2.1
-openstack endpoint delete <ENDPOINT-ID></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Versionen & Discovery</div><code>keystone discover
+keystone endpoint-list --long</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Bash-Integration</div><code><span class="cm"># Token für API-Calls:</span>
+TOKEN=$(keystone token-get \
+  | awk '/id/ { print $4; exit }')
+curl -H "X-Auth-Token: $TOKEN" \
+  http://nova:8774/v2/servers/detail</code></div>
+    <div class="tip"><strong>V3 API:</strong> Für Keystone v3 mit Domains und erweiterten Rollen den openstack CLI verwenden — keystone CLI unterstützt nur v2.</div>
   </div>
 </div>
 

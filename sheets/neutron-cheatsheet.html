@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenStack Neutron (Network) - TheLayer0Guide</title>
+<title>OpenStack Neutron CLI - TheLayer0Guide</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="../assets/neutron.svg">
 <style>
@@ -55,174 +55,181 @@
   <a href="../index.html" class="nav-link">← Index</a>
   <div class="header-grid">
     <div>
-      <div class="badge">▸ OpenStack Networking</div>
+      <div class="badge">▸ Neutron Network CLI</div>
       <img src="../assets/neutron.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(32%) sepia(80%) saturate(500%) hue-rotate(195deg)">
-      <h1>OpenStack <span>Neutron</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
-      <p class="subtitle">$ openstack network list</p>
+      <h1>Neutron <span>CLI</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ neutron net-list</p>
       <div class="version-legend">
         <div class="chip ch-bl">Networking</div>
-        <div class="chip ch-gn">Router/Subnets</div>
+        <div class="chip ch-gn">Router</div>
         <div class="chip ch-cy">Floating IPs</div>
         <div class="chip ch-pu">Security Groups</div>
       </div>
     </div>
-    <div class="meta"><strong>openstack network</strong><br>Networks · Subnets<br>Routers · Ports<br>FIPs · SecGroups</div>
+    <div class="meta"><strong>neutron</strong><br>net · subnet · router<br>port · floatingip<br>security-group · qos</div>
   </div>
 </header>
 <main>
 
 <div class="section th-bl">
-  <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Netzwerke & Subnetze</div></div>
+  <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Netzwerke</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Netzwerke</div><code>openstack network list
-openstack network show private
-openstack network create private \
-  --provider-network-type vxlan
-openstack network create external \
-  --external \
-  --provider-network-type flat \
-  --provider-physical-network physnet1
-openstack network delete private</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Subnetze</div><code>openstack subnet list
-openstack subnet show mysubnet
-openstack subnet create \
-  --network private \
-  --subnet-range 10.0.0.0/24 \
-  --gateway 10.0.0.1 \
-  --dns-nameserver 8.8.8.8 \
-  --dns-nameserver 8.8.4.4 \
-  --allocation-pool start=10.0.0.100,end=10.0.0.200 \
-  mysubnet
-openstack subnet delete mysubnet</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">DHCP & IPv6</div><code>openstack subnet set --no-dhcp mysubnet
-openstack subnet create \
-  --network private \
-  --subnet-range fd00::/64 \
-  --ip-version 6 \
-  --ipv6-ra-mode slaac \
-  --ipv6-address-mode slaac \
-  mysubnet-v6</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Auflisten & Anzeigen</div><code>neutron net-list
+neutron net-show private
+neutron net-list --shared
+neutron net-list --router:external=True</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen</div><code>neutron net-create private
+neutron net-create --shared shared-net
+neutron net-create \
+  --router:external \
+  --provider:network_type flat \
+  --provider:physical_network physnet1 \
+  external</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Provider-Netzwerke</div><code>neutron net-create \
+  --provider:network_type vlan \
+  --provider:physical_network physnet1 \
+  --provider:segmentation_id 100 \
+  vlan100
+neutron net-create \
+  --provider:network_type vxlan \
+  --provider:segmentation_id 200 \
+  vxlan200
+neutron net-update private --name internal
+neutron net-delete private</code></div>
   </div>
 </div>
 
 <div class="section th-gn">
-  <div class="section-header"><div class="section-icon">🔀</div><div class="section-title">Router</div></div>
+  <div class="section-header"><div class="section-icon">📡</div><div class="section-title">Subnetze</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Router verwalten</div><code>openstack router list
-openstack router show myrouter
-openstack router create myrouter
-openstack router set \
-  --external-gateway external \
-  myrouter
-openstack router add subnet myrouter mysubnet
-openstack router remove subnet myrouter mysubnet
-openstack router delete myrouter</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Router Ports & Routen</div><code>openstack router show -c interfaces_info myrouter
-openstack router add route \
-  --route destination=192.168.0.0/24,gateway=10.0.0.254 \
-  myrouter
-openstack router remove route \
-  --route destination=192.168.0.0/24,gateway=10.0.0.254 \
-  myrouter</code></div>
-    <div class="tip"><strong>HA Router:</strong> openstack router create --ha myrouter (bei Neutron mit L3HA) erzeugt einen hochverfügbaren Router via VRRP.</div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen IPv4</div><code>neutron subnet-create private 10.0.0.0/24 \
+  --name mysubnet \
+  --gateway 10.0.0.1 \
+  --dns-nameserver 8.8.8.8 \
+  --dns-nameserver 8.8.4.4 \
+  --allocation-pool \
+    start=10.0.0.100,end=10.0.0.200</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen IPv6</div><code>neutron subnet-create private fd00::/64 \
+  --name mysubnet-v6 \
+  --ip-version 6 \
+  --ipv6-ra-mode slaac \
+  --ipv6-address-mode slaac</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Verwalten</div><code>neutron subnet-list
+neutron subnet-show mysubnet
+neutron subnet-update mysubnet --no-dhcp
+neutron subnet-update mysubnet --enable-dhcp
+neutron subnet-delete mysubnet</code></div>
   </div>
 </div>
 
 <div class="section th-cy">
-  <div class="section-header"><div class="section-icon">🔌</div><div class="section-title">Ports</div></div>
+  <div class="section-header"><div class="section-icon">🔀</div><div class="section-title">Router</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Port-Operationen</div><code>openstack port list
-openstack port list --network private
-openstack port show myport
-openstack port create \
-  --network private \
-  --fixed-ip ip-address=10.0.0.50 \
-  myport
-openstack port create \
-  --network private \
-  --mac-address aa:bb:cc:dd:ee:ff \
-  myport
-openstack port delete myport</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Port konfigurieren</div><code>openstack port set \
-  --security-group mysg \
-  myport
-openstack port unset --security-group mysg myport
-openstack port set --no-security-group myport
-openstack port set \
-  --allowed-address ip-address=10.0.0.0/24 \
-  myport
-openstack server add port myserver myport</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Gateway</div><code>neutron router-create myrouter
+neutron router-create --ha myrouter    <span class="cm"># HA via VRRP</span>
+neutron router-gateway-set myrouter external
+neutron router-gateway-clear myrouter</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Interfaces</div><code>neutron router-interface-add myrouter mysubnet
+neutron router-interface-delete myrouter mysubnet
+neutron router-port-list myrouter</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Statische Routen</div><code>neutron router-update myrouter \
+  --routes type=dict,list=true \
+  destination=192.168.0.0/24,nexthop=10.0.0.254</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Verwalten</div><code>neutron router-list
+neutron router-show myrouter
+neutron router-delete myrouter</code></div>
+    <div class="tip"><strong>HA Router:</strong> --ha erzeugt einen Router mit VRRP-Failover. Erfordert Neutron L3HA-Konfiguration.</div>
   </div>
 </div>
 
 <div class="section th-pu">
-  <div class="section-header"><div class="section-icon">🌍</div><div class="section-title">Floating IPs</div></div>
+  <div class="section-header"><div class="section-icon">🔌</div><div class="section-title">Ports</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">FIP verwalten</div><code>openstack floating ip list
-openstack floating ip create external
-openstack floating ip show 203.0.113.10
-openstack floating ip delete 203.0.113.10</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">FIP zuweisen</div><code>openstack server add floating ip myserver 203.0.113.10
-openstack server remove floating ip myserver 203.0.113.10
-<span class="cm"># An spezifischen Port binden:</span>
-openstack floating ip set \
-  --port myport \
-  203.0.113.10</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Konfigurieren</div><code>neutron port-create private --name myport
+neutron port-create private \
+  --fixed-ip ip_address=10.0.0.50 \
+  --mac-address aa:bb:cc:dd:ee:ff \
+  --name myport
+neutron port-update myport \
+  --security-group websg</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Allowed Address Pairs</div><code>neutron port-update myport \
+  --allowed-address-pairs \
+  type=dict,list=true \
+  ip_address=10.0.0.0/24
+neutron port-update myport \
+  --no-security-groups          <span class="cm"># alle SGs entfernen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Verwalten</div><code>neutron port-list
+neutron port-list --network private
+neutron port-show myport
+neutron port-delete myport</code></div>
   </div>
 </div>
 
 <div class="section th-re">
+  <div class="section-header"><div class="section-icon">🌍</div><div class="section-title">Floating IPs</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen & Zuweisen</div><code>neutron floatingip-create external
+neutron floatingip-associate FIP-UUID PORT-UUID
+neutron floatingip-disassociate FIP-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Verwalten</div><code>neutron floatingip-list
+neutron floatingip-show FIP-UUID
+neutron floatingip-delete FIP-UUID</code></div>
+  </div>
+</div>
+
+<div class="section th-bl">
   <div class="section-header"><div class="section-icon">🛡</div><div class="section-title">Security Groups</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Security Groups</div><code>openstack security group list
-openstack security group create websg \
-  --description "Web Server Security Group"
-openstack security group delete websg</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Regeln hinzufügen</div><code>openstack security group rule list websg
-<span class="cm"># SSH eingehend:</span>
-openstack security group rule create \
-  --proto tcp --dst-port 22 \
-  --remote-ip 10.0.0.0/8 websg
+    <div class="cmd-entry"><div class="cmd-desc">Erstellen</div><code>neutron security-group-list
+neutron security-group-create websg \
+  --description "Web Server SG"
+neutron security-group-delete websg</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Regeln hinzufügen</div><code><span class="cm"># SSH eingehend:</span>
+neutron security-group-rule-create \
+  --protocol tcp \
+  --port-range-min 22 --port-range-max 22 \
+  --remote-ip-prefix 10.0.0.0/8 websg
 <span class="cm"># HTTP/HTTPS:</span>
-openstack security group rule create \
-  --proto tcp --dst-port 80 websg
-openstack security group rule create \
-  --proto tcp --dst-port 443 websg
+neutron security-group-rule-create \
+  --protocol tcp \
+  --port-range-min 80 --port-range-max 80 websg
+neutron security-group-rule-create \
+  --protocol tcp \
+  --port-range-min 443 --port-range-max 443 websg
 <span class="cm"># ICMP (ping):</span>
-openstack security group rule create \
-  --proto icmp websg
-<span class="cm"># Ausgehend alles:</span>
-openstack security group rule create \
-  --proto any --egress websg</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">SG entfernen</div><code>openstack security group rule delete <RULE-ID>
-openstack server remove security group myserver websg</code></div>
+neutron security-group-rule-create \
+  --protocol icmp websg
+<span class="cm"># Egress alles:</span>
+neutron security-group-rule-create \
+  --direction egress websg</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Regel löschen</div><code>neutron security-group-rule-list websg
+neutron security-group-rule-delete RULE-UUID</code></div>
   </div>
 </div>
 
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">📊</div><div class="section-title">QoS & RBAC</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">QoS Policy</div><code>openstack network qos policy list
-openstack network qos policy create 1gbit-policy
-openstack network qos rule create \
-  --type bandwidth-limit \
+    <div class="cmd-entry"><div class="cmd-desc">QoS Policy</div><code>neutron qos-policy-list
+neutron qos-policy-create 1gbit-policy
+neutron qos-bandwidth-limit-rule-create \
   --max-kbps 1000000 \
   --max-burst-kbits 10000000 \
   1gbit-policy
-openstack port set --qos-policy 1gbit-policy myport</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">RBAC (Netzwerke teilen)</div><code>openstack network rbac list
-openstack network rbac create \
+neutron port-update myport \
+  --qos-policy 1gbit-policy</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">RBAC (Netz teilen)</div><code>neutron rbac-list
+neutron rbac-create \
   --type network \
   --action access_as_shared \
-  --target-project otherproject \
-  private</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Quotas</div><code>openstack quota show --project myproject
-openstack quota set \
-  --networks 20 \
-  --subnets 40 \
-  --routers 10 \
-  --floating-ips 50 \
-  myproject</code></div>
+  --target-tenant PROJECT-UUID \
+  NET-UUID
+neutron rbac-delete RBAC-UUID</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Quotas</div><code>neutron quota-show --tenant-id PROJECT-UUID
+neutron quota-update \
+  --network 20 --subnet 40 \
+  --router 10 --floatingip 50 \
+  --tenant-id PROJECT-UUID</code></div>
   </div>
 </div>
 
