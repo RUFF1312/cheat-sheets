@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VS Code - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/vscode.svg">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#007ACC;--accent2:#1BA1E2;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#0d1117 0%,#001a33 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(0,122,204,.08),transparent);}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(0,122,204,.1);border:1px solid rgba(0,122,204,.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text);}
+  h1 span{color:var(--accent);}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .meta strong{color:var(--accent2);}
+  .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
+  .ch-bl{background:rgba(0,122,204,.1);border:1px solid rgba(0,122,204,.3);color:var(--accent);}
+  .ch-gn{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);color:var(--green);}
+  .ch-cy{background:rgba(57,197,207,.1);border:1px solid rgba(57,197,207,.3);color:var(--cyan);}
+  .ch-pu{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.3);color:var(--purple);}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px;}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .th-bl .section-header{background:rgba(0,122,204,.06);} .th-bl .section-icon{background:rgba(0,122,204,.15);} .th-bl .section-title{color:var(--accent);}
+  .th-gn .section-header{background:rgba(63,185,80,.06);} .th-gn .section-icon{background:rgba(63,185,80,.15);} .th-gn .section-title{color:var(--green);}
+  .th-cy .section-header{background:rgba(57,197,207,.06);} .th-cy .section-icon{background:rgba(57,197,207,.15);} .th-cy .section-title{color:var(--cyan);}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--purple);}
+  .th-re .section-header{background:rgba(244,112,103,.06);} .th-re .section-icon{background:rgba(244,112,103,.15);} .th-re .section-title{color:var(--red);}
+  .command-list{padding:8px 0;}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
+  .cmd-entry:last-child{border-bottom:none;}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+  .kw{color:#007ACC;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;}
+  .tip{padding:8px 16px;background:rgba(0,122,204,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip strong{color:var(--text);}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(0,122,204,.3);padding:4px 12px;border-radius:4px;background:rgba(0,122,204,.08);}
+  .nav-link:hover{background:rgba(0,122,204,.15);}
+  @media(max-width:1100px){main{columns:2;}}
+  @media(max-width:700px){main{columns:1;padding:16px;}header{padding:24px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Editor Reference</div>
+      <img src="../assets/vscode.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(32%) sepia(100%) saturate(500%) hue-rotate(185deg)">
+      <h1><span>VS Code</span> Shortcuts<br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">Ctrl+P · Ctrl+Shift+P · F5</p>
+      <div class="version-legend">
+        <div class="chip ch-bl">Shortcuts</div>
+        <div class="chip ch-gn">Debugging</div>
+        <div class="chip ch-cy">IntelliSense</div>
+        <div class="chip ch-pu">Extensions</div>
+      </div>
+    </div>
+    <div class="meta"><strong>VS Code</strong><br>Shortcuts · Debugging<br>Git · Terminal<br>IntelliSense · Config</div>
+  </div>
+</header>
+<main>
+
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">✏️</div><div class="section-title">Bearbeitung</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Grundlegendes</div><code><span class="kw">Ctrl+X</span>             <span class="cm">Ausschneiden (ohne Auswahl: ganze Zeile)</span>
+<span class="kw">Ctrl+C</span>             <span class="cm">Kopieren (ohne Auswahl: ganze Zeile)</span>
+<span class="kw">Ctrl+Z</span>             <span class="cm">Rückgängig</span>
+<span class="kw">Ctrl+Shift+Z</span>       <span class="cm">Wiederherstellen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Zeilen bearbeiten</div><code><span class="kw">Alt+↑ / Alt+↓</span>      <span class="cm">Zeile nach oben/unten verschieben</span>
+<span class="kw">Shift+Alt+↑/↓</span>      <span class="cm">Zeile duplizieren</span>
+<span class="kw">Ctrl+Shift+K</span>       <span class="cm">Zeile löschen</span>
+<span class="kw">Ctrl+Enter</span>         <span class="cm">Neue Zeile darunter einfügen</span>
+<span class="kw">Ctrl+Shift+Enter</span>   <span class="cm">Neue Zeile darüber einfügen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Kommentare & Einrückung</div><code><span class="kw">Ctrl+/</span>             <span class="cm">Zeilen-Kommentar ein/aus</span>
+<span class="kw">Shift+Alt+A</span>        <span class="cm">Block-Kommentar ein/aus</span>
+<span class="kw">Tab / Shift+Tab</span>    <span class="cm">Einrücken / Ausrücken</span>
+<span class="kw">Ctrl+]  / Ctrl+[</span>  <span class="cm">Zeile einrücken / ausrücken</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Code-Blöcke</div><code><span class="kw">Ctrl+K Ctrl+0</span>      <span class="cm">Alle Blöcke einfalten</span>
+<span class="kw">Ctrl+K Ctrl+J</span>      <span class="cm">Alle Blöcke ausfalten</span>
+<span class="kw">Ctrl+Shift+[</span>       <span class="cm">Aktuellen Block einfalten</span>
+<span class="kw">Ctrl+Shift+]</span>       <span class="cm">Aktuellen Block ausfalten</span></code></div>
+  </div>
+</div>
+
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">🖱️</div><div class="section-title">Multi-Cursor & Selektion</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Multi-Cursor setzen</div><code><span class="kw">Alt+Click</span>          <span class="cm">Cursor hinzufügen</span>
+<span class="kw">Ctrl+Alt+↑/↓</span>       <span class="cm">Cursor oben/unten einfügen</span>
+<span class="kw">Ctrl+D</span>             <span class="cm">Nächstes Vorkommen auswählen</span>
+<span class="kw">Ctrl+Shift+L</span>       <span class="cm">Alle Vorkommen auswählen</span>
+<span class="kw">Ctrl+U</span>             <span class="cm">Letzten Cursor-Schritt rückgängig</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Selektion erweitern</div><code><span class="kw">Shift+Alt+Drag</span>     <span class="cm">Box-Selektion (Spalten)</span>
+<span class="kw">Ctrl+Shift+←/→</span>    <span class="cm">Wortweise selektieren</span>
+<span class="kw">Shift+Home/End</span>     <span class="cm">Bis Zeilenanfang/-ende</span>
+<span class="kw">Ctrl+Shift+Home</span>    <span class="cm">Bis Datei-Anfang</span>
+<span class="kw">Ctrl+Shift+End</span>     <span class="cm">Bis Datei-Ende</span>
+<span class="kw">Ctrl+A</span>             <span class="cm">Alles auswählen</span></code></div>
+    <div class="tip"><strong>Tipp:</strong> Mit <strong>Ctrl+D</strong> iterativ weitere Vorkommen hinzufügen, mit <strong>Ctrl+K Ctrl+D</strong> ein Vorkommen überspringen.</div>
+  </div>
+</div>
+
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Schnellnavigation</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Quick Open</div><code><span class="kw">Ctrl+P</span>             <span class="cm">Datei öffnen (Quick Open)</span>
+<span class="kw">Ctrl+Shift+P</span>       <span class="cm">Command Palette öffnen</span>
+<span class="kw">Ctrl+G</span>             <span class="cm">Zu Zeile springen (:42)</span>
+<span class="kw">Ctrl+Shift+O</span>       <span class="cm">Symbol in Datei suchen (@)</span>
+<span class="kw">Ctrl+T</span>             <span class="cm">Symbol im Workspace suchen (#)</span>
+<span class="kw">Ctrl+R</span>             <span class="cm">Zuletzt geöffnete Workspace</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Editor-Navigation</div><code><span class="kw">Ctrl+Tab</span>           <span class="cm">Offene Tabs wechseln</span>
+<span class="kw">Alt+← / Alt+→</span>      <span class="cm">Zurück / Vor navigieren</span>
+<span class="kw">Ctrl+Home / End</span>    <span class="cm">Datei-Anfang / -Ende</span>
+<span class="kw">Ctrl+← / →</span>         <span class="cm">Wortweise springen</span>
+<span class="kw">Ctrl+M</span>             <span class="cm">Tab-Bewegung ein/aus (Accessibility)</span></code></div>
+    <div class="tip"><strong>Tipp:</strong> Im Quick Open <strong>@:</strong> für Symbole nach Kategorie gruppiert, <strong>#</strong> für globale Symbolsuche.</div>
+  </div>
+</div>
+
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🔎</div><div class="section-title">Suche & Ersetzen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">In Datei</div><code><span class="kw">Ctrl+F</span>             <span class="cm">Suchen</span>
+<span class="kw">Ctrl+H</span>             <span class="cm">Suchen und Ersetzen</span>
+<span class="kw">F3 / Shift+F3</span>      <span class="cm">Nächster / Vorheriger Treffer</span>
+<span class="kw">Alt+Enter</span>          <span class="cm">Alle Treffer auswählen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">In Dateien (global)</div><code><span class="kw">Ctrl+Shift+F</span>       <span class="cm">In Dateien suchen</span>
+<span class="kw">Ctrl+Shift+H</span>       <span class="cm">In Dateien ersetzen</span>
+<span class="kw">Ctrl+Shift+J</span>       <span class="cm">Erweiterte Suche einblenden</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Such-Modifikatoren</div><code><span class="kw">Alt+C</span>   <span class="cm">Groß-/Kleinschreibung (Match Case)</span>
+<span class="kw">Alt+W</span>   <span class="cm">Ganzes Wort</span>
+<span class="kw">Alt+R</span>   <span class="cm">Regulärer Ausdruck</span></code></div>
+  </div>
+</div>
+
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">🧭</div><div class="section-title">Code-Navigation</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Definitionen & Referenzen</div><code><span class="kw">F12</span>                <span class="cm">Zur Definition springen</span>
+<span class="kw">Alt+F12</span>            <span class="cm">Definition voranschauen (Peek)</span>
+<span class="kw">Ctrl+F12</span>           <span class="cm">Implementierungen anzeigen</span>
+<span class="kw">Shift+F12</span>          <span class="cm">Alle Referenzen anzeigen</span>
+<span class="kw">Ctrl+Shift+F10</span>     <span class="cm">Peek-Fenster schließen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Refactoring</div><code><span class="kw">F2</span>                 <span class="cm">Symbol umbenennen (Rename)</span>
+<span class="kw">Ctrl+.</span>             <span class="cm">Quick Fix / Code Actions</span>
+<span class="kw">Shift+Alt+F</span>        <span class="cm">Dokument formatieren</span>
+<span class="kw">Ctrl+K Ctrl+F</span>      <span class="cm">Selektion formatieren</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Fehler-Navigation</div><code><span class="kw">Ctrl+Shift+M</span>       <span class="cm">Probleme-Panel öffnen</span>
+<span class="kw">F8</span>                 <span class="cm">Nächster Fehler/Warnung</span>
+<span class="kw">Shift+F8</span>           <span class="cm">Vorheriger Fehler/Warnung</span></code></div>
+  </div>
+</div>
+
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">💡</div><div class="section-title">IntelliSense & Snippets</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Code-Vervollständigung</div><code><span class="kw">Ctrl+Space</span>         <span class="cm">IntelliSense auslösen</span>
+<span class="kw">Tab / Enter</span>        <span class="cm">Vorschlag übernehmen</span>
+<span class="kw">Esc</span>                <span class="cm">IntelliSense schließen</span>
+<span class="kw">Ctrl+Shift+Space</span>   <span class="cm">Signatur-Hilfe (Parameter Info)</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Dokumentation & Hover</div><code><span class="kw">Ctrl+K Ctrl+I</span>      <span class="cm">Hover-Info anzeigen</span>
+<span class="kw">Ctrl+K Ctrl+Space</span>  <span class="cm">Leerzeichen/Tabs anzeigen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Snippets</div><code><span class="kw">Tab</span>                <span class="cm">Nächster Snippet-Tabstopp</span>
+<span class="kw">Shift+Tab</span>          <span class="cm">Vorheriger Tabstopp</span>
+<span class="cm">-- Eigene Snippets: File → Preferences → Snippets</span>
+<span class="cm">-- Emmet: z.B. ul>li*3 + Tab</span></code></div>
+    <div class="tip"><strong>Tipp:</strong> Emmet ist eingebaut — HTML/CSS-Abkürzungen mit Tab expandieren.</div>
+  </div>
+</div>
+
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">📑</div><div class="section-title">Editor-Verwaltung</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Tabs</div><code><span class="kw">Ctrl+W</span>             <span class="cm">Tab schließen</span>
+<span class="kw">Ctrl+Shift+T</span>       <span class="cm">Letzten Tab wiederherstellen</span>
+<span class="kw">Ctrl+K Ctrl+W</span>      <span class="cm">Alle Tabs schließen</span>
+<span class="kw">Ctrl+PageUp/Dn</span>     <span class="cm">Vorheriger / Nächster Tab</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Split & Gruppen</div><code><span class="kw">Ctrl+\</span>             <span class="cm">Editor teilen (Split Right)</span>
+<span class="kw">Ctrl+K Ctrl+\</span>      <span class="cm">Editor vertikal/horizontal teilen</span>
+<span class="kw">Ctrl+1 / 2 / 3</span>    <span class="cm">Editor-Gruppe 1/2/3 fokussieren</span>
+<span class="kw">Ctrl+K ← / →</span>      <span class="cm">Tab in andere Gruppe verschieben</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Ansichtsmodi</div><code><span class="kw">Ctrl+K Z</span>           <span class="cm">Zen-Modus (fokussiert)</span>
+<span class="kw">F11</span>                <span class="cm">Vollbild</span>
+<span class="kw">Ctrl+= / Ctrl+-</span>    <span class="cm">Zoom rein / raus</span>
+<span class="kw">Ctrl+Numpad0</span>       <span class="cm">Zoom zurücksetzen</span></code></div>
+  </div>
+</div>
+
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🖥️</div><div class="section-title">Integriertes Terminal</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Terminal öffnen</div><code><span class="kw">Ctrl+`</span>             <span class="cm">Terminal ein-/ausblenden</span>
+<span class="kw">Ctrl+Shift+`</span>       <span class="cm">Neues Terminal erstellen</span>
+<span class="kw">Ctrl+Shift+5</span>       <span class="cm">Terminal teilen</span>
+<span class="kw">Ctrl+PageUp/Dn</span>     <span class="cm">Zwischen Terminals wechseln</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Im Terminal</div><code><span class="kw">Ctrl+C</span>             <span class="cm">Prozess abbrechen</span>
+<span class="kw">Ctrl+Home / End</span>    <span class="cm">Zum Verlaufs-Anfang/-Ende</span>
+<span class="kw">Ctrl+↑ / ↓</span>        <span class="cm">Zeile scrollen</span>
+<span class="kw">Ctrl+Shift+C/V</span>     <span class="cm">Kopieren / Einfügen</span></code></div>
+    <div class="tip"><strong>Tipp:</strong> Mehrere Terminal-Profile (bash, PowerShell, fish) über das <strong>+</strong>-Dropdown wählbar.</div>
+  </div>
+</div>
+
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">🐛</div><div class="section-title">Debugging</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Steuerung</div><code><span class="kw">F5</span>                 <span class="cm">Debuggen starten / fortfahren</span>
+<span class="kw">Shift+F5</span>           <span class="cm">Debuggen stoppen</span>
+<span class="kw">Ctrl+Shift+F5</span>      <span class="cm">Debuggen neu starten</span>
+<span class="kw">F9</span>                 <span class="cm">Breakpoint setzen / entfernen</span>
+<span class="kw">Ctrl+Shift+D</span>       <span class="cm">Debug-Panel öffnen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Schritte</div><code><span class="kw">F10</span>                <span class="cm">Step Over (nächste Zeile)</span>
+<span class="kw">F11</span>                <span class="cm">Step Into (hineinspringen)</span>
+<span class="kw">Shift+F11</span>          <span class="cm">Step Out (herausspringen)</span>
+<span class="kw">Ctrl+Shift+Y</span>       <span class="cm">Debug Console öffnen</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">launch.json</div><code><span class="cm">-- Konfiguration: .vscode/launch.json</span>
+{
+  <span class="kw">"type"</span>: <span class="st">"node"</span>,
+  <span class="kw">"request"</span>: <span class="st">"launch"</span>,
+  <span class="kw">"program"</span>: <span class="st">"${workspaceFolder}/index.js"</span>
+}</code></div>
+  </div>
+</div>
+
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">🌿</div><div class="section-title">Git & Source Control</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Aktionen</div><code><span class="kw">Ctrl+Shift+G</span>       <span class="cm">Source Control öffnen</span>
+<span class="kw">Ctrl+Enter</span>         <span class="cm">Commit (im SC-Eingabefeld)</span>
+<span class="kw">F7 / Shift+F7</span>      <span class="cm">Nächste / Vorherige Diff-Änderung</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Gutter-Indikatoren</div><code><span class="st">█ Grün</span>   <span class="cm">Neue Zeilen (hinzugefügt)</span>
+<span class="kw">█ Blau</span>   <span class="cm">Geänderte Zeilen</span>
+<span class="nu">▸ Rot</span>    <span class="cm">Gelöschte Zeilen (Pfeil am Gutter)</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Git-CLI im Terminal</div><code>git <span class="fn">status</span>             <span class="cm"># Änderungen anzeigen</span>
+git <span class="fn">add</span> -p              <span class="cm"># Interaktives Staging</span>
+git <span class="fn">commit</span> -m <span class="st">"msg"</span>    <span class="cm"># Commit</span>
+git <span class="fn">stash</span> / <span class="fn">pop</span>        <span class="cm"># Stash</span></code></div>
+    <div class="tip"><strong>Tipp:</strong> GitLens-Extension erweitert die Git-Integration erheblich (Blame, History, PR-Workflow).</div>
+  </div>
+</div>
+
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">🪟</div><div class="section-title">Anzeige & Panels</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Seitenleiste</div><code><span class="kw">Ctrl+B</span>             <span class="cm">Seitenleiste ein/aus</span>
+<span class="kw">Ctrl+Shift+E</span>       <span class="cm">Explorer</span>
+<span class="kw">Ctrl+Shift+F</span>       <span class="cm">Suche</span>
+<span class="kw">Ctrl+Shift+G</span>       <span class="cm">Source Control</span>
+<span class="kw">Ctrl+Shift+D</span>       <span class="cm">Debug</span>
+<span class="kw">Ctrl+Shift+X</span>       <span class="cm">Extensions</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Panel (unten)</div><code><span class="kw">Ctrl+J</span>             <span class="cm">Panel ein/aus</span>
+<span class="kw">Ctrl+`</span>             <span class="cm">Terminal-Panel</span>
+<span class="kw">Ctrl+Shift+M</span>       <span class="cm">Probleme-Panel</span>
+<span class="kw">Ctrl+Shift+U</span>       <span class="cm">Ausgabe-Panel</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Breadcrumbs & Minimap</div><code><span class="cm">-- Breadcrumbs: View → Show Breadcrumbs</span>
+<span class="cm">-- Minimap: View → Toggle Minimap</span>
+<span class="cm">-- "editor.minimap.enabled": false (settings)</span></code></div>
+  </div>
+</div>
+
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">Konfiguration & Extensions</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Einstellungen</div><code><span class="kw">Ctrl+,</span>             <span class="cm">Einstellungen öffnen (GUI)</span>
+<span class="kw">Ctrl+K Ctrl+S</span>      <span class="cm">Tastenkombinationen bearbeiten</span>
+<span class="kw">Ctrl+Shift+P</span>       <span class="cm">→ "Open User Settings (JSON)"</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Workspace-Dateien</div><code>.vscode/settings.json   <span class="cm">-- Workspace-Einstellungen</span>
+.vscode/launch.json     <span class="cm">-- Debug-Konfigurationen</span>
+.vscode/tasks.json      <span class="cm">-- Task-Runner</span>
+.vscode/extensions.json <span class="cm">-- Empfohlene Extensions</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Extensions per CLI</div><code>code <span class="fn">--install-extension</span> ms-python.python
+code <span class="fn">--list-extensions</span>
+code <span class="fn">--disable-extension</span> NAME
+code <span class="fn">--uninstall-extension</span> NAME</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Nützliche Extensions</div><code><span class="st">ms-python.python</span>        <span class="cm">Python</span>
+<span class="st">eamodio.gitlens</span>         <span class="cm">GitLens</span>
+<span class="st">esbenp.prettier-vscode</span>  <span class="cm">Prettier</span>
+<span class="st">ms-vscode.remote-ssh</span>    <span class="cm">Remote SSH</span>
+<span class="st">dbaeumer.vscode-eslint</span>  <span class="cm">ESLint</span>
+<span class="st">ms-azuretools.vscode-docker</span> <span class="cm">Docker</span></code></div>
+    <div class="tip"><strong>Tipp:</strong> Settings Sync (eingebaut) synchronisiert Einstellungen, Extensions und Keybindings über GitHub-Account.</div>
+  </div>
+</div>
+
+</main>
+<footer style="text-align:center;padding:24px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#7d8590;">
+TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide · VS Code · Shortcuts · Debugging · Extensions
+</footer>
+</body>
+</html>

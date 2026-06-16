@@ -1,6 +1,6 @@
 # Sheet-Inventar — TheLayer0Guide
 
-Vollständige Liste aller 88 Sheets. Stand: 2026-06-16.
+Vollständige Liste aller 89 Sheets. Stand: 2026-06-16.
 
 ---
 
@@ -76,7 +76,7 @@ Vollständige Liste aller 88 Sheets. Stand: 2026-06-16.
 
 ---
 
-## Dev & Automation (15)
+## Dev & Automation (16)
 
 | Datei | Titel | `--accent` |
 |---|---|---|
@@ -95,6 +95,7 @@ Vollständige Liste aller 88 Sheets. Stand: 2026-06-16.
 | `json-cheatsheet.html` | JSON | `#f59e0b` |
 | `yaml-cheatsheet.html` | YAML | `#6366f1` |
 | `markdown-cheatsheet.html` | Markdown / GFM | `#4078C8` |
+| `vscode-cheatsheet.html` | VS Code | `#007ACC` |
 
 ---
 
