@@ -175,7 +175,7 @@ acl <span class="val">is_host</span>    hdr(host) -i api.example.com</code>
 use_backend <span class="val">static-servers</span> if <span class="val">is_static</span>
 use_backend <span class="val">api-servers</span>    if <span class="val">is_host</span>
 http-request deny             if !<span class="val">is_local</span>
-http-request redirect location <span class="val">https://%[hdr(Host)]%[capture.req.uri]</span></code>
+http-request redirect location <span class="val">https://%[hdr(Host)]%[req.uri]</span></code>
     </div>
     <div class="cmd-entry">
       <div class="cmd-desc">Header manipulieren</div>

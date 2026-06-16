@@ -78,7 +78,7 @@
 <span class="kw">literal</span>:  <span class="st">'kein Escape: \n'</span>   <span class="cm"># single quote</span>
 <span class="kw">integer</span>:  <span class="nu">42</span>
 <span class="kw">float</span>:    <span class="nu">3.14</span>
-<span class="kw">bool</span>:     <span class="tp">true</span>                <span class="cm"># false | yes | no</span>
+<span class="kw">bool</span>:     <span class="tp">true</span>                <span class="cm"># YAML 1.1: yes | no | on | off auch bool</span>
 <span class="kw">null</span>:     <span class="tp">null</span>                <span class="cm"># ~ ist auch null</span>
 <span class="kw">datum</span>:    <span class="nu">2025-01-15</span>          <span class="cm"># ISO 8601</span></code></div>
     <div class="cmd-entry"><div class="cmd-desc">Explizite Typen (Tags)</div><code><span class="kw">als_string</span>: <span class="tp">!!str</span> <span class="nu">42</span>          <span class="cm"># Zahl → String</span>
@@ -191,7 +191,7 @@ yaml.<span class="fn">dump_all</span>([doc1, doc2], f)</code></div>
 
 <span class="cm"># Weitere Booleans in YAML 1.1:</span>
 <span class="cm"># yes, no, on, off, true, false (und Großbuchstaben)</span>
-<span class="cm"># YAML 1.2 (PyYAML >= 6.0): nur true/false</span></code></div>
+<span class="cm"># YAML 1.2 (ruamel.yaml): nur true/false — PyYAML bleibt YAML 1.1</span></code></div>
     <div class="cmd-entry"><div class="cmd-desc">Einrückung & Tabulatoren</div><code><span class="cm"># NIEMALS Tabs zur Einrückung!</span>
 <span class="cm"># Nur Leerzeichen erlaubt</span>
 <span class="cm"># Einrücktiefe konsistent halten (2 oder 4)</span>

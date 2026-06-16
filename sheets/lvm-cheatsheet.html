@@ -186,7 +186,7 @@
       <code><span class="cm"># RAID1 (Mirror):</span>
 <span class="kw">lvcreate</span> <span class="fl">--type</span> raid1 <span class="fl">-m</span> 1 \
     <span class="fl">-L</span> 50G <span class="fl">-n</span> lv_mirror vg_data
-<span class="cm"># RAID5 (3+ Disks):</span>
+<span class="cm"># RAID5 (4+ Disks, -i 3 Stripes + 1 Parität):</span>
 <span class="kw">lvcreate</span> <span class="fl">--type</span> raid5 <span class="fl">-i</span> 3 \
     <span class="fl">-L</span> 100G <span class="fl">-n</span> lv_raid5 vg_data
 <span class="cm"># RAID-Status:</span>

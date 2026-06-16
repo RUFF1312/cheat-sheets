@@ -218,7 +218,7 @@
   <span class="fl">--noautoconsole</span></code></div>
     <div class="cmd-entry"><div class="cmd-desc">OS-Varianten auflisten</div>
 <code><span class="kw">osinfo-query</span> os | <span class="kw">grep</span> <span class="val">ubuntu</span>
-<span class="kw">virt-install</span> <span class="fl">--os-variant</span> <span class="val">list</span></code></div>
+<span class="kw">osinfo-query</span> os <span class="fl">--fields</span>=short-id,name | <span class="kw">grep</span> <span class="val">debian</span></code></div>
   </div>
   <div class="tip">💡 <strong>--graphics none --console pty</strong> für reine CLI-VMs ohne VNC</div>
 </div>

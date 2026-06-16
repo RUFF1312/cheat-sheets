@@ -103,14 +103,17 @@
 <span class="kw">component</span>      <span class="cm">-- Komponenten-Name</span>
 <span class="kw">fixVersion</span>     <span class="cm">-- Release-Version</span>
 <span class="kw">sprint</span>         <span class="cm">-- Sprint-Name oder openSprints()</span>
-<span class="kw">epic link</span>      <span class="cm">-- Epic-Key</span>
+<span class="kw">"Epic Link"</span>    <span class="cm">-- Epic-Key (Classic; in Quotes wegen Leerzeichen)</span>
 <span class="kw">summary</span>        <span class="cm">-- Titel (nur ~)</span>
 <span class="kw">text</span>           <span class="cm">-- Volltext (summary + desc + comments)</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Operatoren</div><code>=  !=  ~  !~         <span class="cm">-- gleich, ungleich, enthält</span>
-&lt;  &lt;=  &gt;  &gt;=         <span class="cm">-- Vergleich (Datum, Prio)</span>
-<span class="op">in</span>  <span class="op">not in</span>           <span class="cm">-- Listenwert</span>
-<span class="op">is</span>  <span class="op">is not</span>           <span class="cm">-- NULL/EMPTY Prüfung</span>
-~                     <span class="cm">-- Textsuche (Wildcard mit *)</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Operatoren</div><code><span class="op">=</span>   <span class="op">!=</span>                <span class="cm">-- gleich / ungleich</span>
+<span class="op">~</span>   <span class="op">!~</span>                <span class="cm">-- enthält / enthält nicht (Textfelder)</span>
+<span class="op">&lt;</span>   <span class="op">&lt;=</span>   <span class="op">&gt;</span>   <span class="op">&gt;=</span>   <span class="cm">-- Vergleich (Datum, Priorität)</span>
+<span class="op">in</span>  <span class="op">not in</span>           <span class="cm">-- Listenwert (mehrere Werte)</span>
+<span class="op">is</span>  <span class="op">is not</span>           <span class="cm">-- NULL / EMPTY-Prüfung</span>
+<span class="op">was</span>  <span class="op">was in</span>          <span class="cm">-- historischer Feldwert</span>
+<span class="op">was not</span>              <span class="cm">-- historisch nie in diesem Status</span>
+<span class="op">changed</span>              <span class="cm">-- Feld hat sich geändert</span></code></div>
   </div>
 </div>
 
@@ -158,7 +161,7 @@
     <div class="cmd-entry"><div class="cmd-desc">Meine offenen Tickets</div><code><span class="kw">assignee</span> = currentUser() <span class="op">AND</span>
   <span class="kw">status</span> <span class="op">not in</span> (Done, Closed, Resolved)
   <span class="op">ORDER BY</span> <span class="kw">priority</span> <span class="op">DESC</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Überfällige Tickets</div><code><span class="kw">duedate</span> <span class="op">&lt;</span> now() <span class="op">AND</span>
+    <div class="cmd-entry"><div class="cmd-desc">Überfällige Tickets</div><code><span class="kw">duedate</span> <span class="op">&lt;</span> <span class="fn">startOfDay</span>() <span class="op">AND</span>
   <span class="kw">status</span> <span class="op">not in</span> (Done, Closed)
   <span class="op">ORDER BY</span> <span class="kw">duedate</span> <span class="op">ASC</span></code></div>
     <div class="cmd-entry"><div class="cmd-desc">Bugs im aktuellen Sprint</div><code><span class="kw">project</span> = MYPROJ <span class="op">AND</span>
@@ -167,7 +170,7 @@
   <span class="kw">status</span> <span class="op">!=</span> Done
   <span class="op">ORDER BY</span> <span class="kw">priority</span> <span class="op">DESC</span></code></div>
     <div class="cmd-entry"><div class="cmd-desc">Kürzlich aktualisiert</div><code><span class="kw">project</span> = MYPROJ <span class="op">AND</span>
-  <span class="kw">updated</span> <span class="op">>=</span> <span class="st">"-24h"</span>
+  <span class="kw">updated</span> <span class="op">>=</span> <span class="st">"-1d"</span>
   <span class="op">ORDER BY</span> <span class="kw">updated</span> <span class="op">DESC</span></code></div>
     <div class="tip"><strong>Tipp:</strong> Gespeicherte Filter in Jira (Filters → View all filters) können als Dashboard-Gadget-Quelle oder per REST-ID abgerufen werden.</div>
   </div>
@@ -212,7 +215,7 @@ curl -su "$AUTH" -X POST \
   <div class="section-header"><div class="section-icon">💻</div><div class="section-title">atlas CLI</div></div>
   <div class="command-list">
     <div class="cmd-entry"><div class="cmd-desc">Setup</div><code><span class="cm"># Installation (npm):</span>
-npm install -g @atlassianlabs/atlas
+npm install -g @atlassian/atlas
 atlas login
 
 <span class="cm"># Oder über curl:</span>

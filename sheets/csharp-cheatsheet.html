@@ -199,7 +199,7 @@ obj ??= <span class="kw">new</span> SomeClass();         <span class="cm">// nul
 {
     <span class="kw">var</span> result = <span class="kw">await</span> <span class="fn">DoWorkAsync</span>();
 }
-<span class="kw">catch</span> (HttpException ex) <span class="kw">when</span> (ex.StatusCode == <span class="nu">404</span>)
+<span class="kw">catch</span> (<span class="tp">HttpRequestException</span> ex) <span class="kw">when</span> ((<span class="kw">int</span>?)ex.StatusCode == <span class="nu">404</span>)
 {
     <span class="cm">// filter-Klausel</span>
 }

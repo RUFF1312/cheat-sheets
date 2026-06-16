@@ -104,7 +104,7 @@
 <span class="kw">Ctrl+X</span>   <span class="cm">Ausschneiden</span>
 <span class="kw">Ctrl+V</span>   <span class="cm">Einfügen</span></code></div>
     <div class="cmd-entry"><div class="cmd-desc">Sonderaktionen</div><code><span class="kw">Ctrl+;</span>      <span class="cm">Aktuelles Datum einfügen</span>
-<span class="kw">Ctrl+:</span>      <span class="cm">Aktuelle Uhrzeit einfügen</span>
+<span class="kw">Ctrl+Shift+;</span>  <span class="cm">Aktuelle Uhrzeit einfügen</span>
 <span class="kw">Ctrl+1</span>      <span class="cm">Zellen formatieren (Dialog)</span>
 <span class="kw">Alt+H+H</span>     <span class="cm">Hintergrundfarbe</span></code></div>
   </div>
@@ -135,7 +135,8 @@
 =<span class="fn">IFERROR</span>(A2/B2, <span class="nu">0</span>)
 =<span class="fn">SWITCH</span>(A2, <span class="nu">1</span>,<span class="st">"Jan"</span>, <span class="nu">2</span>,<span class="st">"Feb"</span>, <span class="st">"?"</span>)</code></div>
     <div class="cmd-entry"><div class="cmd-desc">Aggregation mit Bedingung</div><code>=<span class="fn">SUMIF</span>(B:B, <span class="st">"Ja"</span>, C:C)
-=<span class="fn">SUMIFS</span>(C:C, A:A, <span class="st">"DE"</span>, B:B, <span class="st">"&gt;2023"</span>)
+=<span class="fn">SUMIFS</span>(C:C, A:A, <span class="st">"DE"</span>, B:B, <span class="st">"&gt;2023"</span>)          <span class="cm">-- B = Jahreszahl</span>
+=<span class="fn">SUMIFS</span>(C:C, A:A, <span class="st">"DE"</span>, D:D, <span class="st">"&gt;="</span>&amp;<span class="fn">DATE</span>(2024,1,1)) <span class="cm">-- D = Datum</span>
 =<span class="fn">COUNTIF</span>(A:A, <span class="st">"&gt;0"</span>)
 =<span class="fn">COUNTIFS</span>(A:A, <span class="st">"&gt;0"</span>, B:B, <span class="st">"Aktiv"</span>)
 =<span class="fn">AVERAGEIF</span>(B:B, <span class="st">"&lt;&gt;0"</span>, C:C)</code></div>

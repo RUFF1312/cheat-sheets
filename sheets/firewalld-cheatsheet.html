@@ -143,8 +143,8 @@ firewall-cmd --permanent \
     <div class="cmd-entry"><div class="cmd-desc">IP blockieren</div><code>firewall-cmd --permanent --add-rich-rule=\
 <span class="st">'rule family="ipv4" source address="1.2.3.4" reject'</span>
 
-<span class="cm"># Oder mit ipset:</span>
-firewall-cmd --permanent --add-ipset=blocklist
+<span class="cm"># Oder mit ipset (erstellen + Eintrag):</span>
+firewall-cmd --permanent --new-ipset=blocklist --type=hash:ip
 firewall-cmd --permanent \
   --ipset=blocklist --add-entry=1.2.3.4</code></div>
     <div class="cmd-entry"><div class="cmd-desc">Logging</div><code>firewall-cmd --permanent --add-rich-rule=\

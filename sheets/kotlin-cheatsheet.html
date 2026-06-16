@@ -105,7 +105,7 @@ s!!.<span class="fn">length</span>                 <span class="cm">// not-null 
     <div class="cmd-entry"><div class="cmd-desc">sealed class</div><code><span class="kw">sealed class</span> <span class="tp">Result</span>&lt;<span class="kw">out</span> <span class="tp">T</span>&gt;
 <span class="kw">data class</span> <span class="tp">Success</span>&lt;<span class="tp">T</span>&gt;(<span class="kw">val</span> data: <span class="tp">T</span>) : <span class="tp">Result</span>&lt;<span class="tp">T</span>&gt;()
 <span class="kw">data class</span> <span class="tp">Error</span>(<span class="kw">val</span> msg: <span class="tp">String</span>) : <span class="tp">Result</span>&lt;<span class="tp">Nothing</span>&gt;()</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">object & companion</div><code><span class="kw">object</span> <span class="tp">Singleton</span> { <span class="kw">fun</span> <span class="fn">do</span>() = <span class="st">"ok"</span> }
+    <div class="cmd-entry"><div class="cmd-desc">object & companion</div><code><span class="kw">object</span> <span class="tp">Singleton</span> { <span class="kw">fun</span> <span class="fn">greet</span>() = <span class="st">"ok"</span> }
 <span class="kw">companion object</span> {
     <span class="kw">fun</span> <span class="fn">create</span>() = <span class="tp">Person</span>(<span class="st">"Alice"</span>, <span class="nu">30</span>)
 }</code></div>

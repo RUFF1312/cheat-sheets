@@ -146,9 +146,9 @@ df.<span class="fn">groupby</span>(<span class="st">'stadt'</span>).<span class=
 <span class="kw">mlr</span> <span class="fl">--csv</span> <span class="fn">sort</span> <span class="fl">-nr</span> alter data.csv  <span class="cm"># numerisch rev.</span>
 <span class="kw">mlr</span> <span class="fl">--csv</span> <span class="fn">cut</span> <span class="fl">-f</span> name,alter data.csv
 <span class="kw">mlr</span> <span class="fl">--csv</span> <span class="fn">filter</span> <span class="st">'$alter &gt; 30'</span> data.csv</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Transformieren</div><code><span class="kw">mlr</span> <span class="fl">--csv</span> <span class="fn">put</span> <span class="st">'$voll = $name . " " . $stadt'</span>
+    <div class="cmd-entry"><div class="cmd-desc">Transformieren</div><code><span class="kw">mlr</span> <span class="fl">--csv</span> <span class="fn">put</span> <span class="st">'$voll = $name . " " . $stadt'</span> data.csv
 <span class="kw">mlr</span> <span class="fl">--csv</span> <span class="fn">rename</span> alter,age data.csv
-<span class="kw">mlr</span> <span class="fl">--csv</span> <span class="fn">stats1</span> <span class="fl">-a</span> mean,sum <span class="fl">-f</span> alter <span class="fl">-g</span> stadt
+<span class="kw">mlr</span> <span class="fl">--csv</span> <span class="fn">stats1</span> <span class="fl">-a</span> mean,sum <span class="fl">-f</span> alter <span class="fl">-g</span> stadt data.csv
 <span class="kw">mlr</span> <span class="fl">--icsv</span> <span class="fl">--ojson</span> <span class="fn">cat</span> data.csv  <span class="cm"># → JSON</span></code></div>
   </div>
 </div>

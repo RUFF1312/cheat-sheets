@@ -87,7 +87,7 @@ docker compose up -d --build   <span class="cm"># build + start</span></code></d
 docker compose logs -f
 docker compose logs -f web     <span class="cm"># Service-spez.</span>
 docker compose top</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Skalierung & Exec</div><code>docker compose scale web=3
+    <div class="cmd-entry"><div class="cmd-desc">Skalierung & Exec</div><code>docker compose up --scale web=3
 docker compose exec web bash
 docker compose run --rm web pytest
 docker compose restart web</code></div>

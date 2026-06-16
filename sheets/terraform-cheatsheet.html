@@ -321,10 +321,14 @@
     </div>
     <div class="cmd-entry">
       <div class="cmd-desc">Iteration über mehrere Ressourcen</div>
-      <code><span class="kw">resource</span> <span class="st">"openstack_compute_instance_v2"</span> <span class="st">"vms"</span> {
+      <code><span class="cm"># count — Index-basiert:</span>
+<span class="kw">resource</span> <span class="st">"openstack_compute_instance_v2"</span> <span class="st">"vms"</span> {
   count = <span class="nu">3</span>
   name  = <span class="st">"vm-${count.index}"</span>
-  <span class="cm"># oder with for_each:</span>
+}
+
+<span class="cm"># for_each — Key-basiert (nicht mit count mischbar):</span>
+<span class="kw">resource</span> <span class="st">"openstack_compute_instance_v2"</span> <span class="st">"nodes"</span> {
   for_each = <span class="var">toset(["web", "db", "cache"])</span>
   name     = <span class="st">"${each.key}-node"</span>
 }</code>
