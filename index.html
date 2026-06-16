@@ -202,6 +202,17 @@
   .c-glance{--ac:#9c5cc7;--acs:rgba(156,92,199,0.15);--acb:rgba(156,92,199,0.25)}
   .c-keystone{--ac:#d4a017;--acs:rgba(212,160,23,0.15);--acb:rgba(212,160,23,0.25)}
   .c-heat{--ac:#e0652a;--acs:rgba(224,101,42,0.15);--acb:rgba(224,101,42,0.25)}
+  /* MS Office */
+  .c-word{--ac:#2B579A;--acs:rgba(43,87,154,0.15);--acb:rgba(43,87,154,0.25)}
+  .c-excel{--ac:#217346;--acs:rgba(33,115,70,0.15);--acb:rgba(33,115,70,0.25)}
+  .c-powerpoint{--ac:#D24726;--acs:rgba(210,71,38,0.15);--acb:rgba(210,71,38,0.25)}
+  .c-outlook{--ac:#0078D4;--acs:rgba(0,120,212,0.15);--acb:rgba(0,120,212,0.25)}
+  .c-vba{--ac:#7B3FA0;--acs:rgba(123,63,160,0.15);--acb:rgba(123,63,160,0.25)}
+  /* Datenformate */
+  .c-csv{--ac:#16a34a;--acs:rgba(22,163,74,0.15);--acb:rgba(22,163,74,0.25)}
+  .c-json{--ac:#f59e0b;--acs:rgba(245,158,11,0.15);--acb:rgba(245,158,11,0.25)}
+  .c-yaml{--ac:#6366f1;--acs:rgba(99,102,241,0.15);--acb:rgba(99,102,241,0.25)}
+  .c-markdown{--ac:#4078C8;--acs:rgba(64,120,200,0.15);--acb:rgba(64,120,200,0.25)}
 
   .card .card-accent{background:var(--ac)}
   .card:hover{border-color:var(--ac)}
@@ -222,6 +233,7 @@
   .pill[data-filter="Cloud & Infra"].active{border-color:#0db7ed;color:#0db7ed;background:rgba(13,183,237,.08)}
   .pill[data-filter="Datenbanken"].active{border-color:#f0c040;color:#f0c040;background:rgba(240,192,64,.08)}
   .pill[data-filter="VMware"].active{border-color:#5ba8e0;color:#5ba8e0;background:rgba(0,125,193,.08)}
+  .pill[data-filter="MS Office"].active{border-color:#0078D4;color:#0078D4;background:rgba(0,120,212,.08)}
   .pill-count{opacity:.55;margin-left:5px}
   /* SUBGROUP PILLS */
   .toolbar-subgroups{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
@@ -257,19 +269,20 @@
   <div class="header-eyebrow">Developer Reference Collection</div>
   <h1><span class="h1-accent">TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span></span><br>Guide</h1>
   <p class="header-sub">Alle Referenz-Sheets auf einen Blick — dark-themed, vollständig, offline-fähig.</p>
-  <div class="header-count"><span>79</span> Sheets · CLI · Scripting · DevOps · OpenStack · VMware · Coding</div>
+  <div class="header-count"><span>88</span> Sheets · CLI · Scripting · DevOps · OpenStack · VMware · Coding</div>
 </header>
 
 <main>
   <div class="toolbar">
     <div class="toolbar-filters">
-      <button class="pill active" data-filter="all">Alle <span class="pill-count">79</span></button>
+      <button class="pill active" data-filter="all">Alle <span class="pill-count">88</span></button>
       <button class="pill" data-filter="Programmiersprachen">Sprachen <span class="pill-count">13</span></button>
-      <button class="pill" data-filter="Dev & Automation">Dev &amp; Automation <span class="pill-count">11</span></button>
+      <button class="pill" data-filter="Dev & Automation">Dev &amp; Automation <span class="pill-count">15</span></button>
       <button class="pill" data-filter="System & Netz">System &amp; Netz <span class="pill-count">17</span></button>
       <button class="pill" data-filter="Datenbanken">Datenbanken <span class="pill-count">4</span></button>
       <button class="pill" data-filter="Cloud & Infra">Cloud &amp; Infra <span class="pill-count">30</span></button>
       <button class="pill" data-filter="VMware">VMware <span class="pill-count">4</span></button>
+      <button class="pill" data-filter="MS Office">MS Office <span class="pill-count">5</span></button>
     </div>
     <div class="toolbar-subgroups">
       <span class="subgroup-label">↳ Subgruppe:</span>
@@ -1521,6 +1534,141 @@
       </div>
     </a>
 
+    <a href="sheets/word-cheatsheet.html" class="card c-word" data-title="Microsoft Word" data-group="MS Office">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/word.svg" alt="word.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">Microsoft Word</div>
+        </div>
+        <div class="card-tagline">Ctrl+B · Ctrl+H · Alt+Ctrl+1 -- Shortcuts &amp; Styles<br>Navigation · Tabellen · Felder · Überarbeitungen</div>
+        <div class="card-tags">
+          <span class="tag">Shortcuts</span><span class="tag">Formatierung</span><span class="tag">Styles</span><span class="tag">Office</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/excel-cheatsheet.html" class="card c-excel" data-title="Microsoft Excel" data-group="MS Office">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/excel.svg" alt="excel.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">Microsoft Excel</div>
+        </div>
+        <div class="card-tagline">=XLOOKUP() · =SUMIFS() · PivotTable -- Formeln<br>Navigation · Daten · Shortcuts · Power Query</div>
+        <div class="card-tags">
+          <span class="tag">Formeln</span><span class="tag">Shortcuts</span><span class="tag">PivotTable</span><span class="tag">Office</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/powerpoint-cheatsheet.html" class="card c-powerpoint" data-title="PowerPoint" data-group="MS Office">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/powerpoint.svg" alt="powerpoint.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">PowerPoint</div>
+        </div>
+        <div class="card-tagline">F5 · Shift+F5 · B/W · Ctrl+G -- Präsentation<br>Folien · Animation · Objekte · Folienmaster</div>
+        <div class="card-tags">
+          <span class="tag">Shortcuts</span><span class="tag">Folien</span><span class="tag">Präsentation</span><span class="tag">Office</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/outlook-cheatsheet.html" class="card c-outlook" data-title="Microsoft Outlook" data-group="MS Office">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/outlook.svg" alt="outlook.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">Microsoft Outlook</div>
+        </div>
+        <div class="card-tagline">Ctrl+N · Ctrl+R · Ctrl+E -- E-Mail &amp; Kalender<br>Suche · Regeln · Quick Steps · Kategorien</div>
+        <div class="card-tags">
+          <span class="tag">E-Mail</span><span class="tag">Kalender</span><span class="tag">Shortcuts</span><span class="tag">Office</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/vba-cheatsheet.html" class="card c-vba" data-title="VBA / Visual Basic" data-group="MS Office">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/vba.svg" alt="vba.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">VBA / Visual Basic</div>
+        </div>
+        <div class="card-tagline">Sub Macro() · Range("A1") · MsgBox -- Automation<br>Variablen · Schleifen · Objekte · Fehlerbehandlung</div>
+        <div class="card-tags">
+          <span class="tag">VBA</span><span class="tag">Makros</span><span class="tag">Excel</span><span class="tag">Automation</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/csv-cheatsheet.html" class="card c-csv" data-title="CSV / Tabellarische Daten" data-group="Dev & Automation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/csv.svg" alt="csv.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">CSV / Tabellarische Daten</div>
+        </div>
+        <div class="card-tagline">csvstat · csvkit · mlr · pandas -- RFC 4180<br>Python csv · Encoding · Trennzeichen · Miller</div>
+        <div class="card-tags">
+          <span class="tag">CSV</span><span class="tag">Python</span><span class="tag">csvkit</span><span class="tag">Datenformat</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/json-cheatsheet.html" class="card c-json" data-title="JSON" data-group="Dev & Automation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/json.svg" alt="json.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">JSON</div>
+        </div>
+        <div class="card-tagline">jq · Python json · JSON Schema -- RFC 8259<br>Syntax · Validierung · REST API · jq-Filter</div>
+        <div class="card-tags">
+          <span class="tag">JSON</span><span class="tag">jq</span><span class="tag">Schema</span><span class="tag">Datenformat</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/yaml-cheatsheet.html" class="card c-yaml" data-title="YAML" data-group="Dev & Automation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/yaml.svg" alt="yaml.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">YAML</div>
+        </div>
+        <div class="card-tagline">Anchors · Aliases · Multiline -- YAML 1.2<br>Skalare · Mappings · PyYAML · Fallstricke</div>
+        <div class="card-tags">
+          <span class="tag">YAML</span><span class="tag">Ansible</span><span class="tag">Kubernetes</span><span class="tag">Datenformat</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/markdown-cheatsheet.html" class="card c-markdown" data-title="Markdown / GFM" data-group="Dev & Automation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/markdown.svg" alt="markdown.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">Markdown / GFM</div>
+        </div>
+        <div class="card-tagline"># · **bold** · `code` · [link](url) -- CommonMark<br>GFM · Tabellen · Front Matter · GitHub Alerts</div>
+        <div class="card-tags">
+          <span class="tag">Markdown</span><span class="tag">GFM</span><span class="tag">CommonMark</span><span class="tag">Datenformat</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
   </div>
 </main>
 
@@ -1537,14 +1685,15 @@
     cards.forEach((c, i) => c.dataset.order = i);
 
     // Group display order + color
-    const GROUP_ORDER = ['Programmiersprachen', 'Dev & Automation', 'System & Netz', 'Datenbanken', 'Cloud & Infra', 'VMware'];
+    const GROUP_ORDER = ['Programmiersprachen', 'Dev & Automation', 'System & Netz', 'Datenbanken', 'Cloud & Infra', 'VMware', 'MS Office'];
     const GROUP_COLOR = {
       'Programmiersprachen': '#f7df1e',
       'Dev & Automation':    '#a371f7',
       'System & Netz':       '#3fb950',
       'Datenbanken':         '#f0c040',
       'Cloud & Infra':       '#0db7ed',
-      'VMware':              '#5ba8e0'
+      'VMware':              '#5ba8e0',
+      'MS Office':           '#0078D4'
     };
 
     let activeFilter = 'all';

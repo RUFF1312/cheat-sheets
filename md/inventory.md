@@ -1,6 +1,6 @@
 # Sheet-Inventar — TheLayer0Guide
 
-Vollständige Liste aller 79 Sheets. Stand: 2026-06-16.
+Vollständige Liste aller 88 Sheets. Stand: 2026-06-16.
 
 ---
 
@@ -76,7 +76,7 @@ Vollständige Liste aller 79 Sheets. Stand: 2026-06-16.
 
 ---
 
-## Dev & Automation (11)
+## Dev & Automation (15)
 
 | Datei | Titel | `--accent` |
 |---|---|---|
@@ -91,6 +91,10 @@ Vollständige Liste aller 79 Sheets. Stand: 2026-06-16.
 | `kickstart-cheatsheet.html` | Kickstart | `#c42b2b` |
 | `jql-cheatsheet.html` | JQL / Atlassian | `#0052CC` |
 | `servicenow-cheatsheet.html` | ServiceNow | `#00C08B` |
+| `csv-cheatsheet.html` | CSV / Tabellarische Daten | `#16a34a` |
+| `json-cheatsheet.html` | JSON | `#f59e0b` |
+| `yaml-cheatsheet.html` | YAML | `#6366f1` |
+| `markdown-cheatsheet.html` | Markdown / GFM | `#4078C8` |
 
 ---
 
@@ -122,6 +126,18 @@ Vollständige Liste aller 79 Sheets. Stand: 2026-06-16.
 | `mariadb-cheatsheet.html` | MariaDB / MySQL | `#0074c1` |
 | `postgresql-cheatsheet.html` | PostgreSQL | `#6495ed` |
 | `redis-cheatsheet.html` | Redis | `#dc382d` |
+
+---
+
+## MS Office (5)
+
+| Datei | Titel | `--accent` |
+|---|---|---|
+| `word-cheatsheet.html` | Microsoft Word | `#2B579A` |
+| `excel-cheatsheet.html` | Microsoft Excel | `#217346` |
+| `powerpoint-cheatsheet.html` | PowerPoint | `#D24726` |
+| `outlook-cheatsheet.html` | Microsoft Outlook | `#0078D4` |
+| `vba-cheatsheet.html` | VBA / Visual Basic | `#7B3FA0` |
 
 ---
 
