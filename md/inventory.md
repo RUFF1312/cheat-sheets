@@ -130,7 +130,7 @@ Vollständige Liste aller 89 Sheets. Stand: 2026-06-16.
 
 ---
 
-## MS Office (5)
+## Office (5) — Subgruppe: MS Office (5)
 
 | Datei | Titel | `--accent` |
 |---|---|---|

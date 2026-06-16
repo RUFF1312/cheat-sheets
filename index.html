@@ -234,7 +234,8 @@
   .pill[data-filter="Cloud & Infra"].active{border-color:#0db7ed;color:#0db7ed;background:rgba(13,183,237,.08)}
   .pill[data-filter="Datenbanken"].active{border-color:#f0c040;color:#f0c040;background:rgba(240,192,64,.08)}
   .pill[data-filter="VMware"].active{border-color:#5ba8e0;color:#5ba8e0;background:rgba(0,125,193,.08)}
-  .pill[data-filter="MS Office"].active{border-color:#0078D4;color:#0078D4;background:rgba(0,120,212,.08)}
+  .pill[data-filter="Office"].active{border-color:#0078D4;color:#0078D4;background:rgba(0,120,212,.08)}
+  .pill[data-subgroup="MS Office"].active{border-color:#0078D4;color:#0078D4;background:rgba(0,120,212,.08);border-style:solid}
   .pill-count{opacity:.55;margin-left:5px}
   /* SUBGROUP PILLS */
   .toolbar-subgroups{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
@@ -283,12 +284,13 @@
       <button class="pill" data-filter="Datenbanken">Datenbanken <span class="pill-count">4</span></button>
       <button class="pill" data-filter="Cloud & Infra">Cloud &amp; Infra <span class="pill-count">30</span></button>
       <button class="pill" data-filter="VMware">VMware <span class="pill-count">4</span></button>
-      <button class="pill" data-filter="MS Office">MS Office <span class="pill-count">5</span></button>
+      <button class="pill" data-filter="Office">Office <span class="pill-count">5</span></button>
     </div>
     <div class="toolbar-subgroups">
       <span class="subgroup-label">↳ Subgruppe:</span>
       <button class="pill pill-sub" data-subgroup="OpenStack">OpenStack <span class="pill-count">6</span></button>
       <button class="pill pill-sub" data-subgroup="VMware">VMware <span class="pill-count">4</span></button>
+      <button class="pill pill-sub" data-subgroup="MS Office">MS Office <span class="pill-count">5</span></button>
     </div>
     <div class="toolbar-row2">
       <input type="text" id="searchInput" class="search-input" placeholder="Sheets, Commands, Tags durchsuchen…">
@@ -1535,7 +1537,7 @@
       </div>
     </a>
 
-    <a href="sheets/word-cheatsheet.html" class="card c-word" data-title="Microsoft Word" data-group="MS Office">
+    <a href="sheets/word-cheatsheet.html" class="card c-word" data-title="Microsoft Word" data-group="Office" data-subgroup="MS Office">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -1550,7 +1552,7 @@
       </div>
     </a>
 
-    <a href="sheets/excel-cheatsheet.html" class="card c-excel" data-title="Microsoft Excel" data-group="MS Office">
+    <a href="sheets/excel-cheatsheet.html" class="card c-excel" data-title="Microsoft Excel" data-group="Office" data-subgroup="MS Office">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -1565,7 +1567,7 @@
       </div>
     </a>
 
-    <a href="sheets/powerpoint-cheatsheet.html" class="card c-powerpoint" data-title="PowerPoint" data-group="MS Office">
+    <a href="sheets/powerpoint-cheatsheet.html" class="card c-powerpoint" data-title="PowerPoint" data-group="Office" data-subgroup="MS Office">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -1580,7 +1582,7 @@
       </div>
     </a>
 
-    <a href="sheets/outlook-cheatsheet.html" class="card c-outlook" data-title="Microsoft Outlook" data-group="MS Office">
+    <a href="sheets/outlook-cheatsheet.html" class="card c-outlook" data-title="Microsoft Outlook" data-group="Office" data-subgroup="MS Office">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -1595,7 +1597,7 @@
       </div>
     </a>
 
-    <a href="sheets/vba-cheatsheet.html" class="card c-vba" data-title="VBA / Visual Basic" data-group="MS Office">
+    <a href="sheets/vba-cheatsheet.html" class="card c-vba" data-title="VBA / Visual Basic" data-group="Office" data-subgroup="MS Office">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -1701,7 +1703,7 @@
     cards.forEach((c, i) => c.dataset.order = i);
 
     // Group display order + color
-    const GROUP_ORDER = ['Programmiersprachen', 'Dev & Automation', 'System & Netz', 'Datenbanken', 'Cloud & Infra', 'VMware', 'MS Office'];
+    const GROUP_ORDER = ['Programmiersprachen', 'Dev & Automation', 'System & Netz', 'Datenbanken', 'Cloud & Infra', 'VMware', 'Office'];
     const GROUP_COLOR = {
       'Programmiersprachen': '#f7df1e',
       'Dev & Automation':    '#a371f7',
@@ -1709,7 +1711,7 @@
       'Datenbanken':         '#f0c040',
       'Cloud & Infra':       '#0db7ed',
       'VMware':              '#5ba8e0',
-      'MS Office':           '#0078D4'
+      'Office':              '#0078D4'
     };
 
     let activeFilter = 'all';

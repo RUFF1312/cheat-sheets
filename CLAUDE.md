@@ -88,7 +88,7 @@ let activeSubgroup = null;   // aktive Untergruppe (VMware, OpenStack)
 ```
 
 - Gruppen-Pills (`data-filter`) nullen `activeSubgroup` beim Klick
-- Subgruppen-Pills (`data-subgroup`) toggeln bei zweitem Klick (→ null)
+- Subgruppen-Pills (`data-subgroup`) toggeln bei zweitem Klick (→ null); aktive Subgruppen: OpenStack, VMware, MS Office
 - Group-Header (h2) nur anzeigen wenn: `activeFilter === 'all' && !activeSubgroup && !sortAZ && !term`
 
 ---
@@ -124,6 +124,6 @@ Typische Commit-Struktur:
 | Dev & Automation | `"Dev & Automation"` | 16 | — |
 | VMware | `"VMware"` | 4 | VMware (4) |
 | Datenbanken | `"Datenbanken"` | 4 | — |
-| MS Office | `"MS Office"` | 5 | — |
+| Office | `"Office"` | 5 | MS Office (5) |
 
 Bei neuen Sheets: Gruppenanzahl und „Alle"-Zähler im Toolbar-HTML aktualisieren.
