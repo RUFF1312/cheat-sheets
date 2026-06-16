@@ -1,6 +1,6 @@
 # Sheet-Inventar — TheLayer0Guide
 
-Vollständige Liste aller 77 Sheets. Stand: 2026-06-11.
+Vollständige Liste aller 79 Sheets. Stand: 2026-06-16.
 
 ---
 
@@ -76,7 +76,7 @@ Vollständige Liste aller 77 Sheets. Stand: 2026-06-11.
 
 ---
 
-## Dev & Automation (9)
+## Dev & Automation (11)
 
 | Datei | Titel | `--accent` |
 |---|---|---|
@@ -89,6 +89,8 @@ Vollständige Liste aller 77 Sheets. Stand: 2026-06-11.
 | `make-cheatsheet.html` | Make / Makefile | `#2e7c5e` |
 | `regex-cheatsheet.html` | Regex | `#16a34a` |
 | `kickstart-cheatsheet.html` | Kickstart | `#c42b2b` |
+| `jql-cheatsheet.html` | JQL / Atlassian | `#0052CC` |
+| `servicenow-cheatsheet.html` | ServiceNow | `#00C08B` |
 
 ---
 

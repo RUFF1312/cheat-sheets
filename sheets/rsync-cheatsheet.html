@@ -18,7 +18,7 @@
   h1 span{color:var(--accent);}
   .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
   .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
-  .meta strong{color:var(--accent);}
+  .meta strong{color:var(--accent2);}
   .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
   .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
   .ch-cy{background:rgba(0,180,160,.1);border:1px solid rgba(0,180,160,.3);color:var(--accent);}
@@ -73,12 +73,12 @@
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">⚡</div><div class="section-title">Grundsyntax</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Lokal → Lokal</div><code">rsync -av /src/ /dst/           <span class="cm"># Inhalt von src</span>
+    <div class="cmd-entry"><div class="cmd-desc">Lokal → Lokal</div><code>rsync -av /src/ /dst/           <span class="cm"># Inhalt von src</span>
 rsync -av /src  /dst/           <span class="cm"># src-Ordner selbst</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Lokal → Remote (SSH)</div><code">rsync -avz /local/ user@host:/remote/
+    <div class="cmd-entry"><div class="cmd-desc">Lokal → Remote (SSH)</div><code>rsync -avz /local/ user@host:/remote/
 rsync -avz -e <span class="st">"ssh -p 2222"</span> /src/ host:/dst/</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Remote → Lokal</div><code">rsync -avz user@host:/remote/ /local/</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Trailing Slash Regel</div><code"><span class="cm"># MIT Slash: Inhalt des Ordners</span>
+    <div class="cmd-entry"><div class="cmd-desc">Remote → Lokal</div><code>rsync -avz user@host:/remote/ /local/</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Trailing Slash Regel</div><code><span class="cm"># MIT Slash: Inhalt des Ordners</span>
 rsync -av /src/  /dst/    <span class="cm">→ /dst/file1 /dst/file2</span>
 <span class="cm"># OHNE Slash: den Ordner selbst</span>
 rsync -av /src   /dst/    <span class="cm">→ /dst/src/file1</span></code></div>
@@ -88,7 +88,7 @@ rsync -av /src   /dst/    <span class="cm">→ /dst/src/file1</span></code></div
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">Wichtige Optionen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Häufige Flags</div><code"><span class="kw">-a</span>  archive (= -rlptgoD)
+    <div class="cmd-entry"><div class="cmd-desc">Häufige Flags</div><code><span class="kw">-a</span>  archive (= -rlptgoD)
 <span class="kw">-v</span>  verbose
 <span class="kw">-z</span>  Komprimierung (SSH)
 <span class="kw">-P</span>  Fortschritt + Partial (= --progress --partial)
@@ -98,14 +98,14 @@ rsync -av /src   /dst/    <span class="cm">→ /dst/src/file1</span></code></div
 <span class="kw">-H</span>  Hardlinks beibehalten
 <span class="kw">-A</span>  ACLs beibehalten
 <span class="kw">-X</span>  Extended Attributes</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Archiv = -rlptgoD</div><code"><span class="kw">-r</span>  rekursiv
+    <div class="cmd-entry"><div class="cmd-desc">Archiv = -rlptgoD</div><code><span class="kw">-r</span>  rekursiv
 <span class="kw">-l</span>  Symlinks beibehalten
 <span class="kw">-p</span>  Berechtigungen
 <span class="kw">-t</span>  Timestamps
 <span class="kw">-g</span>  Gruppe
 <span class="kw">-o</span>  Owner (root)
 <span class="kw">-D</span>  Gerätedateien + Spezial</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Löschen</div><code"><span class="kw">--delete</span>          <span class="cm"># Zieldateien löschen, die Quelle fehlen</span>
+    <div class="cmd-entry"><div class="cmd-desc">Löschen</div><code><span class="kw">--delete</span>          <span class="cm"># Zieldateien löschen, die Quelle fehlen</span>
 <span class="kw">--delete-before</span>   <span class="cm"># vor dem Transfer löschen</span>
 <span class="kw">--delete-excluded</span> <span class="cm"># auch Excludes löschen</span></code></div>
   </div>
@@ -114,10 +114,10 @@ rsync -av /src   /dst/    <span class="cm">→ /dst/src/file1</span></code></div
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Include & Exclude</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Inline Patterns</div><code">rsync -av <span class="kw">--exclude</span>=<span class="st">'*.log'</span> /src/ /dst/
+    <div class="cmd-entry"><div class="cmd-desc">Inline Patterns</div><code>rsync -av <span class="kw">--exclude</span>=<span class="st">'*.log'</span> /src/ /dst/
 rsync -av <span class="kw">--exclude</span>=<span class="st">'.git/'</span> <span class="kw">--exclude</span>=<span class="st">'node_modules/'</span> /src/ /dst/
 rsync -av <span class="kw">--include</span>=<span class="st">'*.py'</span> <span class="kw">--exclude</span>=<span class="st">'*'</span> /src/ /dst/</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Exclude-Datei</div><code"><span class="cm"># .rsyncignore:</span>
+    <div class="cmd-entry"><div class="cmd-desc">Exclude-Datei</div><code><span class="cm"># .rsyncignore:</span>
 *.log
 *.tmp
 .git/
@@ -125,7 +125,7 @@ node_modules/
 __pycache__/
 
 rsync -av <span class="kw">--exclude-from</span>=<span class="st">'.rsyncignore'</span> /src/ /dst/</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Reihenfolge beachten</div><code"><span class="cm"># Erst include, dann exclude!</span>
+    <div class="cmd-entry"><div class="cmd-desc">Reihenfolge beachten</div><code><span class="cm"># Erst include, dann exclude!</span>
 rsync -av \
   <span class="kw">--include</span>=<span class="st">'*.conf'</span>  \
   <span class="kw">--include</span>=<span class="st">'*/'</span>      \
@@ -137,16 +137,16 @@ rsync -av \
 <div class="section th-re">
   <div class="section-header"><div class="section-icon">💾</div><div class="section-title">Backup-Strategien</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Inkrementelles Backup (Hard-Link)</div><code">DATE=$(date +%Y-%m-%d)
+    <div class="cmd-entry"><div class="cmd-desc">Inkrementelles Backup (Hard-Link)</div><code>DATE=$(date +%Y-%m-%d)
 rsync -av --link-dest=/backup/latest \
   /data/ /backup/$DATE/
 ln -sfn /backup/$DATE /backup/latest</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Mirror mit Löschung</div><code">rsync -avz --delete \
+    <div class="cmd-entry"><div class="cmd-desc">Mirror mit Löschung</div><code>rsync -avz --delete \
   user@prod:/var/www/ \
   /backup/www/</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Bandbreite begrenzen</div><code">rsync -avz <span class="kw">--bwlimit</span>=<span class="nu">5000</span> \
+    <div class="cmd-entry"><div class="cmd-desc">Bandbreite begrenzen</div><code>rsync -avz <span class="kw">--bwlimit</span>=<span class="nu">5000</span> \
   /src/ user@host:/dst/    <span class="cm"># 5 MB/s</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">SSH-Optionen</div><code">rsync -avz \
+    <div class="cmd-entry"><div class="cmd-desc">SSH-Optionen</div><code>rsync -avz \
   -e <span class="st">"ssh -i ~/.ssh/backup_key -o StrictHostKeyChecking=no"</span> \
   /src/ backup@host:/dst/</code></div>
     <div class="tip"><strong>Immer</strong> zuerst mit -n (dry-run) testen, besonders bei --delete!</div>
@@ -156,13 +156,13 @@ ln -sfn /backup/$DATE /backup/latest</code></div>
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">rsync Daemon</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">/etc/rsyncd.conf</div><code">[backups]
+    <div class="cmd-entry"><div class="cmd-desc">/etc/rsyncd.conf</div><code>[backups]
 path = /var/backups
 read only = no
 auth users = rsync-user
 secrets file = /etc/rsyncd.secrets
 hosts allow = 10.0.0.0/24</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Daemon nutzen</div><code">rsync -avz rsync://user@host/backups/ /local/
+    <div class="cmd-entry"><div class="cmd-desc">Daemon nutzen</div><code>rsync -avz rsync://user@host/backups/ /local/
 <span class="cm"># oder mit rsync:// Protokoll</span>
 rsync -avz <span class="kw">--password-file</span>=~/.rsync-pass \
   user@host::module /local/</code></div>

@@ -79,10 +79,10 @@ argocd login argocd.example.com --insecure
 argocd login argocd.example.com \
   --username admin --password secret
 argocd logout argocd.example.com</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Cluster registrieren</div><code">argocd cluster add my-context
+    <div class="cmd-entry"><div class="cmd-desc">Cluster registrieren</div><code>argocd cluster add my-context
 argocd cluster list
 argocd cluster get https://k8s.example.com</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Admin-Passwort zurücksetzen</div><code">kubectl -n argocd get secret argocd-initial-admin-secret \
+    <div class="cmd-entry"><div class="cmd-desc">Admin-Passwort zurücksetzen</div><code>kubectl -n argocd get secret argocd-initial-admin-secret \
   -o jsonpath="{.data.password}" | base64 -d
 argocd account update-password</code></div>
   </div>
@@ -91,17 +91,17 @@ argocd account update-password</code></div>
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">📦</div><div class="section-title">Apps verwalten</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">App erstellen</div><code">argocd app create myapp \
+    <div class="cmd-entry"><div class="cmd-desc">App erstellen</div><code>argocd app create myapp \
   --repo https://github.com/org/repo \
   --path k8s/overlays/prod \
   --dest-server https://kubernetes.default.svc \
   --dest-namespace production \
   --revision main \
   --sync-policy automated</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">App Status</div><code">argocd app list
+    <div class="cmd-entry"><div class="cmd-desc">App Status</div><code>argocd app list
 argocd app get myapp
 argocd app history myapp</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">App löschen</div><code">argocd app delete myapp
+    <div class="cmd-entry"><div class="cmd-desc">App löschen</div><code>argocd app delete myapp
 argocd app delete myapp --cascade  <span class="cm"># auch K8s-Ressourcen</span></code></div>
   </div>
 </div>
@@ -109,16 +109,16 @@ argocd app delete myapp --cascade  <span class="cm"># auch K8s-Ressourcen</span>
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">🔄</div><div class="section-title">Sync & Diff</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Sync ausführen</div><code">argocd app sync myapp
+    <div class="cmd-entry"><div class="cmd-desc">Sync ausführen</div><code>argocd app sync myapp
 argocd app sync myapp --force         <span class="cm"># erzwingen</span>
 argocd app sync myapp --prune         <span class="cm"># extra Ressourcen löschen</span>
 argocd app sync myapp --dry-run       <span class="cm"># simulieren</span>
 argocd app sync myapp --revision v1.2 <span class="cm"># spezifische Version</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Diff & Logs</div><code">argocd app diff myapp              <span class="cm"># Git vs. Cluster</span>
+    <div class="cmd-entry"><div class="cmd-desc">Diff & Logs</div><code>argocd app diff myapp              <span class="cm"># Git vs. Cluster</span>
 argocd app logs myapp -c mycontainer
 argocd app wait myapp --health
 argocd app wait myapp --sync</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Rollback</div><code">argocd app rollback myapp 3        <span class="cm"># History-ID</span>
+    <div class="cmd-entry"><div class="cmd-desc">Rollback</div><code>argocd app rollback myapp 3        <span class="cm"># History-ID</span>
 argocd app history myapp           <span class="cm"># IDs anzeigen</span></code></div>
   </div>
 </div>
@@ -126,7 +126,7 @@ argocd app history myapp           <span class="cm"># IDs anzeigen</span></code>
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">Application YAML</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">App-Manifest</div><code"><span class="tp">apiVersion</span>: argoproj.io/v1alpha1
+    <div class="cmd-entry"><div class="cmd-desc">App-Manifest</div><code><span class="tp">apiVersion</span>: argoproj.io/v1alpha1
 <span class="tp">kind</span>: Application
 <span class="tp">metadata</span>:
   name: myapp
@@ -152,13 +152,13 @@ argocd app history myapp           <span class="cm"># IDs anzeigen</span></code>
 <div class="section th-or">
   <div class="section-header"><div class="section-icon">📁</div><div class="section-title">Projects & RBAC</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Projekt verwalten</div><code">argocd proj create myproject
+    <div class="cmd-entry"><div class="cmd-desc">Projekt verwalten</div><code>argocd proj create myproject
 argocd proj list
 argocd proj get myproject
 argocd proj add-source myproject https://github.com/org/repo
 argocd proj add-destination myproject \
   https://kubernetes.default.svc staging</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">RBAC Policies</div><code"><span class="cm"># argocd-rbac-cm ConfigMap:</span>
+    <div class="cmd-entry"><div class="cmd-desc">RBAC Policies</div><code><span class="cm"># argocd-rbac-cm ConfigMap:</span>
 <span class="kw">policy.default</span>: role:readonly
 <span class="kw">policy.csv</span>: |
   p, role:dev, applications, sync, myproject/*, allow
@@ -170,12 +170,12 @@ argocd proj add-destination myproject \
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Repo & Image</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Repositories</div><code">argocd repo add https://github.com/org/repo \
+    <div class="cmd-entry"><div class="cmd-desc">Repositories</div><code>argocd repo add https://github.com/org/repo \
   --username git --password token
 argocd repo add git@github.com:org/repo \
   --ssh-private-key-path ~/.ssh/id_rsa
 argocd repo list</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Image Updater (Annotation)</div><code"><span class="cm"># Annotation auf Application:</span>
+    <div class="cmd-entry"><div class="cmd-desc">Image Updater (Annotation)</div><code><span class="cm"># Annotation auf Application:</span>
 argocd-image-updater.argoproj.io/image-list: myapp=my-reg/myapp
 argocd-image-updater.argoproj.io/myapp.update-strategy: semver
 argocd-image-updater.argoproj.io/myapp.allow-tags: regexp:^v[0-9]+</code></div>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ServiceNow - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/servicenow.svg">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#00C08B;--accent2:#26D9BC;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#0d1117 0%,#001a15 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(0,192,139,.08),transparent);}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(0,192,139,.1);border:1px solid rgba(0,192,139,.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text);}
+  h1 span{color:var(--accent);}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .meta strong{color:var(--accent2);}
+  .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
+  .ch-gn{background:rgba(0,192,139,.1);border:1px solid rgba(0,192,139,.3);color:var(--accent);}
+  .ch-cy{background:rgba(57,197,207,.1);border:1px solid rgba(57,197,207,.3);color:var(--cyan);}
+  .ch-pu{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.3);color:var(--purple);}
+  .ch-or{background:rgba(244,162,97,.1);border:1px solid rgba(244,162,97,.3);color:#f4a261;}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px;}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .th-gn .section-header{background:rgba(0,192,139,.06);} .th-gn .section-icon{background:rgba(0,192,139,.15);} .th-gn .section-title{color:var(--accent);}
+  .th-cy .section-header{background:rgba(57,197,207,.06);} .th-cy .section-icon{background:rgba(57,197,207,.15);} .th-cy .section-title{color:var(--cyan);}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--purple);}
+  .th-or .section-header{background:rgba(244,162,97,.06);} .th-or .section-icon{background:rgba(244,162,97,.15);} .th-or .section-title{color:#f4a261;}
+  .th-re .section-header{background:rgba(244,112,103,.06);} .th-re .section-icon{background:rgba(244,112,103,.15);} .th-re .section-title{color:var(--red);}
+  .command-list{padding:8px 0;}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
+  .cmd-entry:last-child{border-bottom:none;}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+  .kw{color:#00C08B;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;} .tp{color:#a371f7;}
+  .tip{padding:8px 16px;background:rgba(0,192,139,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip strong{color:var(--text);}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(0,192,139,.3);padding:4px 12px;border-radius:4px;background:rgba(0,192,139,.08);}
+  .nav-link:hover{background:rgba(0,192,139,.15);}
+  @media(max-width:1100px){main{columns:2;}}
+  @media(max-width:700px){main{columns:1;padding:16px;}header{padding:24px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ ITSM Platform Reference</div>
+      <img src="../assets/servicenow.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:brightness(0) invert(1)">
+      <h1><span>ServiceNow</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">var gr = new GlideRecord('incident');</p>
+      <div class="version-legend">
+        <div class="chip ch-gn">GlideRecord</div>
+        <div class="chip ch-cy">REST API</div>
+        <div class="chip ch-pu">Scripting</div>
+        <div class="chip ch-or">Table API</div>
+      </div>
+    </div>
+    <div class="meta"><strong>ServiceNow</strong><br>GlideRecord · GlideSystem<br>Table API · REST<br>Script Include</div>
+  </div>
+</header>
+<main>
+
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">📋</div><div class="section-title">GlideRecord — Abfragen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Einfache Abfrage</div><code><span class="kw">var</span> gr = <span class="kw">new</span> <span class="fn">GlideRecord</span>(<span class="st">'incident'</span>);
+gr.<span class="fn">addQuery</span>(<span class="st">'state'</span>, <span class="nu">1</span>);          <span class="cm">// state = 1 (New)</span>
+gr.<span class="fn">addQuery</span>(<span class="st">'category'</span>, <span class="st">'network'</span>);
+gr.<span class="fn">query</span>();
+<span class="kw">while</span> (gr.<span class="fn">next</span>()) {
+    gs.<span class="fn">info</span>(gr.<span class="fn">getValue</span>(<span class="st">'number'</span>));
+}</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">get() — Single Record</div><code><span class="kw">var</span> gr = <span class="kw">new</span> <span class="fn">GlideRecord</span>(<span class="st">'incident'</span>);
+<span class="kw">if</span> (gr.<span class="fn">get</span>(<span class="st">'sys_id'</span>, <span class="st">'abc123...'</span>)) {
+    gs.<span class="fn">info</span>(gr.short_description);
+}
+<span class="cm">// oder per Feld-Wert-Paar:</span>
+gr.<span class="fn">get</span>(<span class="st">'number'</span>, <span class="st">'INC0012345'</span>);</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Encoded Query & Operatoren</div><code><span class="kw">var</span> gr = <span class="kw">new</span> <span class="fn">GlideRecord</span>(<span class="st">'incident'</span>);
+<span class="cm">// Encoded Query (direkt aus Filter kopieren):</span>
+gr.<span class="fn">addEncodedQuery</span>(<span class="st">'state=1^priority=1^active=true'</span>);
+<span class="cm">// OR-Bedingung:</span>
+<span class="kw">var</span> qc = gr.<span class="fn">addQuery</span>(<span class="st">'state'</span>, <span class="nu">1</span>);
+qc.<span class="fn">addOrCondition</span>(<span class="st">'state'</span>, <span class="nu">2</span>);
+gr.<span class="fn">query</span>();</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Sortierung & Limit</div><code>gr.<span class="fn">orderBy</span>(<span class="st">'sys_created_on'</span>);
+gr.<span class="fn">orderByDesc</span>(<span class="st">'priority'</span>);
+gr.<span class="fn">setLimit</span>(<span class="nu">100</span>);
+gr.<span class="fn">chooseWindow</span>(<span class="nu">0</span>, <span class="nu">50</span>);       <span class="cm">// Pagination</span></code></div>
+  </div>
+</div>
+
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">✏️</div><div class="section-title">GlideRecord — Schreiben</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Insert (Neu erstellen)</div><code><span class="kw">var</span> gr = <span class="kw">new</span> <span class="fn">GlideRecord</span>(<span class="st">'incident'</span>);
+gr.<span class="fn">initialize</span>();
+gr.<span class="fn">setValue</span>(<span class="st">'short_description'</span>, <span class="st">'Network down'</span>);
+gr.<span class="fn">setValue</span>(<span class="st">'category'</span>, <span class="st">'network'</span>);
+gr.<span class="fn">setValue</span>(<span class="st">'priority'</span>, <span class="nu">1</span>);
+<span class="kw">var</span> sysId = gr.<span class="fn">insert</span>();
+gs.<span class="fn">info</span>(<span class="st">'Created: '</span> + sysId);</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Update</div><code><span class="kw">var</span> gr = <span class="kw">new</span> <span class="fn">GlideRecord</span>(<span class="st">'incident'</span>);
+gr.<span class="fn">get</span>(<span class="st">'number'</span>, <span class="st">'INC0012345'</span>);
+gr.<span class="fn">setValue</span>(<span class="st">'state'</span>, <span class="nu">6</span>);         <span class="cm">// Resolved</span>
+gr.<span class="fn">setValue</span>(<span class="st">'close_code'</span>, <span class="st">'Solved'</span>);
+gr.<span class="fn">update</span>();
+
+<span class="cm">// Bulk-Update ohne next():</span>
+gr.<span class="fn">addQuery</span>(<span class="st">'state'</span>, <span class="nu">1</span>);
+gr.<span class="fn">setValue</span>(<span class="st">'assigned_to'</span>, gs.<span class="fn">getUserID</span>());
+gr.<span class="fn">updateMultiple</span>();</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Delete & Reference Fields</div><code><span class="cm">// Löschen (Vorsicht!):</span>
+gr.<span class="fn">deleteRecord</span>();
+gr.<span class="fn">deleteMultiple</span>();   <span class="cm">// Alle gematchten Records</span>
+
+<span class="cm">// Reference-Feld lesen:</span>
+gr.<span class="fn">getValue</span>(<span class="st">'assigned_to'</span>);       <span class="cm">// sys_id</span>
+gr.assigned_to.<span class="fn">getDisplayValue</span>(); <span class="cm">// Name</span>
+gr.<span class="fn">getDisplayValue</span>(<span class="st">'assigned_to'</span>); <span class="cm">// Name</span></code></div>
+  </div>
+</div>
+
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">GlideSystem (gs)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Logging & User</div><code>gs.<span class="fn">info</span>(<span class="st">'Message'</span>);        <span class="cm">// Info-Log</span>
+gs.<span class="fn">warn</span>(<span class="st">'Warning'</span>);
+gs.<span class="fn">error</span>(<span class="st">'Error occurred'</span>);
+gs.<span class="fn">debug</span>(<span class="st">'Debug: '</span> + value);
+
+gs.<span class="fn">getUserID</span>();              <span class="cm">// sys_id des aktuellen Users</span>
+gs.<span class="fn">getUserName</span>();            <span class="cm">// Login-Name</span>
+gs.<span class="fn">getUser</span>().<span class="fn">getFullName</span>(); <span class="cm">// Vollständiger Name</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Utilities</div><code>gs.<span class="fn">now</span>();                   <span class="cm">// Aktuelle Zeit (UTC)</span>
+gs.<span class="fn">nowDateTime</span>();           <span class="cm">// DateTime-String</span>
+gs.<span class="fn">tableExists</span>(<span class="st">'u_custom'</span>); <span class="cm">// Tabelle existiert?</span>
+gs.<span class="fn">hasRole</span>(<span class="st">'admin'</span>);        <span class="cm">// Rolle vorhanden?</span>
+gs.<span class="fn">getProperty</span>(<span class="st">'glide.smtp.host'</span>);
+gs.<span class="fn">setProperty</span>(<span class="st">'my.prop'</span>, <span class="st">'value'</span>);</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">REST Message / HTTP</div><code><span class="kw">var</span> rm = <span class="kw">new</span> <span class="fn">sn_ws.RESTMessageV2</span>();
+rm.<span class="fn">setEndpoint</span>(<span class="st">'https://api.example.com/v1/data'</span>);
+rm.<span class="fn">setHttpMethod</span>(<span class="st">'POST'</span>);
+rm.<span class="fn">setRequestHeader</span>(<span class="st">'Content-Type'</span>, <span class="st">'application/json'</span>);
+rm.<span class="fn">setRequestBody</span>(<span class="fn">JSON.stringify</span>({key: <span class="st">'value'</span>}));
+<span class="kw">var</span> resp = rm.<span class="fn">execute</span>();
+gs.<span class="fn">info</span>(resp.<span class="fn">getStatusCode</span>() + <span class="st">': '</span> + resp.<span class="fn">getBody</span>());</code></div>
+  </div>
+</div>
+
+<div class="section th-or">
+  <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Table API (REST)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Auth & Basis-URL</div><code>export SN=https://instance.service-now.com
+export AUTH="admin:password"
+
+<span class="cm"># Incidents abrufen:</span>
+curl -su "$AUTH" \
+  "$SN/api/now/table/incident" \
+  -H <span class="st">"Accept: application/json"</span> \
+  -G <span class="fn">--data-urlencode</span> <span class="st">'sysparm_limit=10'</span> \
+  <span class="fn">--data-urlencode</span> <span class="st">'sysparm_query=state=1'</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Wichtige Query-Parameter</div><code>sysparm_query=<span class="st">state=1^priority=2</span>  <span class="cm"># Encoded Query</span>
+sysparm_fields=<span class="st">number,short_description,state</span>
+sysparm_limit=<span class="nu">100</span>
+sysparm_offset=<span class="nu">0</span>
+sysparm_display_value=<span class="kw">true</span>    <span class="cm"># Display-Werte statt IDs</span>
+sysparm_exclude_reference_link=<span class="kw">true</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Create / Update / Delete</div><code><span class="cm"># Neuen Incident anlegen:</span>
+curl -su "$AUTH" -X POST \
+  "$SN/api/now/table/incident" \
+  -H <span class="st">"Content-Type: application/json"</span> \
+  -d <span class="st">'{"short_description":"Disk full","category":"hardware"}'</span>
+
+<span class="cm"># Update per sys_id:</span>
+curl -su "$AUTH" -X PATCH \
+  "$SN/api/now/table/incident/SYS_ID" \
+  -H <span class="st">"Content-Type: application/json"</span> \
+  -d <span class="st">'{"state":"6","close_code":"Solved"}'</span></code></div>
+    <div class="tip"><strong>OAuth:</strong> Für Produktions-Integrationen OAuth 2.0 (Credentials Flow) statt Basic Auth nutzen — unter System OAuth → Application Registry konfigurieren.</div>
+  </div>
+</div>
+
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🧩</div><div class="section-title">Script Include</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">Klassen-Definition</div><code><span class="kw">var</span> <span class="fn">MyHelper</span> = <span class="kw">Class.create</span>();
+MyHelper.prototype = <span class="fn">Object.extendsObject</span>(
+    AbstractAjaxProcessor, {
+
+    <span class="fn">getIncidentCount</span>: <span class="kw">function</span>() {
+        <span class="kw">var</span> gr = <span class="kw">new</span> <span class="fn">GlideRecord</span>(<span class="st">'incident'</span>);
+        gr.<span class="fn">addQuery</span>(<span class="st">'state'</span>, <span class="nu">1</span>);
+        gr.<span class="fn">query</span>();
+        <span class="kw">return</span> gr.<span class="fn">getRowCount</span>();
+    },
+
+    type: <span class="st">'MyHelper'</span>
+});</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Script Include aufrufen</div><code><span class="cm">// Server-seitig:</span>
+<span class="kw">var</span> helper = <span class="kw">new</span> <span class="fn">MyHelper</span>();
+<span class="kw">var</span> count = helper.<span class="fn">getIncidentCount</span>();
+
+<span class="cm">// Client-seitig (AJAX):</span>
+<span class="kw">var</span> ga = <span class="kw">new</span> <span class="fn">GlideAjax</span>(<span class="st">'MyHelper'</span>);
+ga.<span class="fn">addParam</span>(<span class="st">'sysparm_name'</span>, <span class="st">'getIncidentCount'</span>);
+ga.<span class="fn">getXMLAnswer</span>(<span class="kw">function</span>(answer) {
+    console.<span class="fn">log</span>(answer);
+});</code></div>
+  </div>
+</div>
+
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">🔑</div><div class="section-title">Nützliche Patterns</div></div>
+  <div class="command-list">
+    <div class="cmd-entry"><div class="cmd-desc">sys_id & Referenzen</div><code><span class="cm">// sys_id des aktuellen Datensatzes:</span>
+current.<span class="fn">getUniqueValue</span>();  <span class="cm">// oder current.sys_id</span>
+
+<span class="cm">// User sys_id per Login-Name:</span>
+<span class="kw">var</span> u = <span class="kw">new</span> <span class="fn">GlideRecord</span>(<span class="st">'sys_user'</span>);
+u.<span class="fn">get</span>(<span class="st">'user_name'</span>, <span class="st">'john.doe'</span>);
+<span class="kw">var</span> userId = u.<span class="fn">getUniqueValue</span>();
+
+<span class="cm">// Gruppe per Name:</span>
+<span class="kw">var</span> g = <span class="kw">new</span> <span class="fn">GlideRecord</span>(<span class="st">'sys_user_group'</span>);
+g.<span class="fn">get</span>(<span class="st">'name'</span>, <span class="st">'Service Desk'</span>);</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Häufige Tabellen</div><code>incident              <span class="cm">// Incidents</span>
+sc_request            <span class="cm">// Service Requests</span>
+sc_req_item           <span class="cm">// Request Items (RITM)</span>
+sc_task               <span class="cm">// Catalog Tasks</span>
+change_request        <span class="cm">// Change Requests</span>
+problem               <span class="cm">// Problems</span>
+cmdb_ci               <span class="cm">// Configuration Items</span>
+cmdb_ci_server        <span class="cm">// Server CIs</span>
+sys_user              <span class="cm">// Users</span>
+sys_user_group        <span class="cm">// Groups</span>
+task_sla              <span class="cm">// SLA Tracking</span></code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Incident States</div><code><span class="nu">1</span>  New
+<span class="nu">2</span>  In Progress
+<span class="nu">3</span>  On Hold
+<span class="nu">6</span>  Resolved
+<span class="nu">7</span>  Closed
+<span class="nu">8</span>  Cancelled</code></div>
+    <div class="tip"><strong>Background Script:</strong> System Definition → Scripts - Background zum schnellen Testen von GlideRecord-Abfragen direkt in der Instanz nutzen.</div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>

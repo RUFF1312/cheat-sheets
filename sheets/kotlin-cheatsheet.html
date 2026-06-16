@@ -83,7 +83,7 @@
 s?.<span class="fn">length</span>                  <span class="cm">// safe call</span>
 s ?: <span class="st">"default"</span>             <span class="cm">// elvis</span>
 s!!.<span class="fn">length</span>                 <span class="cm">// not-null assert</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Typen</div><code"><span class="tp">Int</span>  <span class="tp">Long</span>  <span class="tp">Double</span>  <span class="tp">Float</span>
+    <div class="cmd-entry"><div class="cmd-desc">Typen</div><code><span class="tp">Int</span>  <span class="tp">Long</span>  <span class="tp">Double</span>  <span class="tp">Float</span>
 <span class="tp">Boolean</span>  <span class="tp">Char</span>  <span class="tp">String</span>
 <span class="tp">Any</span>  <span class="tp">Unit</span>  <span class="tp">Nothing</span></code></div>
   </div>
@@ -92,20 +92,20 @@ s!!.<span class="fn">length</span>                 <span class="cm">// not-null 
 <div class="section th-pk">
   <div class="section-header"><div class="section-icon">🏗</div><div class="section-title">Klassen & Data Classes</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Klasse</div><code"><span class="kw">class</span> <span class="tp">Person</span>(
+    <div class="cmd-entry"><div class="cmd-desc">Klasse</div><code><span class="kw">class</span> <span class="tp">Person</span>(
     <span class="kw">val</span> name: <span class="tp">String</span>,
     <span class="kw">var</span> age: <span class="tp">Int</span>
 ) {
     <span class="kw">fun</span> <span class="fn">greet</span>() = <span class="st">"Hi, $name"</span>
 }</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">data class</div><code"><span class="kw">data class</span> <span class="tp">Point</span>(<span class="kw">val</span> x: <span class="tp">Int</span>, <span class="kw">val</span> y: <span class="tp">Int</span>)
+    <div class="cmd-entry"><div class="cmd-desc">data class</div><code><span class="kw">data class</span> <span class="tp">Point</span>(<span class="kw">val</span> x: <span class="tp">Int</span>, <span class="kw">val</span> y: <span class="tp">Int</span>)
 <span class="kw">val</span> p = <span class="tp">Point</span>(<span class="nu">1</span>, <span class="nu">2</span>)
 <span class="kw">val</span> p2 = p.copy(x = <span class="nu">3</span>)   <span class="cm">// immutable copy</span>
 <span class="cm">// equals, hashCode, toString generiert</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">sealed class</div><code"><span class="kw">sealed class</span> <span class="tp">Result</span>&lt;<span class="kw">out</span> <span class="tp">T</span>&gt;
+    <div class="cmd-entry"><div class="cmd-desc">sealed class</div><code><span class="kw">sealed class</span> <span class="tp">Result</span>&lt;<span class="kw">out</span> <span class="tp">T</span>&gt;
 <span class="kw">data class</span> <span class="tp">Success</span>&lt;<span class="tp">T</span>&gt;(<span class="kw">val</span> data: <span class="tp">T</span>) : <span class="tp">Result</span>&lt;<span class="tp">T</span>&gt;()
 <span class="kw">data class</span> <span class="tp">Error</span>(<span class="kw">val</span> msg: <span class="tp">String</span>) : <span class="tp">Result</span>&lt;<span class="tp">Nothing</span>&gt;()</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">object & companion</div><code"><span class="kw">object</span> <span class="tp">Singleton</span> { <span class="kw">fun</span> <span class="fn">do</span>() = <span class="st">"ok"</span> }
+    <div class="cmd-entry"><div class="cmd-desc">object & companion</div><code><span class="kw">object</span> <span class="tp">Singleton</span> { <span class="kw">fun</span> <span class="fn">do</span>() = <span class="st">"ok"</span> }
 <span class="kw">companion object</span> {
     <span class="kw">fun</span> <span class="fn">create</span>() = <span class="tp">Person</span>(<span class="st">"Alice"</span>, <span class="nu">30</span>)
 }</code></div>
@@ -115,17 +115,17 @@ s!!.<span class="fn">length</span>                 <span class="cm">// not-null 
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">Funktionen & Lambdas</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Funktionen</div><code"><span class="kw">fun</span> <span class="fn">add</span>(a: <span class="tp">Int</span>, b: <span class="tp">Int</span>) = a + b      <span class="cm">// expression body</span>
+    <div class="cmd-entry"><div class="cmd-desc">Funktionen</div><code><span class="kw">fun</span> <span class="fn">add</span>(a: <span class="tp">Int</span>, b: <span class="tp">Int</span>) = a + b      <span class="cm">// expression body</span>
 <span class="kw">fun</span> <span class="fn">greet</span>(name: <span class="tp">String</span> = <span class="st">"Welt"</span>): <span class="tp">String</span> {
     <span class="kw">return</span> <span class="st">"Hallo $name"</span>
 }</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Lambda & Higher-Order</div><code"><span class="kw">val</span> double: (<span class="tp">Int</span>) -> <span class="tp">Int</span> = { x -> x * <span class="nu">2</span> }
+    <div class="cmd-entry"><div class="cmd-desc">Lambda & Higher-Order</div><code><span class="kw">val</span> double: (<span class="tp">Int</span>) -> <span class="tp">Int</span> = { x -> x * <span class="nu">2</span> }
 <span class="kw">val</span> add = { a: <span class="tp">Int</span>, b: <span class="tp">Int</span> -> a + b }
 
 <span class="kw">fun</span> <span class="fn">apply</span>(f: (<span class="tp">Int</span>) -> <span class="tp">Int</span>, x: <span class="tp">Int</span>) = f(x)
 <span class="fn">apply</span>(double, <span class="nu">5</span>)        <span class="cm">// 10</span>
 <span class="fn">apply</span>({ it * <span class="nu">3</span> }, <span class="nu">5</span>)   <span class="cm">// it = einziger Parameter</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Extension Functions</div><code"><span class="kw">fun</span> <span class="tp">String</span>.<span class="fn">shout</span>() = this.<span class="fn">uppercase</span>() + <span class="st">"!"</span>
+    <div class="cmd-entry"><div class="cmd-desc">Extension Functions</div><code><span class="kw">fun</span> <span class="tp">String</span>.<span class="fn">shout</span>() = this.<span class="fn">uppercase</span>() + <span class="st">"!"</span>
 <span class="st">"hello"</span>.<span class="fn">shout</span>()   <span class="cm">// "HELLO!"</span></code></div>
   </div>
 </div>
@@ -133,11 +133,11 @@ s!!.<span class="fn">length</span>                 <span class="cm">// not-null 
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">📦</div><div class="section-title">Collections & Sequences</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">List / Map / Set</div><code"><span class="kw">val</span> list = <span class="fn">listOf</span>(<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>)           <span class="cm">// immutable</span>
+    <div class="cmd-entry"><div class="cmd-desc">List / Map / Set</div><code><span class="kw">val</span> list = <span class="fn">listOf</span>(<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>)           <span class="cm">// immutable</span>
 <span class="kw">val</span> ml   = <span class="fn">mutableListOf</span>(<span class="nu">1</span>, <span class="nu">2</span>)
 <span class="kw">val</span> map  = <span class="fn">mapOf</span>(<span class="st">"a"</span> to <span class="nu">1</span>)
 <span class="kw">val</span> mm   = <span class="fn">mutableMapOf</span>(<span class="st">"a"</span> to <span class="nu">1</span>)</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Collection-Operationen</div><code">list.<span class="fn">filter</span> { it > <span class="nu">1</span> }
+    <div class="cmd-entry"><div class="cmd-desc">Collection-Operationen</div><code>list.<span class="fn">filter</span> { it > <span class="nu">1</span> }
 list.<span class="fn">map</span> { it * <span class="nu">2</span> }
 list.<span class="fn">reduce</span> { acc, x -> acc + x }
 list.<span class="fn">groupBy</span> { it % <span class="nu">2</span> }
@@ -149,13 +149,13 @@ list.<span class="fn">first</span>()  list.<span class="fn">lastOrNull</span>()<
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🎯</div><div class="section-title">when & Smart Casts</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">when expression</div><code"><span class="kw">val</span> label = <span class="kw">when</span> (x) {
+    <div class="cmd-entry"><div class="cmd-desc">when expression</div><code><span class="kw">val</span> label = <span class="kw">when</span> (x) {
     <span class="nu">1</span>, <span class="nu">2</span>    -> <span class="st">"eins oder zwei"</span>
     <span class="kw">in</span> <span class="nu">3</span>..<span class="nu">9</span> -> <span class="st">"drei bis neun"</span>
     <span class="kw">is</span> <span class="tp">String</span> -> x.<span class="fn">uppercase</span>()
     <span class="kw">else</span>    -> <span class="st">"andere"</span>
 }</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Smart Cast & is</div><code"><span class="kw">if</span> (obj <span class="kw">is</span> <span class="tp">String</span>) {
+    <div class="cmd-entry"><div class="cmd-desc">Smart Cast & is</div><code><span class="kw">if</span> (obj <span class="kw">is</span> <span class="tp">String</span>) {
     <span class="cm">// obj automatisch als String gecasted</span>
     println(obj.<span class="fn">length</span>)
 }</code></div>
@@ -165,7 +165,7 @@ list.<span class="fn">first</span>()  list.<span class="fn">lastOrNull</span>()<
 <div class="section th-vi">
   <div class="section-header"><div class="section-icon">🧵</div><div class="section-title">Coroutines</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Grundlegendes</div><code"><span class="cm">// build.gradle: kotlinx-coroutines-core</span>
+    <div class="cmd-entry"><div class="cmd-desc">Grundlegendes</div><code><span class="cm">// build.gradle: kotlinx-coroutines-core</span>
 <span class="kw">import</span> kotlinx.coroutines.*
 
 <span class="kw">fun</span> <span class="fn">main</span>() = <span class="fn">runBlocking</span> {
@@ -173,7 +173,7 @@ list.<span class="fn">first</span>()  list.<span class="fn">lastOrNull</span>()<
     <span class="kw">val</span> res = <span class="fn">async</span> { <span class="fn">fetchData</span>() }
     println(res.<span class="fn">await</span>())
 }</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">suspend function</div><code"><span class="kw">suspend fun</span> <span class="fn">fetchUser</span>(id: <span class="tp">Int</span>): <span class="tp">User</span> {
+    <div class="cmd-entry"><div class="cmd-desc">suspend function</div><code><span class="kw">suspend fun</span> <span class="fn">fetchUser</span>(id: <span class="tp">Int</span>): <span class="tp">User</span> {
     <span class="kw">return</span> <span class="fn">withContext</span>(<span class="tp">Dispatchers</span>.IO) {
         api.<span class="fn">getUser</span>(id)
     }
@@ -185,7 +185,7 @@ list.<span class="fn">first</span>()  list.<span class="fn">lastOrNull</span>()<
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">💡</div><div class="section-title">Scope Functions</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">let / run / apply / also / with</div><code"><span class="cm">// let: Transformation, null-check</span>
+    <div class="cmd-entry"><div class="cmd-desc">let / run / apply / also / with</div><code><span class="cm">// let: Transformation, null-check</span>
 user?.<span class="fn">let</span> { println(it.name) }
 
 <span class="cm">// apply: Objekt konfigurieren</span>

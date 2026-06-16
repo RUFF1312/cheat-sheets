@@ -81,12 +81,12 @@
 <span class="tp">MAX</span>  = <span class="nu">100</span>           <span class="cm"># constant</span>
 <span class="sy">:symbol</span>              <span class="cm"># Symbol</span>
 <span class="kw">nil</span>  <span class="kw">true</span>  <span class="kw">false</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">String-Interpolation</div><code">msg = <span class="st">"Hallo #{name}, du bist #{</span><span class="tp">@age</span><span class="st">}!"</span>
+    <div class="cmd-entry"><div class="cmd-desc">String-Interpolation</div><code>msg = <span class="st">"Hallo #{name}, du bist #{</span><span class="tp">@age</span><span class="st">}!"</span>
 multi = <span class="st"><<~RUBY
   Mehrzeilig
   #{expression}
 RUBY</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Kontrollstrukturen</div><code"><span class="kw">if</span> x > <span class="nu">0</span>
+    <div class="cmd-entry"><div class="cmd-desc">Kontrollstrukturen</div><code><span class="kw">if</span> x > <span class="nu">0</span>
   puts <span class="st">"positiv"</span>
 <span class="kw">elsif</span> x == <span class="nu">0</span>
   puts <span class="st">"null"</span>
@@ -102,13 +102,13 @@ puts <span class="st">"no"</span> <span class="kw">unless</span> condition</code
 <div class="section th-yl">
   <div class="section-header"><div class="section-icon">📦</div><div class="section-title">Arrays & Hashes</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Array</div><code">arr = [<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>]
+    <div class="cmd-entry"><div class="cmd-desc">Array</div><code>arr = [<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>]
 arr << <span class="nu">4</span>              <span class="cm"># anhängen</span>
 arr.push(<span class="nu">5</span>)
 arr.first  arr.last
 arr.length  arr.size
 arr[<span class="nu">1</span>..<span class="nu">3</span>]               <span class="cm"># Range</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Hash</div><code">h = { name: <span class="st">"Alice"</span>, age: <span class="nu">30</span> }
+    <div class="cmd-entry"><div class="cmd-desc">Hash</div><code>h = { name: <span class="st">"Alice"</span>, age: <span class="nu">30</span> }
 h[:name]              <span class="cm"># "Alice"</span>
 h[:city] = <span class="st">"Berlin"</span>
 h.key?(<span class="sy">:name</span>)
@@ -120,15 +120,15 @@ h.merge({ x: <span class="nu">1</span> })</code></div>
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🔁</div><div class="section-title">Blocks, Procs & Lambdas</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Block</div><code">[<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>].each { |x| puts x }
+    <div class="cmd-entry"><div class="cmd-desc">Block</div><code>[<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>].each { |x| puts x }
 [<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>].each <span class="kw">do</span> |x|
   puts x
 <span class="kw">end</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Proc & Lambda</div><code">square = <span class="tp">Proc</span>.new { |x| x**<span class="nu">2</span> }
+    <div class="cmd-entry"><div class="cmd-desc">Proc & Lambda</div><code>square = <span class="tp">Proc</span>.new { |x| x**<span class="nu">2</span> }
 double = ->(x) { x * <span class="nu">2</span> }      <span class="cm"># lambda</span>
 double.call(<span class="nu">5</span>)
 double.(<span class="nu">5</span>)  double[<span class="nu">5</span>]</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">yield</div><code"><span class="kw">def</span> <span class="fn">wrap</span>
+    <div class="cmd-entry"><div class="cmd-desc">yield</div><code><span class="kw">def</span> <span class="fn">wrap</span>
   puts <span class="st">"before"</span>
   <span class="kw">yield</span>
   puts <span class="st">"after"</span>
@@ -140,7 +140,7 @@ wrap { puts <span class="st">"inside"</span> }</code></div>
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">🌊</div><div class="section-title">Enumerable</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Häufige Methoden</div><code">[<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>].map  { |x| x * <span class="nu">2</span> }
+    <div class="cmd-entry"><div class="cmd-desc">Häufige Methoden</div><code>[<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>].map  { |x| x * <span class="nu">2</span> }
 [<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>].select { |x| x > <span class="nu">1</span> }
 [<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>].reject { |x| x > <span class="nu">1</span> }
 [<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>].reduce(<span class="nu">0</span>) { |s,x| s+x }
@@ -149,7 +149,7 @@ wrap { puts <span class="st">"inside"</span> }</code></div>
 [<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>].find  { |x| x == <span class="nu">2</span> }
 [<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>].sort_by { |x| -x }
 [<span class="nu">1</span>,<span class="nu">2</span>].flat_map { |x| [x, x*<span class="nu">2</span>] }</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Ranges</div><code">(<span class="nu">1</span>..<span class="nu">10</span>).each { |i| puts i }
+    <div class="cmd-entry"><div class="cmd-desc">Ranges</div><code>(<span class="nu">1</span>..<span class="nu">10</span>).each { |i| puts i }
 (<span class="nu">1</span>...<span class="nu">10</span>).to_a    <span class="cm"># ohne 10</span>
 (<span class="st">'a'</span>..<span class="st">'z'</span>).include?(<span class="st">'m'</span>)</code></div>
   </div>
@@ -158,7 +158,7 @@ wrap { puts <span class="st">"inside"</span> }</code></div>
 <div class="section th-yl">
   <div class="section-header"><div class="section-icon">🏗</div><div class="section-title">Klassen & OOP</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Klasse</div><code"><span class="kw">class</span> <span class="tp">Animal</span>
+    <div class="cmd-entry"><div class="cmd-desc">Klasse</div><code><span class="kw">class</span> <span class="tp">Animal</span>
   attr_accessor <span class="sy">:name</span>
   attr_reader   <span class="sy">:age</span>
 
@@ -171,12 +171,12 @@ wrap { puts <span class="st">"inside"</span> }</code></div>
     <span class="st">"#{@name} macht Geräusch"</span>
   <span class="kw">end</span>
 <span class="kw">end</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Vererbung</div><code"><span class="kw">class</span> <span class="tp">Dog</span> < <span class="tp">Animal</span>
+    <div class="cmd-entry"><div class="cmd-desc">Vererbung</div><code><span class="kw">class</span> <span class="tp">Dog</span> < <span class="tp">Animal</span>
   <span class="kw">def</span> <span class="fn">speak</span>
     <span class="st">"Wuff! (#{super})"</span>
   <span class="kw">end</span>
 <span class="kw">end</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Module (Mixin)</div><code"><span class="kw">module</span> <span class="tp">Walkable</span>
+    <div class="cmd-entry"><div class="cmd-desc">Module (Mixin)</div><code><span class="kw">module</span> <span class="tp">Walkable</span>
   <span class="kw">def</span> <span class="fn">walk</span> = puts <span class="st">"walking"</span>
 <span class="kw">end</span>
 <span class="kw">class</span> <span class="tp">Dog</span> < <span class="tp">Animal</span>
@@ -188,14 +188,14 @@ wrap { puts <span class="st">"inside"</span> }</code></div>
 <div class="section th-re">
   <div class="section-header"><div class="section-icon">⚠️</div><div class="section-title">Exceptions & Gems</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">begin/rescue/ensure</div><code"><span class="kw">begin</span>
+    <div class="cmd-entry"><div class="cmd-desc">begin/rescue/ensure</div><code><span class="kw">begin</span>
   result = <span class="nu">10</span> / <span class="nu">0</span>
 <span class="kw">rescue</span> <span class="tp">ZeroDivisionError</span> => e
   puts e.message
 <span class="kw">ensure</span>
   puts <span class="st">"immer"</span>
 <span class="kw">end</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Gem-Befehle</div><code">gem install rails
+    <div class="cmd-entry"><div class="cmd-desc">Gem-Befehle</div><code>gem install rails
 bundle init
 bundle add sinatra
 bundle exec ruby app.rb</code></div>

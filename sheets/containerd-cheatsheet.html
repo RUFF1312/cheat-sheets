@@ -74,12 +74,12 @@
 <div class="section th-bl">
   <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">crictl — Kubernetes CRI</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Konfiguration</div><code">cat > /etc/crictl.yaml <<EOF
+    <div class="cmd-entry"><div class="cmd-desc">Konfiguration</div><code>cat > /etc/crictl.yaml <<EOF
 runtime-endpoint: unix:///run/containerd/containerd.sock
 image-endpoint: unix:///run/containerd/containerd.sock
 timeout: 10
 EOF</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Container</div><code">crictl ps                      <span class="cm"># laufende Container</span>
+    <div class="cmd-entry"><div class="cmd-desc">Container</div><code>crictl ps                      <span class="cm"># laufende Container</span>
 crictl ps -a                   <span class="cm"># alle Container</span>
 crictl exec -it <ID> sh
 crictl logs <ID>
@@ -88,7 +88,7 @@ crictl inspect <ID>
 crictl stats                   <span class="cm"># Ressourcen</span>
 crictl stop <ID>
 crictl rm <ID></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Pods & Images</div><code">crictl pods
+    <div class="cmd-entry"><div class="cmd-desc">Pods & Images</div><code>crictl pods
 crictl pods --name myapp
 crictl images
 crictl rmi <IMAGE>
@@ -99,19 +99,19 @@ crictl pull nginx:alpine</code></div>
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🐳</div><div class="section-title">nerdctl — Docker-Kompatibel</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Container verwalten</div><code">nerdctl run -d --name nginx nginx:alpine
+    <div class="cmd-entry"><div class="cmd-desc">Container verwalten</div><code>nerdctl run -d --name nginx nginx:alpine
 nerdctl ps
 nerdctl ps -a
 nerdctl stop nginx
 nerdctl rm nginx
 nerdctl exec -it nginx sh
 nerdctl logs -f nginx</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Images</div><code">nerdctl images
+    <div class="cmd-entry"><div class="cmd-desc">Images</div><code>nerdctl images
 nerdctl pull ubuntu:22.04
 nerdctl push myregistry/myapp:v1
 nerdctl build -t myapp:latest .
 nerdctl tag myapp:latest myregistry/myapp:latest</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Namespaces</div><code">nerdctl --namespace k8s.io ps   <span class="cm"># K8s-Namespace</span>
+    <div class="cmd-entry"><div class="cmd-desc">Namespaces</div><code>nerdctl --namespace k8s.io ps   <span class="cm"># K8s-Namespace</span>
 nerdctl namespace ls</code></div>
     <div class="tip"><strong>nerdctl</strong> ist ein Docker-kompatibler CLI für containerd. Bei Kubernetes-Debugging ist crictl die richtige Wahl.</div>
   </div>
@@ -120,11 +120,11 @@ nerdctl namespace ls</code></div>
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">ctr — Low-Level CLI</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Images</div><code">ctr images ls
+    <div class="cmd-entry"><div class="cmd-desc">Images</div><code>ctr images ls
 ctr images pull docker.io/library/nginx:alpine
 ctr images push myregistry/myapp:v1
 ctr images rm nginx:alpine</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Container</div><code">ctr containers ls
+    <div class="cmd-entry"><div class="cmd-desc">Container</div><code>ctr containers ls
 ctr containers create docker.io/library/nginx:alpine nginx
 ctr tasks start nginx
 ctr tasks ls
@@ -132,7 +132,7 @@ ctr tasks exec --exec-id sh nginx sh
 ctr tasks kill nginx
 ctr tasks rm nginx
 ctr containers rm nginx</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Namespace-Flag</div><code"><span class="cm"># Kubernetes verwendet den Namespace "k8s.io":</span>
+    <div class="cmd-entry"><div class="cmd-desc">Namespace-Flag</div><code><span class="cm"># Kubernetes verwendet den Namespace "k8s.io":</span>
 ctr -n k8s.io containers ls
 ctr -n k8s.io images ls</code></div>
   </div>
@@ -141,10 +141,10 @@ ctr -n k8s.io images ls</code></div>
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🛠</div><div class="section-title">containerd Service</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Service verwalten</div><code">systemctl status containerd
+    <div class="cmd-entry"><div class="cmd-desc">Service verwalten</div><code>systemctl status containerd
 systemctl restart containerd
 journalctl -u containerd -f</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">/etc/containerd/config.toml</div><code"><span class="kw">version</span> = 2
+    <div class="cmd-entry"><div class="cmd-desc">/etc/containerd/config.toml</div><code><span class="kw">version</span> = 2
 
 [<span class="fn">plugins."io.containerd.grpc.v1.cri"</span>]
   [<span class="fn">plugins."io.containerd.grpc.v1.cri".containerd</span>]
@@ -155,7 +155,7 @@ journalctl -u containerd -f</code></div>
   [<span class="fn">plugins."io.containerd.grpc.v1.cri".registry.mirrors</span>]
     [<span class="fn">plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"</span>]
       endpoint = [<span class="st">"https://mirror.gcr.io"</span>]</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Konfig generieren & prüfen</div><code">containerd config default > /etc/containerd/config.toml
+    <div class="cmd-entry"><div class="cmd-desc">Konfig generieren & prüfen</div><code>containerd config default > /etc/containerd/config.toml
 containerd config dump</code></div>
   </div>
 </div>
@@ -163,11 +163,11 @@ containerd config dump</code></div>
 <div class="section th-re">
   <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Troubleshooting</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Snapshots & Cleanup</div><code">ctr snapshots ls
+    <div class="cmd-entry"><div class="cmd-desc">Snapshots & Cleanup</div><code>ctr snapshots ls
 ctr snapshots rm <SNAPSHOT>
 <span class="cm"># Ungenutzte Images bereinigen:</span>
 ctr images prune --all</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Events & Debug</div><code">ctr events
+    <div class="cmd-entry"><div class="cmd-desc">Events & Debug</div><code>ctr events
 crictl info                    <span class="cm"># Runtime-Info</span>
 crictl version
 <span class="cm"># Socket-Pfade prüfen:</span>

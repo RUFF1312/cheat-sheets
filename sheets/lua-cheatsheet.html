@@ -40,7 +40,7 @@
   .cmd-entry:last-child{border-bottom:none;}
   .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
   code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
-  .kw{color:#79a8ff;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .kw{color:#4e6fff;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
   .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;} .tp{color:#e5c07b;}
   .tip{padding:8px 16px;background:rgba(78,111,255,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
   .tip strong{color:var(--text);}
@@ -74,7 +74,7 @@
 <div class="section th-bl">
   <div class="section-header"><div class="section-icon">📝</div><div class="section-title">Basics</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Variablen & Typen</div><code"><span class="kw">local</span> name = <span class="st">"Alice"</span>       <span class="cm">-- string</span>
+    <div class="cmd-entry"><div class="cmd-desc">Variablen & Typen</div><code><span class="kw">local</span> name = <span class="st">"Alice"</span>       <span class="cm">-- string</span>
 <span class="kw">local</span> count = <span class="nu">42</span>             <span class="cm">-- number (float oder int)</span>
 <span class="kw">local</span> flag = <span class="kw">true</span>            <span class="cm">-- boolean</span>
 <span class="kw">local</span> nothing = <span class="kw">nil</span>          <span class="cm">-- nil</span>
@@ -83,14 +83,14 @@
 global_var = <span class="st">"sichtbar überall"</span>
 
 print(<span class="fn">type</span>(name))            <span class="cm">-- "string"</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Strings</div><code"><span class="kw">local</span> s = <span class="st">"Hello, "</span> .. name  <span class="cm">-- Verkettung mit ..</span>
+    <div class="cmd-entry"><div class="cmd-desc">Strings</div><code><span class="kw">local</span> s = <span class="st">"Hello, "</span> .. name  <span class="cm">-- Verkettung mit ..</span>
 <span class="kw">local</span> len = #s               <span class="cm">-- Länge</span>
 <span class="fn">string.upper</span>(s)
 <span class="fn">string.find</span>(s, <span class="st">"pattern"</span>)
 <span class="fn">string.format</span>(<span class="st">"%d: %s"</span>, count, name)
 <span class="fn">string.sub</span>(s, <span class="nu">1</span>, <span class="nu">5</span>)         <span class="cm">-- Substring (1-basiert!)</span>
 <span class="fn">string.gsub</span>(s, <span class="st">"old"</span>, <span class="st">"new"</span>)</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Kontrollfluss</div><code"><span class="kw">if</span> x > <span class="nu">0</span> <span class="kw">then</span>
+    <div class="cmd-entry"><div class="cmd-desc">Kontrollfluss</div><code><span class="kw">if</span> x > <span class="nu">0</span> <span class="kw">then</span>
     print(<span class="st">"positiv"</span>)
 <span class="kw">elseif</span> x == <span class="nu">0</span> <span class="kw">then</span>
     print(<span class="st">"null"</span>)
@@ -103,7 +103,7 @@ print(<span class="fn">type</span>(name))            <span class="cm">-- "string
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">📋</div><div class="section-title">Tables (Kernstruktur)</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Array & Hash</div><code"><span class="cm">-- Array (1-basiert!):</span>
+    <div class="cmd-entry"><div class="cmd-desc">Array & Hash</div><code><span class="cm">-- Array (1-basiert!):</span>
 <span class="kw">local</span> arr = {<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>}
 print(arr[<span class="nu">1</span>])              <span class="cm">-- "a"</span>
 print(#arr)                <span class="cm">-- 3</span>
@@ -116,7 +116,7 @@ print(#arr)                <span class="cm">-- 3</span>
     age = <span class="nu">30</span>
 }
 print(person.name)         <span class="cm">-- oder person["name"]</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Iteration</div><code"><span class="cm">-- Array (ipairs, geordnet):</span>
+    <div class="cmd-entry"><div class="cmd-desc">Iteration</div><code><span class="cm">-- Array (ipairs, geordnet):</span>
 <span class="kw">for</span> i, v <span class="kw">in</span> <span class="fn">ipairs</span>(arr) <span class="kw">do</span>
     print(i, v)
 <span class="kw">end</span>
@@ -125,7 +125,7 @@ print(person.name)         <span class="cm">-- oder person["name"]</span></code>
 <span class="kw">for</span> k, v <span class="kw">in</span> <span class="fn">pairs</span>(person) <span class="kw">do</span>
     print(k, v)
 <span class="kw">end</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Schleifen</div><code"><span class="kw">for</span> i = <span class="nu">1</span>, <span class="nu">10</span> <span class="kw">do</span> print(i) <span class="kw">end</span>
+    <div class="cmd-entry"><div class="cmd-desc">Schleifen</div><code><span class="kw">for</span> i = <span class="nu">1</span>, <span class="nu">10</span> <span class="kw">do</span> print(i) <span class="kw">end</span>
 <span class="kw">for</span> i = <span class="nu">10</span>, <span class="nu">1</span>, -<span class="nu">1</span> <span class="kw">do</span> ... <span class="kw">end</span>   <span class="cm">-- Schritt -1</span>
 <span class="kw">while</span> condition <span class="kw">do</span> ... <span class="kw">end</span>
 <span class="kw">repeat</span> ... <span class="kw">until</span> condition</code></div>
@@ -135,7 +135,7 @@ print(person.name)         <span class="cm">-- oder person["name"]</span></code>
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">Funktionen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Definitionen</div><code"><span class="kw">local function</span> <span class="fn">greet</span>(name)
+    <div class="cmd-entry"><div class="cmd-desc">Definitionen</div><code><span class="kw">local function</span> <span class="fn">greet</span>(name)
     <span class="kw">return</span> <span class="st">"Hello, "</span> .. name
 <span class="kw">end</span>
 
@@ -144,7 +144,7 @@ print(person.name)         <span class="cm">-- oder person["name"]</span></code>
     <span class="kw">return</span> <span class="fn">math.floor</span>(a/b), a % b
 <span class="kw">end</span>
 <span class="kw">local</span> q, r = <span class="fn">divmod</span>(<span class="nu">10</span>, <span class="nu">3</span>)  <span class="cm">-- q=3, r=1</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Varargs & Closures</div><code"><span class="kw">local function</span> <span class="fn">sum</span>(...)
+    <div class="cmd-entry"><div class="cmd-desc">Varargs & Closures</div><code><span class="kw">local function</span> <span class="fn">sum</span>(...)
     <span class="kw">local</span> total = <span class="nu">0</span>
     <span class="kw">for</span> _, v <span class="kw">in</span> <span class="fn">ipairs</span>({...}) <span class="kw">do</span>
         total = total + v
@@ -163,7 +163,7 @@ print(person.name)         <span class="cm">-- oder person["name"]</span></code>
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🎯</div><div class="section-title">Metatables & OOP</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Klasse via Metatables</div><code"><span class="kw">local</span> Animal = {}
+    <div class="cmd-entry"><div class="cmd-desc">Klasse via Metatables</div><code><span class="kw">local</span> Animal = {}
 Animal.__index = Animal
 
 <span class="kw">function</span> Animal.<span class="fn">new</span>(name, sound)
@@ -176,7 +176,7 @@ Animal.__index = Animal
 
 <span class="kw">local</span> cat = Animal.<span class="fn">new</span>(<span class="st">"Cat"</span>, <span class="st">"meow"</span>)
 cat:<span class="fn">speak</span>()          <span class="cm">-- cat.speak(cat) implizit</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Metatable Operatoren</div><code"><span class="fn">setmetatable</span>(t, {
+    <div class="cmd-entry"><div class="cmd-desc">Metatable Operatoren</div><code><span class="fn">setmetatable</span>(t, {
     __index = parent,      <span class="cm">-- Vererbung / Fallback</span>
     __newindex = fn,       <span class="cm">-- beim Setzen von Keys</span>
     __tostring = fn,       <span class="cm">-- tostring(t)</span>
@@ -190,7 +190,7 @@ cat:<span class="fn">speak</span>()          <span class="cm">-- cat.speak(cat) 
 <div class="section th-re">
   <div class="section-header"><div class="section-icon">🔀</div><div class="section-title">Coroutines</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Coroutine Basics</div><code"><span class="kw">local</span> co = <span class="fn">coroutine.create</span>(<span class="kw">function</span>(a, b)
+    <div class="cmd-entry"><div class="cmd-desc">Coroutine Basics</div><code><span class="kw">local</span> co = <span class="fn">coroutine.create</span>(<span class="kw">function</span>(a, b)
     print(<span class="st">"start"</span>, a, b)
     <span class="kw">local</span> c = <span class="fn">coroutine.yield</span>(<span class="nu">1</span>)
     print(<span class="st">"resumed"</span>, c)
@@ -199,7 +199,7 @@ cat:<span class="fn">speak</span>()          <span class="cm">-- cat.speak(cat) 
 <span class="fn">coroutine.resume</span>(co, <span class="nu">10</span>, <span class="nu">20</span>)  <span class="cm">-- start 10 20</span>
 <span class="fn">coroutine.resume</span>(co, <span class="nu">99</span>)      <span class="cm">-- resumed 99</span>
 <span class="fn">coroutine.status</span>(co)          <span class="cm">-- "dead"</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Module Pattern</div><code"><span class="cm">-- mymod.lua:</span>
+    <div class="cmd-entry"><div class="cmd-desc">Module Pattern</div><code><span class="cm">-- mymod.lua:</span>
 <span class="kw">local</span> M = {}
 
 <span class="kw">function</span> M.<span class="fn">hello</span>() print(<span class="st">"hi"</span>) <span class="kw">end</span>

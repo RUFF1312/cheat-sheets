@@ -74,16 +74,16 @@
 <div class="section th-yw">
   <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">LogQL Grundlagen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Log-Stream Selektor</div><code">{app=<span class="st">"nginx"</span>}
+    <div class="cmd-entry"><div class="cmd-desc">Log-Stream Selektor</div><code>{app=<span class="st">"nginx"</span>}
 {app=<span class="st">"nginx"</span>, env=<span class="st">"prod"</span>}
 {namespace=<span class="st">"default"</span>, pod=~<span class="st">"api-.*"</span>}
 <span class="cm">-- Operator: = != =~ !~</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Log Pipeline</div><code">{app=<span class="st">"nginx"</span>}
+    <div class="cmd-entry"><div class="cmd-desc">Log Pipeline</div><code>{app=<span class="st">"nginx"</span>}
   |= <span class="st">"error"</span>           <span class="cm">-- enthält</span>
   != <span class="st">"health"</span>          <span class="cm">-- enthält nicht</span>
   |~ <span class="st">"ERR[0-9]+"</span>       <span class="cm">-- regex match</span>
   !~ <span class="st">"bot|crawler"</span>     <span class="cm">-- regex nicht</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Parser</div><code">{app=<span class="st">"myapp"</span>} | json
+    <div class="cmd-entry"><div class="cmd-desc">Parser</div><code>{app=<span class="st">"myapp"</span>} | json
 {app=<span class="st">"myapp"</span>} | json level, msg
 {app=<span class="st">"nginx"</span>} | logfmt
 {app=<span class="st">"nginx"</span>} | pattern <span class="st">'&lt;ip&gt; - - [&lt;_&gt;] "&lt;method&gt; &lt;path&gt; &lt;_&gt;" &lt;status&gt;'</span>
@@ -94,12 +94,12 @@
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">📊</div><div class="section-title">Filter & Transformationen</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Label Filter (nach Parse)</div><code">{app=<span class="st">"myapp"</span>} | json | level=<span class="st">"error"</span>
+    <div class="cmd-entry"><div class="cmd-desc">Label Filter (nach Parse)</div><code>{app=<span class="st">"myapp"</span>} | json | level=<span class="st">"error"</span>
 {app=<span class="st">"myapp"</span>} | json | status >= <span class="nu">500</span>
 {app=<span class="st">"myapp"</span>} | json | duration > 1s</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Line Format</div><code">{app=<span class="st">"myapp"</span>} | json
+    <div class="cmd-entry"><div class="cmd-desc">Line Format</div><code>{app=<span class="st">"myapp"</span>} | json
   | line_format <span class="st">"{{.level}} - {{.msg}}"</span></code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Label Transformationen</div><code">{app=<span class="st">"myapp"</span>} | json
+    <div class="cmd-entry"><div class="cmd-desc">Label Transformationen</div><code>{app=<span class="st">"myapp"</span>} | json
   | label_format level=lvl
   | drop_label msg</code></div>
   </div>
@@ -108,18 +108,18 @@
 <div class="section th-cy">
   <div class="section-header"><div class="section-icon">📈</div><div class="section-title">Metric Queries</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Rate & Count</div><code"><span class="fn">rate</span>({app=<span class="st">"nginx"</span>}[5m])
+    <div class="cmd-entry"><div class="cmd-desc">Rate & Count</div><code><span class="fn">rate</span>({app=<span class="st">"nginx"</span>}[5m])
 <span class="fn">count_over_time</span>({app=<span class="st">"nginx"</span>}[1h])
 <span class="fn">bytes_rate</span>({app=<span class="st">"nginx"</span>}[5m])
 <span class="fn">bytes_over_time</span>({app=<span class="st">"nginx"</span>}[1h])</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Aggregation</div><code"><span class="cm">-- Error-Rate per App:</span>
+    <div class="cmd-entry"><div class="cmd-desc">Aggregation</div><code><span class="cm">-- Error-Rate per App:</span>
 <span class="fn">sum</span>(<span class="fn">rate</span>({job=<span class="st">"app"</span>} |= <span class="st">"error"</span> [5m])) <span class="kw">by</span> (app)
 <span class="cm">-- HTTP Status-Verteilung:</span>
 <span class="fn">sum</span>(<span class="fn">count_over_time</span>({app=<span class="st">"nginx"</span>} | logfmt | status > <span class="nu">399</span> [1m])) <span class="kw">by</span> (status)</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Unwrapped Metrics</div><code"><span class="cm">-- Extrahierte Zahlen als Metriken:</span>
+    <div class="cmd-entry"><div class="cmd-desc">Unwrapped Metrics</div><code><span class="cm">-- Extrahierte Zahlen als Metriken:</span>
 <span class="fn">avg_over_time</span>({app=<span class="st">"api"</span>} | json | unwrap duration [5m])
 <span class="fn">max_over_time</span>({app=<span class="st">"api"</span>} | json | unwrap resp_size [5m])</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Aggregationsfunktionen</div><code"><span class="fn">sum</span>() <span class="fn">avg</span>() <span class="fn">min</span>() <span class="fn">max</span>() <span class="fn">count</span>() <span class="fn">topk</span>(k,…)
+    <div class="cmd-entry"><div class="cmd-desc">Aggregationsfunktionen</div><code><span class="fn">sum</span>() <span class="fn">avg</span>() <span class="fn">min</span>() <span class="fn">max</span>() <span class="fn">count</span>() <span class="fn">topk</span>(k,…)
 <span class="fn">quantile_over_time</span>(0.99, …)</code></div>
   </div>
 </div>
@@ -127,23 +127,23 @@
 <div class="section th-pu">
   <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">logcli CLI</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Grundbefehle</div><code">export LOKI_ADDR=http://loki:3100
+    <div class="cmd-entry"><div class="cmd-desc">Grundbefehle</div><code>export LOKI_ADDR=http://loki:3100
 logcli query '{app="nginx"}'
 logcli query '{app="nginx"}' --since=1h
 logcli query '{app="nginx"}' --from=2024-01-01T00:00:00Z
 logcli query '{app="nginx"}' --limit=100
 logcli query '{app="nginx"}' --output=jsonl</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Labels anzeigen</div><code">logcli labels
+    <div class="cmd-entry"><div class="cmd-desc">Labels anzeigen</div><code>logcli labels
 logcli labels app
 logcli series '{app="nginx"}'</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Instanter Query</div><code">logcli instant-query 'sum(rate({app="nginx"}[5m]))'</code></div>
+    <div class="cmd-entry"><div class="cmd-desc">Instanter Query</div><code>logcli instant-query 'sum(rate({app="nginx"}[5m]))'</code></div>
   </div>
 </div>
 
 <div class="section th-yw">
   <div class="section-header"><div class="section-icon">📡</div><div class="section-title">Promtail Konfiguration</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Grundstruktur</div><code"><span class="tp">server</span>:
+    <div class="cmd-entry"><div class="cmd-desc">Grundstruktur</div><code><span class="tp">server</span>:
   http_listen_port: 9080
 <span class="tp">clients</span>:
   - url: http://loki:3100/loki/api/v1/push
@@ -154,7 +154,7 @@ logcli series '{app="nginx"}'</code></div>
         labels:
           job: varlogs
           __path__: /var/log/*.log</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Pipeline Stages</div><code"><span class="kw">pipeline_stages</span>:
+    <div class="cmd-entry"><div class="cmd-desc">Pipeline Stages</div><code><span class="kw">pipeline_stages</span>:
   - json:
       expressions:
         level: level

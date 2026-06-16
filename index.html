@@ -119,6 +119,10 @@
   .c-chronyc{--ac:#2563eb;--acs:rgba(37,99,235,0.15);--acb:rgba(37,99,235,0.25)}
   /* Kickstart */
   .c-kickstart{--ac:#c42b2b;--acs:rgba(196,43,43,0.15);--acb:rgba(196,43,43,0.25)}
+  /* JQL / Atlassian */
+  .c-jql{--ac:#0052CC;--acs:rgba(0,82,204,0.15);--acb:rgba(0,82,204,0.25)}
+  /* ServiceNow */
+  .c-servicenow{--ac:#00C08B;--acs:rgba(0,192,139,0.15);--acb:rgba(0,192,139,0.25)}
   /* Package Manager */
   .c-pkgmanager{--ac:#e88a2f;--acs:rgba(232,138,47,0.15);--acb:rgba(232,138,47,0.25)}
   /* KVM */
@@ -259,9 +263,9 @@
 <main>
   <div class="toolbar">
     <div class="toolbar-filters">
-      <button class="pill active" data-filter="all">Alle <span class="pill-count">77</span></button>
+      <button class="pill active" data-filter="all">Alle <span class="pill-count">79</span></button>
       <button class="pill" data-filter="Programmiersprachen">Sprachen <span class="pill-count">13</span></button>
-      <button class="pill" data-filter="Dev & Automation">Dev &amp; Automation <span class="pill-count">9</span></button>
+      <button class="pill" data-filter="Dev & Automation">Dev &amp; Automation <span class="pill-count">11</span></button>
       <button class="pill" data-filter="System & Netz">System &amp; Netz <span class="pill-count">17</span></button>
       <button class="pill" data-filter="Datenbanken">Datenbanken <span class="pill-count">4</span></button>
       <button class="pill" data-filter="Cloud & Infra">Cloud &amp; Infra <span class="pill-count">30</span></button>
@@ -819,6 +823,38 @@
         <div class="card-tagline">$ inst.ks=http://... -- Unattended Installation<br>RHEL · Rocky · Alma · PXE · %pre/%post · LVM</div>
         <div class="card-tags">
           <span class="tag">Unattended</span><span class="tag">PXE</span><span class="tag">Partitionen</span><span class="tag">%post</span><span class="tag">RHEL</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- JQL / Atlassian -->
+    <a href="sheets/jql-cheatsheet.html" class="card c-jql" data-title="JQL / Atlassian" data-group="Dev & Automation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/jql.svg" alt="jql.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">JQL / Atlassian</div>
+        </div>
+        <div class="card-tagline">project = "PROJ" AND status != Done -- Jira Query Language<br>JQL · REST API · atlas CLI · Confluence CQL</div>
+        <div class="card-tags">
+          <span class="tag">JQL</span><span class="tag">Jira</span><span class="tag">REST API</span><span class="tag">Confluence</span><span class="tag">atlas</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- ServiceNow -->
+    <a href="sheets/servicenow-cheatsheet.html" class="card c-servicenow" data-title="ServiceNow" data-group="Dev & Automation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/servicenow.svg" alt="servicenow.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">ServiceNow</div>
+        </div>
+        <div class="card-tagline">var gr = new GlideRecord('incident') -- ITSM Scripting<br>GlideRecord · Table API · REST · Script Include</div>
+        <div class="card-tags">
+          <span class="tag">GlideRecord</span><span class="tag">Table API</span><span class="tag">Scripting</span><span class="tag">ITSM</span><span class="tag">REST</span>
         </div>
         <div class="card-arrow">→</div>
       </div>

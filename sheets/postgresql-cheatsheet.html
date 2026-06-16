@@ -40,9 +40,9 @@
   .cmd-entry:last-child{border-bottom:none;}
   .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
   code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
-  .kw{color:#6495ed;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .kw{color:#2d6a9f;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
   .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;} .tp{color:#a371f7;}
-  .tip{padding:8px 16px;background:rgba(45,106,159,.06);border-left:3px solid var(--accent2);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip{padding:8px 16px;background:rgba(45,106,159,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
   .tip strong{color:var(--text);}
   .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent2);text-decoration:none;border:1px solid rgba(45,106,159,.3);padding:4px 12px;border-radius:4px;background:rgba(45,106,159,.08);}
   .nav-link:hover{background:rgba(45,106,159,.15);}
@@ -191,7 +191,7 @@ psql -U postgres                  <span class="cm"># lokaler Unix-Socket</span><
 <div class="section th-gn">
   <div class="section-header"><div class="section-icon">🔑</div><div class="section-title">JSONB & Arrays</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">JSONB Operatoren</div><code">data-><span class="st">'key'</span>         <span class="cm">-- JSON-Wert</span>
+    <div class="cmd-entry"><div class="cmd-desc">JSONB Operatoren</div><code>data-><span class="st">'key'</span>         <span class="cm">-- JSON-Wert</span>
 data->><span class="st">'key'</span>        <span class="cm">-- Text-Wert</span>
 data #>> <span class="st">'{a,b}'</span>      <span class="cm">-- verschachtelter Pfad</span>
 data @> <span class="st">'{"role":"admin"}'</span> <span class="cm">-- enthält</span>
@@ -208,15 +208,15 @@ arr && <span class="st">ARRAY[1,2]</span>       <span class="cm">-- überschneid
 <div class="section th-re">
   <div class="section-header"><div class="section-icon">🛡</div><div class="section-title">Backup & Administration</div></div>
   <div class="command-list">
-    <div class="cmd-entry"><div class="cmd-desc">Backup & Restore</div><code">pg_dump -U postgres mydb > backup.sql
+    <div class="cmd-entry"><div class="cmd-desc">Backup & Restore</div><code>pg_dump -U postgres mydb > backup.sql
 pg_dump -Fc mydb > backup.dump   <span class="cm"># custom format</span>
 pg_restore -U postgres -d mydb backup.dump
 psql -U postgres mydb < backup.sql</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Rollen & Rechte</div><code"><span class="kw">CREATE USER</span> app <span class="kw">WITH PASSWORD</span> <span class="st">'secret'</span>;
+    <div class="cmd-entry"><div class="cmd-desc">Rollen & Rechte</div><code><span class="kw">CREATE USER</span> app <span class="kw">WITH PASSWORD</span> <span class="st">'secret'</span>;
 <span class="kw">CREATE DATABASE</span> mydb <span class="kw">OWNER</span> app;
 <span class="kw">GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA</span> public <span class="kw">TO</span> app;
 <span class="kw">GRANT USAGE ON ALL SEQUENCES IN SCHEMA</span> public <span class="kw">TO</span> app;</code></div>
-    <div class="cmd-entry"><div class="cmd-desc">Transaktionen</div><code"><span class="kw">BEGIN</span>;
+    <div class="cmd-entry"><div class="cmd-desc">Transaktionen</div><code><span class="kw">BEGIN</span>;
 <span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance = balance - <span class="nu">100</span> <span class="kw">WHERE</span> id = <span class="nu">1</span>;
 <span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance = balance + <span class="nu">100</span> <span class="kw">WHERE</span> id = <span class="nu">2</span>;
 <span class="kw">COMMIT</span>;   <span class="cm">-- oder ROLLBACK;</span>
