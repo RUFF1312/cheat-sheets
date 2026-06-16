@@ -1702,6 +1702,9 @@
 
     cards.forEach((c, i) => c.dataset.order = i);
 
+    // Sync static counts to actual card count
+    document.querySelectorAll('.header-count span, .pill[data-filter="all"] .pill-count').forEach(el => el.textContent = cards.length);
+
     // Group display order + color
     const GROUP_ORDER = ['Programmiersprachen', 'Dev & Automation', 'System & Netz', 'Datenbanken', 'Cloud & Infra', 'VMware', 'Office'];
     const GROUP_COLOR = {
@@ -1807,13 +1810,13 @@
       });
 
       // Result counter (only while searching)
-      resultCount.textContent = term ? `${visible.length} / 77` : '';
+      resultCount.textContent = term ? `${visible.length} / ${cards.length}` : '';
 
       // Update pill counts dynamically
       document.querySelectorAll('.pill[data-filter]').forEach(pill => {
         const f = pill.dataset.filter;
         const n = f === 'all'
-          ? (term ? visible.length : 77)
+          ? (term ? visible.length : cards.length)
           : cards.filter(c => c.dataset.group === f && (!term || c.textContent.toLowerCase().includes(term))).length;
         const span = pill.querySelector('.pill-count');
         if (span) span.textContent = n;
