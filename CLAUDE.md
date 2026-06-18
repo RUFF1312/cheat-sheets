@@ -8,13 +8,13 @@ Projektregeln für Claude-Sessions. Werden bei jedem Start automatisch geladen.
 
 ```
 cheat-sheets/
-├── index.html              Hauptseite (77 Karten, Filter-System, JS)
+├── index.html              Hauptseite (101 Karten, Filter-System, JS)
 ├── sheets/                 Alle Cheat-Sheet HTML-Dateien
 ├── assets/                 SVG-Icons (ein Icon pro Tool)
 └── md/
     ├── style.md            Design System — alle Farben, Komponenten, Regeln
     ├── sheet-template.md   Kanonisches HTML-Template für neue Sheets
-    └── inventory.md        Vollständiges Verzeichnis aller 77 Sheets
+    └── inventory.md        Vollständiges Verzeichnis aller 101 Sheets
 ```
 
 Vor umfangreichen Änderungen immer `md/style.md`, `md/sheet-template.md` und `md/inventory.md` lesen.
@@ -71,11 +71,12 @@ Der `-webkit-text-fill-color` ist notwendig, wenn `h1` einen CSS-Textgradienten 
 1. `md/sheet-template.md` lesen — dort ist das kanonische HTML-Template
 2. Checkliste am Ende des Templates Punkt für Punkt abarbeiten
 3. Index-Eintrag hinzufügen: neue `.c-TOOL` CSS-Klasse + neue Karte im HTML
-4. Pill-Zähler in der Toolbar aktualisieren (Alle + Gruppe)
-5. Falls Subgruppe nötig: `data-subgroup="..."` an Karten und Pill ergänzen
-6. Subgruppen-Pill-Farbe im CSS ergänzen:
+4. `data-group="GRUPPE"` und `data-subgroups="SG1 SG2"` (Leerzeichen-getrennt, mehre möglich) an der Karte setzen
+5. Pill-Zähler in der Toolbar aktualisieren (Alle + Gruppe — werden auch dynamisch per JS aktualisiert)
+6. Subgruppen-Pill: falls neue Subgruppe, Button in `.toolbar-subgroups` mit `data-for-group="GRUPPE"` ergänzen
+7. Subgruppen-Pill-Farbe im CSS ergänzen:
    ```css
-   .pill[data-subgroup="NAME"].active { border-color: #FARBE; color: #FARBE; ... }
+   .pill[data-subgroup="NAME"].active { border-color: #FARBE; color: #FARBE; background:rgba(...,.08); border-style:solid }
    ```
 
 ---
@@ -83,13 +84,16 @@ Der `-webkit-text-fill-color` ist notwendig, wenn `h1` einen CSS-Textgradienten 
 ## Index-Seite — Filterlogik
 
 ```javascript
-let activeFilter = 'all';    // aktive Gruppe
-let activeSubgroup = null;   // aktive Untergruppe (VMware, OpenStack)
+let activeFilter = 'all';    // aktive Hauptgruppe
+let activeSubgroup = null;   // aktive Untergruppe (kontextsensitiv zur Hauptgruppe)
 ```
 
-- Gruppen-Pills (`data-filter`) nullen `activeSubgroup` beim Klick
-- Subgruppen-Pills (`data-subgroup`) toggeln bei zweitem Klick (→ null); aktive Subgruppen: OpenStack, VMware, MS Office
-- Group-Header (h2) nur anzeigen wenn: `activeFilter === 'all' && !activeSubgroup && !sortAZ && !term`
+- Gruppen-Pills (`data-filter`) nullen `activeSubgroup` und zeigen nur Subgruppen-Pills der aktiven Gruppe
+- Subgruppen-Pills (`data-subgroup`, `data-for-group`) werden per `sg-visible` CSS-Klasse ein-/ausgeblendet
+- Subgruppen-Pill zweiter Klick → zurück zur Hauptgruppe (nicht zu "Alle")
+- Multi-Subgroup: Karten haben `data-subgroups="SG1 SG2"` (Leerzeichen-getrennt)
+- Filter: `(c.dataset.subgroups || '').split(' ').includes(activeSubgroup)`
+- Group-Header nur anzeigen wenn: `activeFilter === 'all' && !activeSubgroup && !sortAZ && !term`
 
 ---
 
@@ -118,13 +122,11 @@ Typische Commit-Struktur:
 
 | Gruppe | `data-group` | Anzahl | Subgruppen |
 |---|---|---|---|
-| Cloud & Infra | `"Cloud & Infra"` | 30 | OpenStack (6) |
-| System & Netz | `"System & Netz"` | 18 | — |
-| Security & Pentesting | `"Security & Pentesting"` | 6 | — |
-| Programmiersprachen | `"Programmiersprachen"` | 13 | — |
-| Dev & Automation | `"Dev & Automation"` | 17 | — |
-| VMware | `"VMware"` | 4 | VMware (4) |
-| Datenbanken | `"Datenbanken"` | 5 | — |
-| Office | `"Office"` | 8 | MS Office (5), LibreOffice (3) |
+| Cloud & Infra | `"Cloud & Infra"` | 34 | Container, OpenStack, VMware, IaC, Monitoring, Proxy-HA, Storage |
+| System & Netz | `"System & Netz"` | 18 | Shell, Netzwerk, SysAdmin, PKI |
+| Security | `"Security"` | 6 | Recon, Web, Exploitation, Password |
+| Development | `"Development"` | 30 | Sprachen, VCS, CI-CD, Datenformate, Automatisierung, ITSM |
+| Daten & Office | `"Daten & Office"` | 13 | SQL, NoSQL, MS-Office, LibreOffice |
 
-Bei neuen Sheets: Gruppenanzahl und „Alle"-Zähler im Toolbar-HTML aktualisieren.
+Sheets können in mehreren Subgruppen vertreten sein (`data-subgroups="SG1 SG2"`).  
+Bei neuen Sheets: Gruppenanzahl im Toolbar-HTML aktualisieren (wird auch dynamisch per JS gesetzt).
