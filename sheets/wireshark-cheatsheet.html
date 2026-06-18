@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireshark - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/wireshark.svg">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#1a56db;--accent2:#60a5fa;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#0d1117 0%,#000a1f 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(26,86,219,.08),transparent);}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(26,86,219,.1);border:1px solid rgba(26,86,219,.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text);}
+  h1 span{color:var(--accent);}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .meta strong{color:var(--accent2);}
+  .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
+  .ch-bl{background:rgba(26,86,219,.1);border:1px solid rgba(26,86,219,.3);color:var(--accent);}
+  .ch-gn{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);color:var(--green);}
+  .ch-cy{background:rgba(57,197,207,.1);border:1px solid rgba(57,197,207,.3);color:var(--cyan);}
+  .ch-pu{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.3);color:var(--purple);}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px;}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .th-bl .section-header{background:rgba(26,86,219,.06);} .th-bl .section-icon{background:rgba(26,86,219,.15);} .th-bl .section-title{color:var(--accent);}
+  .th-gn .section-header{background:rgba(63,185,80,.06);} .th-gn .section-icon{background:rgba(63,185,80,.15);} .th-gn .section-title{color:var(--green);}
+  .th-cy .section-header{background:rgba(57,197,207,.06);} .th-cy .section-icon{background:rgba(57,197,207,.15);} .th-cy .section-title{color:var(--cyan);}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--purple);}
+  .th-re .section-header{background:rgba(244,112,103,.06);} .th-re .section-icon{background:rgba(244,112,103,.15);} .th-re .section-title{color:var(--red);}
+  .th-or .section-header{background:rgba(234,88,12,.06);} .th-or .section-icon{background:rgba(234,88,12,.15);} .th-or .section-title{color:#ea580c;}
+  .command-list{padding:8px 0;}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
+  .cmd-entry:last-child{border-bottom:none;}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+  .kw{color:#60a5fa;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;}
+  .tip{padding:8px 16px;background:rgba(26,86,219,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip strong{color:var(--text);}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(26,86,219,.3);padding:4px 12px;border-radius:4px;background:rgba(26,86,219,.08);}
+  .nav-link:hover{background:rgba(26,86,219,.15);}
+  @media(max-width:1100px){main{columns:2;}}
+  @media(max-width:700px){main{columns:1;padding:16px;}header{padding:24px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Security · Network Analysis</div>
+      <img src="../assets/wireshark.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(30%) sepia(90%) saturate(700%) hue-rotate(210deg)">
+      <h1><span>Wireshark</span> Network Analyzer<br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ tshark -i eth0 -Y "http.request" -T fields -e ip.src -e http.host</p>
+      <div class="version-legend">
+        <div class="chip ch-bl">Wireshark 4.x</div>
+        <div class="chip ch-gn">Display Filters</div>
+        <div class="chip ch-cy">tshark CLI</div>
+        <div class="chip ch-pu">TLS Decryption</div>
+      </div>
+    </div>
+    <div class="meta"><strong>wireshark</strong><br>Packet Capture<br>Protocol Analysis<br>Stream Follow<br>Statistics<br>TLS / WPA2 Decrypt</div>
+  </div>
+</header>
+<main>
+
+<!-- 1. Display-Filter Syntax -->
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Display-Filter Syntax</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">IP-Adresse (Quelle oder Ziel)</div>
+      <code>ip.addr == <span class="nu">192.168.1.1</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Quell-IP / Ziel-IP</div>
+      <code>ip.src == <span class="nu">10.0.0.1</span>
+ip.dst == <span class="nu">10.0.0.2</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">TCP- / UDP-Port</div>
+      <code>tcp.port == <span class="nu">443</span>
+udp.port == <span class="nu">53</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Protokoll-Filter</div>
+      <code><span class="kw">http</span>   <span class="kw">dns</span>   <span class="kw">tls</span>   <span class="kw">icmp</span>
+<span class="kw">ssh</span>   <span class="kw">ftp</span>   <span class="kw">smtp</span>  <span class="kw">arp</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Protokolle ausblenden (NOT-Verknüpfung)</div>
+      <code>!<span class="kw">arp</span> &amp;&amp; !<span class="kw">dns</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Nur SYN-Pakete (kein SYN-ACK)</div>
+      <code>tcp.flags.syn == <span class="nu">1</span> &amp;&amp; tcp.flags.ack == <span class="nu">0</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Große Pakete filtern</div>
+      <code>frame.len &gt; <span class="nu">1000</span></code>
+    </div>
+    <div class="tip"><strong>Tipp:</strong> Display-Filter wirken nur auf die Anzeige, nicht auf das Capture. Logik: <strong>&amp;&amp;</strong>, <strong>||</strong>, <strong>!</strong>. Vergleich: <strong>==</strong>, <strong>!=</strong>, <strong>contains</strong>, <strong>matches</strong>.</div>
+  </div>
+</div>
+
+<!-- 2. Capture-Filter Syntax -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">📡</div><div class="section-title">Capture-Filter Syntax</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Host filtern</div>
+      <code>host <span class="nu">192.168.1.1</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Netzwerk / Subnetz</div>
+      <code>net <span class="nu">192.168.0.0/24</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Port / TCP-Port</div>
+      <code>port <span class="nu">80</span>
+tcp port <span class="nu">443</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Port ausschließen</div>
+      <code>not port <span class="nu">22</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Nur Source-Host</div>
+      <code>src host <span class="nu">10.0.0.1</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Port-Bereich</div>
+      <code>portrange <span class="nu">1000-2000</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Nur ICMP</div>
+      <code>icmp</code>
+    </div>
+    <div class="tip"><strong>Capture-Filter</strong> (BPF-Syntax) werden vor dem Capture angewendet und reduzieren den Buffer-Verbrauch. Sie sind effizienter als Display-Filter.</div>
+  </div>
+</div>
+
+<!-- 3. Protokoll-spezifische Filter -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Protokoll-spez. Filter</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">HTTP-Methode / Response-Code</div>
+      <code>http.request.method == <span class="st">"GET"</span>
+http.response.code == <span class="nu">200</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">DNS-Query enthält String</div>
+      <code>dns.qry.name contains <span class="st">"evil"</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">TLS Client Hello</div>
+      <code>tls.handshake.type == <span class="nu">1</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">FTP-Passwort / SMTP-Auth</div>
+      <code>ftp.request.command == <span class="st">"PASS"</span>
+smtp.req.command == <span class="st">"AUTH"</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">SSH-Version</div>
+      <code>ssh.protocol contains <span class="st">"OpenSSH"</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">TCP-Retransmissions</div>
+      <code>tcp.analysis.retransmission</code>
+    </div>
+    <div class="tip"><strong>Protokoll-Felder</strong> sind hierarchisch: <strong>http.request.method</strong>, <strong>dns.qry.name</strong>, <strong>tls.handshake.type</strong>. Tab-Vervollständigung im Filter-Feld hilft beim Erkunden.</div>
+  </div>
+</div>
+
+<!-- 4. Streams & Rekonstruktion -->
+<div class="section th-or">
+  <div class="section-header"><div class="section-icon">🔗</div><div class="section-title">Streams &amp; Rekonstruktion</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">TCP-Stream folgen</div>
+      <code>Follow → TCP Stream  <span class="cm">(Strg+Alt+Shift+T)</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">HTTP-Konversation anzeigen</div>
+      <code>Follow → HTTP Stream</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">TLS-Stream (Schlüssel nötig)</div>
+      <code>Follow → TLS Stream</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Protokoll manuell zuweisen</div>
+      <code>Analyze → Decode As</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">HTTP-Dateien exportieren</div>
+      <code>File → Export Objects → HTTP</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">SMB-Dateien exportieren</div>
+      <code>File → Export Objects → SMB</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">PDU-Export für Nachanalyse</div>
+      <code>File → Export PDUs to File</code>
+    </div>
+    <div class="tip"><strong>Export Objects</strong> rekonstruiert übertragene Dateien direkt aus dem Capture — nützlich für Malware-Analyse und Forensik.</div>
+  </div>
+</div>
+
+<!-- 5. Statistiken & Graphs -->
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">📊</div><div class="section-title">Statistiken &amp; Graphs</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Protokoll-Übersicht</div>
+      <code>Statistics → Protocol Hierarchy</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Top-Verbindungen</div>
+      <code>Statistics → Conversations</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Top-Endpunkte</div>
+      <code>Statistics → Endpoints</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Traffic-Graph (zeitbasiert)</div>
+      <code>Statistics → IO Graphs</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Sequenzdiagramm / Flow Graph</div>
+      <code>Statistics → Flow Graph</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">HTTP-Request-Statistiken</div>
+      <code>Statistics → HTTP → Requests</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">DNS-Statistiken</div>
+      <code>Statistics → DNS</code>
+    </div>
+    <div class="tip"><strong>IO Graphs</strong> unterstützt benutzerdefinierte Display-Filter als Kurven — ideal für Baseline-Vergleiche und Anomalie-Erkennung.</div>
+  </div>
+</div>
+
+<!-- 6. tshark CLI -->
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">⌨️</div><div class="section-title">tshark (CLI)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Live-Capture auf Interface</div>
+      <code>tshark <span class="kw">-i</span> eth0</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">pcap-Datei lesen</div>
+      <code>tshark <span class="kw">-r</span> capture.pcap</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Capture in Datei schreiben</div>
+      <code>tshark <span class="kw">-i</span> eth0 <span class="kw">-w</span> out.pcap</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Display-Filter anwenden</div>
+      <code>tshark <span class="kw">-r</span> file.pcap <span class="kw">-Y</span> <span class="st">"http"</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Felder extrahieren (-T fields)</div>
+      <code>tshark <span class="kw">-r</span> file.pcap <span class="kw">-T fields</span> \
+  <span class="kw">-e</span> ip.src <span class="kw">-e</span> http.host</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">HTTP-Statistik (Tree-Format)</div>
+      <code>tshark <span class="kw">-r</span> file.pcap <span class="kw">-z</span> http,tree</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Output nach Stichwort durchsuchen</div>
+      <code>tshark <span class="kw">-r</span> file.pcap | grep <span class="st">"password"</span></code>
+    </div>
+    <div class="tip"><strong>tshark</strong> ist die Kommandozeilen-Version von Wireshark. Mit <strong>-T json</strong> lässt sich die Ausgabe maschinell weiterverarbeiten.</div>
+  </div>
+</div>
+
+<!-- 7. Keyboard-Shortcuts -->
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">⌨️</div><div class="section-title">Keyboard-Shortcuts</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Capture starten / stoppen</div>
+      <code><span class="kw">Ctrl+K</span>        <span class="cm"># Capture starten</span>
+<span class="kw">Ctrl+E</span>        <span class="cm"># Capture stoppen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Suchen / Springen</div>
+      <code><span class="kw">Ctrl+F</span>        <span class="cm"># Paket suchen</span>
+<span class="kw">Ctrl+G</span>        <span class="cm"># Zu Paket-Nr. springen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Datei öffnen / speichern</div>
+      <code><span class="kw">Ctrl+R</span>        <span class="cm"># Datei öffnen</span>
+<span class="kw">Ctrl+Shift+S</span>  <span class="cm"># Speichern unter</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">TCP-Stream / Expert-Info</div>
+      <code><span class="kw">Ctrl+Alt+Shift+T</span>  <span class="cm"># TCP-Stream</span>
+<span class="kw">Ctrl+Shift+E</span>      <span class="cm"># Expert-Infos</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Zoom / Pakete markieren</div>
+      <code><span class="kw">Ctrl++</span> / <span class="kw">Ctrl+-</span>  <span class="cm"># Schriftgröße</span>
+<span class="kw">Ctrl+M</span>           <span class="cm"># Paket markieren</span></code>
+    </div>
+    <div class="tip"><strong>Ctrl+Shift+E</strong> (Expert Information) zeigt Warnungen und Fehler wie Retransmissions, Window-Zero oder malformed Packets aggregiert an.</div>
+  </div>
+</div>
+
+<!-- 8. Decryption -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">🔓</div><div class="section-title">Decryption</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">TLS — Pre-Master-Secret Log setzen</div>
+      <code>Edit → Preferences → Protocols → TLS
+  → (Pre)-Master-Secret log filename</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Browser-Keys exportieren (Linux/macOS)</div>
+      <code><span class="kw">SSLKEYLOGFILE</span>=<span class="st">/tmp/keys.log</span> firefox
+<span class="kw">SSLKEYLOGFILE</span>=<span class="st">/tmp/keys.log</span> chromium</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">WPA2 entschlüsseln — Einstellungen</div>
+      <code>Edit → Preferences → Protocols
+  → IEEE 802.11 → Decryption keys</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">WPA2-Key-Format</div>
+      <code>wpa-pwd:<span class="st">Passwort</span>:<span class="st">SSID</span>   <span class="cm"># Klartext</span>
+wpa-psk:<span class="st">HEX_PSK_64_ZEICHEN</span>  <span class="cm"># Hex</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Kerberos — Keytab-Datei hinterlegen</div>
+      <code>Edit → Preferences → Protocols
+  → Kerberos → Keytab-Datei</code>
+    </div>
+    <div class="tip"><strong>SSLKEYLOGFILE</strong> funktioniert mit Firefox, Chromium und Node.js (via <strong>NODE_OPTIONS=--tls-keylog</strong>). Die Datei direkt in Wireshark als TLS-Keylog eintragen.</div>
+  </div>
+</div>
+
+<!-- 9. Capture-Optionen & pcap-Tools -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">Capture-Optionen &amp; pcap-Tools</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Interface-Auswahl &amp; Promiscuous-Mode</div>
+      <code>Capture → Options  <span class="cm"># GUI</span>
+tshark <span class="kw">-D</span>          <span class="cm"># Interfaces auflisten</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Ring-Buffer (Größe / Zeitlimit)</div>
+      <code>Capture → Options → Output
+  → Ring buffer: <span class="nu">10</span> files × <span class="nu">100</span> MB</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">pcap-Metadaten anzeigen</div>
+      <code>capinfos file.pcap</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Mehrere pcap-Dateien zusammenführen</div>
+      <code>mergecap <span class="kw">-w</span> out.pcap a.pcap b.pcap</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Pakete ausschneiden (Nummernbereich)</div>
+      <code>editcap <span class="kw">-r</span> in.pcap out.pcap <span class="nu">1-1000</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Zeitstempel verschieben (in Sekunden)</div>
+      <code>editcap <span class="kw">-t</span> <span class="nu">3600</span> in.pcap out.pcap</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">System-Capture mit tcpdump</div>
+      <code>tcpdump <span class="kw">-i</span> eth0 <span class="kw">-w</span> out.pcap</code>
+    </div>
+    <div class="tip"><strong>capinfos</strong>, <strong>mergecap</strong>, <strong>editcap</strong> und <strong>tshark</strong> werden mit dem Wireshark-Paket mitgeliefert und sind im PATH verfügbar.</div>
+  </div>
+</div>
+
+<!-- 10. Quick Reference — Häufige Filter -->
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">⚡</div><div class="section-title">Quick Reference — Häufige Filter</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Klartext-Credentials (mehrere Protokolle)</div>
+      <code>ftp || http || smtp || pop || imap</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">DNS-Exfiltration (lange Subdomain-Labels)</div>
+      <code>dns &amp;&amp; dns.qry.name.len &gt; <span class="nu">40</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">SYN-Scan erkennen</div>
+      <code>tcp.flags == <span class="nu">0x002</span> &amp;&amp;
+  !tcp.analysis.retransmission</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">ARP-Spoofing erkennen</div>
+      <code>arp.duplicate-address-detected</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Große Transfers (nahe MTU)</div>
+      <code>frame.len &gt; <span class="nu">1400</span> &amp;&amp; ip</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">HTTP POST mit "password"-Feld</div>
+      <code>http.request.method == <span class="st">"POST"</span> &amp;&amp;
+  http contains <span class="st">"password"</span></code>
+    </div>
+    <div class="tip"><strong>Hinweis:</strong> Display-Filter sind case-sensitiv. Der <strong>contains</strong>-Operator prüft auf Bytes/Strings im Payload. <strong>matches</strong> akzeptiert Perl-kompatible Regex (PCRE).</div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>

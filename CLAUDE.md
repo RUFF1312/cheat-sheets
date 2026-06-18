@@ -8,13 +8,13 @@ Projektregeln für Claude-Sessions. Werden bei jedem Start automatisch geladen.
 
 ```
 cheat-sheets/
-├── index.html              Hauptseite (101 Karten, Filter-System, JS)
+├── index.html              Hauptseite (111 Karten, Filter-System, JS)
 ├── sheets/                 Alle Cheat-Sheet HTML-Dateien
 ├── assets/                 SVG-Icons (ein Icon pro Tool)
 └── md/
     ├── style.md            Design System — alle Farben, Komponenten, Regeln
     ├── sheet-template.md   Kanonisches HTML-Template für neue Sheets
-    └── inventory.md        Vollständiges Verzeichnis aller 101 Sheets
+    └── inventory.md        Vollständiges Verzeichnis aller 111 Sheets
 ```
 
 Vor umfangreichen Änderungen immer `md/style.md`, `md/sheet-template.md` und `md/inventory.md` lesen.
@@ -124,7 +124,7 @@ Typische Commit-Struktur:
 |---|---|---|---|
 | Cloud & Infra | `"Cloud & Infra"` | 34 | Container, OpenStack, VMware, IaC, Monitoring, Proxy-HA, Storage |
 | System & Netz | `"System & Netz"` | 18 | Shell, Netzwerk, SysAdmin, PKI |
-| Security | `"Security"` | 6 | Recon, Web, Exploitation, Password |
+| Security | `"Security"` | 16 | Recon, Web, Exploitation, Password |
 | Development | `"Development"` | 30 | Sprachen, VCS, CI-CD, Datenformate, Automatisierung, ITSM |
 | Daten & Office | `"Daten & Office"` | 13 | SQL, NoSQL, MS-Office, LibreOffice |
 

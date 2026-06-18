@@ -1,6 +1,6 @@
 # Sheet-Inventar — TheLayer0Guide
 
-Vollständige Liste aller 101 Sheets. Stand: 2026-06-18.
+Vollständige Liste aller 111 Sheets. Stand: 2026-06-18.
 
 ---
 
@@ -74,7 +74,7 @@ Subgruppen: Shell, Netzwerk, SysAdmin, PKI
 
 ---
 
-## Security (6)
+## Security (16)
 
 Subgruppen: Recon, Web, Exploitation, Password
 
@@ -86,6 +86,16 @@ Subgruppen: Recon, Web, Exploitation, Password
 | `hydra-cheatsheet.html` | Hydra | Exploitation, Password | `#dc2626` |
 | `hashcat-cheatsheet.html` | Hashcat | Password | `#0891b2` |
 | `gobuster-cheatsheet.html` | Gobuster & ffuf | Recon, Web | `#7c3aed` |
+| `sqlmap-cheatsheet.html` | sqlmap | Web | `#c0392b` |
+| `john-cheatsheet.html` | John the Ripper | Password | `#991b1b` |
+| `wireshark-cheatsheet.html` | Wireshark | Recon | `#1a56db` |
+| `netcat-cheatsheet.html` | netcat / ncat | Exploitation | `#0f766e` |
+| `aircrack-cheatsheet.html` | aircrack-ng | Exploitation | `#15803d` |
+| `nikto-cheatsheet.html` | nikto | Web, Recon | `#9a3412` |
+| `responder-cheatsheet.html` | Responder | Exploitation | `#be185d` |
+| `impacket-cheatsheet.html` | Impacket | Exploitation | `#0369a1` |
+| `theharvester-cheatsheet.html` | theHarvester | Recon | `#b45309` |
+| `netexec-cheatsheet.html` | CrackMapExec / NetExec | Exploitation | `#6d28d9` |
 
 ---
 

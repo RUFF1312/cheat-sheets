@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>John the Ripper - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/john.svg">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#991b1b;--accent2:#ef4444;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#0d1117 0%,#1a0505 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(153,27,27,.08),transparent);}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(153,27,27,.1);border:1px solid rgba(153,27,27,.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text);}
+  h1 span{color:var(--accent);}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .meta strong{color:var(--accent2);}
+  .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
+  .ch-re{background:rgba(153,27,27,.1);border:1px solid rgba(153,27,27,.3);color:var(--accent);}
+  .ch-gn{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);color:var(--green);}
+  .ch-cy{background:rgba(57,197,207,.1);border:1px solid rgba(57,197,207,.3);color:var(--cyan);}
+  .ch-pu{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.3);color:var(--purple);}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px;}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .th-re .section-header{background:rgba(153,27,27,.06);} .th-re .section-icon{background:rgba(153,27,27,.15);} .th-re .section-title{color:var(--accent);}
+  .th-gn .section-header{background:rgba(63,185,80,.06);} .th-gn .section-icon{background:rgba(63,185,80,.15);} .th-gn .section-title{color:var(--green);}
+  .th-cy .section-header{background:rgba(57,197,207,.06);} .th-cy .section-icon{background:rgba(57,197,207,.15);} .th-cy .section-title{color:var(--cyan);}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--purple);}
+  .th-or .section-header{background:rgba(249,115,22,.06);} .th-or .section-icon{background:rgba(249,115,22,.15);} .th-or .section-title{color:#f97316;}
+  .th-bl .section-header{background:rgba(57,197,207,.06);} .th-bl .section-icon{background:rgba(57,197,207,.15);} .th-bl .section-title{color:var(--cyan);}
+  .command-list{padding:8px 0;}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
+  .cmd-entry:last-child{border-bottom:none;}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+  .kw{color:#f87171;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;}
+  .tip{padding:8px 16px;background:rgba(153,27,27,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip strong{color:var(--text);}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(153,27,27,.3);padding:4px 12px;border-radius:4px;background:rgba(153,27,27,.08);}
+  .nav-link:hover{background:rgba(153,27,27,.15);}
+  @media(max-width:1100px){main{columns:2;}}
+  @media(max-width:700px){main{columns:1;padding:16px;}header{padding:24px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Security · Password Cracking</div>
+      <img src="../assets/john.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(14%) sepia(90%) saturate(700%) hue-rotate(340deg) brightness(110%)">
+      <h1><span>John</span> the Ripper<br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ john --wordlist=rockyou.txt hash.txt</p>
+      <div class="version-legend">
+        <div class="chip ch-re">John the Ripper</div>
+        <div class="chip ch-gn">Jumbo Edition</div>
+        <div class="chip ch-cy">Password Cracking</div>
+        <div class="chip ch-pu">Security Auditing</div>
+      </div>
+    </div>
+    <div class="meta"><strong>john</strong><br>--wordlist · --rules<br>--format · --show<br>--incremental · --mask<br>--session · --restore</div>
+  </div>
+</header>
+<main>
+
+<!-- 1. Grundlagen & Syntax -->
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">⚡</div><div class="section-title">Grundlagen &amp; Syntax</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Einfacher Crack (auto-detect Format)</div>
+      <code>john hash.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Wordlist-Angriff</div>
+      <code>john <span class="kw">--wordlist</span>=<span class="st">/usr/share/wordlists/rockyou.txt</span> hash.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Format explizit angeben</div>
+      <code>john <span class="kw">--format</span>=<span class="st">FORMAT</span> hash.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Gecrackte Passwörter anzeigen</div>
+      <code>john <span class="kw">--show</span> hash.txt
+john <span class="kw">--show</span> <span class="kw">--format</span>=<span class="st">FORMAT</span> hash.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Alle unterstützten Formate auflisten</div>
+      <code>john <span class="kw">--list</span>=formats
+john <span class="kw">--list</span>=formats | grep <span class="kw">-i</span> sha</code>
+    </div>
+    <div class="tip"><strong>Hinweis:</strong> John speichert gecrackte Passwörter in <strong>~/.john/john.pot</strong>. --show liest daraus, ohne erneut zu cracken. Das Pot-File kann mit <strong>--pot=DATEI</strong> angepasst werden.</div>
+  </div>
+</div>
+
+<!-- 2. Hash-Formate -->
+<div class="section th-or">
+  <div class="section-header"><div class="section-icon">🔑</div><div class="section-title">Hash-Formate (--format)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Linux / Unix Hashes</div>
+      <code><span class="cm"># md5crypt   — Linux MD5 ($1$)</span>
+<span class="cm"># sha256crypt — SHA-256 ($5$)</span>
+<span class="cm"># sha512crypt — SHA-512 ($6$)</span>
+<span class="cm"># bcrypt     — bcrypt ($2a$, $2b$)</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Windows / Active Directory</div>
+      <code><span class="cm"># nt         — Windows NTLM</span>
+<span class="cm"># lm         — Windows LM (veraltet)</span>
+<span class="cm"># mscash2    — Domain Cached Credentials v2</span>
+<span class="cm"># krb5tgs    — Kerberoasting-Hashes</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Archiv / Dokument</div>
+      <code><span class="cm"># zip        — ZIP-Archiv</span>
+<span class="cm"># rar        — RAR-Archiv</span>
+<span class="cm"># office     — MS-Office-Dokumente</span>
+<span class="cm"># pdf        — PDF-Passwort</span>
+<span class="cm"># keepass    — KeePass KDBX</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Beispiel: Format-spezifischer Crack</div>
+      <code>john <span class="kw">--format</span>=<span class="st">nt</span> <span class="kw">--wordlist</span>=rockyou.txt hashes.txt
+john <span class="kw">--format</span>=<span class="st">sha512crypt</span> hash.txt</code>
+    </div>
+    <div class="tip"><strong>Tipp:</strong> <strong>--list=formats --format=dynamic</strong> zeigt alle dynamischen Formate. Bei unbekannten Hashes hilft <strong>hash-identifier</strong> oder <strong>hashid</strong> beim Erkennen des Typs.</div>
+  </div>
+</div>
+
+<!-- 3. Wordlist-Angriffe -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">📋</div><div class="section-title">Wordlist-Angriffe</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Standard-Wordlist</div>
+      <code>john <span class="kw">--wordlist</span>=rockyou.txt hash.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Mit Standard-Regeln</div>
+      <code>john <span class="kw">--wordlist</span>=rockyou.txt <span class="kw">--rules</span> hash.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Mit benannten Regeln</div>
+      <code>john <span class="kw">--wordlist</span>=rockyou.txt <span class="kw">--rules</span>=Jumbo hash.txt
+john <span class="kw">--wordlist</span>=rockyou.txt <span class="kw">--rules</span>=All hash.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Wordlist von stdin</div>
+      <code>john <span class="kw">--wordlist</span>=- hash.txt &lt; words.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Häufige Wordlist-Pfade</div>
+      <code><span class="st">/usr/share/wordlists/rockyou.txt</span>
+<span class="st">/usr/share/john/password.lst</span>
+<span class="st">/usr/share/seclists/Passwords/</span></code>
+    </div>
+    <div class="tip"><strong>Empfehlung:</strong> <strong>--rules=Jumbo</strong> erweitert jedes Wort um hunderte Mutationen (Großschreibung, Zahlenanhänge, Leet-Speak). Deutlich effektiver als reiner Wordlist-Angriff.</div>
+  </div>
+</div>
+
+<!-- 4. Regel-basierte Angriffe -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">⚙</div><div class="section-title">Regel-basierte Angriffe</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Eingebaute Regel-Sets</div>
+      <code><span class="cm"># --rules=Single    Single-Crack-Regeln</span>
+<span class="cm"># --rules=Wordlist  Standard-Wordlist-Regeln</span>
+<span class="cm"># --rules=Extra     Erweiterte Mutationen</span>
+<span class="cm"># --rules=Jumbo     JtR-Jumbo-Regeln</span>
+<span class="cm"># --rules=KoreLogic Komplexe Transformationen</span>
+<span class="cm"># --rules=All       Alle Regel-Sets kombiniert</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Eigene Regeln in john.conf</div>
+      <code><span class="cm"># ~/.john/john.conf öffnen und ergänzen:</span>
+[List.Rules:Custom]
+<span class="cm"># c         — erstes Zeichen Großbuchstabe</span>
+<span class="cm"># Az"123"   — Suffix "123" anhängen</span>
+<span class="cm"># l         — alles Kleinbuchstaben</span>
+<span class="cm"># r         — Wort umkehren</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Benutzerdefinierte Regeln verwenden</div>
+      <code>john <span class="kw">--wordlist</span>=rockyou.txt \
+  <span class="kw">--rules</span>=Custom hash.txt</code>
+    </div>
+    <div class="tip"><strong>Hinweis:</strong> Die Konfigurationsdatei liegt standardmäßig unter <strong>/etc/john/john.conf</strong> oder <strong>~/.john/john.conf</strong>. Benutzer-Einstellungen haben Vorrang.</div>
+  </div>
+</div>
+
+<!-- 5. Brute-Force & Incremental -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">🔓</div><div class="section-title">Brute-Force &amp; Incremental</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Vollständiger Brute-Force</div>
+      <code>john <span class="kw">--incremental</span> hash.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Vordefinierte Zeichensätze</div>
+      <code>john <span class="kw">--incremental</span>=Alpha hash.txt   <span class="cm"># a-z A-Z</span>
+john <span class="kw">--incremental</span>=Digits hash.txt  <span class="cm"># 0-9</span>
+john <span class="kw">--incremental</span>=Alnum hash.txt   <span class="cm"># a-z A-Z 0-9</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Masken-Angriff</div>
+      <code>john <span class="kw">--mask</span>=<span class="st">'?a?a?a?a?a?a'</span> hash.txt
+john <span class="kw">--mask</span>=<span class="st">'?l?l?d?d'</span> hash.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Masken-Zeichenklassen</div>
+      <code><span class="kw">?l</span>  <span class="cm"># Kleinbuchstaben [a-z]</span>
+<span class="kw">?u</span>  <span class="cm"># Großbuchstaben [A-Z]</span>
+<span class="kw">?d</span>  <span class="cm"># Ziffern [0-9]</span>
+<span class="kw">?s</span>  <span class="cm"># Sonderzeichen</span>
+<span class="kw">?a</span>  <span class="cm"># alle Zeichen (?l+?u+?d+?s)</span></code>
+    </div>
+    <div class="tip"><strong>Warnung:</strong> Incremental-Mode ist extrem langsam bei langen Passwörtern. Für einfache Hashes (MD5, NTLM) Hashcat mit GPU nutzen — John ist CPU-optimiert.</div>
+  </div>
+</div>
+
+<!-- 6. Hash-Extraktion (Helper-Tools) -->
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">Hash-Extraktion (Helper-Tools)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Linux-System-Hashes</div>
+      <code>unshadow /etc/passwd /etc/shadow &gt; hashes.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Archiv-Passwörter extrahieren</div>
+      <code>zip2john archive.zip &gt; zip.hash
+rar2john archive.rar &gt; rar.hash</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Dokument-Passwörter extrahieren</div>
+      <code>pdf2john file.pdf &gt; pdf.hash
+office2john doc.docx &gt; office.hash</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Schlüssel &amp; Datenbank-Passwörter</div>
+      <code>keepass2john keepass.kdbx &gt; kp.hash
+ssh2john id_rsa &gt; ssh.hash
+bitlocker2john image.img &gt; bl.hash</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Extrahierten Hash direkt cracken</div>
+      <code>zip2john secret.zip &gt; z.hash
+john <span class="kw">--wordlist</span>=rockyou.txt z.hash</code>
+    </div>
+    <div class="tip"><strong>Hinweis:</strong> Alle <strong>*2john</strong>-Tools sind in der Jumbo-Edition enthalten. Der Pfad liegt typischerweise unter <strong>/usr/share/john/</strong> oder ist direkt im PATH verfügbar.</div>
+  </div>
+</div>
+
+<!-- 7. Session-Management -->
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">💾</div><div class="section-title">Session-Management</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Session benennen und starten</div>
+      <code>john <span class="kw">--session</span>=<span class="st">mysession</span> \
+  <span class="kw">--wordlist</span>=rockyou.txt hash.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Unterbrochene Session fortsetzen</div>
+      <code>john <span class="kw">--restore</span>=<span class="st">mysession</span>
+john <span class="kw">--restore</span>   <span class="cm"># letzte Session</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Aktuellen Fortschritt anzeigen</div>
+      <code>john <span class="kw">--status</span>
+john <span class="kw">--status</span>=<span class="st">mysession</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Session-Dateien verwalten</div>
+      <code>ls ~/.john/*.rec          <span class="cm"># alle Sessions</span>
+<span class="cm"># Ctrl+C → Session wird automatisch</span>
+<span class="cm"># gespeichert und kann fortgesetzt werden</span></code>
+    </div>
+    <div class="tip"><strong>Tipp:</strong> Sessions werden als <strong>.rec</strong>-Dateien in <strong>~/.john/</strong> gespeichert. Bei langen Cracking-Jobs immer eine Session benennen — so lässt sich die Arbeit jederzeit unterbrechen und fortsetzen.</div>
+  </div>
+</div>
+
+<!-- 8. Distributed Cracking -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">🖧</div><div class="section-title">Distributed Cracking</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Keyspace auf mehrere Nodes aufteilen</div>
+      <code>john <span class="kw">--node</span>=<span class="nu">1</span>/<span class="nu">3</span> <span class="kw">--wordlist</span>=rockyou.txt hash.txt
+john <span class="kw">--node</span>=<span class="nu">2</span>/<span class="nu">3</span> <span class="kw">--wordlist</span>=rockyou.txt hash.txt
+john <span class="kw">--node</span>=<span class="nu">3</span>/<span class="nu">3</span> <span class="kw">--wordlist</span>=rockyou.txt hash.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">MPI-Unterstützung (Jumbo Edition)</div>
+      <code>mpirun <span class="kw">-n</span> <span class="nu">4</span> john <span class="kw">--wordlist</span>=rockyou.txt hash.txt
+<span class="cm"># 4 parallele Prozesse auf lokalem System</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Node-Aufteilung — Konzept</div>
+      <code><span class="cm"># Node 1/3 → crackt Keyspace 0–33%</span>
+<span class="cm"># Node 2/3 → crackt Keyspace 33–66%</span>
+<span class="cm"># Node 3/3 → crackt Keyspace 66–100%</span>
+<span class="cm"># Alle Nodes laufen unabhängig, kein</span>
+<span class="cm"># gemeinsamer Netzwerkstatus nötig</span></code>
+    </div>
+    <div class="tip"><strong>Tipp:</strong> <strong>--node</strong> funktioniert für alle Angriffsmodi (Wordlist, Incremental, Mask). Pot-Dateien sollten nach Abschluss aller Nodes zusammengeführt werden.</div>
+  </div>
+</div>
+
+<!-- 9. Output & Wordlist-Generierung -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">📄</div><div class="section-title">Output &amp; Wordlist-Generierung</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Ergebnisse in Datei speichern</div>
+      <code>john <span class="kw">--show</span> hash.txt &gt; cracked.txt
+john <span class="kw">--show</span>=left hash.txt   <span class="cm"># ungecrackte</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Eigene Pot-Datei verwenden</div>
+      <code>john <span class="kw">--pot</span>=<span class="st">custom.pot</span> \
+  <span class="kw">--wordlist</span>=rockyou.txt hash.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Passwort-Kandidaten ausgeben (kein Crack)</div>
+      <code>john <span class="kw">--stdout</span> <span class="kw">--incremental</span> | head -20
+john <span class="kw">--stdout</span> <span class="kw">--wordlist</span>=rockyou.txt \
+  <span class="kw">--rules</span> | head -50</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Charset-Datei für Incremental erzeugen</div>
+      <code>john <span class="kw">--make-charset</span>=custom.chr
+<span class="cm"># Erzeugt .chr-Datei aus gecr. Passwörtern</span>
+<span class="cm"># für optimierten Incremental-Mode</span></code>
+    </div>
+    <div class="tip"><strong>Hinweis:</strong> <strong>--stdout</strong> mit Pipe zu <strong>hashcat --stdin</strong> kombinierbar: John generiert Kandidaten mit Regeln, Hashcat crackt GPU-beschleunigt.</div>
+  </div>
+</div>
+
+<!-- 10. Quick Reference -->
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">🚀</div><div class="section-title">Quick Reference</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Linux-System-Hashes cracken</div>
+      <code>unshadow /etc/passwd /etc/shadow | \
+  john <span class="kw">--wordlist</span>=rockyou.txt <span class="kw">--stdin</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">NTLM-Hashes (Windows)</div>
+      <code>john <span class="kw">--format</span>=<span class="st">nt</span> <span class="kw">--wordlist</span>=rockyou.txt hashes.txt
+john <span class="kw">--format</span>=<span class="st">nt</span> <span class="kw">--show</span> hashes.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Kerberoast-Hashes (AD)</div>
+      <code>john <span class="kw">--format</span>=<span class="st">krb5tgs</span> \
+  <span class="kw">--wordlist</span>=rockyou.txt tgs.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">ZIP-Archiv knacken</div>
+      <code>zip2john secret.zip &gt; z.hash
+john <span class="kw">--wordlist</span>=rockyou.txt <span class="kw">--rules</span> z.hash
+john <span class="kw">--show</span> z.hash</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">SSH-Schlüssel (passphrase)</div>
+      <code>ssh2john id_rsa &gt; ssh.hash
+john <span class="kw">--wordlist</span>=rockyou.txt <span class="kw">--rules</span>=Jumbo ssh.hash</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Format-Auto-Detection</div>
+      <code>john hash.txt   <span class="cm"># --format=auto ist Standard</span>
+<span class="cm"># John erkennt viele Formate automatisch</span>
+<span class="cm"># bei Problemen: --format=FORMAT angeben</span></code>
+    </div>
+    <div class="tip"><strong>Merksatz:</strong> <strong>*2john</strong> → Hash extrahieren · <strong>john --wordlist + --rules</strong> → cracken · <strong>john --show</strong> → Ergebnisse anzeigen.</div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>

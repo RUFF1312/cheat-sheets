@@ -191,6 +191,16 @@
   .c-hydra{--ac:#dc2626;--acs:rgba(220,38,38,0.15);--acb:rgba(220,38,38,0.25)}
   .c-hashcat{--ac:#0891b2;--acs:rgba(8,145,178,0.15);--acb:rgba(8,145,178,0.25)}
   .c-gobuster{--ac:#7c3aed;--acs:rgba(124,58,237,0.15);--acb:rgba(124,58,237,0.25)}
+  .c-sqlmap{--ac:#c0392b;--acs:rgba(192,57,43,0.15);--acb:rgba(192,57,43,0.25)}
+  .c-john{--ac:#991b1b;--acs:rgba(153,27,27,0.15);--acb:rgba(153,27,27,0.25)}
+  .c-wireshark{--ac:#1a56db;--acs:rgba(26,86,219,0.15);--acb:rgba(26,86,219,0.25)}
+  .c-netcat{--ac:#0f766e;--acs:rgba(15,118,110,0.15);--acb:rgba(15,118,110,0.25)}
+  .c-aircrack{--ac:#15803d;--acs:rgba(21,128,61,0.15);--acb:rgba(21,128,61,0.25)}
+  .c-nikto{--ac:#9a3412;--acs:rgba(154,52,18,0.15);--acb:rgba(154,52,18,0.25)}
+  .c-responder{--ac:#be185d;--acs:rgba(190,24,93,0.15);--acb:rgba(190,24,93,0.25)}
+  .c-impacket{--ac:#0369a1;--acs:rgba(3,105,161,0.15);--acb:rgba(3,105,161,0.25)}
+  .c-theharvester{--ac:#b45309;--acs:rgba(180,83,9,0.15);--acb:rgba(180,83,9,0.25)}
+  .c-netexec{--ac:#6d28d9;--acs:rgba(109,40,217,0.15);--acb:rgba(109,40,217,0.25)}
   /* ArgoCD */
   .c-argocd{--ac:#ef7b4d;--acs:rgba(239,123,77,0.15);--acb:rgba(239,123,77,0.25)}
   /* Loki */
@@ -315,16 +325,16 @@
   <div class="header-eyebrow">Developer Reference Collection</div>
   <h1><span class="h1-accent">TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span></span><br>Guide</h1>
   <p class="header-sub">Alle Referenz-Sheets auf einen Blick — dark-themed, vollständig, offline-fähig.</p>
-  <div class="header-count"><span>101</span> Sheets · CLI · Scripting · DevOps · Security · OpenStack · VMware · Coding</div>
+  <div class="header-count"><span>111</span> Sheets · CLI · Scripting · DevOps · Security · OpenStack · VMware · Coding</div>
 </header>
 
 <main>
   <div class="toolbar">
     <div class="toolbar-filters">
-      <button class="pill active" data-filter="all">Alle <span class="pill-count">101</span></button>
+      <button class="pill active" data-filter="all">Alle <span class="pill-count">111</span></button>
       <button class="pill" data-filter="Cloud & Infra">Cloud &amp; Infra <span class="pill-count">34</span></button>
       <button class="pill" data-filter="System & Netz">System &amp; Netz <span class="pill-count">18</span></button>
-      <button class="pill" data-filter="Security">Security <span class="pill-count">6</span></button>
+      <button class="pill" data-filter="Security">Security <span class="pill-count">16</span></button>
       <button class="pill" data-filter="Development">Development <span class="pill-count">30</span></button>
       <button class="pill" data-filter="Daten & Office">Daten &amp; Office <span class="pill-count">13</span></button>
     </div>
@@ -1493,6 +1503,156 @@
         <div class="card-tagline">gobuster dir -u URL -w wordlist -- Web Fuzzer<br>dir · dns · vhost · ffuf filter · SecLists</div>
         <div class="card-tags">
           <span class="tag">fuzzing</span><span class="tag">directory</span><span class="tag">subdomain</span><span class="tag">pentesting</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/sqlmap-cheatsheet.html" class="card c-sqlmap" data-title="sqlmap" data-group="Security" data-subgroups="Web">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/sqlmap.svg" alt="sqlmap.svg" style="width:24px;height:24px;filter:none"></div>
+          <div class="card-name">sqlmap</div>
+        </div>
+        <div class="card-tagline">sqlmap -u "URL?id=1" --dbs --batch<br>SQL Injection · DB Takeover · OS-Shell</div>
+        <div class="card-tags">
+          <span class="tag">SQLi</span><span class="tag">Pentest</span><span class="tag">WAF-Bypass</span><span class="tag">Dump</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/john-cheatsheet.html" class="card c-john" data-title="John the Ripper" data-group="Security" data-subgroups="Password">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/john.svg" alt="john.svg" style="width:24px;height:24px;filter:invert(14%) sepia(90%) saturate(700%) hue-rotate(340deg) brightness(110%)"></div>
+          <div class="card-name">John the Ripper</div>
+        </div>
+        <div class="card-tagline">john --wordlist=rockyou.txt hash.txt<br>crack · wordlist · rules · incremental · unshadow</div>
+        <div class="card-tags">
+          <span class="tag">Password</span><span class="tag">Cracking</span><span class="tag">Wordlist</span><span class="tag">Security</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/wireshark-cheatsheet.html" class="card c-wireshark" data-title="Wireshark" data-group="Security" data-subgroups="Recon">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/wireshark.svg" alt="wireshark.svg" style="width:24px;height:24px;filter:invert(30%) sepia(90%) saturate(700%) hue-rotate(210deg)"></div>
+          <div class="card-name">Wireshark</div>
+        </div>
+        <div class="card-tagline">tshark -i eth0 -Y "http" -- Network Protocol Analyzer<br>Display Filters · Capture · TLS Decrypt · Streams</div>
+        <div class="card-tags">
+          <span class="tag">Display Filter</span><span class="tag">tshark</span><span class="tag">TLS Decrypt</span><span class="tag">pcap</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/netcat-cheatsheet.html" class="card c-netcat" data-title="netcat / ncat" data-group="Security" data-subgroups="Exploitation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/netcat.svg" alt="netcat.svg" style="width:24px;height:24px;filter:invert(38%) sepia(72%) saturate(500%) hue-rotate(142deg)"></div>
+          <div class="card-name">netcat / ncat</div>
+        </div>
+        <div class="card-tagline">nc -lvp 4444 -- Swiss Army Knife Networking<br>Reverse Shells · Dateitransfer · Port-Scan</div>
+        <div class="card-tags">
+          <span class="tag">TCP/UDP</span><span class="tag">Reverse Shell</span><span class="tag">Dateitransfer</span><span class="tag">Banner Grabbing</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/aircrack-cheatsheet.html" class="card c-aircrack" data-title="aircrack-ng" data-group="Security" data-subgroups="Exploitation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/aircrack.svg" alt="aircrack.svg" style="width:24px;height:24px;filter:invert(42%) sepia(90%) saturate(400%) hue-rotate(100deg)"></div>
+          <div class="card-name">aircrack-ng</div>
+        </div>
+        <div class="card-tagline">aircrack-ng -w rockyou.txt handshake.cap -- 802.11 WPA2 Suite<br>Monitor Mode · Deauth · Handshake · PMKID</div>
+        <div class="card-tags">
+          <span class="tag">WPA2</span><span class="tag">WEP</span><span class="tag">Wireless</span><span class="tag">Handshake</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/nikto-cheatsheet.html" class="card c-nikto" data-title="nikto" data-group="Security" data-subgroups="Web Recon">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/nikto.svg" alt="nikto.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">nikto</div>
+        </div>
+        <div class="card-tagline">nikto -h https://target -Tuning x6 -- Web Server Scanner<br>CVE · SSL · Misconfig · Disclosure</div>
+        <div class="card-tags">
+          <span class="tag">Web Recon</span><span class="tag">Vuln Scan</span><span class="tag">SSL</span><span class="tag">CGI</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/responder-cheatsheet.html" class="card c-responder" data-title="Responder" data-group="Security" data-subgroups="Exploitation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/responder.svg" alt="responder.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">Responder</div>
+        </div>
+        <div class="card-tagline">responder -I eth0 -rdwP -- LLMNR/NBT-NS Poisoner<br>NTLMv2 · WPAD · Active Directory · Relay</div>
+        <div class="card-tags">
+          <span class="tag">LLMNR</span><span class="tag">NBT-NS</span><span class="tag">NTLMv2</span><span class="tag">Relay</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/impacket-cheatsheet.html" class="card c-impacket" data-title="Impacket" data-group="Security" data-subgroups="Exploitation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/impacket.svg" alt="impacket.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">Impacket</div>
+        </div>
+        <div class="card-tagline">secretsdump.py DOMAIN/USER:PASS@DC -- AD Attack Suite<br>PTH · Kerberoast · NTLM Relay · secretsdump</div>
+        <div class="card-tags">
+          <span class="tag">Active Directory</span><span class="tag">Kerberos</span><span class="tag">PTH</span><span class="tag">NTLM Relay</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/theharvester-cheatsheet.html" class="card c-theharvester" data-title="theHarvester" data-group="Security" data-subgroups="Recon">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/theharvester.svg" alt="theharvester.svg" style="width:24px;height:24px;filter:invert(35%) sepia(90%) saturate(800%) hue-rotate(20deg) brightness(0.9)"></div>
+          <div class="card-name">theHarvester</div>
+        </div>
+        <div class="card-tagline">theHarvester -d domain -b all -- OSINT-Recon<br>E-Mails · Subdomains · Hosts · API-Sources</div>
+        <div class="card-tags">
+          <span class="tag">OSINT</span><span class="tag">Recon</span><span class="tag">E-Mails</span><span class="tag">Subdomains</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/netexec-cheatsheet.html" class="card c-netexec" data-title="CrackMapExec / NetExec" data-group="Security" data-subgroups="Exploitation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/netexec.svg" alt="netexec.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">CrackMapExec / NetExec</div>
+        </div>
+        <div class="card-tagline">nxc smb 192.168.1.0/24 -- AD Pentesting Suite<br>SMB · LDAP · WinRM · Pass-the-Hash · Kerberoasting</div>
+        <div class="card-tags">
+          <span class="tag">SMB</span><span class="tag">Active Directory</span><span class="tag">Pass-the-Hash</span><span class="tag">Kerberoast</span>
         </div>
         <div class="card-arrow">→</div>
       </div>

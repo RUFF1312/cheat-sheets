@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>aircrack-ng - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/aircrack.svg">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#15803d;--accent2:#4ade80;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#0d1117 0%,#011208 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(21,128,61,.08),transparent);}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(21,128,61,.1);border:1px solid rgba(21,128,61,.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text);}
+  h1 span{color:var(--accent);}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .meta strong{color:var(--accent2);}
+  .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
+  .ch-ac{background:rgba(21,128,61,.1);border:1px solid rgba(21,128,61,.3);color:var(--accent);}
+  .ch-gn{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);color:var(--green);}
+  .ch-cy{background:rgba(57,197,207,.1);border:1px solid rgba(57,197,207,.3);color:var(--cyan);}
+  .ch-pu{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.3);color:var(--purple);}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px;}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .th-gn .section-header{background:rgba(21,128,61,.06);} .th-gn .section-icon{background:rgba(21,128,61,.15);} .th-gn .section-title{color:var(--accent);}
+  .th-bl .section-header{background:rgba(57,197,207,.06);} .th-bl .section-icon{background:rgba(57,197,207,.15);} .th-bl .section-title{color:var(--cyan);}
+  .th-cy .section-header{background:rgba(57,197,207,.06);} .th-cy .section-icon{background:rgba(57,197,207,.15);} .th-cy .section-title{color:var(--cyan);}
+  .th-re .section-header{background:rgba(244,112,103,.06);} .th-re .section-icon{background:rgba(244,112,103,.15);} .th-re .section-title{color:var(--red);}
+  .th-or .section-header{background:rgba(251,146,60,.06);} .th-or .section-icon{background:rgba(251,146,60,.15);} .th-or .section-title{color:#fb923c;}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--purple);}
+  .command-list{padding:8px 0;}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
+  .cmd-entry:last-child{border-bottom:none;}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+  .kw{color:#22c55e;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;}
+  .tip{padding:8px 16px;background:rgba(21,128,61,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip strong{color:var(--text);}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(21,128,61,.3);padding:4px 12px;border-radius:4px;background:rgba(21,128,61,.08);}
+  .nav-link:hover{background:rgba(21,128,61,.15);}
+  @media(max-width:1100px){main{columns:2;}}
+  @media(max-width:700px){main{columns:1;padding:16px;}header{padding:24px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Security · Wireless Exploitation</div>
+      <img src="../assets/aircrack.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(42%) sepia(90%) saturate(400%) hue-rotate(100deg)">
+      <h1><span>aircrack</span>-ng Suite<br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ aircrack-ng -w rockyou.txt -b BSSID handshake.cap</p>
+      <div class="version-legend">
+        <div class="chip ch-ac">aircrack-ng 1.7</div>
+        <div class="chip ch-gn">WPA2 Handshake</div>
+        <div class="chip ch-cy">PMKID Attack</div>
+        <div class="chip ch-pu">WEP / Replay</div>
+      </div>
+    </div>
+    <div class="meta"><strong>aircrack-ng</strong><br>Monitor Mode<br>Capture · Deauth<br>WPA2 Crack<br>WEP Crack<br>PMKID · Decrypt</div>
+  </div>
+</header>
+<main>
+
+<!-- 1. Vorbereitung — Monitor Mode -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">📡</div><div class="section-title">Vorbereitung — Monitor Mode</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Wireless-Interfaces auflisten</div>
+      <code><span class="kw">airmon-ng</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Störende Prozesse beenden (NetworkManager etc.)</div>
+      <code><span class="kw">airmon-ng</span> check kill</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Monitor-Modus aktivieren → wlan0mon</div>
+      <code><span class="kw">airmon-ng</span> start wlan0</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Monitor-Modus beenden</div>
+      <code><span class="kw">airmon-ng</span> stop wlan0mon</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Interfaces und Modi anzeigen</div>
+      <code>iwconfig</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Alternativer Weg via iw</div>
+      <code>iw dev wlan0 set type monitor
+ifconfig wlan0 up</code>
+    </div>
+    <div class="tip"><strong>airmon-ng check kill</strong> muss vor dem Start ausgeführt werden — sonst blockiert NetworkManager den Monitor-Modus und die Capture-Rate ist gering.</div>
+  </div>
+</div>
+
+<!-- 2. airodump-ng — Traffic-Capture -->
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">🔭</div><div class="section-title">airodump-ng — Traffic-Capture</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Alle APs und Clients scannen</div>
+      <code><span class="kw">airodump-ng</span> wlan0mon</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Spezifisches Netz aufzeichnen</div>
+      <code><span class="kw">airodump-ng</span> <span class="fn">-c</span> <span class="nu">6</span> \
+  <span class="fn">--bssid</span> <span class="st">AA:BB:CC:DD:EE:FF</span> \
+  <span class="fn">-w</span> capture wlan0mon</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Wichtige Optionen im Überblick</div>
+      <code><span class="fn">-c</span> CHANNEL       <span class="cm"># auf Kanal fokussieren</span>
+<span class="fn">--bssid</span> BSSID   <span class="cm"># auf AP fokussieren</span>
+<span class="fn">-w</span> PRÄFIX       <span class="cm"># .cap/.csv speichern</span>
+<span class="fn">--essid</span> NAME   <span class="cm"># nach SSID filtern</span>
+<span class="fn">--band</span> abg     <span class="cm"># mehrere Bänder</span>
+<span class="fn">--wps</span>           <span class="cm"># WPS-Info anzeigen</span></code>
+    </div>
+    <div class="tip"><strong>ENC-Spalte:</strong> WPA2 = CCMP/TKIP, WEP = WEP. <strong>PWR</strong> gibt die Signalstärke in dBm an — je näher an 0, desto stärker.</div>
+  </div>
+</div>
+
+<!-- 3. aireplay-ng — Attacks -->
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">⚡</div><div class="section-title">aireplay-ng — Attacks</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Deauth-Angriff (5 Pakete, broadcast)</div>
+      <code><span class="kw">aireplay-ng</span> <span class="fn">-0</span> <span class="nu">5</span> <span class="fn">-a</span> BSSID wlan0mon</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Gezielter Deauth gegen einzelnen Client</div>
+      <code><span class="kw">aireplay-ng</span> <span class="fn">-0</span> <span class="nu">0</span> \
+  <span class="fn">-a</span> BSSID <span class="fn">-c</span> CLIENT_MAC wlan0mon
+<span class="cm"># -0 0 = endloser Deauth (Strg+C zum Stoppen)</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Fake Authentication am AP</div>
+      <code><span class="kw">aireplay-ng</span> <span class="fn">-1</span> <span class="nu">0</span> <span class="fn">-a</span> BSSID wlan0mon</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">ARP-Replay (WEP — IVs sammeln)</div>
+      <code><span class="kw">aireplay-ng</span> <span class="fn">-3</span> \
+  <span class="fn">-b</span> BSSID <span class="fn">-h</span> EIGENE_MAC wlan0mon</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Fragmentation-Angriff / Injection-Test</div>
+      <code><span class="kw">aireplay-ng</span> <span class="fn">-5</span> <span class="fn">-b</span> BSSID wlan0mon
+<span class="kw">aireplay-ng</span> <span class="fn">-9</span> wlan0mon  <span class="cm"># Test</span></code>
+    </div>
+    <div class="tip"><strong>--ignore-negative-one</strong> unterdrückt Kanalwarnungen, wenn das Treiber-Interface keinen festen Kanal meldet.</div>
+  </div>
+</div>
+
+<!-- 4. WPA2 Handshake Capture -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">🤝</div><div class="section-title">WPA2 Handshake Capture</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Schritt 1 — Netz aufzeichnen</div>
+      <code><span class="kw">airodump-ng</span> <span class="fn">-c</span> CH \
+  <span class="fn">--bssid</span> BSSID \
+  <span class="fn">-w</span> handshake wlan0mon</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Schritt 2 — Client deauthen (neues Terminal)</div>
+      <code><span class="kw">aireplay-ng</span> <span class="fn">-0</span> <span class="nu">3</span> <span class="fn">-a</span> BSSID wlan0mon</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Bestätigung in airodump-ng</div>
+      <code><span class="cm"># Oben rechts erscheint:</span>
+WPA handshake: <span class="st">AA:BB:CC:DD:EE:FF</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Handshake validieren</div>
+      <code><span class="kw">aircrack-ng</span> handshake.cap
+<span class="cm"># Ausgabe: "1 handshake" bestätigt Capture</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Alternativer Check mit pyrit</div>
+      <code>pyrit analyze <span class="fn">-r</span> handshake.cap</code>
+    </div>
+    <div class="tip"><strong>Passiv warten:</strong> Ohne Deauth auf echten Client-Connect warten. Dauert länger, ist aber unauffälliger und hinterlässt keine Deauth-Frames im Log.</div>
+  </div>
+</div>
+
+<!-- 5. aircrack-ng — Passwort-Cracking -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🔑</div><div class="section-title">aircrack-ng — Passwort-Cracking</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Wordlist-Angriff auf WPA2</div>
+      <code><span class="kw">aircrack-ng</span> <span class="fn">-w</span> rockyou.txt handshake.cap</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Spezifischer AP (mehrere Handshakes)</div>
+      <code><span class="kw">aircrack-ng</span> <span class="fn">-w</span> wordlist.txt \
+  <span class="fn">-b</span> BSSID handshake.cap</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Explizit WPA2 / WEP</div>
+      <code><span class="kw">aircrack-ng</span> <span class="fn">-a2</span> <span class="fn">-b</span> BSSID <span class="fn">-w</span> rockyou.txt handshake.cap
+<span class="kw">aircrack-ng</span> <span class="fn">-a1</span> <span class="fn">-b</span> BSSID <span class="fn">-w</span> wep.txt wep.cap</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Brute Force via crunch-Pipe</div>
+      <code>crunch <span class="nu">8</span> <span class="nu">12</span> abcdefgh0123 | \
+  <span class="kw">aircrack-ng</span> <span class="fn">-w</span> - <span class="fn">-b</span> BSSID handshake.cap</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Erfolgsmeldung</div>
+      <code><span class="cm"># Ausgabe bei Treffer:</span>
+KEY FOUND! [ <span class="st">PASSWORT</span> ]</code>
+    </div>
+    <div class="tip"><strong>Hashcat</strong> ist deutlich schneller als aircrack-ng auf GPU-Hardware. Empfehlung: Handshake mit hcxpcapngtool extrahieren und mit Hashcat cracken.</div>
+  </div>
+</div>
+
+<!-- 6. PMKID-Angriff -->
+<div class="section th-or">
+  <div class="section-header"><div class="section-icon">🎯</div><div class="section-title">PMKID-Angriff (kein Client nötig)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Schritt 1 — PMKID-Capture mit hcxdumptool</div>
+      <code>hcxdumptool <span class="fn">-i</span> wlan0mon \
+  <span class="fn">-o</span> pmkid.pcapng \
+  <span class="fn">--enable_status=1</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Schritt 2 — Hash für Hashcat extrahieren</div>
+      <code>hcxpcapngtool <span class="fn">-o</span> hash.hc22000 pmkid.pcapng</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Schritt 3 — Hashcat auf PMKID / EAPOL</div>
+      <code>hashcat <span class="fn">-m</span> <span class="nu">22000</span> hash.hc22000 rockyou.txt
+<span class="cm"># -m 22000 = WPA2 PMKID+EAPOL unified</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Vorteil gegenüber Handshake</div>
+      <code><span class="cm"># Kein aktiver Client nötig</span>
+<span class="cm"># Kein Deauth erforderlich</span>
+<span class="cm"># AP muss nur in Reichweite sein</span></code>
+    </div>
+    <div class="tip"><strong>PMKID</strong> (WPA2-KRACK-Nebenprodukt) wird vom AP in EAPOL-Frame-1 übermittelt. Seit 2018 Standard-Angriff gegen moderne Router.</div>
+  </div>
+</div>
+
+<!-- 7. WEP-Angriff -->
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">🔓</div><div class="section-title">WEP-Angriff</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Schritt 1 — WEP-Traffic aufzeichnen</div>
+      <code><span class="kw">airodump-ng</span> <span class="fn">-c</span> CH \
+  <span class="fn">--bssid</span> BSSID <span class="fn">-w</span> wep wlan0mon</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Schritt 2 — Fake Authentication</div>
+      <code><span class="kw">aireplay-ng</span> <span class="fn">-1</span> <span class="nu">0</span> <span class="fn">-a</span> BSSID wlan0mon</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Schritt 3 — ARP-Replay (IVs injizieren)</div>
+      <code><span class="kw">aireplay-ng</span> <span class="fn">-3</span> <span class="fn">-b</span> BSSID wlan0mon</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Schritt 4 — Schlüssel cracken (~50.000 IVs)</div>
+      <code><span class="kw">aircrack-ng</span> wep*.cap</code>
+    </div>
+    <div class="tip"><strong>WEP gilt als vollständig gebrochen</strong> und ist seit 2004 deprecated. In modernen Netzen kaum noch anzutreffen. Für Laborzwecke: ~50.000–80.000 IVs reichen für einen zuverlässigen Crack.</div>
+  </div>
+</div>
+
+<!-- 8. airdecap-ng — Entschlüsselung -->
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">🔐</div><div class="section-title">airdecap-ng — Entschlüsselung</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">WPA2-Capture mit bekanntem Passwort entschlüsseln</div>
+      <code><span class="kw">airdecap-ng</span> <span class="fn">-p</span> PASSWORT \
+  <span class="fn">-e</span> SSID handshake.cap</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Spezifischer AP per BSSID</div>
+      <code><span class="kw">airdecap-ng</span> <span class="fn">-b</span> BSSID \
+  <span class="fn">-p</span> PASSWORT capture.cap</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">WEP-Capture entschlüsseln</div>
+      <code><span class="kw">airdecap-ng</span> <span class="fn">-w</span> WEPKEY capture.cap
+<span class="cm"># WEPKEY in Hex: z. B. AABBCCDDEE</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Ergebnis</div>
+      <code><span class="cm"># Erzeugt: capture-dec.cap</span>
+<span class="cm"># Wireshark-lesbare Klartextpakete</span>
+wireshark capture-dec.cap</code>
+    </div>
+    <div class="tip"><strong>airdecap-ng</strong> benötigt das korrekte Passwort und die SSID des Netzwerks. Ohne korrekte SSID schlägt die PBKDF2-Ableitung des PMK fehl.</div>
+  </div>
+</div>
+
+<!-- 9. airolib-ng — Precomputed Hashes -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">🗄️</div><div class="section-title">airolib-ng — Precomputed Hashes</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Neue Datenbank erstellen</div>
+      <code><span class="kw">airolib-ng</span> db <span class="fn">--init</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">SSIDs und Wordlist importieren</div>
+      <code><span class="kw">airolib-ng</span> db <span class="fn">--import essid</span> ssids.txt
+<span class="kw">airolib-ng</span> db <span class="fn">--import passwd</span> rockyou.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">PMKs berechnen (zeitintensiv)</div>
+      <code><span class="kw">airolib-ng</span> db <span class="fn">--batch</span>
+<span class="cm"># Fortschritt mit --stats anzeigen:</span>
+<span class="kw">airolib-ng</span> db <span class="fn">--stats</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Mit PMK-Datenbank cracken</div>
+      <code><span class="kw">aircrack-ng</span> <span class="fn">-r</span> db handshake.cap</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Alternativ: cowpatty mit Rainbow-Table</div>
+      <code>cowpatty <span class="fn">-d</span> db <span class="fn">-r</span> handshake.cap <span class="fn">-s</span> SSID</code>
+    </div>
+    <div class="tip"><strong>Precomputed PMKs</strong> beschleunigen das Cracking erheblich — die teure PBKDF2-Berechnung (4096 Iterationen pro Passwort) entfällt. Nachteil: Datenbank ist SSID-spezifisch.</div>
+  </div>
+</div>
+
+<!-- 10. Quick Reference -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">⚡</div><div class="section-title">Quick Reference</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">WPA2-Crack-Workflow (vollständig)</div>
+      <code><span class="cm"># 1. Vorbereitung</span>
+<span class="kw">airmon-ng</span> check kill
+<span class="kw">airmon-ng</span> start wlan0
+<span class="cm"># 2. Netz finden</span>
+<span class="kw">airodump-ng</span> wlan0mon
+<span class="cm"># 3. Capture starten</span>
+<span class="kw">airodump-ng</span> <span class="fn">-c</span> CH <span class="fn">--bssid</span> BSSID <span class="fn">-w</span> cap wlan0mon
+<span class="cm"># 4. Client deauthen (neues Terminal)</span>
+<span class="kw">aireplay-ng</span> <span class="fn">-0</span> <span class="nu">3</span> <span class="fn">-a</span> BSSID wlan0mon
+<span class="cm"># 5. Cracken</span>
+<span class="kw">aircrack-ng</span> <span class="fn">-w</span> rockyou.txt cap.cap</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Hashcat-Integration (GPU — schneller)</div>
+      <code>hcxpcapngtool <span class="fn">-o</span> hash.hc22000 cap.cap
+hashcat <span class="fn">-m</span> <span class="nu">22000</span> hash.hc22000 rockyou.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">PMKID-Workflow ohne Client</div>
+      <code>hcxdumptool <span class="fn">-i</span> wlan0mon <span class="fn">-o</span> pmkid.pcapng
+hcxpcapngtool <span class="fn">-o</span> hash.hc22000 pmkid.pcapng
+hashcat <span class="fn">-m</span> <span class="nu">22000</span> hash.hc22000 rockyou.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Monitor-Mode verifizieren</div>
+      <code>iw list | grep <span class="fn">-i</span> monitor
+iwconfig wlan0mon | grep <span class="st">"Mode:Monitor"</span></code>
+    </div>
+    <div class="tip"><strong>Rechtlicher Hinweis:</strong> Nur an eigenen Netzwerken oder mit ausdrücklicher Genehmigung verwenden. Unbefugter Zugriff auf Netzwerke ist strafbar (§ 202a StGB).</div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>
