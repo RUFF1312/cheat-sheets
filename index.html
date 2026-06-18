@@ -175,10 +175,16 @@
   .c-postgresql{--ac:#2d6a9f;--acs:rgba(45,106,159,0.15);--acb:rgba(45,106,159,0.25)}
   /* Redis */
   .c-redis{--ac:#dc382d;--acs:rgba(220,56,45,0.15);--acb:rgba(220,56,45,0.25)}
+  /* MongoDB */
+  .c-mongodb{--ac:#13AA52;--acs:rgba(19,170,82,0.15);--acb:rgba(19,170,82,0.25)}
   /* rsync */
   .c-rsync{--ac:#00b4a0;--acs:rgba(0,180,160,0.15);--acb:rgba(0,180,160,0.25)}
   /* firewalld */
   .c-firewalld{--ac:#e05a00;--acs:rgba(224,90,0,0.15);--acb:rgba(224,90,0,0.25)}
+  /* WireGuard */
+  .c-wireguard{--ac:#f8a000;--acs:rgba(248,160,0,0.15);--acb:rgba(248,160,0,0.25)}
+  /* nmap */
+  .c-nmap{--ac:#0E6B8C;--acs:rgba(14,107,140,0.15);--acb:rgba(14,107,140,0.25)}
   /* ArgoCD */
   .c-argocd{--ac:#ef7b4d;--acs:rgba(239,123,77,0.15);--acb:rgba(239,123,77,0.25)}
   /* Loki */
@@ -208,12 +214,18 @@
   .c-powerpoint{--ac:#D24726;--acs:rgba(210,71,38,0.15);--acb:rgba(210,71,38,0.25)}
   .c-outlook{--ac:#0078D4;--acs:rgba(0,120,212,0.15);--acb:rgba(0,120,212,0.25)}
   .c-vba{--ac:#7B3FA0;--acs:rgba(123,63,160,0.15);--acb:rgba(123,63,160,0.25)}
+  /* LibreOffice */
+  .c-libreoffice-writer{--ac:#0E4E96;--acs:rgba(14,78,150,0.15);--acb:rgba(14,78,150,0.25)}
+  .c-libreoffice-calc{--ac:#15A74D;--acs:rgba(21,167,77,0.15);--acb:rgba(21,167,77,0.25)}
+  .c-libreoffice-impress{--ac:#C7442F;--acs:rgba(199,68,47,0.15);--acb:rgba(199,68,47,0.25)}
   /* Datenformate */
   .c-csv{--ac:#16a34a;--acs:rgba(22,163,74,0.15);--acb:rgba(22,163,74,0.25)}
   .c-json{--ac:#f59e0b;--acs:rgba(245,158,11,0.15);--acb:rgba(245,158,11,0.25)}
   .c-yaml{--ac:#6366f1;--acs:rgba(99,102,241,0.15);--acb:rgba(99,102,241,0.25)}
   .c-markdown{--ac:#4078C8;--acs:rgba(64,120,200,0.15);--acb:rgba(64,120,200,0.25)}
   .c-vscode{--ac:#007ACC;--acs:rgba(0,122,204,0.15);--acb:rgba(0,122,204,0.25)}
+  /* GitHub CLI */
+  .c-gh{--ac:#8957E5;--acs:rgba(137,87,229,0.15);--acb:rgba(137,87,229,0.25)}
 
   .card .card-accent{background:var(--ac)}
   .card:hover{border-color:var(--ac)}
@@ -236,6 +248,7 @@
   .pill[data-filter="VMware"].active{border-color:#5ba8e0;color:#5ba8e0;background:rgba(0,125,193,.08)}
   .pill[data-filter="Office"].active{border-color:#0078D4;color:#0078D4;background:rgba(0,120,212,.08)}
   .pill[data-subgroup="MS Office"].active{border-color:#0078D4;color:#0078D4;background:rgba(0,120,212,.08);border-style:solid}
+  .pill[data-subgroup="LibreOffice"].active{border-color:#0E4E96;color:#0E4E96;background:rgba(14,78,150,.08);border-style:solid}
   .pill-count{opacity:.55;margin-left:5px}
   /* SUBGROUP PILLS */
   .toolbar-subgroups{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
@@ -277,20 +290,21 @@
 <main>
   <div class="toolbar">
     <div class="toolbar-filters">
-      <button class="pill active" data-filter="all">Alle <span class="pill-count">89</span></button>
+      <button class="pill active" data-filter="all">Alle <span class="pill-count">96</span></button>
       <button class="pill" data-filter="Programmiersprachen">Sprachen <span class="pill-count">13</span></button>
-      <button class="pill" data-filter="Dev & Automation">Dev &amp; Automation <span class="pill-count">16</span></button>
-      <button class="pill" data-filter="System & Netz">System &amp; Netz <span class="pill-count">17</span></button>
-      <button class="pill" data-filter="Datenbanken">Datenbanken <span class="pill-count">4</span></button>
+      <button class="pill" data-filter="Dev & Automation">Dev &amp; Automation <span class="pill-count">17</span></button>
+      <button class="pill" data-filter="System & Netz">System &amp; Netz <span class="pill-count">19</span></button>
+      <button class="pill" data-filter="Datenbanken">Datenbanken <span class="pill-count">5</span></button>
       <button class="pill" data-filter="Cloud & Infra">Cloud &amp; Infra <span class="pill-count">30</span></button>
       <button class="pill" data-filter="VMware">VMware <span class="pill-count">4</span></button>
-      <button class="pill" data-filter="Office">Office <span class="pill-count">5</span></button>
+      <button class="pill" data-filter="Office">Office <span class="pill-count">8</span></button>
     </div>
     <div class="toolbar-subgroups">
       <span class="subgroup-label">↳ Subgruppe:</span>
       <button class="pill pill-sub" data-subgroup="OpenStack">OpenStack <span class="pill-count">6</span></button>
       <button class="pill pill-sub" data-subgroup="VMware">VMware <span class="pill-count">4</span></button>
       <button class="pill pill-sub" data-subgroup="MS Office">MS Office <span class="pill-count">5</span></button>
+      <button class="pill pill-sub" data-subgroup="LibreOffice">LibreOffice <span class="pill-count">3</span></button>
     </div>
     <div class="toolbar-row2">
       <input type="text" id="searchInput" class="search-input" placeholder="Sheets, Commands, Tags durchsuchen…">
@@ -1278,6 +1292,21 @@
       </div>
     </a>
 
+    <a href="sheets/mongodb-cheatsheet.html" class="card c-mongodb" data-title="MongoDB" data-group="Datenbanken">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/mongodb.svg" alt="mongodb.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">MongoDB</div>
+        </div>
+        <div class="card-tagline">$ mongosh "mongodb://localhost:27017" -- NoSQL<br>CRUD · Aggregation · Indexing · Replica Set</div>
+        <div class="card-tags">
+          <span class="tag">mongosh</span><span class="tag">Aggregation</span><span class="tag">Indexing</span><span class="tag">MongoDB 7</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
     <!-- System & Netz (neue) -->
     <a href="sheets/rsync-cheatsheet.html" class="card c-rsync" data-title="rsync" data-group="System & Netz">
       <div class="card-accent"></div>
@@ -1304,6 +1333,36 @@
         <div class="card-tagline">$ firewall-cmd --list-all -- Zonen · Services<br>Rich Rules · NAT · Masquerade · Port Forward</div>
         <div class="card-tags">
           <span class="tag">Zonen</span><span class="tag">Rich Rules</span><span class="tag">NAT</span><span class="tag">nftables</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/wireguard-cheatsheet.html" class="card c-wireguard" data-title="WireGuard" data-group="System & Netz">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/wireguard.svg" alt="wireguard.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">WireGuard</div>
+        </div>
+        <div class="card-tagline">wg-quick up wg0 -- Modern VPN Tunnel<br>Peers · Keys · Routing · NAT</div>
+        <div class="card-tags">
+          <span class="tag">VPN</span><span class="tag">UDP</span><span class="tag">ChaCha20</span><span class="tag">Curve25519</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/nmap-cheatsheet.html" class="card c-nmap" data-title="nmap" data-group="System & Netz">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/nmap.svg" alt="nmap.svg" style="width:24px;height:24px;filter:invert(40%) sepia(80%) saturate(500%) hue-rotate(165deg)"></div>
+          <div class="card-name">nmap</div>
+        </div>
+        <div class="card-tagline">$ nmap -sS -sV -O -p- target -- Port Scanner<br>scan · discovery · nse · evasion</div>
+        <div class="card-tags">
+          <span class="tag">Port Scan</span><span class="tag">NSE</span><span class="tag">OS Detection</span><span class="tag">Firewall</span>
         </div>
         <div class="card-arrow">→</div>
       </div>
@@ -1612,6 +1671,51 @@
       </div>
     </a>
 
+    <a href="sheets/libreoffice-writer-cheatsheet.html" class="card c-libreoffice-writer" data-title="LibreOffice Writer" data-group="Office" data-subgroup="LibreOffice">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/libreoffice-writer.svg" alt="libreoffice-writer.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">LibreOffice Writer</div>
+        </div>
+        <div class="card-tagline">Ctrl+B · Ctrl+H · F5 · F11 -- Shortcuts &amp; Styles<br>Tabellen · Felder · Serienbriefe · Makros · Export</div>
+        <div class="card-tags">
+          <span class="tag">Shortcuts</span><span class="tag">Styles</span><span class="tag">ODT</span><span class="tag">Office</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/libreoffice-calc-cheatsheet.html" class="card c-libreoffice-calc" data-title="LibreOffice Calc" data-group="Office" data-subgroup="LibreOffice">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/libreoffice-calc.svg" alt="libreoffice-calc.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">LibreOffice Calc</div>
+        </div>
+        <div class="card-tagline">=SUMIFS() · XLOOKUP() · Pivot -- Formeln<br>Navigation · Datum · Text · Shortcuts · Diagramme</div>
+        <div class="card-tags">
+          <span class="tag">Formeln</span><span class="tag">Shortcuts</span><span class="tag">Pivot</span><span class="tag">Open Source</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/libreoffice-impress-cheatsheet.html" class="card c-libreoffice-impress" data-title="LibreOffice Impress" data-group="Office" data-subgroup="LibreOffice">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/libreoffice-impress.svg" alt="libreoffice-impress.svg" style="width:24px;height:24px;"></div>
+          <div class="card-name">LibreOffice Impress</div>
+        </div>
+        <div class="card-tagline">F5 · Shift+F5 · Ctrl+Shift+G -- Präsentation<br>Animationen · Übergänge · Export · Master</div>
+        <div class="card-tags">
+          <span class="tag">Shortcuts</span><span class="tag">Folien</span><span class="tag">Export</span><span class="tag">Animationen</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
     <a href="sheets/csv-cheatsheet.html" class="card c-csv" data-title="CSV / Tabellarische Daten" data-group="Dev & Automation">
       <div class="card-accent"></div>
       <div class="card-body">
@@ -1682,6 +1786,21 @@
         <div class="card-tagline">Ctrl+P · Ctrl+Shift+P · F12 -- Editor Shortcuts<br>Debugging · Git · IntelliSense · Extensions</div>
         <div class="card-tags">
           <span class="tag">Shortcuts</span><span class="tag">Debugging</span><span class="tag">Git</span><span class="tag">Extensions</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/gh-cheatsheet.html" class="card c-gh" data-title="GitHub CLI" data-group="Dev & Automation">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/gh.svg" alt="gh.svg" style="width:24px;height:24px;filter:invert(45%) sepia(80%) saturate(800%) hue-rotate(240deg)"></div>
+          <div class="card-name">GitHub CLI</div>
+        </div>
+        <div class="card-tagline">gh pr create --fill -- Auth · PR · Issues<br>Actions · Releases · Gists · API</div>
+        <div class="card-tags">
+          <span class="tag">gh auth</span><span class="tag">pull requests</span><span class="tag">actions</span><span class="tag">releases</span>
         </div>
         <div class="card-arrow">→</div>
       </div>

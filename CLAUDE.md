@@ -114,16 +114,16 @@ Typische Commit-Struktur:
 
 ---
 
-## Gruppen und Zähler (Stand: 89 Sheets)
+## Gruppen und Zähler (Stand: 96 Sheets)
 
 | Gruppe | `data-group` | Anzahl | Subgruppen |
 |---|---|---|---|
 | Cloud & Infra | `"Cloud & Infra"` | 30 | OpenStack (6) |
-| System & Netz | `"System & Netz"` | 17 | — |
+| System & Netz | `"System & Netz"` | 19 | — |
 | Programmiersprachen | `"Programmiersprachen"` | 13 | — |
-| Dev & Automation | `"Dev & Automation"` | 16 | — |
+| Dev & Automation | `"Dev & Automation"` | 17 | — |
 | VMware | `"VMware"` | 4 | VMware (4) |
-| Datenbanken | `"Datenbanken"` | 4 | — |
-| Office | `"Office"` | 5 | MS Office (5) |
+| Datenbanken | `"Datenbanken"` | 5 | — |
+| Office | `"Office"` | 8 | MS Office (5), LibreOffice (3) |
 
 Bei neuen Sheets: Gruppenanzahl und „Alle"-Zähler im Toolbar-HTML aktualisieren.

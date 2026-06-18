@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LibreOffice Calc - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/libreoffice-calc.svg">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#15A74D;--accent2:#1fc75e;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#0d1117 0%,#001a0a 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(21,167,77,.08),transparent);}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(21,167,77,.1);border:1px solid rgba(21,167,77,.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text);}
+  h1 span{color:var(--accent);}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .meta strong{color:var(--accent2);}
+  .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
+  .ch-gn{background:rgba(21,167,77,.1);border:1px solid rgba(21,167,77,.3);color:var(--accent);}
+  .ch-cy{background:rgba(57,197,207,.1);border:1px solid rgba(57,197,207,.3);color:var(--cyan);}
+  .ch-pu{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.3);color:var(--purple);}
+  .ch-re{background:rgba(244,112,103,.1);border:1px solid rgba(244,112,103,.3);color:var(--red);}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px;}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .th-gn .section-header{background:rgba(21,167,77,.06);} .th-gn .section-icon{background:rgba(21,167,77,.15);} .th-gn .section-title{color:var(--accent);}
+  .th-cy .section-header{background:rgba(57,197,207,.06);} .th-cy .section-icon{background:rgba(57,197,207,.15);} .th-cy .section-title{color:var(--cyan);}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--purple);}
+  .th-re .section-header{background:rgba(244,112,103,.06);} .th-re .section-icon{background:rgba(244,112,103,.15);} .th-re .section-title{color:var(--red);}
+  .command-list{padding:8px 0;}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
+  .cmd-entry:last-child{border-bottom:none;}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+  .kw{color:#15A74D;font-weight:700;} .fn{color:#39c5cf;font-weight:600;} .st{color:#3fb950;}
+  .nu{color:#f47067;} .cm{color:#7d8590;font-style:italic;}
+  .tip{padding:8px 16px;background:rgba(21,167,77,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip strong{color:var(--text);}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(21,167,77,.3);padding:4px 12px;border-radius:4px;background:rgba(21,167,77,.08);}
+  .nav-link:hover{background:rgba(21,167,77,.15);}
+  @media(max-width:1100px){main{columns:2;}}
+  @media(max-width:700px){main{columns:1;padding:16px;}header{padding:24px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Office Reference</div>
+      <img src="../assets/libreoffice-calc.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(52%) sepia(80%) saturate(500%) hue-rotate(100deg)">
+      <h1><span>LibreOffice</span> Calc<br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">=SUMIFS(B2:B100,A2:A100,"Kriterium")</p>
+      <div class="version-legend">
+        <div class="chip ch-gn">LibreOffice 24.x</div>
+        <div class="chip ch-cy">Formeln</div>
+        <div class="chip ch-pu">Shortcuts</div>
+        <div class="chip ch-re">Pivot</div>
+      </div>
+    </div>
+    <div class="meta"><strong>LibreOffice Calc</strong><br>Tabellenkalkulation<br>Open Source<br>Linux · Windows · macOS<br>ODS · XLSX · CSV</div>
+  </div>
+</header>
+<main>
+
+<!-- 1. Navigation -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🧭</div><div class="section-title">Navigation</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Erste / letzte Zelle</div>
+      <code>Ctrl+Home          <span class="cm"># Zelle A1</span>
+Ctrl+End           <span class="cm"># letzte belegte Zelle</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Zellenbereich springen</div>
+      <code>Ctrl+→ / ←         <span class="cm"># letzter Wert in Zeile</span>
+Ctrl+↑ / ↓         <span class="cm"># letzter Wert in Spalte</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Name Box / Gehe zu</div>
+      <code>Namensfeld (links oben) anklicken
+→ Zelladresse eingeben: <span class="st">B5</span> oder <span class="st">Tabelle2.C3</span>
+Ctrl+G             <span class="cm"># Gehe zu (Navigator)</span>
+F5                 <span class="cm"># Navigator öffnen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Blatt wechseln</div>
+      <code>Ctrl+PgDn          <span class="cm"># nächstes Blatt</span>
+Ctrl+PgUp          <span class="cm"># vorheriges Blatt</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Zeile / Spalte markieren</div>
+      <code>Shift+Leertaste    <span class="cm"># ganze Zeile</span>
+Ctrl+Leertaste     <span class="cm"># ganze Spalte</span>
+Ctrl+A             <span class="cm"># gesamtes Blatt</span></code>
+    </div>
+    <div class="tip"><strong>Tipp:</strong> Eingabe im Namensfeld wie <strong>A1:D10</strong> markiert den Bereich direkt.</div>
+  </div>
+</div>
+
+<!-- 2. Shortcuts Bearbeitung -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">⌨️</div><div class="section-title">Shortcuts — Bearbeitung</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Zellen einfügen / löschen</div>
+      <code>Ctrl+Plus          <span class="cm"># Zeile/Spalte einfügen</span>
+Ctrl+Minus         <span class="cm"># Zeile/Spalte löschen</span>
+Del                <span class="cm"># Zellinhalte löschen</span>
+Backspace          <span class="cm"># Zellinhalt löschen (edit)</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Kopieren / Ausfüllen</div>
+      <code>Ctrl+D             <span class="cm"># Fill Down (nach unten)</span>
+Ctrl+R             <span class="cm"># Fill Right (nach rechts)</span>
+Ctrl+C / Ctrl+V    <span class="cm"># Kopieren / Einfügen</span>
+Ctrl+Shift+V       <span class="cm"># Inhalte einfügen (Dialog)</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Rückgängig / Wiederholen</div>
+      <code>Ctrl+Z             <span class="cm"># Rückgängig</span>
+Ctrl+Y             <span class="cm"># Wiederholen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Suchen &amp; Ersetzen</div>
+      <code>Ctrl+H             <span class="cm"># Suchen &amp; Ersetzen</span>
+Ctrl+F             <span class="cm"># Suchen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">AutoFill (Maus)</div>
+      <code><span class="cm"># Zelle markieren → kleines Quadrat</span>
+<span class="cm"># unten rechts nach unten/rechts ziehen</span>
+<span class="cm"># Doppelklick: füllt bis letzte Zeile</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Namen definieren</div>
+      <code>Ctrl+F3            <span class="cm"># Namen definieren / verwalten</span>
+Shift+Ctrl+F4      <span class="cm"># Namensfeld fokussieren</span></code>
+    </div>
+  </div>
+</div>
+
+<!-- 3. Zellen formatieren -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">🎨</div><div class="section-title">Zellen formatieren</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Format-Dialog öffnen</div>
+      <code>Ctrl+1             <span class="cm"># Zellen formatieren</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Schnell-Formate</div>
+      <code>Ctrl+Shift+1       <span class="cm"># Zahl mit 2 Dezimalstellen</span>
+Ctrl+Shift+2       <span class="cm"># Wissenschaftlich</span>
+Ctrl+Shift+3       <span class="cm"># Datum (TT.MM.JJ)</span>
+Ctrl+Shift+4       <span class="cm"># Währung (€)</span>
+Ctrl+Shift+5       <span class="cm"># Prozent (%)</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Benutzerdefinierte Zahlenformate</div>
+      <code><span class="st">#.##0,00 €</span>      <span class="cm"># Währung</span>
+<span class="st">TT.MM.JJJJ</span>      <span class="cm"># Datum</span>
+<span class="st">HH:MM:SS</span>         <span class="cm"># Uhrzeit</span>
+<span class="st">0,00%</span>            <span class="cm"># Prozent</span>
+<span class="st">[>=1000]#.##0;#.##0</span>  <span class="cm"># bedingt</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Text-Formatierung</div>
+      <code>Ctrl+B             <span class="cm"># Fett</span>
+Ctrl+I             <span class="cm"># Kursiv</span>
+Ctrl+U             <span class="cm"># Unterstrichen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Bedingte Formatierung</div>
+      <code><span class="cm"># Format → Bedingte Formatierung</span>
+<span class="cm"># → Bedingung → Zellwert / Formel</span>
+<span class="cm"># → Neu / Bearbeiten / Löschen</span></code>
+    </div>
+    <div class="tip"><strong>Tipp:</strong> Im Format-Code <strong>@</strong> steht für den Zelltextinhalt unverändert (z. B. <strong>@ "€"</strong>).</div>
+  </div>
+</div>
+
+<!-- 4. Formeln Grundlagen -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">➕</div><div class="section-title">Formeln — Grundlagen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Summe / Mittelwert / Anzahl</div>
+      <code>=<span class="fn">SUM</span>(B2:B100)
+=<span class="fn">AVERAGE</span>(B2:B100)
+=<span class="fn">COUNT</span>(B2:B100)       <span class="cm"># nur Zahlen</span>
+=<span class="fn">COUNTA</span>(B2:B100)      <span class="cm"># alle nichtleeren</span>
+=<span class="fn">MAX</span>(B2:B100)
+=<span class="fn">MIN</span>(B2:B100)</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Wenn-Funktion</div>
+      <code>=<span class="fn">IF</span>(A2&gt;100,<span class="st">"Hoch"</span>,<span class="st">"Niedrig"</span>)
+=<span class="fn">IF</span>(A2=<span class="st">""</span>,<span class="st">"leer"</span>,A2)
+=<span class="fn">IFS</span>(A2&gt;90,<span class="st">"A"</span>,A2&gt;70,<span class="st">"B"</span>,<span class="kw">TRUE</span>,<span class="st">"C"</span>)</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Fehlerbehandlung</div>
+      <code>=<span class="fn">IFERROR</span>(A2/B2,<span class="nu">0</span>)
+=<span class="fn">IFNA</span>(VLOOKUP(…),<span class="st">"Nicht gefunden"</span>)
+=<span class="fn">ISERROR</span>(A2)         <span class="cm"># → WAHR/FALSCH</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Absolute / relative Bezüge</div>
+      <code>=A2*B2             <span class="cm"># relativ</span>
+=$A$2*B2           <span class="cm"># A2 absolut</span>
+=$A2*B2            <span class="cm"># Spalte absolut</span>
+=A$2*B2            <span class="cm"># Zeile absolut</span>
+<span class="cm"># F4 wechselt den Bezugstyp</span></code>
+    </div>
+    <div class="tip"><strong>Tipp:</strong> Mit <strong>Ctrl+`</strong> (Grave Accent) wechselt die Ansicht zwischen Formeln und Werten.</div>
+  </div>
+</div>
+
+<!-- 5. Lookup-Funktionen -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Lookup-Funktionen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">VLOOKUP (senkrecht)</div>
+      <code>=<span class="fn">VLOOKUP</span>(Suchkrit,Matrix,SpaltenIdx,0)
+<span class="cm"># 0 = exakte Übereinstimmung</span>
+<span class="cm"># 1 = ungefähr (sortiert!)</span>
+=<span class="fn">VLOOKUP</span>(A2,$D$2:$F$100,2,0)</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">HLOOKUP (waagerecht)</div>
+      <code>=<span class="fn">HLOOKUP</span>(Suchkrit,Matrix,ZeilenIdx,0)
+<span class="cm"># sucht in erster Zeile der Matrix</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">INDEX / MATCH</div>
+      <code>=<span class="fn">INDEX</span>(C2:C100,<span class="fn">MATCH</span>(A2,B2:B100,0))
+<span class="cm"># MATCH gibt Zeilennummer zurück</span>
+<span class="cm"># INDEX holt den Wert an der Position</span>
+<span class="cm"># MATCH-Typ: 0=exakt, 1=≤, -1=≥</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">XLOOKUP (ab LO 24.2)</div>
+      <code>=<span class="fn">XLOOKUP</span>(Suchkrit,SuchArr,RückgabeArr)
+=<span class="fn">XLOOKUP</span>(A2,D2:D100,E2:E100,<span class="st">"N/A"</span>)
+<span class="cm"># 4. Arg: Wert wenn nicht gefunden</span>
+<span class="cm"># 5. Arg: 0=exakt, -1=exakt/kleiner</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">MATCH / XMATCH</div>
+      <code>=<span class="fn">MATCH</span>(<span class="st">"Berlin"</span>,A2:A100,0)
+=<span class="fn">XMATCH</span>(<span class="st">"Berlin"</span>,A2:A100,0)
+<span class="cm"># gibt relative Position zurück</span></code>
+    </div>
+  </div>
+</div>
+
+<!-- 6. Statistische Funktionen -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">📊</div><div class="section-title">Statistische Funktionen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">SUMIF / COUNTIF</div>
+      <code>=<span class="fn">SUMIF</span>(A2:A100,<span class="st">"Berlin"</span>,B2:B100)
+=<span class="fn">COUNTIF</span>(A2:A100,<span class="st">"&gt;100"</span>)
+=<span class="fn">COUNTIF</span>(A2:A100,<span class="st">"Ber*"</span>)  <span class="cm"># Wildcard</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">SUMIFS / COUNTIFS (mehrere Kriterien)</div>
+      <code>=<span class="fn">SUMIFS</span>(B2:B100,A2:A100,<span class="st">"DE"</span>,C2:C100,<span class="st">"&gt;0"</span>)
+=<span class="fn">COUNTIFS</span>(A2:A100,<span class="st">"&gt;=2024-01-01"</span>,
+          A2:A100,<span class="st">"&lt;=2024-12-31"</span>)
+<span class="cm"># Summe-Bereich muss gleich groß sein</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">AVERAGEIF / AVERAGEIFS</div>
+      <code>=<span class="fn">AVERAGEIF</span>(A2:A100,<span class="st">"&gt;0"</span>,B2:B100)
+=<span class="fn">AVERAGEIFS</span>(B2:B100,A2:A100,<span class="st">"DE"</span>,
+            C2:C100,<span class="st">"&gt;10"</span>)</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Rang / Große / Kleine</div>
+      <code>=<span class="fn">RANK</span>(A2,A2:A100,0)   <span class="cm"># 0=absteigend</span>
+=<span class="fn">LARGE</span>(B2:B100,3)     <span class="cm"># 3. größter Wert</span>
+=<span class="fn">SMALL</span>(B2:B100,1)     <span class="cm"># kleinster Wert</span></code>
+    </div>
+    <div class="tip"><strong>Tipp:</strong> Kriterien in SUMIFS/COUNTIFS können Platzhalter enthalten: <strong>*</strong> (beliebig viele Zeichen), <strong>?</strong> (ein Zeichen).</div>
+  </div>
+</div>
+
+<!-- 7. Datum & Zeit -->
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">📅</div><div class="section-title">Datum &amp; Zeit</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Aktuelles Datum / Zeit</div>
+      <code>=<span class="fn">TODAY</span>()            <span class="cm"># heutiges Datum</span>
+=<span class="fn">NOW</span>()              <span class="cm"># Datum + aktuelle Uhrzeit</span>
+Ctrl+; <span class="cm"># aktuelles Datum als fester Wert</span>
+Ctrl+Shift+; <span class="cm"># aktuelle Uhrzeit als fester Wert</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Datum konstruieren / zerlegen</div>
+      <code>=<span class="fn">DATE</span>(2024,12,31)   <span class="cm"># → serielles Datum</span>
+=<span class="fn">YEAR</span>(A2)           <span class="cm"># Jahr</span>
+=<span class="fn">MONTH</span>(A2)          <span class="cm"># Monat (1–12)</span>
+=<span class="fn">DAY</span>(A2)            <span class="cm"># Tag (1–31)</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Differenz / Versatz</div>
+      <code>=<span class="fn">DATEDIF</span>(A2,B2,<span class="st">"D"</span>)  <span class="cm"># Tage</span>
+=<span class="fn">DATEDIF</span>(A2,B2,<span class="st">"M"</span>)  <span class="cm"># Monate</span>
+=<span class="fn">DATEDIF</span>(A2,B2,<span class="st">"Y"</span>)  <span class="cm"># Jahre</span>
+=<span class="fn">EDATE</span>(A2,3)         <span class="cm"># +3 Monate</span>
+=<span class="fn">EOMONTH</span>(A2,0)       <span class="cm"># Monatsende</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Wochentag / Arbeitstage</div>
+      <code>=<span class="fn">WEEKDAY</span>(A2,2)      <span class="cm"># 2=Mo=1, So=7</span>
+=<span class="fn">WORKDAY</span>(A2,10)     <span class="cm"># +10 Arbeitstage</span>
+=<span class="fn">NETWORKDAYS</span>(A2,B2) <span class="cm"># Arbeitstage zw.</span></code>
+    </div>
+    <div class="tip"><strong>Hinweis:</strong> Datumsangaben in LibreOffice Calc sind intern Ganzzahlen (Tage seit 30.12.1899). Formatierung entscheidet über die Darstellung.</div>
+  </div>
+</div>
+
+<!-- 8. Text-Funktionen -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">🔤</div><div class="section-title">Text-Funktionen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Verbinden</div>
+      <code>=A2&amp;<span class="st">" "</span>&amp;B2          <span class="cm"># &amp; ist Concat</span>
+=<span class="fn">CONCAT</span>(A2,<span class="st">" "</span>,B2)
+=<span class="fn">TEXTJOIN</span>(<span class="st">";"</span>,<span class="kw">TRUE</span>,A2:A10)  <span class="cm"># Trennzeichen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Extrahieren</div>
+      <code>=<span class="fn">LEFT</span>(A2,5)          <span class="cm"># erste 5 Zeichen</span>
+=<span class="fn">RIGHT</span>(A2,3)         <span class="cm"># letzte 3 Zeichen</span>
+=<span class="fn">MID</span>(A2,3,4)         <span class="cm"># ab Pos 3, 4 Zeichen</span>
+=<span class="fn">LEN</span>(A2)             <span class="cm"># Zeichenanzahl</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Suchen / Ersetzen</div>
+      <code>=<span class="fn">FIND</span>(<span class="st">"@"</span>,A2)        <span class="cm"># Pos (Groß-/Klein)</span>
+=<span class="fn">SEARCH</span>(<span class="st">"@"</span>,A2)      <span class="cm"># Pos (unabhängig)</span>
+=<span class="fn">SUBSTITUTE</span>(A2,<span class="st">"alt"</span>,<span class="st">"neu"</span>)
+=<span class="fn">REPLACE</span>(A2,3,2,<span class="st">"XY"</span>) <span class="cm"># ab Pos 3, 2 Zeichen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Bereinigen / Umwandeln</div>
+      <code>=<span class="fn">TRIM</span>(A2)            <span class="cm"># Leerzeichen entfernen</span>
+=<span class="fn">CLEAN</span>(A2)           <span class="cm"># Steuerzeichen entfernen</span>
+=<span class="fn">UPPER</span>(A2)           <span class="cm"># GROSSBUCHSTABEN</span>
+=<span class="fn">LOWER</span>(A2)           <span class="cm"># kleinbuchstaben</span>
+=<span class="fn">PROPER</span>(A2)          <span class="cm"># Erster Gross</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">TEXT-Formatierung</div>
+      <code>=<span class="fn">TEXT</span>(A2,<span class="st">"TT.MM.JJJJ"</span>)  <span class="cm"># Zahl als Text</span>
+=<span class="fn">TEXT</span>(A2,<span class="st">"0,00 €"</span>)    <span class="cm"># Währung als Text</span>
+=<span class="fn">VALUE</span>(<span class="st">"123,45"</span>)       <span class="cm"># Text → Zahl</span></code>
+    </div>
+  </div>
+</div>
+
+<!-- 9. Pivot-Tabellen -->
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">🔄</div><div class="section-title">Pivot-Tabellen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Pivot erstellen</div>
+      <code><span class="cm"># 1. Datenzelle in Tabelle anklicken</span>
+<span class="cm"># 2. Einfügen → Pivot-Tabelle</span>
+<span class="cm"># 3. Datenbereich prüfen → OK</span>
+<span class="cm"># 4. Felder in Zeilen/Spalten/Daten ziehen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Felder konfigurieren</div>
+      <code><span class="cm"># Zeilenfelder: Kategorien (z. B. Region)</span>
+<span class="cm"># Spaltenfelder: Zeitraum (z. B. Quartal)</span>
+<span class="cm"># Datenfelder: Messwerte (z. B. Umsatz)</span>
+<span class="cm"># Seitenfelder: Filter (z. B. Jahr)</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Pivot aktualisieren</div>
+      <code><span class="cm"># Rechtsklick auf Pivot → Aktualisieren</span>
+<span class="cm"># oder: Daten → Pivot-Tabelle → Aktualisieren</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Datenfeldoptionen</div>
+      <code><span class="cm"># Doppelklick auf Datenfeld →</span>
+<span class="cm"># Funktion: Summe, Anzahl, Mittelwert</span>
+<span class="cm"># Max, Min, Produkt, StdAbw, Varianz</span></code>
+    </div>
+    <div class="tip"><strong>Tipp:</strong> Datenbereiche vor der Pivot-Erstellung als Tabelle formatieren (<strong>Ctrl+T</strong>), damit Erweiterungen automatisch erkannt werden.</div>
+  </div>
+</div>
+
+<!-- 10. Diagramme -->
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">📈</div><div class="section-title">Diagramme</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Diagramm einfügen</div>
+      <code><span class="cm"># 1. Datenbereich markieren</span>
+<span class="cm"># 2. Einfügen → Diagramm…</span>
+<span class="cm"># 3. Typ wählen → Weiter</span>
+<span class="cm"># 4. Datenreihen / Beschriftung</span>
+<span class="cm"># 5. Titel eingeben → Fertigstellen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Diagrammtypen (Auswahl)</div>
+      <code>Balken / Säulen    <span class="cm"># Kategorien vergleichen</span>
+Linie              <span class="cm"># Zeitreihen</span>
+Kreis / Torte      <span class="cm"># Anteile</span>
+XY (Streuung)      <span class="cm"># Korrelation</span>
+Fläche             <span class="cm"># kumulierte Werte</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Diagramm bearbeiten</div>
+      <code><span class="cm"># Doppelklick: Bearbeitungsmodus</span>
+<span class="cm"># Rechtsklick auf Element:</span>
+<span class="cm"># → Datenreihen formatieren</span>
+<span class="cm"># → Diagrammtyp ändern</span>
+<span class="cm"># Klick außerhalb: Bearbeitungsmodus Ende</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Sparklines (Minidiagramme)</div>
+      <code><span class="cm"># Einfügen → Sparklines</span>
+<span class="cm"># Typen: Linie, Balken, Gewinn/Verlust</span></code>
+    </div>
+    <div class="tip"><strong>Tipp:</strong> Mit <strong>F2</strong> im Bearbeitungsmodus des Diagramms lässt sich der Datenbereich direkt anpassen.</div>
+  </div>
+</div>
+
+<!-- 11. Daten sortieren & filtern -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🔽</div><div class="section-title">Sortieren &amp; Filtern</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Autofilter</div>
+      <code><span class="cm"># Daten → Autofilter (ein-/ausschalten)</span>
+<span class="cm"># Pfeil in Spaltenüberschrift → Kriterien</span>
+<span class="cm"># Ctrl+Shift+L  (Toggle Autofilter)</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Sortieren</div>
+      <code><span class="cm"># Daten → Sortieren…</span>
+<span class="cm"># Spalte + Reihenfolge wählen</span>
+<span class="cm"># Mehrere Ebenen: Kriterien hinzufügen</span>
+<span class="cm"># Option: Groß-/Kleinschreibung</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Standardfilter (erweitert)</div>
+      <code><span class="cm"># Daten → Standardfilter…</span>
+<span class="cm"># UND/ODER-Verknüpfung mehrerer Bedingungen</span>
+<span class="cm"># Ergebnis in anderen Bereich kopieren</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Duplikate entfernen</div>
+      <code><span class="cm"># Daten → Mehr Filter → Duplikate entfernen</span>
+<span class="cm"># Spalten auswählen → OK</span></code>
+    </div>
+  </div>
+</div>
+
+<!-- 12. Tabellenblätter & Referenzen -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">📋</div><div class="section-title">Tabellenblätter &amp; Referenzen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Blatt-Operationen</div>
+      <code><span class="cm"># Rechtsklick auf Reiter:</span>
+<span class="cm"># Blatt einfügen / umbenennen / löschen</span>
+<span class="cm"># Blatt verschieben / kopieren</span>
+<span class="cm"># Blatt-Reiter Farbe festlegen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Blattübergreifende Formeln</div>
+      <code>=<span class="st">Tabelle2</span>.A1         <span class="cm"># anderes Blatt</span>
+=<span class="st">Tabelle2</span>.A1:<span class="st">Tabelle2</span>.A10
+=<span class="st">'Mein Blatt'</span>.B5    <span class="cm"># Name mit Leerzeichen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">3D-Bezüge (Bereich über Blätter)</div>
+      <code>=<span class="fn">SUM</span>(<span class="st">Blatt1</span>.B2:<span class="st">Blatt4</span>.B2)
+<span class="cm"># summiert B2 in Blatt1 bis Blatt4</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Externe Referenz</div>
+      <code>='<span class="st">file:///home/user/daten.ods</span>'#$Tabelle1.A1
+<span class="cm"># Datei muss gespeichert sein</span></code>
+    </div>
+    <div class="tip"><strong>Tipp:</strong> Blätter lassen sich per Drag &amp; Drop auf dem Reiter umsortieren. Beim Kopieren <strong>Ctrl</strong> gedrückt halten.</div>
+  </div>
+</div>
+
+<!-- 13. Dateneingabe & Validierung -->
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">✅</div><div class="section-title">Dateneingabe &amp; Validierung</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Gültigkeitsprüfung</div>
+      <code><span class="cm"># Daten → Gültigkeit…</span>
+<span class="cm"># Typ: Ganzzahl, Dezimal, Liste, Datum</span>
+<span class="cm"># Bedingung: zwischen, größer als, …</span>
+<span class="cm"># Fehlermeldung bei ungültiger Eingabe</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Dropdown-Liste</div>
+      <code><span class="cm"># Daten → Gültigkeit → Typ: Liste</span>
+<span class="cm"># Einträge durch Zeilenumbruch trennen</span>
+<span class="cm"># oder Zellbereich als Quelle angeben</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Eingabe-Shortcut</div>
+      <code>Tab                <span class="cm"># rechts und bestätigen</span>
+Enter              <span class="cm"># unten und bestätigen</span>
+Ctrl+Enter         <span class="cm"># bestätigen, Zelle behalten</span>
+Escape             <span class="cm"># Eingabe abbrechen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Gleiche Werte in mehrere Zellen</div>
+      <code><span class="cm"># Bereich markieren → Wert eingeben</span>
+<span class="cm"># → Ctrl+Enter: alle Zellen füllen</span></code>
+    </div>
+  </div>
+</div>
+
+<!-- 14. Drucken & Seiteneinrichtung -->
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">🖨️</div><div class="section-title">Drucken &amp; Seiteneinrichtung</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Seitenvorschau / Drucken</div>
+      <code>Ctrl+P             <span class="cm"># Drucken-Dialog</span>
+<span class="cm"># Ansicht → Seitenvorschau</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Druckbereich festlegen</div>
+      <code><span class="cm"># Bereich markieren</span>
+<span class="cm"># Format → Druckbereiche → Festlegen</span>
+<span class="cm"># Format → Druckbereiche → Bearbeiten</span>
+<span class="cm"># Format → Druckbereiche → Entfernen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Kopfzeile / Fußzeile</div>
+      <code><span class="cm"># Einfügen → Kopf- und Fußzeilen</span>
+<span class="cm"># &amp;D = Datum, &amp;P = Seitennummer</span>
+<span class="cm"># &amp;N = Gesamtseitenzahl, &amp;F = Dateiname</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Zeilen-/Spalten-Wiederholung</div>
+      <code><span class="cm"># Format → Druckbereiche → Bearbeiten</span>
+<span class="cm"># Wiederholungszeilen: $1 (Zeile 1 auf jeder Seite)</span>
+<span class="cm"># Wiederholungsspalten: $A (Spalte A auf jeder Seite)</span></code>
+    </div>
+    <div class="tip"><strong>Tipp:</strong> Manuelle Seitenumbrüche einfügen: Zeile markieren → <strong>Einfügen → Zeilenumbruch</strong>. Blaue Linien in der Seitenumbruch-Vorschau sind verschiebbar.</div>
+  </div>
+</div>
+
+<!-- 15. Makros & Basic -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🤖</div><div class="section-title">Makros &amp; Basic</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Makro aufzeichnen / ausführen</div>
+      <code><span class="cm"># Extras → Makros → Makro aufzeichnen</span>
+<span class="cm"># Schritte ausführen → Aufzeichnung beenden</span>
+<span class="cm"># Extras → Makros → Makro ausführen</span>
+Alt+F8             <span class="cm"># Makro-Dialog (Windows)</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Basic IDE öffnen</div>
+      <code>Alt+F11            <span class="cm"># Basic IDE (Windows)</span>
+<span class="cm"># Extras → Makros → Basic-IDE bearbeiten</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Zellen per Makro lesen / schreiben</div>
+      <code><span class="kw">Dim</span> oDoc <span class="kw">As</span> Object
+<span class="kw">Dim</span> oSheet <span class="kw">As</span> Object
+<span class="kw">Dim</span> oCell <span class="kw">As</span> Object
+oDoc = ThisComponent
+oSheet = oDoc.Sheets.getByIndex(<span class="nu">0</span>)
+oCell = oSheet.getCellByPosition(<span class="nu">0</span>, <span class="nu">0</span>)
+oCell.setString(<span class="st">"Hallo"</span>)
+MsgBox oCell.getString()</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Tastenkürzel zuweisen</div>
+      <code><span class="cm"># Extras → Anpassen → Tastatur</span>
+<span class="cm"># Kategorie: Makros → Makro auswählen</span>
+<span class="cm"># Tastenkombination zuweisen → OK</span></code>
+    </div>
+    <div class="tip"><strong>Hinweis:</strong> LibreOffice Basic ist kompatibel mit vielen VBA-Makros, aber nicht zu 100 %. Die UNO-API ermöglicht vollständige Dokumentkontrolle.</div>
+  </div>
+</div>
+
+<!-- 16. Nützliche Tipps & Sonstiges -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">💡</div><div class="section-title">Nützliche Tipps</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Datei-Formate speichern</div>
+      <code>Ctrl+S             <span class="cm"># Als ODS speichern</span>
+Ctrl+Shift+S       <span class="cm"># Speichern unter…</span>
+<span class="cm"># Format wählen: ODS, XLSX, CSV, PDF</span>
+<span class="cm"># Datei → Als PDF exportieren → PDF/A</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Fenster / Ansicht</div>
+      <code>Ctrl+F2            <span class="cm"># Formel-Assistent</span>
+Ctrl+Shift+F9      <span class="cm"># Alle Formeln neu berechnen</span>
+F9                 <span class="cm"># Neuberechnung</span>
+<span class="cm"># Ansicht → Zeilen-/Spaltenköpfe</span>
+<span class="cm"># Ansicht → Fenster teilen</span>
+<span class="cm"># Ansicht → Zeilen/Spalten fixieren</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Kommentare</div>
+      <code><span class="cm"># Einfügen → Kommentar</span>
+Ctrl+Alt+C         <span class="cm"># Kommentar einfügen</span>
+<span class="cm"># Kleines rotes Dreieck = Kommentar vorhanden</span>
+<span class="cm"># Hover: Kommentar anzeigen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Transponieren (Zeile ↔ Spalte)</div>
+      <code><span class="cm"># Bereich kopieren → Zielzelle</span>
+<span class="cm"># Ctrl+Shift+V → Transponieren ankreuzen</span>
+<span class="cm"># oder: =TRANSPOSE(A1:D1) als Matrix</span>
+<span class="cm"># (Eingabe mit Ctrl+Shift+Enter)</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Calc-Einstellungen</div>
+      <code><span class="cm"># Extras → Optionen → LibreOffice Calc</span>
+<span class="cm"># → Berechnen: Dezimalstellen, Datumsformat</span>
+<span class="cm"># → Ansicht: Gitternetz, Formeln, Nullwerte</span>
+<span class="cm"># → Kompatibilität: VBA-Makros aktivieren</span></code>
+    </div>
+    <div class="tip"><strong>Tipp:</strong> Mit <strong>Ctrl+Shift+Enter</strong> wird eine Formel als Matrixformel eingegeben (geschweifte Klammern erscheinen automatisch). Matrixformeln können mehrere Zellen gleichzeitig berechnen.</div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>

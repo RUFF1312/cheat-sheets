@@ -52,7 +52,7 @@ Vollständige Liste aller 89 Sheets. Stand: 2026-06-16.
 
 ---
 
-## System & Netz (17)
+## System & Netz (19)
 
 | Datei | Titel | `--accent` |
 |---|---|---|
@@ -73,10 +73,12 @@ Vollständige Liste aller 89 Sheets. Stand: 2026-06-16.
 | `performance-cheatsheet.html` | Linux Performance | `#9b59b6` |
 | `rsync-cheatsheet.html` | rsync | `#00b4a0` |
 | `firewalld-cheatsheet.html` | firewalld | `#e05a00` |
+| `wireguard-cheatsheet.html` | WireGuard | `#f8a000` |
+| `nmap-cheatsheet.html` | nmap | `#0E6B8C` |
 
 ---
 
-## Dev & Automation (16)
+## Dev & Automation (17)
 
 | Datei | Titel | `--accent` |
 |---|---|---|
@@ -96,6 +98,7 @@ Vollständige Liste aller 89 Sheets. Stand: 2026-06-16.
 | `yaml-cheatsheet.html` | YAML | `#6366f1` |
 | `markdown-cheatsheet.html` | Markdown / GFM | `#4078C8` |
 | `vscode-cheatsheet.html` | VS Code | `#007ACC` |
+| `gh-cheatsheet.html` | GitHub CLI | `#8957E5` |
 
 ---
 
@@ -119,7 +122,7 @@ Vollständige Liste aller 89 Sheets. Stand: 2026-06-16.
 
 ---
 
-## Datenbanken (4)
+## Datenbanken (5)
 
 | Datei | Titel | `--accent` |
 |---|---|---|
@@ -127,18 +130,22 @@ Vollständige Liste aller 89 Sheets. Stand: 2026-06-16.
 | `mariadb-cheatsheet.html` | MariaDB / MySQL | `#0074c1` |
 | `postgresql-cheatsheet.html` | PostgreSQL | `#6495ed` |
 | `redis-cheatsheet.html` | Redis | `#dc382d` |
+| `mongodb-cheatsheet.html` | MongoDB | `#13AA52` |
 
 ---
 
-## Office (5) — Subgruppe: MS Office (5)
+## Office (8) — Subgruppen: MS Office (5), LibreOffice (3)
 
-| Datei | Titel | `--accent` |
-|---|---|---|
-| `word-cheatsheet.html` | Microsoft Word | `#2B579A` |
-| `excel-cheatsheet.html` | Microsoft Excel | `#217346` |
-| `powerpoint-cheatsheet.html` | PowerPoint | `#D24726` |
-| `outlook-cheatsheet.html` | Microsoft Outlook | `#0078D4` |
-| `vba-cheatsheet.html` | VBA / Visual Basic | `#7B3FA0` |
+| Datei | Titel | Subgruppe | `--accent` |
+|---|---|---|---|
+| `word-cheatsheet.html` | Microsoft Word | MS Office | `#2B579A` |
+| `excel-cheatsheet.html` | Microsoft Excel | MS Office | `#217346` |
+| `powerpoint-cheatsheet.html` | PowerPoint | MS Office | `#D24726` |
+| `outlook-cheatsheet.html` | Microsoft Outlook | MS Office | `#0078D4` |
+| `vba-cheatsheet.html` | VBA / Visual Basic | MS Office | `#7B3FA0` |
+| `libreoffice-writer-cheatsheet.html` | LibreOffice Writer | LibreOffice | `#0E4E96` |
+| `libreoffice-calc-cheatsheet.html` | LibreOffice Calc | LibreOffice | `#15A74D` |
+| `libreoffice-impress-cheatsheet.html` | LibreOffice Impress | LibreOffice | `#C7442F` |
 
 ---
 

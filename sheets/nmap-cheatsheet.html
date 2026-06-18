@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>nmap - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/nmap.svg">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#0E6B8C;--accent2:#1a9bbf;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#0d1117 0%,#010d12 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(14,107,140,.08),transparent);}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(14,107,140,.1);border:1px solid rgba(14,107,140,.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text);}
+  h1 span{color:var(--accent);}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .meta strong{color:var(--accent2);}
+  .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
+  .ch-ac{background:rgba(14,107,140,.1);border:1px solid rgba(14,107,140,.3);color:var(--accent);}
+  .ch-gn{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);color:var(--green);}
+  .ch-cy{background:rgba(57,197,207,.1);border:1px solid rgba(57,197,207,.3);color:var(--cyan);}
+  .ch-pu{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.3);color:var(--purple);}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px;}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .th-ac .section-header{background:rgba(14,107,140,.06);} .th-ac .section-icon{background:rgba(14,107,140,.15);} .th-ac .section-title{color:var(--accent);}
+  .th-gn .section-header{background:rgba(63,185,80,.06);} .th-gn .section-icon{background:rgba(63,185,80,.15);} .th-gn .section-title{color:var(--green);}
+  .th-cy .section-header{background:rgba(57,197,207,.06);} .th-cy .section-icon{background:rgba(57,197,207,.15);} .th-cy .section-title{color:var(--cyan);}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--purple);}
+  .th-re .section-header{background:rgba(244,112,103,.06);} .th-re .section-icon{background:rgba(244,112,103,.15);} .th-re .section-title{color:var(--red);}
+  .command-list{padding:8px 0;}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
+  .cmd-entry:last-child{border-bottom:none;}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+  .kw{color:#1a9bbf;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;}
+  .tip{padding:8px 16px;background:rgba(14,107,140,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip strong{color:var(--text);}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(14,107,140,.3);padding:4px 12px;border-radius:4px;background:rgba(14,107,140,.08);}
+  .nav-link:hover{background:rgba(14,107,140,.15);}
+  @media(max-width:1100px){main{columns:2;}}
+  @media(max-width:700px){main{columns:1;padding:16px;}header{padding:24px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ System &amp; Netz Reference</div>
+      <img src="../assets/nmap.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:invert(40%) sepia(80%) saturate(500%) hue-rotate(165deg)">
+      <h1><span>nmap</span> Port Scanner<br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ nmap -sS -sV -O -p- 192.168.1.0/24</p>
+      <div class="version-legend">
+        <div class="chip ch-ac">nmap 7.x</div>
+        <div class="chip ch-gn">TCP/UDP Scans</div>
+        <div class="chip ch-cy">NSE Scripts</div>
+        <div class="chip ch-pu">Firewall Evasion</div>
+      </div>
+    </div>
+    <div class="meta"><strong>nmap</strong><br>Host Discovery<br>Port Scanning<br>OS Detection<br>Version Detection<br>NSE Scripting</div>
+  </div>
+</header>
+<main>
+
+<!-- 1. Scan Types -->
+<div class="section th-ac">
+  <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Scan-Typen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">TCP SYN Scan (Standard, benötigt root)</div>
+      <code>nmap <span class="kw">-sS</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">TCP Connect Scan (kein root nötig)</div>
+      <code>nmap <span class="kw">-sT</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">UDP Scan</div>
+      <code>nmap <span class="kw">-sU</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">TCP ACK Scan (Firewall-Mapping)</div>
+      <code>nmap <span class="kw">-sA</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Ping-only (kein Port-Scan)</div>
+      <code>nmap <span class="kw">-sn</span> 192.168.1.0/24</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">TCP Window / FIN / Null / Xmas Scan</div>
+      <code>nmap <span class="kw">-sW</span> 192.168.1.1   <span class="cm"># Window</span>
+nmap <span class="kw">-sF</span> 192.168.1.1   <span class="cm"># FIN</span>
+nmap <span class="kw">-sN</span> 192.168.1.1   <span class="cm"># Null</span>
+nmap <span class="kw">-sX</span> 192.168.1.1   <span class="cm"># Xmas</span></code>
+    </div>
+    <div class="tip"><strong>Hinweis:</strong> <strong>-sS</strong> (SYN) ist der schnellste und unauffälligste TCP-Scan, da keine vollständige Verbindung aufgebaut wird. Root-Rechte erforderlich.</div>
+  </div>
+</div>
+
+<!-- 2. Host Discovery -->
+<div class="section th-ac">
+  <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Host Discovery</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Ping Scan (kein Port-Scan)</div>
+      <code>nmap <span class="kw">-sn</span> 10.0.0.0/24</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Host als online behandeln (kein Ping)</div>
+      <code>nmap <span class="kw">-Pn</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">TCP SYN Discovery auf Port 443</div>
+      <code>nmap <span class="kw">-PS443</span> 192.168.1.0/24</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">TCP ACK Discovery auf Port 80</div>
+      <code>nmap <span class="kw">-PA80</span> 192.168.1.0/24</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">UDP Discovery auf Port 53</div>
+      <code>nmap <span class="kw">-PU53</span> 192.168.1.0/24</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">ICMP Echo, Timestamp &amp; Netmask</div>
+      <code>nmap <span class="kw">-PE</span> 192.168.1.0/24  <span class="cm"># Echo</span>
+nmap <span class="kw">-PP</span> 192.168.1.0/24  <span class="cm"># Timestamp</span>
+nmap <span class="kw">-PM</span> 192.168.1.0/24  <span class="cm"># Netmask</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Ziele aus Datei einlesen</div>
+      <code>nmap <span class="kw">-iL</span> hosts.txt <span class="kw">-sn</span></code>
+    </div>
+    <div class="tip"><strong>-Pn</strong> überspringt die Host-Discovery — sinnvoll bei Hosts, die auf Ping nicht antworten (z. B. Windows-Firewall).</div>
+  </div>
+</div>
+
+<!-- 3. Port Specification -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🔌</div><div class="section-title">Port-Angaben</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Einzelner Port / Portbereich</div>
+      <code>nmap <span class="kw">-p</span> <span class="nu">22</span> 192.168.1.1
+nmap <span class="kw">-p</span> <span class="nu">22,80,443</span> 192.168.1.1
+nmap <span class="kw">-p</span> <span class="nu">1-1024</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Alle 65535 Ports scannen</div>
+      <code>nmap <span class="kw">-p-</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Top N häufigste Ports</div>
+      <code>nmap <span class="kw">--top-ports</span> <span class="nu">100</span> 192.168.1.1
+nmap <span class="kw">--top-ports</span> <span class="nu">1000</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Fast Scan (100 häufigste Ports)</div>
+      <code>nmap <span class="kw">-F</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Protokoll-spezifische Ports (TCP/UDP)</div>
+      <code>nmap <span class="kw">-p</span> T:<span class="nu">80</span>,U:<span class="nu">53</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Port-Bereich ausschließen</div>
+      <code>nmap <span class="kw">-p</span> <span class="nu">1-65535</span> <span class="kw">--exclude-ports</span> <span class="nu">9100</span> 192.168.1.1</code>
+    </div>
+  </div>
+</div>
+
+<!-- 4. Service & Version Detection -->
+<div class="section th-ac">
+  <div class="section-header"><div class="section-icon">🏷️</div><div class="section-title">Service &amp; Version</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Service-Version erkennen</div>
+      <code>nmap <span class="kw">-sV</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Default NSE-Scripts ausführen</div>
+      <code>nmap <span class="kw">-sC</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Version + Scripts kombiniert</div>
+      <code>nmap <span class="kw">-sV -sC</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Intensität der Versionserkennung (0–9)</div>
+      <code>nmap <span class="kw">--version-intensity</span> <span class="nu">5</span> 192.168.1.1
+<span class="cm"># 0 = leicht, 9 = aggressiv</span>
+nmap <span class="kw">--version-light</span> 192.168.1.1  <span class="cm"># =2</span>
+nmap <span class="kw">--version-all</span> 192.168.1.1   <span class="cm"># =9</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">RPC-Programm-Nummern ermitteln</div>
+      <code>nmap <span class="kw">-sR</span> 192.168.1.1</code>
+    </div>
+    <div class="tip"><strong>-A</strong> aktiviert OS-Erkennung, Version, Scripts und Traceroute gleichzeitig.</div>
+  </div>
+</div>
+
+<!-- 5. OS Detection -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">💻</div><div class="section-title">OS-Erkennung</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">OS-Fingerprinting</div>
+      <code>nmap <span class="kw">-O</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">OS-Guess aggressiver machen</div>
+      <code>nmap <span class="kw">-O --osscan-guess</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">OS-Scan erzwingen (auch bei &lt;1 offenem Port)</div>
+      <code>nmap <span class="kw">-O --osscan-limit</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Aggressive Erkennung (OS+Version+Script)</div>
+      <code>nmap <span class="kw">-A</span> 192.168.1.1</code>
+    </div>
+    <div class="tip"><strong>Hinweis:</strong> OS-Erkennung benötigt mindestens einen offenen und einen geschlossenen Port. Root-Rechte sind erforderlich.</div>
+  </div>
+</div>
+
+<!-- 6. Timing & Performance -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">⏱️</div><div class="section-title">Timing &amp; Performance</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Timing-Template (T0–T5)</div>
+      <code>nmap <span class="kw">-T0</span> 192.168.1.1  <span class="cm"># paranoid (IDS-Umgehung)</span>
+nmap <span class="kw">-T1</span> 192.168.1.1  <span class="cm"># sneaky</span>
+nmap <span class="kw">-T2</span> 192.168.1.1  <span class="cm"># polite</span>
+nmap <span class="kw">-T3</span> 192.168.1.1  <span class="cm"># normal (default)</span>
+nmap <span class="kw">-T4</span> 192.168.1.1  <span class="cm"># aggressive</span>
+nmap <span class="kw">-T5</span> 192.168.1.1  <span class="cm"># insane</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Minimale Paketrate (Pakete/Sekunde)</div>
+      <code>nmap <span class="kw">--min-rate</span> <span class="nu">1000</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Maximale Paketrate begrenzen</div>
+      <code>nmap <span class="kw">--max-rate</span> <span class="nu">500</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Maximale Wiederholungsversuche</div>
+      <code>nmap <span class="kw">--max-retries</span> <span class="nu">2</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Parallele Hosts &amp; Probes</div>
+      <code>nmap <span class="kw">--min-hostgroup</span> <span class="nu">64</span> 10.0.0.0/24
+nmap <span class="kw">--min-parallelism</span> <span class="nu">100</span> 10.0.0.0/24</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Timeout pro Host setzen</div>
+      <code>nmap <span class="kw">--host-timeout</span> <span class="nu">30s</span> 192.168.1.1</code>
+    </div>
+  </div>
+</div>
+
+<!-- 7. Output Formats -->
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">📄</div><div class="section-title">Output-Formate</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Normal (lesbar), XML, Grepable</div>
+      <code>nmap <span class="kw">-oN</span> <span class="st">scan.txt</span> 192.168.1.1
+nmap <span class="kw">-oX</span> <span class="st">scan.xml</span> 192.168.1.1
+nmap <span class="kw">-oG</span> <span class="st">scan.gnmap</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Alle Formate gleichzeitig (-oN/-oX/-oG)</div>
+      <code>nmap <span class="kw">-oA</span> <span class="st">ergebnis</span> 192.168.1.1
+<span class="cm"># erzeugt: ergebnis.nmap, ergebnis.xml, ergebnis.gnmap</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Script-Kiddie-Output (spaßig)</div>
+      <code>nmap <span class="kw">-oS</span> <span class="st">l33t.txt</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Verbosität erhöhen</div>
+      <code>nmap <span class="kw">-v</span> 192.168.1.1    <span class="cm"># verbose</span>
+nmap <span class="kw">-vv</span> 192.168.1.1   <span class="cm"># sehr verbose</span>
+nmap <span class="kw">-d</span> 192.168.1.1    <span class="cm"># debug</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Paket-Trace ausgeben</div>
+      <code>nmap <span class="kw">--packet-trace</span> 192.168.1.1</code>
+    </div>
+    <div class="tip"><strong>-oA</strong> ist empfohlen: XML-Ausgabe kann mit <strong>ndiff</strong> oder <strong>xsltproc</strong> weiterverarbeitet werden.</div>
+  </div>
+</div>
+
+<!-- 8. NSE Scripts -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">📜</div><div class="section-title">NSE Scripts</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Default-Scripts (wie -sC)</div>
+      <code>nmap <span class="kw">--script</span> <span class="st">default</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Script-Kategorien</div>
+      <code>nmap <span class="kw">--script</span> <span class="st">safe</span> 192.168.1.1
+nmap <span class="kw">--script</span> <span class="st">vuln</span> 192.168.1.1
+nmap <span class="kw">--script</span> <span class="st">auth</span> 192.168.1.1
+nmap <span class="kw">--script</span> <span class="st">discovery</span> 192.168.1.1
+nmap <span class="kw">--script</span> <span class="st">intrusive</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Einzelne Scripts ausführen</div>
+      <code>nmap <span class="kw">--script</span> <span class="fn">http-title</span> 192.168.1.1
+nmap <span class="kw">--script</span> <span class="fn">ssh-hostkey</span> 192.168.1.1
+nmap <span class="kw">--script</span> <span class="fn">smb-vuln-ms17-010</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Script-Argumente übergeben</div>
+      <code>nmap <span class="kw">--script</span> <span class="fn">http-brute</span> \
+  <span class="kw">--script-args</span> <span class="st">userdb=users.txt,passdb=pass.txt</span> \
+  <span class="kw">-p</span> <span class="nu">80</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Wildcard / mehrere Scripts</div>
+      <code>nmap <span class="kw">--script</span> <span class="st">"http-*"</span> 192.168.1.1
+nmap <span class="kw">--script</span> <span class="st">http-title,http-headers</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Script-Datenbank aktualisieren</div>
+      <code>nmap <span class="kw">--script-updatedb</span></code>
+    </div>
+    <div class="tip"><strong>Scripts</strong> liegen in <strong>/usr/share/nmap/scripts/</strong>. Mit <strong>nmap --script-help vuln</strong> Beschreibungen anzeigen.</div>
+  </div>
+</div>
+
+<!-- 9. Firewall Evasion -->
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">🛡️</div><div class="section-title">Firewall-Umgehung</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">IP-Fragmentierung (8-Byte-Fragmente)</div>
+      <code>nmap <span class="kw">-f</span> 192.168.1.1
+nmap <span class="kw">-ff</span> 192.168.1.1  <span class="cm"># 16-Byte-Fragmente</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Decoy-IPs (Tarnung durch Köder)</div>
+      <code>nmap <span class="kw">-D</span> <span class="nu">10.0.0.5,10.0.0.6,ME</span> 192.168.1.1
+nmap <span class="kw">-D</span> RND:<span class="nu">10</span> 192.168.1.1  <span class="cm"># 10 zufällige Decoys</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Quellport vortäuschen</div>
+      <code>nmap <span class="kw">--source-port</span> <span class="nu">53</span> 192.168.1.1
+nmap <span class="kw">-g</span> <span class="nu">443</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Datenlänge auffüllen (IDS-Evasion)</div>
+      <code>nmap <span class="kw">--data-length</span> <span class="nu">25</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">MAC-Adresse fälschen</div>
+      <code>nmap <span class="kw">--spoof-mac</span> <span class="st">0</span> 192.168.1.1  <span class="cm"># zufällig</span>
+nmap <span class="kw">--spoof-mac</span> <span class="st">Apple</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Checksummen-Fehler setzen</div>
+      <code>nmap <span class="kw">--badsum</span> 192.168.1.1</code>
+    </div>
+    <div class="tip"><strong>-D RND:10</strong> erzeugt 10 zufällige Köder-IPs. <strong>ME</strong> als Position einfügen, um den echten Scan-Port-Eintrag zu steuern.</div>
+  </div>
+</div>
+
+<!-- 10. Common Scan Recipes -->
+<div class="section th-ac">
+  <div class="section-header"><div class="section-icon">⚡</div><div class="section-title">Typische Scan-Rezepte</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Schneller Netzwerk-Überblick</div>
+      <code>nmap <span class="kw">-sn</span> <span class="kw">-T4</span> 10.0.0.0/24</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Standard-Vollscan (alle Ports, Version, OS)</div>
+      <code>nmap <span class="kw">-sS -sV -sC -O -p-</span> <span class="kw">-T4</span> <span class="kw">-oA</span> <span class="st">full</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Schneller Top-100-Scan</div>
+      <code>nmap <span class="kw">-F -T4</span> 192.168.1.0/24</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Stealth-Scan (langsam, IDS-freundlich)</div>
+      <code>nmap <span class="kw">-sS -T1 -f --data-length</span> <span class="nu">20</span> \
+  <span class="kw">-D</span> RND:<span class="nu">5</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Vulnerability-Scan</div>
+      <code>nmap <span class="kw">-sV --script</span> <span class="st">vuln</span> <span class="kw">-p-</span> <span class="kw">-T4</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">SMB-Schwachstellen prüfen</div>
+      <code>nmap <span class="kw">-p</span> <span class="nu">445</span> <span class="kw">--script</span> <span class="st">smb-vuln-*</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Web-Dienste untersuchen</div>
+      <code>nmap <span class="kw">-p</span> <span class="nu">80,443,8080,8443</span> <span class="kw">--script</span> <span class="st">http-*</span> 192.168.1.1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">UDP-Hauptports (langsam!)</div>
+      <code>nmap <span class="kw">-sU --top-ports</span> <span class="nu">200</span> <span class="kw">-T4</span> 192.168.1.1</code>
+    </div>
+  </div>
+</div>
+
+<!-- 11. Target Specification -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🎯</div><div class="section-title">Ziel-Angaben</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Einzelner Host / Hostname</div>
+      <code>nmap 192.168.1.1
+nmap example.local</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">CIDR-Netz / Bereich / Wildcard</div>
+      <code>nmap 192.168.1.0/24
+nmap 192.168.1.1-254
+nmap 192.168.1.*</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Mehrere Hosts &amp; Netzwerke</div>
+      <code>nmap 192.168.1.1 10.0.0.1 172.16.0.0/16</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Ziele aus Datei / zufällig</div>
+      <code>nmap <span class="kw">-iL</span> <span class="st">targets.txt</span>
+nmap <span class="kw">-iR</span> <span class="nu">100</span>              <span class="cm"># 100 zufällige Hosts</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Hosts ausschließen</div>
+      <code>nmap 192.168.1.0/24 <span class="kw">--exclude</span> 192.168.1.1
+nmap 192.168.1.0/24 <span class="kw">--excludefile</span> <span class="st">excl.txt</span></code>
+    </div>
+    <div class="tip"><strong>--exclude</strong> schützt kritische Hosts (z. B. Produktions-Server) vor versehentlichem Scan.</div>
+  </div>
+</div>
+
+<!-- 12. Output & Misc -->
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">Sonstiges &amp; Diagnose</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">nmap-Version anzeigen</div>
+      <code>nmap <span class="kw">-V</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Scan ohne Ports-Scan (Host-Liste)</div>
+      <code>nmap <span class="kw">-sL</span> 192.168.1.0/24  <span class="cm"># nur auflisten</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">IPv6-Scan</div>
+      <code>nmap <span class="kw">-6</span> fe80::1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Traceroute</div>
+      <code>nmap <span class="kw">--traceroute</span> 8.8.8.8</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Laufzeit-Statistik anzeigen</div>
+      <code>nmap <span class="kw">--stats-every</span> <span class="nu">10s</span> 192.168.1.0/24</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Scan-Ergebnisse vergleichen</div>
+      <code>ndiff <span class="st">scan1.xml</span> <span class="st">scan2.xml</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">XML nach HTML konvertieren</div>
+      <code>xsltproc <span class="st">scan.xml</span> <span class="kw">-o</span> <span class="st">scan.html</span></code>
+    </div>
+    <div class="tip"><strong>ndiff</strong> und <strong>xsltproc</strong> sind im nmap-Paket enthalten. <strong>ndiff</strong> eignet sich für Änderungs-Tracking über Zeit.</div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>
