@@ -201,10 +201,6 @@ nmap <span class="kw">--top-ports</span> <span class="nu">1000</span> 192.168.1.
 nmap <span class="kw">--version-light</span> 192.168.1.1  <span class="cm"># =2</span>
 nmap <span class="kw">--version-all</span> 192.168.1.1   <span class="cm"># =9</span></code>
     </div>
-    <div class="cmd-entry">
-      <div class="cmd-desc">RPC-Programm-Nummern ermitteln</div>
-      <code>nmap <span class="kw">-sR</span> 192.168.1.1</code>
-    </div>
     <div class="tip"><strong>-A</strong> aktiviert OS-Erkennung, Version, Scripts und Traceroute gleichzeitig.</div>
   </div>
 </div>
@@ -222,7 +218,7 @@ nmap <span class="kw">--version-all</span> 192.168.1.1   <span class="cm"># =9</
       <code>nmap <span class="kw">-O --osscan-guess</span> 192.168.1.1</code>
     </div>
     <div class="cmd-entry">
-      <div class="cmd-desc">OS-Scan erzwingen (auch bei &lt;1 offenem Port)</div>
+      <div class="cmd-desc">OS-Scan auf günstige Ziele beschränken (mind. 1 offen+geschlossen)</div>
       <code>nmap <span class="kw">-O --osscan-limit</span> 192.168.1.1</code>
     </div>
     <div class="cmd-entry">

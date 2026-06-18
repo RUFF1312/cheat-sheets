@@ -30,10 +30,10 @@
   .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
   .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
   .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
-  .th-pu .section-header{background:rgba(137,87,229,.06);} .th-pu .section-icon{background:rgba(137,87,229,.15);} .th-pu .section-title{color:var(--accent);}
+  .th-ac .section-header{background:rgba(137,87,229,.06);} .th-ac .section-icon{background:rgba(137,87,229,.15);} .th-ac .section-title{color:var(--accent);}
   .th-gn .section-header{background:rgba(63,185,80,.06);} .th-gn .section-icon{background:rgba(63,185,80,.15);} .th-gn .section-title{color:var(--green);}
   .th-cy .section-header{background:rgba(57,197,207,.06);} .th-cy .section-icon{background:rgba(57,197,207,.15);} .th-cy .section-title{color:var(--cyan);}
-  .th-lv .section-header{background:rgba(163,113,247,.06);} .th-lv .section-icon{background:rgba(163,113,247,.15);} .th-lv .section-title{color:var(--purple);}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--purple);}
   .th-re .section-header{background:rgba(244,112,103,.06);} .th-re .section-icon{background:rgba(244,112,103,.15);} .th-re .section-title{color:var(--red);}
   .command-list{padding:8px 0;}
   .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
@@ -72,7 +72,7 @@
 <main>
 
 <!-- SECTION 1: Auth -->
-<div class="section th-pu">
+<div class="section th-ac">
   <div class="section-header"><div class="section-icon">🔑</div><div class="section-title">Authentication</div></div>
   <div class="command-list">
     <div class="cmd-entry">
@@ -106,7 +106,7 @@ gh auth status --show-token</code>
 </div>
 
 <!-- SECTION 2: Repo -->
-<div class="section th-pu">
+<div class="section th-ac">
   <div class="section-header"><div class="section-icon">📁</div><div class="section-title">Repository</div></div>
   <div class="command-list">
     <div class="cmd-entry">
@@ -332,7 +332,7 @@ gh release delete v1.2.0 --cleanup-tag</code>
 </div>
 
 <!-- SECTION 7: Gists -->
-<div class="section th-lv">
+<div class="section th-pu">
   <div class="section-header"><div class="section-icon">📝</div><div class="section-title">Gists</div></div>
   <div class="command-list">
     <div class="cmd-entry">
@@ -370,7 +370,7 @@ gh gist edit GIST_ID --filename script.sh</code>
 </div>
 
 <!-- SECTION 8: SSH- & GPG-Keys -->
-<div class="section th-lv">
+<div class="section th-pu">
   <div class="section-header"><div class="section-icon">🔐</div><div class="section-title">SSH &amp; GPG Keys</div></div>
   <div class="command-list">
     <div class="cmd-entry">
@@ -403,7 +403,7 @@ gh ssh-key add ~/.ssh/id_ed25519.pub --type signing</code>
 </div>
 
 <!-- SECTION 9: Aliases -->
-<div class="section th-pu">
+<div class="section th-ac">
   <div class="section-header"><div class="section-icon">⚡</div><div class="section-title">gh alias</div></div>
   <div class="command-list">
     <div class="cmd-entry">
@@ -423,17 +423,12 @@ gh alias set co  <span class="st">'pr checkout'</span></code>
       <div class="cmd-desc">Alias löschen</div>
       <code>gh alias delete prc</code>
     </div>
-    <div class="cmd-entry">
-      <div class="cmd-desc">Alias importieren (aus YAML)</div>
-      <code>gh alias import aliases.yml
-gh alias import - &lt; aliases.yml</code>
-    </div>
     <div class="tip"><strong>Alias-Scope:</strong> Aliases werden in <code style="display:inline;padding:1px 4px;">~/.config/gh/config.yml</code> gespeichert und gelten für alle Repos.</div>
   </div>
 </div>
 
 <!-- SECTION 10: Output-Formatierung -->
-<div class="section th-pu">
+<div class="section th-ac">
   <div class="section-header"><div class="section-icon">🔧</div><div class="section-title">Output &amp; Formatierung</div></div>
   <div class="command-list">
     <div class="cmd-entry">
@@ -466,7 +461,7 @@ gh api --paginate /repos/{owner}/{repo}/issues</code>
       <code>gh api --paginate /orgs/myorg/repos \
   --jq <span class="st">'.[].full_name'</span></code>
     </div>
-    <div class="tip"><strong>Felder erkunden:</strong> <code style="display:inline;padding:1px 4px;">gh pr view --json</code> (ohne Felder) gibt alle verfügbaren JSON-Felder aus.</div>
+    <div class="tip"><strong>Felder erkunden:</strong> Verfügbare JSON-Felder via <code style="display:inline;padding:1px 4px;">gh pr view --help</code> ermitteln. <code style="display:inline;padding:1px 4px;">--json</code> ohne Feldliste gibt einen Fehler zurück.</div>
   </div>
 </div>
 
@@ -532,7 +527,7 @@ gh codespace delete --codespace CODESPACE_NAME</code>
 </div>
 
 <!-- SECTION 13: Organisations & Projekte -->
-<div class="section th-lv">
+<div class="section th-pu">
   <div class="section-header"><div class="section-icon">🏢</div><div class="section-title">Orgs &amp; Projects</div></div>
   <div class="command-list">
     <div class="cmd-entry">

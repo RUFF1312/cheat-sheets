@@ -324,7 +324,7 @@ lsmod | grep wireguard</code>
   <div class="section-header"><div class="section-icon">📶</div><div class="section-title">MTU &amp; Performance</div></div>
   <div class="command-list">
     <div class="cmd-entry">
-      <div class="cmd-desc">MTU explizit setzen (Standard: 1420 für IPv4)</div>
+      <div class="cmd-desc">MTU explizit setzen (Standard: 1420 für IPv4+IPv6)</div>
       <code>[Interface]
 MTU = 1420</code>
     </div>
@@ -472,7 +472,7 @@ dnf install qrencode     <span class="cm"># RHEL/Rocky</span></code>
     <div class="cmd-entry">
       <div class="cmd-desc">Alle WireGuard-Interfaces auf einmal hochbringen</div>
       <code>for conf in /etc/wireguard/*.conf; do
-  wg-quick up "${conf%.conf}"
+  wg-quick up "$(basename "${conf%.conf}")"
 done</code>
     </div>
     <div class="cmd-entry">
