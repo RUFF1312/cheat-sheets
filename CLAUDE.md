@@ -114,12 +114,13 @@ Typische Commit-Struktur:
 
 ---
 
-## Gruppen und Zähler (Stand: 96 Sheets)
+## Gruppen und Zähler (Stand: 101 Sheets)
 
 | Gruppe | `data-group` | Anzahl | Subgruppen |
 |---|---|---|---|
 | Cloud & Infra | `"Cloud & Infra"` | 30 | OpenStack (6) |
-| System & Netz | `"System & Netz"` | 19 | — |
+| System & Netz | `"System & Netz"` | 18 | — |
+| Security & Pentesting | `"Security & Pentesting"` | 6 | — |
 | Programmiersprachen | `"Programmiersprachen"` | 13 | — |
 | Dev & Automation | `"Dev & Automation"` | 17 | — |
 | VMware | `"VMware"` | 4 | VMware (4) |

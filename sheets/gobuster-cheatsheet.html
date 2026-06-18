@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gobuster & ffuf - TheLayer0Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/gobuster.svg">
+<style>
+  :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--accent:#7c3aed;--accent2:#a78bfa;--green:#3fb950;--purple:#a371f7;--cyan:#39c5cf;--red:#f47067;--text:#e6edf3;--muted:#7d8590;--code-bg:#10161d;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#0d1117 0%,#130920 50%,#0d1117 100%);border-bottom:2px solid var(--accent);padding:40px 48px 32px;position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 200px at 60% 50%,rgba(124,58,237,.08),transparent);}
+  .header-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;position:relative;}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);padding:3px 10px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:var(--text);}
+  h1 span{color:var(--accent);}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .meta strong{color:var(--accent2);}
+  .version-legend{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:4px;padding:4px 12px;font-weight:600;}
+  .ch-ac{background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);color:var(--accent);}
+  .ch-gn{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);color:var(--green);}
+  .ch-cy{background:rgba(57,197,207,.1);border:1px solid rgba(57,197,207,.3);color:var(--cyan);}
+  .ch-pu{background:rgba(163,113,247,.1);border:1px solid rgba(163,113,247,.3);color:var(--purple);}
+  .ch-re{background:rgba(244,112,103,.1);border:1px solid rgba(244,112,103,.3);color:var(--red);}
+  main{padding:32px 48px;max-width:1400px;margin:0 auto;columns:3;column-gap:20px;}
+  .section{break-inside:avoid;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+  .section-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+  .th-ac .section-header{background:rgba(124,58,237,.06);} .th-ac .section-icon{background:rgba(124,58,237,.15);} .th-ac .section-title{color:var(--accent);}
+  .th-gn .section-header{background:rgba(63,185,80,.06);} .th-gn .section-icon{background:rgba(63,185,80,.15);} .th-gn .section-title{color:var(--green);}
+  .th-cy .section-header{background:rgba(57,197,207,.06);} .th-cy .section-icon{background:rgba(57,197,207,.15);} .th-cy .section-title{color:var(--cyan);}
+  .th-pu .section-header{background:rgba(163,113,247,.06);} .th-pu .section-icon{background:rgba(163,113,247,.15);} .th-pu .section-title{color:var(--accent);}
+  .th-re .section-header{background:rgba(244,112,103,.06);} .th-re .section-icon{background:rgba(244,112,103,.15);} .th-re .section-title{color:var(--red);}
+  .command-list{padding:8px 0;}
+  .cmd-entry{padding:6px 16px;border-bottom:1px solid rgba(48,54,61,.5);}
+  .cmd-entry:last-child{border-bottom:none;}
+  .cmd-desc{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px;text-transform:uppercase;}
+  code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--code-bg);display:block;padding:5px 9px;border-radius:4px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+  .kw{color:#9d6bff;font-weight:700;} .st{color:#3fb950;} .nu{color:#f47067;}
+  .cm{color:#7d8590;font-style:italic;} .fn{color:#39c5cf;font-weight:600;}
+  .tip{padding:8px 16px;background:rgba(124,58,237,.06);border-left:3px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.6;}
+  .tip strong{color:var(--text);}
+  .nav-link{position:absolute;top:40px;right:48px;z-index:10;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;border:1px solid rgba(124,58,237,.3);padding:4px 12px;border-radius:4px;background:rgba(124,58,237,.08);}
+  .nav-link:hover{background:rgba(124,58,237,.15);}
+  @media(max-width:1100px){main{columns:2;}}
+  @media(max-width:700px){main{columns:1;padding:16px;}header{padding:24px 16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html" class="nav-link">← Index</a>
+  <div class="header-grid">
+    <div>
+      <div class="badge">▸ Security &amp; Pentesting Reference</div>
+      <img src="../assets/gobuster.svg" alt="Logo" style="width:48px;height:48px;margin-bottom:12px;display:block;filter:none">
+      <h1><span>Gobuster</span> &amp; ffuf<br>TheLayer<span style="color:#a371f7;font-family:'JetBrains Mono',monospace;font-size:1.25em;-webkit-text-fill-color:#a371f7;">0</span>Guide</h1>
+      <p class="subtitle">$ gobuster dir -u http://target -w wordlist.txt -x php,html</p>
+      <div class="version-legend">
+        <div class="chip ch-ac">Gobuster 3.x / ffuf 2.x</div>
+        <div class="chip ch-gn">Web Fuzzing</div>
+        <div class="chip ch-cy">Dir &amp; DNS Enum</div>
+        <div class="chip ch-re">Pentesting</div>
+      </div>
+    </div>
+    <div class="meta"><strong>gobuster &amp; ffuf</strong><br>dir · dns · vhost<br>s3 · gcs · fuzz<br>match · filter<br>wordlists</div>
+  </div>
+</header>
+<main>
+
+<!-- 1. Gobuster dir -->
+<div class="section th-ac">
+  <div class="section-header"><div class="section-icon">📁</div><div class="section-title">Gobuster dir — Verzeichnis-Enum</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Basis-Scan</div>
+      <code>gobuster dir \
+  -u <span class="st">http://target.tld</span> \
+  -w <span class="st">/usr/share/wordlists/dirb/common.txt</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Mit Datei-Endungen &amp; Threads</div>
+      <code>gobuster dir \
+  -u <span class="st">http://target.tld</span> \
+  -w <span class="st">directory-list-2.3-medium.txt</span> \
+  -x <span class="st">php,html,txt,bak</span> \
+  -t <span class="nu">50</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Output, Status-Codes, Auth</div>
+      <code>gobuster dir \
+  -u <span class="st">http://target.tld</span> \
+  -w <span class="st">raft-large-files.txt</span> \
+  -s <span class="st">200,204,301,302,307</span> \
+  -o <span class="st">results.txt</span> \
+  -U <span class="st">admin</span> -P <span class="st">password</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">HTTPS + benutzerdefinierter Header</div>
+      <code>gobuster dir \
+  -u <span class="st">https://target.tld</span> \
+  -w <span class="st">common.txt</span> \
+  -k <span class="cm"># TLS-Fehler ignorieren</span>
+  -H <span class="st">"Authorization: Bearer TOKEN"</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Proxy &amp; erweitertes Timeout</div>
+      <code>gobuster dir \
+  -u <span class="st">http://target.tld</span> \
+  -w <span class="st">common.txt</span> \
+  --proxy <span class="st">http://127.0.0.1:8080</span> \
+  --timeout <span class="nu">10s</span></code>
+    </div>
+    <div class="tip"><strong>Flags:</strong> <code>-e</code> zeigt vollständige URLs · <code>-r</code> folgt Redirects · <code>--no-error</code> unterdrückt Fehler-Ausgaben</div>
+  </div>
+</div>
+
+<!-- 2. Gobuster dns -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">🌐</div><div class="section-title">Gobuster dns — Subdomain-Enum</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Subdomain-Brute-Force</div>
+      <code>gobuster dns \
+  -d <span class="st">target.tld</span> \
+  -w <span class="st">subdomains-top1million-5000.txt</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">IPs anzeigen + eigener Resolver</div>
+      <code>gobuster dns \
+  -d <span class="st">target.tld</span> \
+  -w <span class="st">subdomains-top1million-20000.txt</span> \
+  -i \
+  -r <span class="st">8.8.8.8</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Wildcards manuell ignorieren</div>
+      <code>gobuster dns \
+  -d <span class="st">target.tld</span> \
+  -w <span class="st">subdomains.txt</span> \
+  --wildcard <span class="cm"># erzwingt Scan trotz Wildcard</span></code>
+    </div>
+    <div class="tip"><strong>-i:</strong> gibt aufgelöste IP-Adressen aus · <strong>-r:</strong> nutzt eigenen DNS-Resolver · Wildcards werden standardmäßig erkannt und stoppen den Scan</div>
+  </div>
+</div>
+
+<!-- 3. Gobuster vhost -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🖧</div><div class="section-title">Gobuster vhost — VHost-Enum</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Virtual-Host-Brute-Force</div>
+      <code>gobuster vhost \
+  -u <span class="st">http://target.tld</span> \
+  -w <span class="st">subdomains-top1million-5000.txt</span> \
+  --append-domain</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Falsch-Positive filtern</div>
+      <code>gobuster vhost \
+  -u <span class="st">http://10.10.10.10</span> \
+  -w <span class="st">subdomains.txt</span> \
+  --append-domain \
+  --exclude-length <span class="nu">250</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Mit Cookie &amp; User-Agent</div>
+      <code>gobuster vhost \
+  -u <span class="st">http://target.tld</span> \
+  -w <span class="st">subdomains.txt</span> \
+  --append-domain \
+  -c <span class="st">"session=abc123"</span> \
+  -a <span class="st">"Mozilla/5.0"</span></code>
+    </div>
+    <div class="tip"><strong>--append-domain:</strong> hängt die Basisdomain automatisch an jedes Wort an (z. B. <code>admin</code> → <code>admin.target.tld</code>). Ohne dieses Flag muss die Wortliste vollständige Hostnamen enthalten.</div>
+  </div>
+</div>
+
+<!-- 4. Gobuster s3 / gcs -->
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">🪣</div><div class="section-title">Gobuster s3 / gcs — Bucket-Enum</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">AWS S3-Buckets aufspüren</div>
+      <code>gobuster s3 \
+  -w <span class="st">bucket-names.txt</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Google Cloud Storage Buckets</div>
+      <code>gobuster gcs \
+  -w <span class="st">bucket-names.txt</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Mit Threads &amp; Output</div>
+      <code>gobuster s3 \
+  -w <span class="st">bucket-names.txt</span> \
+  -t <span class="nu">20</span> \
+  -o <span class="st">buckets.txt</span></code>
+    </div>
+    <div class="tip"><strong>Status-Bedeutung:</strong> <code>200</code> = Bucket existiert &amp; öffentlich · <code>301</code> = existiert, Redirect · <code>403</code> = existiert, kein Zugriff · <code>404</code> = nicht gefunden</div>
+  </div>
+</div>
+
+<!-- 5. ffuf Grundlagen -->
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">⚡</div><div class="section-title">ffuf — Grundlagen</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Basis-Fuzzing</div>
+      <code>ffuf \
+  -u <span class="st">http://target.tld/FUZZ</span> \
+  -w <span class="st">/usr/share/seclists/Discovery/Web-Content/common.txt</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Status-Codes &amp; Threads</div>
+      <code>ffuf \
+  -u <span class="st">http://target.tld/FUZZ</span> \
+  -w <span class="st">directory-list-2.3-medium.txt</span> \
+  -mc <span class="nu">200,301,302,403</span> \
+  -t <span class="nu">40</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Datei-Endungen fuzzen</div>
+      <code>ffuf \
+  -u <span class="st">http://target.tld/FUZZ</span> \
+  -w <span class="st">common.txt</span> \
+  -e <span class="st">.php,.html,.txt,.bak,.old</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Zwei FUZZ-Schlüsselwörter (MSW)</div>
+      <code>ffuf \
+  -u <span class="st">http://target.tld/W1/W2</span> \
+  -w <span class="st">dirs.txt:W1</span> \
+  -w <span class="st">files.txt:W2</span> \
+  -mc <span class="nu">200</span></code>
+    </div>
+    <div class="tip"><strong>FUZZ</strong> ist das Standard-Schlüsselwort. Eigene Schlüsselwörter (W1, W2 …) erlauben gleichzeitiges Fuzzen mehrerer Positionen.</div>
+  </div>
+</div>
+
+<!-- 6. ffuf Filter & Match -->
+<div class="section th-ac">
+  <div class="section-header"><div class="section-icon">🔍</div><div class="section-title">ffuf — Filter &amp; Match</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Match-Optionen (zeige nur …)</div>
+      <code><span class="cm"># Nur bestimmte HTTP-Statuscodes:</span>
+ffuf -u URL/FUZZ -w wl.txt -mc <span class="nu">200,301</span>
+
+<span class="cm"># Nur bestimmte Antwortgröße (Bytes):</span>
+ffuf -u URL/FUZZ -w wl.txt -ms <span class="nu">1234</span>
+
+<span class="cm"># Nur bestimmte Zeilenzahl:</span>
+ffuf -u URL/FUZZ -w wl.txt -ml <span class="nu">42</span>
+
+<span class="cm"># Nur bestimmte Wortanzahl:</span>
+ffuf -u URL/FUZZ -w wl.txt -mw <span class="nu">10</span>
+
+<span class="cm"># Regex-Match auf Antwort-Body:</span>
+ffuf -u URL/FUZZ -w wl.txt -mr <span class="st">"Welcome"</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Filter-Optionen (verstecke …)</div>
+      <code><span class="cm"># Bestimmte Status-Codes filtern:</span>
+ffuf -u URL/FUZZ -w wl.txt -fc <span class="nu">404,403</span>
+
+<span class="cm"># Bestimmte Antwortgröße filtern:</span>
+ffuf -u URL/FUZZ -w wl.txt -fs <span class="nu">4242</span>
+
+<span class="cm"># Bestimmte Zeilenzahl filtern:</span>
+ffuf -u URL/FUZZ -w wl.txt -fl <span class="nu">10</span>
+
+<span class="cm"># Bestimmte Wortanzahl filtern:</span>
+ffuf -u URL/FUZZ -w wl.txt -fw <span class="nu">3</span>
+
+<span class="cm"># Regex auf Body filtern:</span>
+ffuf -u URL/FUZZ -w wl.txt -fr <span class="st">"Not Found"</span></code>
+    </div>
+    <div class="tip"><strong>Tipp:</strong> Erst ohne Filter laufen lassen, die häufigste Antwortgröße notieren, dann mit <code>-fs SIZE</code> filtern um False-Positives zu eliminieren.</div>
+  </div>
+</div>
+
+<!-- 7. ffuf POST & Header-Fuzzing -->
+<div class="section th-cy">
+  <div class="section-header"><div class="section-icon">📮</div><div class="section-title">ffuf — POST &amp; Header-Fuzzing</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">POST-Body fuzzen</div>
+      <code>ffuf \
+  -u <span class="st">http://target.tld/login</span> \
+  -w <span class="st">passwords.txt</span> \
+  -X POST \
+  -d <span class="st">"username=admin&amp;password=FUZZ"</span> \
+  -H <span class="st">"Content-Type: application/x-www-form-urlencoded"</span> \
+  -fc <span class="nu">302</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">JSON-Body fuzzen</div>
+      <code>ffuf \
+  -u <span class="st">http://target.tld/api/login</span> \
+  -w <span class="st">passwords.txt</span> \
+  -X POST \
+  -d <span class="st">'{"user":"admin","pass":"FUZZ"}'</span> \
+  -H <span class="st">"Content-Type: application/json"</span> \
+  -mr <span class="st">"token"</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Header-Wert fuzzen</div>
+      <code>ffuf \
+  -u <span class="st">http://target.tld/</span> \
+  -w <span class="st">headers.txt</span> \
+  -H <span class="st">"X-Custom-Header: FUZZ"</span> \
+  -mc <span class="nu">200</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Mit Session-Cookie</div>
+      <code>ffuf \
+  -u <span class="st">http://target.tld/admin/FUZZ</span> \
+  -w <span class="st">common.txt</span> \
+  -b <span class="st">"session=abc123; role=user"</span></code>
+    </div>
+    <div class="tip"><strong>-b:</strong> Cookie-String direkt · <strong>-H:</strong> beliebige HTTP-Header · mehrere <code>-H</code>-Flags möglich</div>
+  </div>
+</div>
+
+<!-- 8. ffuf Subdomain & VHost -->
+<div class="section th-gn">
+  <div class="section-header"><div class="section-icon">🏷️</div><div class="section-title">ffuf — Subdomain &amp; VHost</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">VHost-Fuzzing via Host-Header</div>
+      <code>ffuf \
+  -u <span class="st">http://target.tld/</span> \
+  -w <span class="st">subdomains-top1million-5000.txt</span> \
+  -H <span class="st">"Host: FUZZ.target.tld"</span> \
+  -fs <span class="nu">4242</span> <span class="cm"># Standardgröße filtern</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Subdomain-Enum (DNS-basiert)</div>
+      <code>ffuf \
+  -u <span class="st">http://FUZZ.target.tld/</span> \
+  -w <span class="st">subdomains-top1million-5000.txt</span> \
+  -mc <span class="nu">200,301,302</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">IP mit Host-Header (kein DNS)</div>
+      <code>ffuf \
+  -u <span class="st">http://10.10.10.10/</span> \
+  -w <span class="st">subdomains.txt</span> \
+  -H <span class="st">"Host: FUZZ.target.tld"</span> \
+  -fc <span class="nu">400</span> \
+  -fs <span class="nu">1337</span></code>
+    </div>
+    <div class="tip"><strong>VHost vs. DNS:</strong> VHost-Fuzzing testet den <code>Host</code>-Header gegen eine IP — ideal wenn kein öffentliches DNS existiert. DNS-Fuzzing benötigt eine auflösbare Domain.</div>
+  </div>
+</div>
+
+<!-- 9. ffuf Ausgabe & Rate -->
+<div class="section th-re">
+  <div class="section-header"><div class="section-icon">📊</div><div class="section-title">ffuf — Ausgabe &amp; Rate-Control</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">Output in verschiedenen Formaten</div>
+      <code><span class="cm"># JSON-Output:</span>
+ffuf -u URL/FUZZ -w wl.txt \
+  -o <span class="st">results.json</span> -of <span class="st">json</span>
+
+<span class="cm"># CSV-Output:</span>
+ffuf -u URL/FUZZ -w wl.txt \
+  -o <span class="st">results.csv</span> -of <span class="st">csv</span>
+
+<span class="cm"># HTML-Report:</span>
+ffuf -u URL/FUZZ -w wl.txt \
+  -o <span class="st">report.html</span> -of <span class="st">html</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Rate-Limiting &amp; Verzögerung</div>
+      <code><span class="cm"># Max. Requests pro Sekunde:</span>
+ffuf -u URL/FUZZ -w wl.txt \
+  -rate <span class="nu">50</span>
+
+<span class="cm"># Pause zwischen Requests (Sekunden):</span>
+ffuf -u URL/FUZZ -w wl.txt \
+  -p <span class="nu">0.1</span>
+
+<span class="cm"># Zufällige Pause (min-max):</span>
+ffuf -u URL/FUZZ -w wl.txt \
+  -p <span class="nu">0.1</span>-<span class="nu">0.5</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Proxy (z. B. Burp Suite)</div>
+      <code>ffuf \
+  -u <span class="st">http://target.tld/FUZZ</span> \
+  -w <span class="st">common.txt</span> \
+  -x <span class="st">http://127.0.0.1:8080</span> \
+  -replay-proxy <span class="st">http://127.0.0.1:8080</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Interaktiver Modus &amp; stilles Laufen</div>
+      <code><span class="cm"># Keine Fortschrittsanzeige (CI/Pipes):</span>
+ffuf -u URL/FUZZ -w wl.txt -s
+
+<span class="cm"># Maximale Laufzeit (Sekunden):</span>
+ffuf -u URL/FUZZ -w wl.txt \
+  -maxtime <span class="nu">60</span> -maxtime-job <span class="nu">30</span></code>
+    </div>
+    <div class="tip"><strong>-replay-proxy:</strong> leitet nur Treffer (Matches) an den Proxy weiter — spart Burp-Traffic und erleichtert die manuelle Analyse.</div>
+  </div>
+</div>
+
+<!-- 10. Wortlisten-Referenz -->
+<div class="section th-pu">
+  <div class="section-header"><div class="section-icon">📚</div><div class="section-title">Wortlisten — SecLists-Referenz</div></div>
+  <div class="command-list">
+    <div class="cmd-entry">
+      <div class="cmd-desc">SecLists installieren</div>
+      <code><span class="cm"># Debian/Ubuntu:</span>
+sudo apt install seclists
+
+<span class="cm"># Basis-Pfad:</span>
+/usr/share/seclists/</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Verzeichnisse &amp; Dateien</div>
+      <code>Discovery/Web-Content/
+  common.txt                  <span class="cm"># 4.7k Einträge, schnell</span>
+  directory-list-2.3-medium.txt <span class="cm"># 220k, Standard</span>
+  directory-list-2.3-big.txt  <span class="cm"># 1.27M, langsam</span>
+  raft-large-directories.txt  <span class="cm"># 62k, gut für APIs</span>
+  raft-large-files.txt        <span class="cm"># 37k Dateinamen</span>
+  raft-large-words.txt        <span class="cm"># 119k Wörter</span></code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Subdomains</div>
+      <code>Discovery/DNS/
+  subdomains-top1million-5000.txt   <span class="cm"># schnell</span>
+  subdomains-top1million-20000.txt  <span class="cm"># ausgewogen</span>
+  subdomains-top1million-110000.txt <span class="cm"># vollständig</span>
+  bitquark-subdomains-top100000.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">Passwörter &amp; Nutzernamen</div>
+      <code>Passwords/
+  rockyou.txt                 <span class="cm"># 14M Passwörter</span>
+  Common-Credentials/
+    10-million-password-list-top-1000.txt
+Usernames/
+  Names/names.txt             <span class="cm"># Vornamen als User</span>
+  xato-net-10-million-usernames.txt</code>
+    </div>
+    <div class="cmd-entry">
+      <div class="cmd-desc">APIs &amp; Parameter</div>
+      <code>Discovery/Web-Content/
+  api/api-endpoints.txt       <span class="cm"># REST-Endpunkte</span>
+  burp-parameter-names.txt    <span class="cm"># GET/POST-Parameter</span>
+  SVNDigger/all.txt           <span class="cm"># SVN-basierte Pfade</span></code>
+    </div>
+    <div class="tip"><strong>Empfehlung:</strong> Mit <code>common.txt</code> starten (schnell). Für tiefere Scans <code>raft-large-*</code> oder <code>directory-list-2.3-medium.txt</code> verwenden.</div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # Sheet-Inventar — TheLayer0Guide
 
-Vollständige Liste aller 89 Sheets. Stand: 2026-06-16.
+Vollständige Liste aller 101 Sheets. Stand: 2026-06-18.
 
 ---
 
@@ -52,7 +52,7 @@ Vollständige Liste aller 89 Sheets. Stand: 2026-06-16.
 
 ---
 
-## System & Netz (19)
+## System & Netz (18)
 
 | Datei | Titel | `--accent` |
 |---|---|---|
@@ -74,7 +74,19 @@ Vollständige Liste aller 89 Sheets. Stand: 2026-06-16.
 | `rsync-cheatsheet.html` | rsync | `#00b4a0` |
 | `firewalld-cheatsheet.html` | firewalld | `#e05a00` |
 | `wireguard-cheatsheet.html` | WireGuard | `#f8a000` |
+
+---
+
+## Security & Pentesting (6)
+
+| Datei | Titel | `--accent` |
+|---|---|---|
 | `nmap-cheatsheet.html` | nmap | `#0E6B8C` |
+| `metasploit-cheatsheet.html` | Metasploit Framework | `#2563eb` |
+| `burp-cheatsheet.html` | Burp Suite | `#ea580c` |
+| `hydra-cheatsheet.html` | Hydra | `#dc2626` |
+| `hashcat-cheatsheet.html` | Hashcat | `#0891b2` |
+| `gobuster-cheatsheet.html` | Gobuster & ffuf | `#7c3aed` |
 
 ---
 

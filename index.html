@@ -185,6 +185,12 @@
   .c-wireguard{--ac:#f8a000;--acs:rgba(248,160,0,0.15);--acb:rgba(248,160,0,0.25)}
   /* nmap */
   .c-nmap{--ac:#0E6B8C;--acs:rgba(14,107,140,0.15);--acb:rgba(14,107,140,0.25)}
+  /* Security & Pentesting */
+  .c-metasploit{--ac:#2563eb;--acs:rgba(37,99,235,0.15);--acb:rgba(37,99,235,0.25)}
+  .c-burp{--ac:#ea580c;--acs:rgba(234,88,12,0.15);--acb:rgba(234,88,12,0.25)}
+  .c-hydra{--ac:#dc2626;--acs:rgba(220,38,38,0.15);--acb:rgba(220,38,38,0.25)}
+  .c-hashcat{--ac:#0891b2;--acs:rgba(8,145,178,0.15);--acb:rgba(8,145,178,0.25)}
+  .c-gobuster{--ac:#7c3aed;--acs:rgba(124,58,237,0.15);--acb:rgba(124,58,237,0.25)}
   /* ArgoCD */
   .c-argocd{--ac:#ef7b4d;--acs:rgba(239,123,77,0.15);--acb:rgba(239,123,77,0.25)}
   /* Loki */
@@ -247,6 +253,7 @@
   .pill[data-filter="Datenbanken"].active{border-color:#f0c040;color:#f0c040;background:rgba(240,192,64,.08)}
   .pill[data-filter="VMware"].active{border-color:#5ba8e0;color:#5ba8e0;background:rgba(0,125,193,.08)}
   .pill[data-filter="Office"].active{border-color:#0078D4;color:#0078D4;background:rgba(0,120,212,.08)}
+  .pill[data-filter="Security & Pentesting"].active{border-color:#dc2626;color:#dc2626;background:rgba(220,38,38,.08)}
   .pill[data-subgroup="MS Office"].active{border-color:#0078D4;color:#0078D4;background:rgba(0,120,212,.08);border-style:solid}
   .pill[data-subgroup="LibreOffice"].active{border-color:#0E4E96;color:#0E4E96;background:rgba(14,78,150,.08);border-style:solid}
   .pill-count{opacity:.55;margin-left:5px}
@@ -284,16 +291,17 @@
   <div class="header-eyebrow">Developer Reference Collection</div>
   <h1><span class="h1-accent">TheLayer<span style="color: #a371f7; font-family: 'JetBrains Mono', monospace; font-size: 1.25em; -webkit-text-fill-color: #a371f7;">0</span></span><br>Guide</h1>
   <p class="header-sub">Alle Referenz-Sheets auf einen Blick — dark-themed, vollständig, offline-fähig.</p>
-  <div class="header-count"><span>89</span> Sheets · CLI · Scripting · DevOps · OpenStack · VMware · Coding</div>
+  <div class="header-count"><span>101</span> Sheets · CLI · Scripting · DevOps · Security · OpenStack · VMware · Coding</div>
 </header>
 
 <main>
   <div class="toolbar">
     <div class="toolbar-filters">
-      <button class="pill active" data-filter="all">Alle <span class="pill-count">96</span></button>
+      <button class="pill active" data-filter="all">Alle <span class="pill-count">101</span></button>
       <button class="pill" data-filter="Programmiersprachen">Sprachen <span class="pill-count">13</span></button>
       <button class="pill" data-filter="Dev & Automation">Dev &amp; Automation <span class="pill-count">17</span></button>
-      <button class="pill" data-filter="System & Netz">System &amp; Netz <span class="pill-count">19</span></button>
+      <button class="pill" data-filter="System & Netz">System &amp; Netz <span class="pill-count">18</span></button>
+      <button class="pill" data-filter="Security & Pentesting">Security &amp; Pentesting <span class="pill-count">6</span></button>
       <button class="pill" data-filter="Datenbanken">Datenbanken <span class="pill-count">5</span></button>
       <button class="pill" data-filter="Cloud & Infra">Cloud &amp; Infra <span class="pill-count">30</span></button>
       <button class="pill" data-filter="VMware">VMware <span class="pill-count">4</span></button>
@@ -1353,7 +1361,7 @@
       </div>
     </a>
 
-    <a href="sheets/nmap-cheatsheet.html" class="card c-nmap" data-title="nmap" data-group="System & Netz">
+    <a href="sheets/nmap-cheatsheet.html" class="card c-nmap" data-title="nmap" data-group="Security & Pentesting">
       <div class="card-accent"></div>
       <div class="card-body">
         <div class="card-icon-row">
@@ -1363,6 +1371,82 @@
         <div class="card-tagline">$ nmap -sS -sV -O -p- target -- Port Scanner<br>scan · discovery · nse · evasion</div>
         <div class="card-tags">
           <span class="tag">Port Scan</span><span class="tag">NSE</span><span class="tag">OS Detection</span><span class="tag">Firewall</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- Security & Pentesting -->
+    <a href="sheets/metasploit-cheatsheet.html" class="card c-metasploit" data-title="Metasploit Framework" data-group="Security & Pentesting">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/metasploit.svg" alt="metasploit.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">Metasploit Framework</div>
+        </div>
+        <div class="card-tagline">msfconsole -q -- Exploit &amp; Post-Exploitation<br>msfvenom · Meterpreter · Auxiliary · DB</div>
+        <div class="card-tags">
+          <span class="tag">exploit</span><span class="tag">msfvenom</span><span class="tag">meterpreter</span><span class="tag">pentesting</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/burp-cheatsheet.html" class="card c-burp" data-title="Burp Suite" data-group="Security & Pentesting">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/burp.svg" alt="burp.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">Burp Suite</div>
+        </div>
+        <div class="card-tagline">Proxy · Repeater · Intruder -- Web Security Testing<br>IDOR · SQLi · XSS · SSRF · Auth Bypass</div>
+        <div class="card-tags">
+          <span class="tag">Proxy</span><span class="tag">Intruder</span><span class="tag">Scanner</span><span class="tag">Pentesting</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/hydra-cheatsheet.html" class="card c-hydra" data-title="Hydra" data-group="Security & Pentesting">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/hydra.svg" alt="hydra.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">Hydra</div>
+        </div>
+        <div class="card-tagline">hydra -l admin -P rockyou.txt ssh://target -- Login-Brute-Forcer<br>SSH · FTP · HTTP-Form · RDP · SMB</div>
+        <div class="card-tags">
+          <span class="tag">brute-force</span><span class="tag">login</span><span class="tag">pentesting</span><span class="tag">network</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/hashcat-cheatsheet.html" class="card c-hashcat" data-title="Hashcat" data-group="Security & Pentesting">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/hashcat.svg" alt="hashcat.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">Hashcat</div>
+        </div>
+        <div class="card-tagline">hashcat -m 0 -a 0 hashes.txt rockyou.txt -- GPU Hash Cracker<br>NTLM · WPA2 · bcrypt · Kerberoast</div>
+        <div class="card-tags">
+          <span class="tag">hash</span><span class="tag">GPU</span><span class="tag">password</span><span class="tag">cracking</span>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="sheets/gobuster-cheatsheet.html" class="card c-gobuster" data-title="Gobuster &amp; ffuf" data-group="Security & Pentesting">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon"><img src="assets/gobuster.svg" alt="gobuster.svg" style="width:24px;height:24px;filter:brightness(0) invert(1)"></div>
+          <div class="card-name">Gobuster &amp; ffuf</div>
+        </div>
+        <div class="card-tagline">gobuster dir -u URL -w wordlist -- Web Fuzzer<br>dir · dns · vhost · ffuf filter · SecLists</div>
+        <div class="card-tags">
+          <span class="tag">fuzzing</span><span class="tag">directory</span><span class="tag">subdomain</span><span class="tag">pentesting</span>
         </div>
         <div class="card-arrow">→</div>
       </div>
@@ -1825,15 +1909,16 @@
     document.querySelectorAll('.header-count span, .pill[data-filter="all"] .pill-count').forEach(el => el.textContent = cards.length);
 
     // Group display order + color
-    const GROUP_ORDER = ['Programmiersprachen', 'Dev & Automation', 'System & Netz', 'Datenbanken', 'Cloud & Infra', 'VMware', 'Office'];
+    const GROUP_ORDER = ['Programmiersprachen', 'Dev & Automation', 'System & Netz', 'Security & Pentesting', 'Datenbanken', 'Cloud & Infra', 'VMware', 'Office'];
     const GROUP_COLOR = {
-      'Programmiersprachen': '#f7df1e',
-      'Dev & Automation':    '#a371f7',
-      'System & Netz':       '#3fb950',
-      'Datenbanken':         '#f0c040',
-      'Cloud & Infra':       '#0db7ed',
-      'VMware':              '#5ba8e0',
-      'Office':              '#0078D4'
+      'Programmiersprachen':  '#f7df1e',
+      'Dev & Automation':     '#a371f7',
+      'System & Netz':        '#3fb950',
+      'Security & Pentesting':'#dc2626',
+      'Datenbanken':          '#f0c040',
+      'Cloud & Infra':        '#0db7ed',
+      'VMware':               '#5ba8e0',
+      'Office':               '#0078D4'
     };
 
     let activeFilter = 'all';
